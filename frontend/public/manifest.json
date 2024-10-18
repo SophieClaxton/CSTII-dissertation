@@ -1,0 +1,10 @@
+{
+    "manifest_version": 3,
+    "name": "sc2370",
+    "version": "1.0.0",
+    "side_panel": {
+        "default_path": "index.html"
+    },
+    "permissions": ["sidePanel", "scripting", "activeTab"],
+    "host_permissions": ["https://*/*", "http://*/*"]
+}
