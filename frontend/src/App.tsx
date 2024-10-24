@@ -1,8 +1,11 @@
 import reactLogo from './assets/react.svg';
 import viteLogo from '../public/vite.svg';
 import './App.css';
+import { setUpMessageHandler } from './panel/messageHandler';
 
 function App() {
+  setUpMessageHandler();
+
   const onClick = async () => {
     const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
     console.log(`found active tab ${tab.id}`);
