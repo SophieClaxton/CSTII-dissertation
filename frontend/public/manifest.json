@@ -6,6 +6,6 @@
     "default_path": "index.html"
   },
   "background": { "service_worker": "background.js", "type": "module" },
-  "permissions": ["sidePanel", "scripting", "activeTab"],
+  "permissions": ["sidePanel", "scripting", "activeTab", "contextMenus"],
   "host_permissions": ["https://*/*", "http://*/*"]
 }
