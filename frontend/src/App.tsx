@@ -2,6 +2,7 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '../public/vite.svg';
 import './App.css';
 import { setUpMessageHandler } from './panel/messageHandler';
+import ClickedElementsDisplay from './panel/ClickedElementsDisplay';
 
 function App() {
   setUpMessageHandler();
@@ -43,6 +44,7 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
+      <ClickedElementsDisplay />
     </>
   );
 }
