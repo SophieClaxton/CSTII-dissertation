@@ -1,23 +1,19 @@
-alert('content script injected');
-
-// setup port
-const contentPort = chrome.runtime.connect({ name: 'content' });
-
 // managing element clickability
 let isClickable = false;
-
-contentPort.onMessage.addListener((message) => {
-  if (message.type === 'toggle_clickability') {
-    console.log('toggling clickability');
-    isClickable = !isClickable;
-    updateClassList();
-  }
-});
-
 const selectableElementTags = ['img', 'a', 'button', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
+const setupClickabilityListener = () => {
+  chrome.runtime.onMessage.addListener((message) => {
+    console.log('received message');
+    if (message.type === 'toggle_clickability') {
+      isClickable = !isClickable;
+      console.log(`set clickability to ${isClickable}`);
+      updateClassList();
+    }
+  });
+};
+
 const updateClassList = () => {
-  alert('updating element class lists');
   document.querySelectorAll('*').forEach((element) => {
     if (selectableElementTags.includes(element.tagName.toLowerCase())) {
       if (isClickable) {
@@ -28,17 +24,21 @@ const updateClassList = () => {
     }
   });
 };
-updateClassList();
 
-document.querySelectorAll('*').forEach((element) => {
-  if (selectableElementTags.includes(element.tagName.toLowerCase())) {
-    console.log(element.tagName);
-    element.addEventListener('click', () => {
-      if (isClickable) {
-        alert('Clicked element');
-        const message = { type: 'clicked_element', element: element.outerHTML };
-        contentPort.postMessage(message);
-      }
-    });
-  }
-});
+const addClickListeners = () => {
+  document.querySelectorAll('*').forEach((element) => {
+    if (selectableElementTags.includes(element.tagName.toLowerCase())) {
+      element.addEventListener('click', () => {
+        if (isClickable) {
+          const message = { type: 'clicked_element', element: element.outerHTML };
+          console.log('sending message');
+          chrome.runtime.sendMessage(message);
+        }
+      });
+    }
+  });
+};
+
+setupClickabilityListener();
+updateClassList();
+addClickListeners();

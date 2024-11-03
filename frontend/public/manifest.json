@@ -11,12 +11,11 @@
   "background": { "service_worker": "background.js", "type": "module" },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "css": ["assets/clickable.css"],
-      "js": ["content.js"],
-      "run_at": "document_end"
+      "css": ["./assets/clickable.css"],
+      "js": ["./content.js"],
+      "matches": ["<all_urls>"]
     }
   ],
   "permissions": ["sidePanel", "scripting", "activeTab", "contextMenus"],
-  "host_permissions": ["https://*/*", "http://*/*"]
+  "host_permissions": ["<all_urls>"]
 }

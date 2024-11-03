@@ -1,6 +1,5 @@
 export enum Port {
   SidePanel = 'sidePanel',
-  Content = 'content',
 }
 
 export enum MessageType {
