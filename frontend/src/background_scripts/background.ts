@@ -21,6 +21,7 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.contextMenus.removeAll();
   chrome.contextMenus.create(closeSidePanelAction);
   chrome.sidePanel.open({ windowId: tab!.windowId });
+  // inject content scripts?
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {

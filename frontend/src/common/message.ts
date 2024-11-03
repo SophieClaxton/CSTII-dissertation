@@ -6,6 +6,7 @@ export enum Port {
 export enum MessageType {
   CloseSidePanel = 'close_side_panel',
   ClickedElement = 'clicked_element',
+  ToggleClickability = 'toggle_clickability',
 }
 
 export interface Message {

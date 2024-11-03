@@ -11,18 +11,21 @@ export default defineConfig({
       input: {
         main: 'index.html',
         background: './src/background_scripts/background.ts',
+        content: './src/content_scripts/content.ts',
+        clickable: './src/content_scripts/clickable.css',
       },
       output: {
         entryFileNames: (chunk) => {
           switch (chunk.name) {
             case 'background':
+            case 'content':
               return '[name].js';
             default:
               return 'assets/[name].[hash].js';
           }
         },
         chunkFileNames: 'assets/[name].[hash].js',
-        assetFileNames: 'assets/[name].[hash].[ext]',
+        assetFileNames: 'assets/[name].[ext]',
       },
     },
   },

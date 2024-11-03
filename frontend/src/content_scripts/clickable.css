@@ -1,0 +1,5 @@
+.clickable {
+  background-color: lightblue;
+  opacity: 0.1;
+  outline: 2px solid lightseagreen;
+}

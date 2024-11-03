@@ -1,33 +1,19 @@
 import { useState } from 'react';
 import { ClickedElementMessage, Message, MessageType } from '../common/message';
-import { highlight_clickable_css, makeElementsClickable } from '../content_scripts/makeElementsClickable';
+import { content_port } from './messageHandler';
+
+enum ButtonFunc {
+  StartSelecting,
+  StopSelecting,
+}
 
 const ClickedElementsDisplay = () => {
   const startSelectingElements = async () => {
     setButtonLabel('Stop Selecting Elements');
-    const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+    setButtonAction(ButtonFunc.StopSelecting);
 
-    await chrome.scripting
-      .executeScript({
-        target: { tabId: tab.id! },
-        func: makeElementsClickable,
-      })
-      .then(() => console.log('registration complete'))
-      .catch((err) => console.warn('unexpected error', err));
-    chrome.scripting.insertCSS({ target: { tabId: tab.id! }, css: highlight_clickable_css });
-    setButtonAction(false);
-
-    chrome.tabs.onUpdated.addListener((tabId, change, tab) => {
-      if (change.url && tabId === tab.id!) {
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id! },
-          func: makeElementsClickable,
-        });
-        chrome.scripting.insertCSS({ target: { tabId: tab.id! }, css: highlight_clickable_css });
-      }
-    });
-
-    chrome.runtime.onMessage.addListener((message: Message) => {
+    content_port.postMessage({ type: 'toggle_clickability' });
+    content_port.onMessage.addListener((message: Message) => {
       if (message.type === MessageType.ClickedElement) {
         console.log('setting element');
         const elementText = (message as ClickedElementMessage).element;
@@ -38,16 +24,20 @@ const ClickedElementsDisplay = () => {
 
   const stopSelectingElements = () => {
     setButtonLabel('Start Selecting Elements');
-    setButtonAction(true);
+    setButtonAction(ButtonFunc.StartSelecting);
+
+    content_port.postMessage({ type: 'toggle_clickability' });
   };
 
   const [buttonLabel, setButtonLabel] = useState('Start Selecting Elements');
-  const [buttonAction, setButtonAction] = useState<boolean>(true);
+  const [buttonAction, setButtonAction] = useState<ButtonFunc>(ButtonFunc.StartSelecting);
   const [element, setElement] = useState<string | undefined>(undefined);
 
   return (
     <div style={{ display: 'block' }}>
-      <button onClick={buttonAction ? startSelectingElements : stopSelectingElements}>{buttonLabel}</button>
+      <button onClick={buttonAction === ButtonFunc.StartSelecting ? startSelectingElements : stopSelectingElements}>
+        {buttonLabel}
+      </button>
       {element && <p>{element}</p>}
     </div>
   );
