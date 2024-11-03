@@ -2,7 +2,7 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '../public/vite.svg';
 import './App.css';
 import { setUpMessageHandler } from './panel/messageHandler';
-import ClickedElementsDisplay from './panel/ClickedElementsDisplay';
+import ClickedElementsDisplay from './panel/components/ClickedElementsDisplay';
 
 function App() {
   setUpMessageHandler();

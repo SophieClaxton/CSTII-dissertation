@@ -1,9 +1,14 @@
 .clickable {
-  background-color: rgba(173, 216, 230, 0.1);
-  outline: 2px solid lightseagreen;
+  background-color: rgba(173, 216, 230, 0.1) !important;
+  outline: 2px solid lightseagreen !important;
 }
 
 .clickable :hover {
-  outline: 4px solid lightseagreen;
-  cursor: pointer;
+  outline: 4px solid lightseagreen !important;
+  cursor: pointer !important;
+}
+
+.focussed-on {
+  background-color: rgba(255, 64, 249, 0.421) !important;
+  outline: 2px solid rgb(225, 0, 255) !important;
 }
