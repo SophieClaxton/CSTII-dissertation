@@ -1,6 +1,7 @@
 .clickable {
-  background-color: rgba(173, 216, 230, 0.1) !important;
+  /* background-color: rgba(173, 216, 230, 0.1) !important; */
   outline: 2px solid lightseagreen !important;
+  box-shadow: 0 0 8px 2px !important;
 }
 
 .clickable :hover {
@@ -9,6 +10,7 @@
 }
 
 .focussed-on {
-  background-color: rgba(255, 64, 249, 0.421) !important;
+  /* background-color: rgba(255, 64, 249, 0.421) !important; */
+  box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.50) !important;
   outline: 2px solid rgb(225, 0, 255) !important;
 }
