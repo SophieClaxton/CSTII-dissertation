@@ -9,6 +9,13 @@
     "default_title": "sc2370"
   },
   "background": { "service_worker": "background.js", "type": "module" },
+  "content_scripts": [
+    {
+      "css": ["./assets/clickable.css"],
+      "js": ["./content.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "permissions": ["sidePanel", "scripting", "activeTab", "contextMenus"],
-  "host_permissions": ["https://*/*", "http://*/*"]
+  "host_permissions": ["<all_urls>"]
 }

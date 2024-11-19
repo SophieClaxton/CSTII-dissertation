@@ -1,5 +1,5 @@
 import { ContextMenuActions, openSidePanelAction, closeSidePanelAction } from './contextMenuActions';
-import { MessageType, Port } from '../common/message';
+import { Message, MessageType, Port } from '../common/message';
 
 /*
 Chrome only allows one action item on the main context menu per extension.
@@ -31,7 +31,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 
   if (info.menuItemId === ContextMenuActions.CloseSidePanel) {
-    chrome.runtime.sendMessage(MessageType.CloseSidePanel);
+    const message: Message = { type: MessageType.CloseSidePanel };
+    chrome.runtime.sendMessage(message);
     chrome.contextMenus.removeAll();
     chrome.contextMenus.create(openSidePanelAction);
   }
