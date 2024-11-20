@@ -10,6 +10,7 @@ interface SubsectionProps {
 const Subsection: React.FC<SubsectionProps> = ({ subsection }) => {
   return (
     <div className="subsection">
+      <p>{subsection.answer}</p>
       {subsection.innerSteps.map((step) => (
         <InnerStep step={step} />
       ))}

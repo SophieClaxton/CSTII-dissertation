@@ -9,6 +9,7 @@ interface EditorProgram {
 
 interface EditorSubsection {
   id: number;
+  answer: 'yes' | 'no';
   innerSteps: EditorInnerStep[];
   endStep: EditorFollowStep | undefined;
 }

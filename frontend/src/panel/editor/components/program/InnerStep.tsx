@@ -10,11 +10,9 @@ const InnerStep: React.FC<InnerStepProps> = ({ step }) => {
   switch (step.type) {
     case EditorStepType.UserDecision:
       return (
-        <div className="user-decision-group">
-          <div className="step">
-            <p>{step.type.toUpperCase()}</p>
-            <p>{step.question}</p>
-          </div>
+        <div className="step">
+          <p>{step.type.toUpperCase()}</p>
+          <p>{step.question}</p>
           <div className="decision-outcomes">
             <Subsection subsection={step.choice1} />
             <Subsection subsection={step.choice2} />

@@ -1,4 +1,4 @@
-import Program from './components/program/Program';
+import ProgramFlow from './components/node/ProgramFlow';
 import testEditorProgram from './consts/testEditorProgram';
 import './styles/editor.css';
 
@@ -16,7 +16,7 @@ const Editor: React.FC<EditorProps> = ({ goHome }) => {
         </button>
       </div>
       {/* <DisplayProgram program={testASTProgram} /> */}
-      <Program program={testEditorProgram} />
+      <ProgramFlow program={testEditorProgram} />
     </div>
   );
 };
