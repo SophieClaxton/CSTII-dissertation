@@ -6,7 +6,7 @@ import {
   ASTReadNode,
   ASTSubsectionNode,
   ASTUserDecisionNode,
-} from '../models/Program';
+} from '../../models/AST';
 
 const endNode: ASTEndNode = {
   type: ASTNodeType.End,
@@ -41,7 +41,7 @@ const clickNode: ASTClickNode = {
   next: decisionNode,
 };
 
-const testProgram: ASTProgramNode = {
+const testASTProgram: ASTProgramNode = {
   type: ASTNodeType.Program,
   name: 'Test Program',
   author: 'Sophie',
@@ -53,4 +53,4 @@ const testProgram: ASTProgramNode = {
   },
 };
 
-export default testProgram;
+export default testASTProgram;

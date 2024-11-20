@@ -1,4 +1,4 @@
-import { ASTSubsectionNode } from '../../models/Program';
+import { ASTSubsectionNode } from '../../models/AST';
 import DisplayStep from './DisplayStep';
 
 interface DisplaySubsectionProps {
