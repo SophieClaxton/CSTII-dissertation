@@ -1,5 +1,5 @@
 import DisplayProgram from './components/DisplayProgram';
-import testProgram from './testProgram';
+import testASTProgram from './consts/testASTProgram';
 import './styles/editor.css';
 
 interface EditorProps {
@@ -15,7 +15,7 @@ const Editor: React.FC<EditorProps> = ({ goHome }) => {
           Back
         </button>
       </div>
-      <DisplayProgram program={testProgram} />
+      <DisplayProgram program={testASTProgram} />
     </div>
   );
 };
