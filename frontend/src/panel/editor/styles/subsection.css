@@ -1,0 +1,10 @@
+.subsection {
+  border-radius: 1rem;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1rem;
+  background-color: dimgray;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

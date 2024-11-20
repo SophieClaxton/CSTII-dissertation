@@ -21,7 +21,7 @@ interface EditorSection {
   endStep: EditorFollowStep | undefined;
 }
 
-enum EditorStepName {
+enum EditorStepType {
   Follow = 'Follow',
   Click = 'Click',
   Read = 'Read',
@@ -35,7 +35,7 @@ enum EditorStepName {
 }
 
 interface EditorStep {
-  name: EditorStepName;
+  type: EditorStepType;
   element: InterfaceElement | undefined;
 }
 
@@ -48,28 +48,28 @@ type EditorInnerStep =
   | EditorInputStep;
 
 interface EditorFollowStep extends EditorStep {
-  name: EditorStepName.Follow;
+  type: EditorStepType.Follow;
   nextSectionId: number;
 }
 
 interface EditorClickStep extends EditorStep {
-  name: EditorStepName.Click;
+  type: EditorStepType.Click;
 }
 
 interface EditorReadStep extends EditorStep {
-  name: EditorStepName.Read;
+  type: EditorStepType.Read;
 }
 
 interface EditorScrollToStep extends EditorStep {
-  name: EditorStepName.Read;
+  type: EditorStepType.Read;
 }
 
 interface EditorDragStep extends EditorStep {
-  name: EditorStepName.Drag;
+  type: EditorStepType.Drag;
 }
 
 interface EditorUserDecisionStep {
-  name: EditorStepName.UserDecision;
+  type: EditorStepType.UserDecision;
   question: string | undefined;
   choice1: EditorSubsection;
   choice2: EditorSubsection;
@@ -78,29 +78,30 @@ interface EditorUserDecisionStep {
 type EditorInputStep = EditorWriteStep | EditorSelectStep | EditorCheckStep | EditorDrawStep;
 
 interface EditorInputStepBase {
+  type: EditorStepType;
   element: InterfaceElement;
   description?: string;
 }
 
 interface EditorWriteStep extends EditorInputStepBase {
-  name: EditorStepName.Write;
+  type: EditorStepType.Write;
 }
 
 interface EditorSelectStep extends EditorInputStepBase {
-  name: EditorStepName.Write;
+  type: EditorStepType.Write;
 }
 
 interface EditorCheckStep extends EditorInputStepBase {
-  name: EditorStepName.Write;
+  type: EditorStepType.Write;
 }
 
 interface EditorDrawStep {
-  name: EditorStepName.Write;
+  type: EditorStepType.Write;
   element: InterfaceElement;
   description: string;
 }
 
-export { EditorStepName };
+export { EditorStepType };
 export type {
   EditorProgram,
   EditorSection,

@@ -4,35 +4,35 @@ import {
   EditorProgram,
   EditorReadStep,
   EditorSection,
-  EditorStepName,
+  EditorStepType,
   EditorSubsection,
   EditorUserDecisionStep,
   EditorWriteStep,
 } from '../../models/ProgramComponent';
 
 const followNode: EditorFollowStep = {
-  name: EditorStepName.Follow,
+  type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'A', url: 'www.url1.com' },
   nextSectionId: 2,
 };
 
 const readNode: EditorReadStep = {
-  name: EditorStepName.Read,
+  type: EditorStepType.Read,
   element: { outerHTML: '', tag: 'P', url: 'www.url1.com' },
 };
 
 const clickNode: EditorClickStep = {
-  name: EditorStepName.Click,
+  type: EditorStepType.Click,
   element: { outerHTML: '', tag: 'BUTTON', url: 'www.url1.com' },
 };
 
 const writeNode: EditorWriteStep = {
-  name: EditorStepName.Write,
+  type: EditorStepType.Write,
   element: { outerHTML: '', tag: 'INPUT', url: 'www.url1.com' },
 };
 
 const readNode2: EditorReadStep = {
-  name: EditorStepName.Read,
+  type: EditorStepType.Read,
   element: { outerHTML: '', tag: 'P', url: 'www.url2.com' },
 };
 
@@ -49,7 +49,7 @@ const subsection2: EditorSubsection = {
 };
 
 const decisionNode: EditorUserDecisionStep = {
-  name: EditorStepName.UserDecision,
+  type: EditorStepType.UserDecision,
   question: 'Are you older than 20?',
   choice1: subsection1,
   choice2: subsection2,

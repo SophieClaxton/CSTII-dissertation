@@ -1,4 +1,4 @@
-import { ASTProgramNode } from '../../models/AST';
+import { ASTProgramNode } from '../../../models/AST';
 import DisplaySection from './DisplaySection';
 
 interface DisplayProgramProps {
