@@ -6,21 +6,21 @@
 .program-meta-data {
   width: 100%;
   box-sizing: border-box;
-  padding: 0 1rem 1rem;
   align-self: flex-start;
   display: flex;
   flex-direction: column;
   text-align: left;
+  padding: 0 1rem 1rem 1rem;
 }
 
 .program-code {
+  width: 100%;
+  height: 70vh;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   background-color: white;
   box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.5) inset;
-  padding: 0 2rem 0 2rem;
-  overflow: scroll;
 }
 
 .start-block {
@@ -34,4 +34,15 @@
   margin-top: 2rem;
   margin-left: 1rem;
   background-color: darkgray;
+}
+
+.start-node {
+  border-radius: 1rem;
+  width: 4rem;
+  height: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: lightgreen;
 }

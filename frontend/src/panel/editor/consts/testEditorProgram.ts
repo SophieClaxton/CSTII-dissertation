@@ -38,12 +38,14 @@ const readNode2: EditorReadStep = {
 
 const subsection1: EditorSubsection = {
   id: 3,
+  answer: 'yes',
   innerSteps: [clickNode],
   endStep: undefined,
 };
 
 const subsection2: EditorSubsection = {
   id: 3,
+  answer: 'no',
   innerSteps: [writeNode],
   endStep: undefined,
 };
