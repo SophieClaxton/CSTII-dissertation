@@ -1,5 +1,5 @@
-import ProgramFlow from './components/node/ProgramFlow';
-import testEditorProgram from './consts/testEditorProgram';
+import XarrowProgramFlow from './components/EditorNode/ProgramFlow';
+import { EditorProgramContextProvider } from './contexts/EditorProgramContext';
 import './styles/editor.css';
 
 interface EditorProps {
@@ -15,8 +15,9 @@ const Editor: React.FC<EditorProps> = ({ goHome }) => {
           Back
         </button>
       </div>
-      {/* <DisplayProgram program={testASTProgram} /> */}
-      <ProgramFlow program={testEditorProgram} />
+      <EditorProgramContextProvider>
+        <XarrowProgramFlow />
+      </EditorProgramContextProvider>
     </div>
   );
 };
