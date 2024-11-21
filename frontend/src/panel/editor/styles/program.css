@@ -46,3 +46,11 @@
   justify-content: center;
   background-color: lightgreen;
 }
+
+.react-flow__edges svg {
+  z-index: 2000 !important;
+}
+
+.react-flow__edge path {
+  stroke: black;
+}

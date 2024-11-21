@@ -1,9 +1,10 @@
-import { EditorProgram } from '../../../models/ProgramComponent';
+import { EditorFollowStep, EditorProgram } from '../../../models/ProgramComponent';
 import {
   applyEdgeChanges,
   applyNodeChanges,
   Background,
   Controls,
+  Edge,
   EdgeChange,
   Node,
   NodeChange,
@@ -14,6 +15,13 @@ import '../../styles/program.css';
 import '../../styles/section.css';
 import SectionNode from './SectionNode';
 import { useCallback, useState } from 'react';
+import {
+  mapEditorFollowStepToFollowNode,
+  mapEditorSectionToSectionNode,
+} from '../../../models/mappers/programComponentMapper';
+import FollowNode from './FollowNode';
+import { getFollowSteps } from '../../flowUtils/getNodes';
+import { getFollowEdge } from '../../flowUtils/getEdges';
 
 interface ProgramFlowProps {
   program: EditorProgram;
@@ -27,18 +35,19 @@ const ProgramFlow: React.FC<ProgramFlowProps> = ({ program }) => {
     data: { label: 'START' },
     className: 'start-node',
   };
-  const sectionNodes: Node[] = program.sections.map((section) => ({
-    id: section.id.toString(),
-    type: 'output',
-    position: { x: 16, y: 64 + (section.id - 1) * 480 },
-    data: { label: <SectionNode section={section} /> },
-    className: 'section',
-  }));
+  const sectionNodes: Node[] = program.sections.map((section, index) =>
+    mapEditorSectionToSectionNode(section, <SectionNode section={section} />, index),
+  );
+  const followSteps: EditorFollowStep[] = program.sections.map(getFollowSteps).flat();
+  const followNodes: Node[] = followSteps.map((followNode) =>
+    mapEditorFollowStepToFollowNode(followNode, <FollowNode step={followNode} />),
+  );
 
-  const initialEdges = [{ id: 'start-1', source: 'start', target: sectionNodes[0].id }];
+  const initialEdge = { id: 'start-1', source: 'start', target: sectionNodes[0].id };
+  const followEdges: Edge[] = followSteps.map(getFollowEdge);
 
-  const [nodes, setNodes] = useState([startNode, ...sectionNodes]);
-  const [edges, setEdges] = useState(initialEdges);
+  const [nodes, setNodes] = useState<Node[]>([startNode, ...sectionNodes, ...followNodes]);
+  const [edges, setEdges] = useState<Edge[]>([initialEdge, ...followEdges]);
 
   const onNodesChange = useCallback(
     (changes: NodeChange<Node>[]) => setNodes((nds) => applyNodeChanges(changes, nds)),

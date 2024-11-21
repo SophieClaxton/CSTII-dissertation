@@ -8,14 +8,14 @@ interface EditorProgram {
 }
 
 interface EditorSubsection {
-  id: number;
+  id: string;
   answer: 'yes' | 'no';
   innerSteps: EditorInnerStep[];
   endStep: EditorFollowStep | undefined;
 }
 
 interface EditorSection {
-  id: number;
+  id: string;
   url: string;
   name?: string;
   innerSteps: EditorInnerStep[];
@@ -50,7 +50,8 @@ type EditorInnerStep =
 
 interface EditorFollowStep extends EditorStep {
   type: EditorStepType.Follow;
-  nextSectionId: number;
+  nextSectionId: string;
+  parentSectionId: string;
 }
 
 interface EditorClickStep extends EditorStep {

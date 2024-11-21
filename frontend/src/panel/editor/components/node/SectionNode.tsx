@@ -1,5 +1,4 @@
 import { EditorSection } from '../../../models/ProgramComponent';
-import FollowStep from '../program/FollowStep';
 import InnerStep from '../program/InnerStep';
 import '../../styles/section.css';
 
@@ -17,7 +16,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
       {section.innerSteps.map((step) => (
         <InnerStep step={step} />
       ))}
-      {section.endStep && <FollowStep step={section.endStep} />}
+      {section.endStep && <div className="empty-follow"></div>}
     </>
   );
 };

@@ -4,8 +4,9 @@
   border-radius: 0.5rem;
   box-sizing: border-box;
   padding: 0.5rem;
-  background-color: darkslategrey;
-  color: white;
+  background-color: rgb(255, 255, 255);
+  outline: 2px solid rgb(60, 60, 60);
+  color: black;
 }
 
 .user-decision-group {
@@ -18,6 +19,15 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.follow-step {
+  width: 22rem;
+  border: none;
+}
+
+.follow-step:focus {
+  outline: 3px solid rgb(60, 60, 60) !important;
 }

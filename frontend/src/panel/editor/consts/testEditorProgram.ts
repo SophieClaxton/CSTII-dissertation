@@ -13,7 +13,8 @@ import {
 const followNode: EditorFollowStep = {
   type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'A', url: 'www.url1.com' },
-  nextSectionId: 2,
+  nextSectionId: '2',
+  parentSectionId: '1',
 };
 
 const readNode: EditorReadStep = {
@@ -37,14 +38,14 @@ const readNode2: EditorReadStep = {
 };
 
 const subsection1: EditorSubsection = {
-  id: 3,
+  id: '3',
   answer: 'yes',
   innerSteps: [clickNode],
   endStep: undefined,
 };
 
 const subsection2: EditorSubsection = {
-  id: 3,
+  id: '4',
   answer: 'no',
   innerSteps: [writeNode],
   endStep: undefined,
@@ -58,14 +59,14 @@ const decisionNode: EditorUserDecisionStep = {
 };
 
 const section1: EditorSection = {
-  id: 1,
+  id: '1',
   url: 'www.url1.com',
   innerSteps: [readNode, decisionNode],
   endStep: followNode,
 };
 
 const section2: EditorSection = {
-  id: 2,
+  id: '2',
   url: 'www.url2.com',
   innerSteps: [readNode2],
   endStep: undefined,
