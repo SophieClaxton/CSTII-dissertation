@@ -21,7 +21,7 @@ const ProgramFlow: React.FC<ProgramFlowProps> = ({ program }) => {
   const updateArrows = useXarrow();
 
   return (
-    <div className="program">
+    <>
       <div className="program-meta-data">
         <h2>{program.name}</h2>
         <h3>{program.author}</h3>
@@ -42,7 +42,7 @@ const ProgramFlow: React.FC<ProgramFlowProps> = ({ program }) => {
           </Xwrapper>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
