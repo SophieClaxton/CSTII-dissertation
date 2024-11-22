@@ -67,7 +67,7 @@ const ProgramFlow: React.FC<ProgramFlowProps> = ({ program }) => {
         <h3>{program.author}</h3>
         <h3>{program.dateCreated}</h3>
       </div>
-      <div className="program-code xy-flow-container">
+      <div className="xy-program-code">
         <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} fitView>
           <Background />
           <Controls />

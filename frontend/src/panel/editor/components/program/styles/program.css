@@ -13,7 +13,7 @@
   padding: 0 1rem 1rem 1rem;
 }
 
-.program-code {
+.xy-program-code {
   width: 100%;
   height: 70vh;
   display: flex;
@@ -53,8 +53,4 @@
 
 .react-flow__edge path {
   stroke: black;
-}
-
-.xy-flow-container {
-  margin: 0;
 }

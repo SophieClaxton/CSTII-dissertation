@@ -1,4 +1,4 @@
-.step {
+.xy-step {
   width: 100%;
   min-width: 8rem;
   border-radius: 0.5rem;
@@ -23,7 +23,7 @@
   margin-top: 0.5rem;
 }
 
-.follow-step {
+.xy-follow-step {
   width: 22rem;
   border: none;
 }

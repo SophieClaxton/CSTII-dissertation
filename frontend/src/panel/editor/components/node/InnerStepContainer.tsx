@@ -16,8 +16,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import InnerStepNode from './InnerStepNode';
-import { useXarrow } from 'react-xarrows';
+import InnerStep from '../program/InnerStep';
 
 interface InnerStepContainerProps {
   innerSteps: EditorInnerStep[];
@@ -29,7 +28,6 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({ innerSteps }) =
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
-  const updateArrows = useXarrow();
 
   const handleDragEvent = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -44,17 +42,10 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({ innerSteps }) =
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={(event: DragEndEvent) => {
-        handleDragEvent(event);
-        updateArrows();
-      }}
-    >
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEvent}>
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {items.map((id) => (
-          <InnerStepNode step={innerSteps.find((step) => step.id === id)!} />
+          <InnerStep step={innerSteps.find((step) => step.id === id)!} />
         ))}
       </SortableContext>
     </DndContext>
