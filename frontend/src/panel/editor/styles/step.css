@@ -23,11 +23,6 @@
   margin-top: 0.5rem;
 }
 
-.follow-step {
-  width: 22rem;
-  border: none;
-}
-
 .follow-step:focus {
   outline: 3px solid rgb(60, 60, 60) !important;
 }

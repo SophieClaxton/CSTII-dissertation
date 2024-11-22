@@ -1,4 +1,4 @@
-import ProgramFlow from './components/node/ProgramFlow';
+import ProgramFlow from './components/xarrowNode/ProgramFlow';
 import testEditorProgram from './consts/testEditorProgram';
 import './styles/editor.css';
 

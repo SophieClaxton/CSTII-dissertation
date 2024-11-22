@@ -11,7 +11,7 @@ const mapEditorSectionToSectionNode = (section: EditorSection, sectionElement: R
 });
 
 const mapEditorFollowStepToId = (followStep: EditorFollowStep) => {
-  return `${followStep.parentSectionId}-F`;
+  return `${followStep.parentSectionId}F`;
 };
 
 const mapEditorFollowStepToFollowNode = (followStep: EditorFollowStep, followStepElement: ReactNode): Node => ({
