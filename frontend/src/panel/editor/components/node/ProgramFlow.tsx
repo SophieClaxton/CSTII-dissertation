@@ -11,8 +11,8 @@ import {
   ReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import '../../styles/program.css';
-import '../../styles/section.css';
+import '../program/styles/program.css';
+import '../program/styles/section.css';
 import SectionNode from './SectionNode';
 import { useCallback, useState } from 'react';
 import {
@@ -67,7 +67,7 @@ const ProgramFlow: React.FC<ProgramFlowProps> = ({ program }) => {
         <h3>{program.author}</h3>
         <h3>{program.dateCreated}</h3>
       </div>
-      <div className="program-code">
+      <div className="program-code xy-flow-container">
         <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} fitView>
           <Background />
           <Controls />

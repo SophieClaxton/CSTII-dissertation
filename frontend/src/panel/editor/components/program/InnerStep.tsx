@@ -1,6 +1,6 @@
 import { EditorInnerStep, EditorStepType } from '../../../models/ProgramComponent';
 import Subsection from './Subsection';
-import '../../styles/step.css';
+import './styles/step.css';
 
 interface InnerStepProps {
   step: EditorInnerStep;

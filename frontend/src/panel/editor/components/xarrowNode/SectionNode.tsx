@@ -1,5 +1,5 @@
 import { EditorSection } from '../../../models/ProgramComponent';
-import '../../styles/section.css';
+import './styles/section.css';
 import FollowNode from './FollowNode';
 import InnerStepContainer from './InnerStepContainer';
 

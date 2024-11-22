@@ -1,6 +1,6 @@
 import { mapEditorFollowStepToId } from '../../../models/mappers/programComponentMapper';
 import { EditorFollowStep } from '../../../models/ProgramComponent';
-import '../../styles/step.css';
+import './styles/step.css';
 
 interface FollowNodeProps {
   step: EditorFollowStep;

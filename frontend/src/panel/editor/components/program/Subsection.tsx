@@ -1,7 +1,7 @@
 import { EditorSubsection } from '../../../models/ProgramComponent';
 import FollowStep from './FollowStep';
 import InnerStep from './InnerStep';
-import '../../styles/subsection.css';
+import './styles/subsection.css';
 
 interface SubsectionProps {
   subsection: EditorSubsection;

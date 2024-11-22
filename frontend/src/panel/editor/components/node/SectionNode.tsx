@@ -1,6 +1,6 @@
 import { EditorSection } from '../../../models/ProgramComponent';
 import InnerStep from '../program/InnerStep';
-import '../../styles/section.css';
+import '../program/styles/section.css';
 
 interface SectionProps {
   section: EditorSection;

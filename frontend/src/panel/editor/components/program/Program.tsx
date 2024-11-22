@@ -1,6 +1,6 @@
 import { EditorProgram } from '../../../models/ProgramComponent';
 import Section from './Section';
-import '../../styles/program.css';
+import './styles/program.css';
 
 interface ProgramProps {
   program: EditorProgram;

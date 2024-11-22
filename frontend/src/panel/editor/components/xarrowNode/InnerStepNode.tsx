@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { EditorInnerStep, EditorStepType } from '../../../models/ProgramComponent';
 import { CSS } from '@dnd-kit/utilities';
-import '../../styles/step.css';
+import './styles/step.css';
 import SubsectionNode from './SubsectionNode';
 
 interface InnerStepNodeProps {

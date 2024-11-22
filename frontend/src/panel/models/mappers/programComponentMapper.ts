@@ -20,7 +20,7 @@ const mapEditorFollowStepToFollowNode = (followStep: EditorFollowStep, followSte
   position: { x: 16, y: 294 },
   data: { label: followStepElement },
   className: 'step follow-step',
-  parentId: followStep.parentSectionId,
+  parentId: followStep.parentSectionId[0],
   draggable: false,
 });
 

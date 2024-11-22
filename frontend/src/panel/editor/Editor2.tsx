@@ -1,4 +1,4 @@
-import XarrowProgramFlow from './components/xarrowNode/ProgramFlow';
+import XYFlowProgramFlow from './components/node/ProgramFlow';
 import testEditorProgram from './consts/testEditorProgram';
 import './styles/editor.css';
 
@@ -15,7 +15,7 @@ const Editor: React.FC<EditorProps> = ({ goHome }) => {
           Back
         </button>
       </div>
-      <XarrowProgramFlow program={testEditorProgram} />
+      <XYFlowProgramFlow program={testEditorProgram} />
     </div>
   );
 };

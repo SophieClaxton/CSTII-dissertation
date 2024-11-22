@@ -3,7 +3,7 @@ import { EditorFollowStep, EditorProgram } from '../../../models/ProgramComponen
 import SectionNode from './SectionNode';
 import { getFollowSteps } from '../../flowUtils/getNodes';
 import { getFollowEdge } from '../../flowUtils/getEdges';
-import '../../styles/program.css';
+import './styles/program.css';
 
 interface ProgramFlowProps {
   program: EditorProgram;
@@ -14,9 +14,6 @@ const ProgramFlow: React.FC<ProgramFlowProps> = ({ program }) => {
   const followSteps: EditorFollowStep[] = program.sections.map(getFollowSteps).flat();
   const followEdges = followSteps.map(getFollowEdge);
   const edges = [initialEdge, ...followEdges];
-
-  console.log(followSteps);
-  console.log(edges);
 
   const updateArrows = useXarrow();
 
