@@ -11,6 +11,7 @@ import {
 } from '../../models/ProgramComponent';
 
 const followNode: EditorFollowStep = {
+  id: 5,
   type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'A', url: 'www.url1.com' },
   nextSectionId: '2',
@@ -18,16 +19,19 @@ const followNode: EditorFollowStep = {
 };
 
 const readNode: EditorReadStep = {
+  id: 1,
   type: EditorStepType.Read,
   element: { outerHTML: '', tag: 'P', url: 'www.url1.com' },
 };
 
 const clickNode: EditorClickStep = {
+  id: 3,
   type: EditorStepType.Click,
   element: { outerHTML: '', tag: 'BUTTON', url: 'www.url1.com' },
 };
 
 const writeNode: EditorWriteStep = {
+  id: 4,
   type: EditorStepType.Write,
   element: { outerHTML: '', tag: 'INPUT', url: 'www.url1.com' },
 };
@@ -47,6 +51,7 @@ const subsection2: EditorSubsection = {
 };
 
 const decisionNode: EditorUserDecisionStep = {
+  id: 2,
   type: EditorStepType.UserDecision,
   question: 'Are you older than 20?',
   choice1: subsection1,
@@ -61,11 +66,13 @@ const section1: EditorSection = {
 };
 
 const readNode2: EditorReadStep = {
+  id: 1,
   type: EditorStepType.Read,
   element: { outerHTML: '', tag: 'P', url: 'www.url2.com' },
 };
 
 const followNodeSub21: EditorFollowStep = {
+  id: 3,
   type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'P', url: 'www.url3.com' },
   nextSectionId: '3',
@@ -73,6 +80,7 @@ const followNodeSub21: EditorFollowStep = {
 };
 
 const followNodeSub22: EditorFollowStep = {
+  id: 4,
   type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'P', url: 'www.url4.com' },
   nextSectionId: '4',
@@ -94,6 +102,7 @@ const subsection22: EditorSubsection = {
 };
 
 const userDecision2: EditorUserDecisionStep = {
+  id: 2,
   type: EditorStepType.UserDecision,
   question: 'Are you hungry?',
   choice1: subsection12,

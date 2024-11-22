@@ -36,6 +36,7 @@ enum EditorStepType {
 }
 
 interface EditorStep {
+  id: number;
   type: EditorStepType;
   element: InterfaceElement | undefined;
 }
@@ -71,6 +72,7 @@ interface EditorDragStep extends EditorStep {
 }
 
 interface EditorUserDecisionStep {
+  id: number;
   type: EditorStepType.UserDecision;
   question: string | undefined;
   choice1: EditorSubsection;
@@ -79,9 +81,7 @@ interface EditorUserDecisionStep {
 
 type EditorInputStep = EditorWriteStep | EditorSelectStep | EditorCheckStep | EditorDrawStep;
 
-interface EditorInputStepBase {
-  type: EditorStepType;
-  element: InterfaceElement;
+interface EditorInputStepBase extends EditorStep {
   description?: string;
 }
 
@@ -98,6 +98,7 @@ interface EditorCheckStep extends EditorInputStepBase {
 }
 
 interface EditorDrawStep {
+  id: number;
   type: EditorStepType.Write;
   element: InterfaceElement;
   description: string;
