@@ -1,7 +1,7 @@
 import { EditorSection } from '../../../models/ProgramComponent';
 import './styles/section.css';
-import FollowNode from './FollowNode';
 import InnerStepContainer from './InnerStepContainer';
+import EndStepNode from './EndStepNode';
 
 interface SectionProps {
   section: EditorSection;
@@ -15,7 +15,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         <p>{section.url}</p>
       </div>
       <InnerStepContainer innerSteps={section.innerSteps} />
-      {section.endStep && <FollowNode step={section.endStep} />}
+      {section.endStep && <EndStepNode endStep={section.endStep} />}
     </div>
   );
 };

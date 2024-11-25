@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { EditorInnerStep, EditorStepType } from '../../../models/ProgramComponent';
 import { CSS } from '@dnd-kit/utilities';
 import './styles/step.css';
-import SubsectionNode from './SubsectionNode';
+import UserDecisionNode from './UserDecisionNode';
 
 interface InnerStepNodeProps {
   step: EditorInnerStep;
@@ -16,14 +16,10 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
   switch (step.type) {
     case EditorStepType.UserDecision:
       return (
-        <div className="step" ref={setNodeRef} style={style} {...attributes} {...listeners} key={step.id}>
-          <p>{step.type.toUpperCase()}</p>
-          <p>{step.question}</p>
-          <div className="decision-outcomes">
-            <SubsectionNode subsection={step.choice1} />
-            <SubsectionNode subsection={step.choice2} />
-          </div>
-        </div>
+        <UserDecisionNode
+          step={step}
+          sortableProps={{ setNodeRef: setNodeRef, style: style, attributes: attributes, listeners: listeners }}
+        />
       );
     default:
       return (

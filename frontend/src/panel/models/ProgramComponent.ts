@@ -11,7 +11,7 @@ interface EditorSubsection {
   id: string;
   answer: 'yes' | 'no';
   innerSteps: EditorInnerStep[];
-  endStep: EditorFollowStep | undefined;
+  endStep: EditorEndStep | undefined;
 }
 
 interface EditorSection {
@@ -19,7 +19,7 @@ interface EditorSection {
   url: string;
   name?: string;
   innerSteps: EditorInnerStep[];
-  endStep: EditorFollowStep | undefined;
+  endStep: EditorEndStep | undefined;
 }
 
 enum EditorStepType {
@@ -49,6 +49,8 @@ type EditorInnerStep =
   | EditorUserDecisionStep
   | EditorInputStep;
 
+type EditorEndStep = EditorFollowStep | EditorUserDecisionFollowStep;
+
 interface EditorFollowStep extends EditorStep {
   type: EditorStepType.Follow;
   nextSectionId: string;
@@ -71,12 +73,22 @@ interface EditorDragStep extends EditorStep {
   type: EditorStepType.Drag;
 }
 
+enum EditorUserDecisionEndsWithType {
+  Follow = 'Folow',
+  InnerStep = 'InnerStep',
+}
+
 interface EditorUserDecisionStep {
   id: number;
   type: EditorStepType.UserDecision;
   question: string | undefined;
   choice1: EditorSubsection;
   choice2: EditorSubsection;
+  endsWithFollow: EditorUserDecisionEndsWithType;
+}
+
+interface EditorUserDecisionFollowStep extends EditorUserDecisionStep {
+  endsWithFollow: EditorUserDecisionEndsWithType.Follow;
 }
 
 type EditorInputStep = EditorWriteStep | EditorSelectStep | EditorCheckStep | EditorDrawStep;
@@ -104,18 +116,20 @@ interface EditorDrawStep {
   description: string;
 }
 
-export { EditorStepType };
+export { EditorStepType, EditorUserDecisionEndsWithType };
 export type {
   EditorProgram,
   EditorSection,
   EditorSubsection,
   EditorInnerStep,
+  EditorEndStep,
   EditorFollowStep,
   EditorClickStep,
   EditorReadStep,
   EditorScrollToStep,
   EditorDragStep,
   EditorUserDecisionStep,
+  EditorUserDecisionFollowStep,
   EditorWriteStep,
   EditorSelectStep,
   EditorCheckStep,

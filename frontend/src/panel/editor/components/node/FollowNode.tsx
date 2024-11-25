@@ -1,5 +1,5 @@
 import { EditorFollowStep } from '../../../models/ProgramComponent';
-import '../program/styles/step.css';
+import './styles/step.css';
 
 interface FollowNodeProps {
   step: EditorFollowStep;

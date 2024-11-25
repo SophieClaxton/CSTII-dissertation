@@ -16,7 +16,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import InnerStep from '../program/InnerStep';
+import InnerStep from './InnerStep';
 
 interface InnerStepContainerProps {
   innerSteps: EditorInnerStep[];

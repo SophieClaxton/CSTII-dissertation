@@ -11,8 +11,8 @@ import {
   ReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import '../program/styles/program.css';
-import '../program/styles/section.css';
+import './styles/program.css';
+import './styles/section.css';
 import SectionNode from './SectionNode';
 import { useCallback, useState } from 'react';
 import {

@@ -1,5 +1,5 @@
 import { EditorSection } from '../../../models/ProgramComponent';
-import '../program/styles/section.css';
+import './styles/section.css';
 import InnerStepContainer from './InnerStepContainer';
 
 interface SectionProps {

@@ -1,7 +1,7 @@
 import { EditorSubsection } from '../../../models/ProgramComponent';
 import './styles/subsection.css';
-import FollowNode from './FollowNode';
 import InnerStepContainer from './InnerStepContainer';
+import EndStepNode from './EndStepNode';
 
 interface SubsectionNodeProps {
   subsection: EditorSubsection;
@@ -12,7 +12,7 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
     <div className="subsection">
       <p>{subsection.answer}</p>
       <InnerStepContainer innerSteps={subsection.innerSteps} />
-      {subsection.endStep && <FollowNode step={subsection.endStep} />}
+      {subsection.endStep && <EndStepNode endStep={subsection.endStep} />}
     </div>
   );
 };

@@ -6,6 +6,8 @@ import {
   EditorSection,
   EditorStepType,
   EditorSubsection,
+  EditorUserDecisionEndsWithType,
+  EditorUserDecisionFollowStep,
   EditorUserDecisionStep,
   EditorWriteStep,
 } from '../../models/ProgramComponent';
@@ -56,6 +58,7 @@ const decisionNode: EditorUserDecisionStep = {
   question: 'Are you older than 20?',
   choice1: subsection1,
   choice2: subsection2,
+  endsWithFollow: EditorUserDecisionEndsWithType.InnerStep,
 };
 
 const section1: EditorSection = {
@@ -101,19 +104,20 @@ const subsection22: EditorSubsection = {
   endStep: followNodeSub22,
 };
 
-const userDecision2: EditorUserDecisionStep = {
+const userDecision2: EditorUserDecisionFollowStep = {
   id: 2,
   type: EditorStepType.UserDecision,
   question: 'Are you hungry?',
   choice1: subsection12,
   choice2: subsection22,
+  endsWithFollow: EditorUserDecisionEndsWithType.Follow,
 };
 
 const section2: EditorSection = {
   id: '2',
   url: 'www.url2.com',
-  innerSteps: [readNode2, userDecision2],
-  endStep: undefined,
+  innerSteps: [readNode2],
+  endStep: userDecision2,
 };
 
 const section3: EditorSection = {
