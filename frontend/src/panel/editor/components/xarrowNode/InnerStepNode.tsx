@@ -23,7 +23,14 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
       );
     default:
       return (
-        <div className="step" ref={setNodeRef} style={style} {...attributes} {...listeners} key={step.id}>
+        <div
+          className="step draggable-step"
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+          key={step.id}
+        >
           <p>{step.type.toUpperCase()}</p>
           {step.element && <p>{step.element.tag}</p>}
         </div>

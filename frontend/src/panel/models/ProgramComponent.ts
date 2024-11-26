@@ -38,7 +38,7 @@ enum EditorStepType {
 interface EditorStep {
   id: number;
   type: EditorStepType;
-  element: InterfaceElement | undefined;
+  element?: InterfaceElement | undefined;
 }
 
 type EditorInnerStep =
@@ -109,11 +109,8 @@ interface EditorCheckStep extends EditorInputStepBase {
   type: EditorStepType.Write;
 }
 
-interface EditorDrawStep {
-  id: number;
+interface EditorDrawStep extends EditorInputStepBase {
   type: EditorStepType.Write;
-  element: InterfaceElement;
-  description: string;
 }
 
 export { EditorStepType, EditorUserDecisionEndsWithType };

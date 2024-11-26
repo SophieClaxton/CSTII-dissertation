@@ -1,5 +1,5 @@
 import { DraggableAttributes } from '@dnd-kit/core';
-import { EditorUserDecisionStep } from '../../../models/ProgramComponent';
+import { EditorUserDecisionEndsWithType, EditorUserDecisionStep } from '../../../models/ProgramComponent';
 import SubsectionNode from './SubsectionNode';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 
@@ -22,7 +22,14 @@ const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({ step, sortableProps
   };
 
   return (
-    <div className="step" ref={setNodeRef} style={style} {...attributes} {...listeners} key={step.id}>
+    <div
+      className={`step ${step.endsWithFollow == EditorUserDecisionEndsWithType.InnerStep ? 'draggableStep' : ''}`}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      key={step.id}
+    >
       <p>{step.type.toUpperCase()}</p>
       <p>{step.question}</p>
       <div className="decision-outcomes">
