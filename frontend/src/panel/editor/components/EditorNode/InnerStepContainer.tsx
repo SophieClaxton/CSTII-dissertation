@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { EditorInnerStep } from '../../../models/ProgramComponent';
 import {
   closestCenter,
   DndContext,
@@ -18,6 +17,7 @@ import {
 } from '@dnd-kit/sortable';
 import InnerStepNode from './InnerStepNode';
 import { useXarrow } from 'react-xarrows';
+import { EditorInnerStep } from '../../../models/programComponent/ProgramComponent';
 
 interface InnerStepContainerProps {
   innerSteps: EditorInnerStep[];

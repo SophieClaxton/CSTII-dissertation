@@ -1,4 +1,4 @@
-import InterfaceElement from './InterfaceElement';
+import InterfaceElement from '../InterfaceElement';
 
 interface EditorProgram {
   name: string;
@@ -7,15 +7,19 @@ interface EditorProgram {
   sections: EditorSection[];
 }
 
-interface EditorSubsection {
+type EditorProgramComponent = EditorSection | EditorSubsection | EditorInnerStep | EditorEndStep;
+
+interface EditorComponent {
   id: string;
+}
+
+interface EditorSubsection extends EditorComponent {
   answer: 'yes' | 'no';
   innerSteps: EditorInnerStep[];
   endStep: EditorEndStep | undefined;
 }
 
-interface EditorSection {
-  id: string;
+interface EditorSection extends EditorComponent {
   url: string;
   name?: string;
   innerSteps: EditorInnerStep[];
@@ -35,8 +39,7 @@ enum EditorStepType {
   Draw = 'Draw',
 }
 
-interface EditorStep {
-  id: number;
+interface EditorStep extends EditorComponent {
   type: EditorStepType;
   element?: InterfaceElement | undefined;
 }
@@ -116,6 +119,7 @@ interface EditorDrawStep extends EditorInputStepBase {
 export { EditorStepType, EditorUserDecisionEndsWithType };
 export type {
   EditorProgram,
+  EditorProgramComponent,
   EditorSection,
   EditorSubsection,
   EditorInnerStep,

@@ -1,9 +1,15 @@
-import { EditorFollowStep, EditorInnerStep, EditorStepType, EditorSubsection } from '../../../models/ProgramComponent';
 import './styles/subsection.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
-import { isInnerStep, isEndStep } from '../../../models/testers/programComponentTesters';
+import { isInnerStep, isEndStep } from '../../../models/programComponent/testers';
 import AddNodeButton from './AddNodeButton';
+import {
+  EditorFollowStep,
+  EditorInnerStep,
+  EditorStepType,
+  EditorSubsection,
+} from '../../../models/programComponent/ProgramComponent';
+import { getNextStepId } from '../../../models/programComponent/getters';
 
 interface SubsectionNodeProps {
   subsection: EditorSubsection;
@@ -21,7 +27,7 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
   const innerStepNodeChoices: EditorInnerStep[] = [
     {
       type: EditorStepType.Read,
-      id: 100,
+      id: getNextStepId(subsection),
     },
   ];
 

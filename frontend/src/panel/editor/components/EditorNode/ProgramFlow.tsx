@@ -1,5 +1,5 @@
 import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
-import { EditorFollowStep, EditorProgram } from '../../../models/ProgramComponent';
+import { EditorFollowStep, EditorProgram } from '../../../models/programComponent/ProgramComponent';
 import SectionNode from './SectionNode';
 import { getFollowSteps } from '../../flowUtils/getNodes';
 import { getFollowEdge } from '../../flowUtils/getEdges';

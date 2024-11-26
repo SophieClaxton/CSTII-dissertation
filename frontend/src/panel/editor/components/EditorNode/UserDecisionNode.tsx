@@ -1,7 +1,10 @@
 import { DraggableAttributes } from '@dnd-kit/core';
-import { EditorUserDecisionEndsWithType, EditorUserDecisionStep } from '../../../models/ProgramComponent';
 import SubsectionNode from './SubsectionNode';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import {
+  EditorUserDecisionEndsWithType,
+  EditorUserDecisionStep,
+} from '../../../models/programComponent/ProgramComponent';
 
 interface UserDecisionNodeProps {
   step: EditorUserDecisionStep;

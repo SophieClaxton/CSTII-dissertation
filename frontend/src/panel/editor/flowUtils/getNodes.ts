@@ -4,7 +4,7 @@ import {
   EditorInnerStep,
   EditorStepType,
   EditorSubsection,
-} from '../../models/ProgramComponent';
+} from '../../models/programComponent/ProgramComponent';
 
 const getFollowSteps = (section: EditorSection | EditorSubsection): EditorFollowStep[] => {
   const innerFollowNodes = section.innerSteps.map(getFollowStepsFromInnerStep).flat();

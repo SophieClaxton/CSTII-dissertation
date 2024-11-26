@@ -1,8 +1,8 @@
 import { useSortable } from '@dnd-kit/sortable';
-import { EditorInnerStep, EditorStepType } from '../../../models/ProgramComponent';
 import { CSS } from '@dnd-kit/utilities';
 import './styles/step.css';
 import UserDecisionNode from './UserDecisionNode';
+import { EditorInnerStep, EditorStepType } from '../../../models/programComponent/ProgramComponent';
 
 interface InnerStepNodeProps {
   step: EditorInnerStep;

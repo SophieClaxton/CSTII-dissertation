@@ -1,15 +1,24 @@
-import { EditorFollowStep, EditorInnerStep, EditorSection, EditorStepType } from '../../../models/ProgramComponent';
+import {
+  EditorFollowStep,
+  EditorInnerStep,
+  EditorSection,
+  EditorStepType,
+} from '../../../models/programComponent/ProgramComponent';
 import './styles/section.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
-import { isEndStep, isInnerStep } from '../../../models/testers/programComponentTesters';
+import { isEndStep, isInnerStep } from '../../../models/programComponent/testers';
+import { getNextSectionId, getNextStepId } from '../../../models/programComponent/getters';
+import { useEditorProgramContext } from '../../contexts/EditorProgramContext';
 
 interface SectionProps {
   section: EditorSection;
 }
 
 const SectionNode: React.FC<SectionProps> = ({ section }) => {
+  const { editorProgram } = useEditorProgramContext();
+
   const onAdd = (node: EditorInnerStep | EditorFollowStep) => {
     if (isInnerStep(node)) {
       section.innerSteps.push(node);
@@ -21,7 +30,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
   const innerStepNodeChoices: EditorInnerStep[] = [
     {
       type: EditorStepType.Read,
-      id: 100,
+      id: getNextStepId(section),
     },
   ];
 
@@ -38,7 +47,14 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
       ) : (
         <AddNodeButton<EditorFollowStep>
           onAdd={onAdd}
-          nodeChoices={[{ type: EditorStepType.Follow, id: 100, parentSectionId: section.id, nextSectionId: '10' }]}
+          nodeChoices={[
+            {
+              type: EditorStepType.Follow,
+              id: getNextStepId(section, true),
+              parentSectionId: section.id,
+              nextSectionId: getNextSectionId(editorProgram),
+            },
+          ]}
         />
       )}
     </div>
