@@ -52,7 +52,7 @@ type EditorInnerStep =
   | EditorUserDecisionStep
   | EditorInputStep;
 
-type EditorEndStep = EditorFollowStep | EditorUserDecisionFollowStep;
+type EditorEndStep = EditorFollowStep | EditorUserDecisionEndStep;
 
 interface EditorFollowStep extends EditorStep {
   type: EditorStepType.Follow;
@@ -81,7 +81,9 @@ enum EditorUserDecisionEndsWithType {
   InnerStep = 'InnerStep',
 }
 
-interface EditorUserDecisionStep {
+type EditorUserDecisionStep = EditorUserDecisionInnerStep | EditorUserDecisionEndStep;
+
+interface BaseEditorUserDecisionStep {
   id: number;
   type: EditorStepType.UserDecision;
   question: string | undefined;
@@ -90,7 +92,11 @@ interface EditorUserDecisionStep {
   endsWithFollow: EditorUserDecisionEndsWithType;
 }
 
-interface EditorUserDecisionFollowStep extends EditorUserDecisionStep {
+interface EditorUserDecisionInnerStep extends BaseEditorUserDecisionStep {
+  endsWithFollow: EditorUserDecisionEndsWithType.InnerStep;
+}
+
+interface EditorUserDecisionEndStep extends BaseEditorUserDecisionStep {
   endsWithFollow: EditorUserDecisionEndsWithType.Follow;
 }
 
@@ -130,7 +136,8 @@ export type {
   EditorScrollToStep,
   EditorDragStep,
   EditorUserDecisionStep,
-  EditorUserDecisionFollowStep,
+  EditorUserDecisionInnerStep,
+  EditorUserDecisionEndStep,
   EditorWriteStep,
   EditorSelectStep,
   EditorCheckStep,

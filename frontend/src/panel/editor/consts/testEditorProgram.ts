@@ -7,7 +7,7 @@ import {
   EditorStepType,
   EditorSubsection,
   EditorUserDecisionEndsWithType,
-  EditorUserDecisionFollowStep,
+  EditorUserDecisionEndStep,
   EditorUserDecisionStep,
   EditorWriteStep,
 } from '../../models/programComponent/ProgramComponent';
@@ -104,7 +104,7 @@ const subsection22: EditorSubsection = {
   endStep: followNodeSub22,
 };
 
-const userDecision2: EditorUserDecisionFollowStep = {
+const userDecision2: EditorUserDecisionEndStep = {
   id: 2,
   type: EditorStepType.UserDecision,
   question: 'Are you hungry?',
