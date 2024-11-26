@@ -39,7 +39,9 @@ enum EditorStepType {
   Draw = 'Draw',
 }
 
-interface EditorStep extends EditorComponent {
+type EditorStep = EditorInnerStep | EditorEndStep;
+
+interface BaseEditorStep extends EditorComponent {
   type: EditorStepType;
   element?: InterfaceElement | undefined;
 }
@@ -54,25 +56,25 @@ type EditorInnerStep =
 
 type EditorEndStep = EditorFollowStep | EditorUserDecisionEndStep;
 
-interface EditorFollowStep extends EditorStep {
+interface EditorFollowStep extends BaseEditorStep {
   type: EditorStepType.Follow;
   nextSectionId: string;
   parentSectionId: string;
 }
 
-interface EditorClickStep extends EditorStep {
+interface EditorClickStep extends BaseEditorStep {
   type: EditorStepType.Click;
 }
 
-interface EditorReadStep extends EditorStep {
+interface EditorReadStep extends BaseEditorStep {
   type: EditorStepType.Read;
 }
 
-interface EditorScrollToStep extends EditorStep {
+interface EditorScrollToStep extends BaseEditorStep {
   type: EditorStepType.Read;
 }
 
-interface EditorDragStep extends EditorStep {
+interface EditorDragStep extends BaseEditorStep {
   type: EditorStepType.Drag;
 }
 
@@ -102,7 +104,7 @@ interface EditorUserDecisionEndStep extends BaseEditorUserDecisionStep {
 
 type EditorInputStep = EditorWriteStep | EditorSelectStep | EditorCheckStep | EditorDrawStep;
 
-interface EditorInputStepBase extends EditorStep {
+interface EditorInputStepBase extends BaseEditorStep {
   description?: string;
 }
 
@@ -128,6 +130,7 @@ export type {
   EditorProgramComponent,
   EditorSection,
   EditorSubsection,
+  EditorStep,
   EditorInnerStep,
   EditorEndStep,
   EditorFollowStep,

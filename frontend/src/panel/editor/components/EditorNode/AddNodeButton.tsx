@@ -1,9 +1,11 @@
-interface AddNodeButtonProps<T> {
+import { EditorStep } from '../../../models/programComponent/ProgramComponent';
+
+interface AddNodeButtonProps<T extends EditorStep> {
   onAdd: (node: T) => void;
   nodeChoices: T[];
 }
 
-const AddNodeButton = <T,>(props: AddNodeButtonProps<T>) => {
+const AddNodeButton = <T extends EditorStep>(props: AddNodeButtonProps<T>) => {
   const { onAdd, nodeChoices } = props;
   return (
     <button className="step add-node-button" onClick={() => onAdd(nodeChoices[0])}>
