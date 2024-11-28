@@ -6,9 +6,9 @@ import './styles/section.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
-import { useEditorProgramContext } from '../../contexts/EditorProgramContext';
 import { innerStepNodeChoices } from '../../consts/nodeChoices';
 import { addEditorStepToSection } from '../../../models/programComponent/setters';
+import { useEditorProgramContext } from '../../contexts/useEditorProgramContext';
 
 interface SectionProps {
   section: EditorSection;

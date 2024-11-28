@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useReducer } from 'react';
 import { EditorProgram } from '../../models/programComponent/ProgramComponent';
 import testEditorProgram from '../consts/testEditorProgram';
 import {
@@ -20,14 +20,6 @@ interface EditorProgramState {
 const EditorProgramContext = createContext<EditorProgramState | undefined>(
   undefined,
 );
-
-const useEditorProgramContext = () => {
-  const editorProgramContext = useContext(EditorProgramContext);
-  if (!editorProgramContext) {
-    throw new Error('No editor program found');
-  }
-  return editorProgramContext;
-};
 
 const EditorProgramContextProvider: React.FC<React.PropsWithChildren> = ({
   children,
@@ -73,7 +65,7 @@ const editorProgramReducer = (
       }
       if (!isSection(section) || !isSubsection(section)) {
         console.log(
-          `Found a program component with id ${action.sectionId} but it is not a section`,
+          `Found a progr~am component with id ${action.sectionId} but it is not a section`,
         );
         return editorProgram;
       }
@@ -104,8 +96,4 @@ const editorProgramReducer = (
   }
 };
 
-export {
-  EditorProgramContext,
-  useEditorProgramContext,
-  EditorProgramContextProvider,
-};
+export { EditorProgramContext, EditorProgramContextProvider };

@@ -8,7 +8,7 @@ import {
 } from '../../../models/programComponent/ProgramComponent';
 import { innerStepNodeChoices } from '../../consts/nodeChoices';
 import { addEditorStepToSection } from '../../../models/programComponent/setters';
-import { useEditorProgramContext } from '../../contexts/EditorProgramContext';
+import { useEditorProgramContext } from '../../contexts/useEditorProgramContext';
 
 interface SubsectionNodeProps {
   subsection: EditorSubsection;
