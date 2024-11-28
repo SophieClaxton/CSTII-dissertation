@@ -33,7 +33,6 @@ const mapSectionToSectionWithUpdatedInnerSteps =
       console.log('Found section to update steps');
       return {
         ...section,
-        url: section.url,
         innerSteps: innerSteps,
       };
     }
@@ -112,8 +111,94 @@ const mapStepToStepWithUpdatedInnerSteps = (
   return step;
 };
 
+const mapSectionToSectionWithUpdatedEndStep =
+  (endStep: EditorEndStep) =>
+  (section: EditorSection, sectionId: string): EditorSection => {
+    if (section.id == sectionId) {
+      console.log('Found section to update steps');
+      return {
+        ...section,
+        endStep: endStep,
+      };
+    }
+    return {
+      ...section,
+      innerSteps: section.innerSteps.map(
+        (step) =>
+          mapStepToStepWithUpdatedEndStep(
+            step,
+            sectionId,
+            endStep,
+          ) as EditorInnerStep,
+      ),
+      endStep: section.endStep
+        ? (mapStepToStepWithUpdatedEndStep(
+            section.endStep,
+            sectionId,
+            endStep,
+          ) as EditorEndStep)
+        : section.endStep,
+    };
+  };
+
+const mapSubsectionToSubsectionWithUpdatedEndStep = (
+  subsection: EditorSubsection,
+  sectionId: string,
+  endStep: EditorEndStep,
+): EditorSubsection => {
+  if (subsection.id == sectionId) {
+    console.log('Found subsection to update steps');
+    return {
+      ...subsection,
+      endStep: endStep,
+    };
+  }
+  return {
+    ...subsection,
+    innerSteps: subsection.innerSteps.map(
+      (step) =>
+        mapStepToStepWithUpdatedEndStep(
+          step,
+          sectionId,
+          endStep,
+        ) as EditorInnerStep,
+    ),
+    endStep: subsection.endStep
+      ? (mapStepToStepWithUpdatedEndStep(
+          subsection.endStep,
+          sectionId,
+          endStep,
+        ) as EditorEndStep)
+      : subsection.endStep,
+  };
+};
+
+const mapStepToStepWithUpdatedEndStep = (
+  step: EditorStep,
+  sectionId: string,
+  endStep: EditorEndStep,
+) => {
+  if (step.type == EditorStepType.UserDecision) {
+    return {
+      ...step,
+      choice1: mapSubsectionToSubsectionWithUpdatedEndStep(
+        step.choice1,
+        sectionId,
+        endStep,
+      ),
+      choice2: mapSubsectionToSubsectionWithUpdatedEndStep(
+        step.choice2,
+        sectionId,
+        endStep,
+      ),
+    };
+  }
+  return step;
+};
+
 export {
   mapEditorFollowStepToId,
   mapProgramToProgramWithUpdatedSections,
   mapSectionToSectionWithUpdatedInnerSteps,
+  mapSectionToSectionWithUpdatedEndStep,
 };

@@ -85,9 +85,8 @@ const followNodeSub21: EditorFollowStep = {
 const followNodeSub22: EditorFollowStep = {
   id: 'S2.E.s2.E',
   type: EditorStepType.Follow,
-  element: { outerHTML: '', tag: 'P', url: 'www.url4.com' },
-  nextSectionId: 'S4',
   parentSectionId: 'S1.E.s2',
+  nextSectionId: undefined,
 };
 
 const subsection12: EditorSubsection = {
@@ -127,18 +126,11 @@ const section3: EditorSection = {
   endStep: undefined,
 };
 
-const section4: EditorSection = {
-  id: 'S4',
-  url: 'www.url4.com',
-  innerSteps: [],
-  endStep: undefined,
-};
-
 const testEditorProgram: EditorProgram = {
   name: 'Test Program',
   author: 'Sophie',
   dateCreated: '20/11/2024',
-  sections: [section1, section2, section3, section4],
+  sections: [section1, section2, section3],
 };
 
 export default testEditorProgram;

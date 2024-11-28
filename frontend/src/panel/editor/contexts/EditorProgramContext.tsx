@@ -9,6 +9,7 @@ import { getEditorComponentById } from '../../models/programComponent/getters';
 import { isSection, isSubsection } from '../../models/programComponent/testers';
 import {
   mapProgramToProgramWithUpdatedSections,
+  mapSectionToSectionWithUpdatedEndStep,
   mapSectionToSectionWithUpdatedInnerSteps,
 } from '../../models/programComponent/mappers';
 
@@ -65,11 +66,11 @@ const editorProgramReducer = (
       }
       if (!isSection(section) || !isSubsection(section)) {
         console.log(
-          `Found a progr~am component with id ${action.sectionId} but it is not a section`,
+          `Found a program component with id ${action.sectionId} but it is not a section`,
         );
         return editorProgram;
       }
-      console.log(`Adding step to section ${section.id}`);
+      console.log(`Adding inner step to section ${section.id}`);
       const newEditorProgram = mapProgramToProgramWithUpdatedSections(
         editorProgram,
         section.id,
@@ -85,8 +86,28 @@ const editorProgramReducer = (
       return editorProgram;
     case EditorReducerActionType.EditEndStep:
       return editorProgram;
-    case EditorReducerActionType.AddEndStep:
-      return editorProgram;
+    case EditorReducerActionType.AddEndStep: {
+      const section = getEditorComponentById(editorProgram, action.sectionId);
+      if (!section) {
+        console.log(`Did not find section with id ${action.sectionId}`);
+        console.log(editorProgram);
+        return editorProgram;
+      }
+      if (!isSection(section) || !isSubsection(section)) {
+        console.log(
+          `Found a program component with id ${action.sectionId} but it is not a section`,
+        );
+        return editorProgram;
+      }
+      console.log(`Adding end step to section ${section.id}`);
+      const newEditorProgram = mapProgramToProgramWithUpdatedSections(
+        editorProgram,
+        section.id,
+        mapSectionToSectionWithUpdatedEndStep(action.endStep),
+      );
+      console.log(newEditorProgram);
+      return newEditorProgram;
+    }
     case EditorReducerActionType.DeleteEndStep:
       return editorProgram;
     case EditorReducerActionType.ChangeUserDecisionStepToInnerStep:

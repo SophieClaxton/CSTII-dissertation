@@ -1,14 +1,14 @@
 import {
-  EditorInnerStep,
   EditorSection,
+  EditorStep,
 } from '../../../models/programComponent/ProgramComponent';
 import './styles/section.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
-import { innerStepNodeChoices } from '../../consts/nodeChoices';
 import { addEditorStepToSection } from '../../../models/programComponent/setters';
 import { useEditorProgramContext } from '../../contexts/useEditorProgramContext';
+import { getNodeChoices } from '../../../models/programComponent/getters';
 
 interface SectionProps {
   section: EditorSection;
@@ -24,9 +24,9 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         <p>{section.url}</p>
       </div>
       <InnerStepContainer innerSteps={section.innerSteps} />
-      <AddNodeButton<EditorInnerStep>
+      <AddNodeButton<EditorStep>
         onAdd={(step) => addEditorStepToSection(dispatch, section, step)}
-        nodeChoices={innerStepNodeChoices(section)}
+        nodeChoices={getNodeChoices(section)}
       />
       {section.endStep && <EndStepNode endStep={section.endStep} />}
     </div>

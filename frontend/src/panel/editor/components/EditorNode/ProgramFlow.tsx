@@ -4,7 +4,7 @@ import SectionNode from './SectionNode';
 import { getFollowSteps } from '../../flowUtils/getNodes';
 import { getFollowEdge } from '../../flowUtils/getEdges';
 import './styles/program.css';
-import { useEditorProgramContext } from '../../contexts/EditorProgramContext';
+import { useEditorProgramContext } from '../../contexts/useEditorProgramContext';
 
 const ProgramFlow: React.FC = () => {
   const { editorProgram: program } = useEditorProgramContext();

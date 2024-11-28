@@ -1,10 +1,12 @@
 import { EditorAction, EditorReducerActionType } from '../EditorReducerActions';
 import {
+  EditorEndStep,
+  EditorInnerStep,
   EditorSection,
   EditorStep,
   EditorSubsection,
 } from './ProgramComponent';
-import { isInnerStep } from './testers';
+import { isEndStep, isInnerStep } from './testers';
 
 const addEditorStepToSection = (
   programDispatch: React.Dispatch<EditorAction>,
@@ -12,15 +14,23 @@ const addEditorStepToSection = (
   step: EditorStep,
 ) => {
   if (isInnerStep(step)) {
-    programDispatch({
+    console.log('The following step is an inner step');
+    console.log(step);
+    return programDispatch({
       type: EditorReducerActionType.AddInnerStep,
       sectionId: section.id,
-      innerStep: step,
+      innerStep: step as EditorInnerStep,
     });
   }
-  // if (isEndStep(step) && !section.endStep) {
-  //   programDispatch({ type: EditorReducerActionType.AddEndStep, sectionId: section.id, endStep: step });
-  // }
+  if (isEndStep(step) && !section.endStep) {
+    console.log('The following step is an end step');
+    console.log(step);
+    return programDispatch({
+      type: EditorReducerActionType.AddEndStep,
+      sectionId: section.id,
+      endStep: step as EditorEndStep,
+    });
+  }
 };
 
 export { addEditorStepToSection };

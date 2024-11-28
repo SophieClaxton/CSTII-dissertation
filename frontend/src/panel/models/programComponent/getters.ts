@@ -1,6 +1,9 @@
 import {
+  EditorEndStep,
+  EditorInnerStep,
   EditorProgram,
   EditorProgramComponent,
+  EditorProgramSection,
   EditorSection,
   EditorStep,
   EditorStepType,
@@ -64,4 +67,49 @@ const getNextSectionId = (editorProgram: EditorProgram): string => {
   return `S${editorProgram.sections.length}`;
 };
 
-export { getEditorComponentById, getNextStepId, getNextSectionId };
+const getNodeChoices = (
+  section: EditorSection | EditorSubsection,
+): EditorStep[] => {
+  const innerNodeChoices = getInnerStepNodeChoices(section);
+  return section.endStep
+    ? innerNodeChoices
+    : [...getEndStepNodeChoices(section), ...innerNodeChoices];
+};
+
+const getInnerStepNodeChoices = (
+  section: EditorSection | EditorSubsection,
+): EditorInnerStep[] => [
+  {
+    id: getNextStepId(section),
+    type: EditorStepType.Click,
+  },
+  {
+    id: getNextStepId(section),
+    type: EditorStepType.Read,
+  },
+  {
+    id: getNextStepId(section),
+    type: EditorStepType.ScrollTo,
+  },
+  {
+    id: getNextStepId(section),
+    type: EditorStepType.Drag,
+  },
+];
+
+const getEndStepNodeChoices = (
+  section: EditorSection | EditorProgramSection,
+): EditorEndStep[] => [
+  {
+    id: `${section.id}.E`,
+    type: EditorStepType.Follow,
+    parentSectionId: section.id,
+  },
+];
+
+export {
+  getEditorComponentById,
+  getNextStepId,
+  getNextSectionId,
+  getNodeChoices,
+};

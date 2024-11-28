@@ -19,7 +19,7 @@ interface EditorComponent {
 
 interface EditorProgramSection extends EditorComponent {
   innerSteps: EditorInnerStep[];
-  endStep: EditorEndStep | undefined;
+  endStep?: EditorEndStep;
 }
 
 interface EditorSubsection extends EditorProgramSection {
@@ -48,7 +48,7 @@ type EditorStep = EditorInnerStep | EditorEndStep;
 
 interface BaseEditorStep extends EditorComponent {
   type: EditorStepType;
-  element?: InterfaceElement | undefined;
+  element?: InterfaceElement;
 }
 
 type EditorInnerStep =
@@ -63,7 +63,7 @@ type EditorEndStep = EditorFollowStep | EditorUserDecisionEndStep;
 
 interface EditorFollowStep extends BaseEditorStep {
   type: EditorStepType.Follow;
-  nextSectionId: string | undefined;
+  nextSectionId?: string;
   parentSectionId: string;
 }
 
@@ -94,7 +94,7 @@ type EditorUserDecisionStep =
 
 interface BaseEditorUserDecisionStep extends EditorComponent {
   type: EditorStepType.UserDecision;
-  question: string | undefined;
+  question?: string;
   choice1: EditorSubsection;
   choice2: EditorSubsection;
   endsWithFollow: EditorUserDecisionEndsWithType;
