@@ -10,7 +10,7 @@ const isSection = (editorProgramComponent: EditorProgramComponent): editorProgra
   return 'id' in editorProgramComponent;
 };
 
-const isSubection = (editorProgramComponent: EditorProgramComponent): editorProgramComponent is EditorSubsection => {
+const isSubsection = (editorProgramComponent: EditorProgramComponent): editorProgramComponent is EditorSubsection => {
   return 'id' in editorProgramComponent;
 };
 
@@ -22,4 +22,4 @@ const isEndStep = (editorProgramComponent: EditorProgramComponent): editorProgra
   return 'type' in editorProgramComponent;
 };
 
-export { isSection, isSubection, isInnerStep, isEndStep };
+export { isSection, isSubsection, isInnerStep, isEndStep };

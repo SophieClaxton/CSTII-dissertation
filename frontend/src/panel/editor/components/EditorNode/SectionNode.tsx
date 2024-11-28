@@ -1,38 +1,18 @@
-import {
-  EditorFollowStep,
-  EditorInnerStep,
-  EditorSection,
-  EditorStepType,
-} from '../../../models/programComponent/ProgramComponent';
+import { EditorInnerStep, EditorSection } from '../../../models/programComponent/ProgramComponent';
 import './styles/section.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
-import { isEndStep, isInnerStep } from '../../../models/programComponent/testers';
-import { getNextSectionId, getNextStepId } from '../../../models/programComponent/getters';
 import { useEditorProgramContext } from '../../contexts/EditorProgramContext';
+import { innerStepNodeChoices } from '../../consts/nodeChoices';
+import { addEditorStepToSection } from '../../../models/programComponent/setters';
 
 interface SectionProps {
   section: EditorSection;
 }
 
 const SectionNode: React.FC<SectionProps> = ({ section }) => {
-  const { editorProgram } = useEditorProgramContext();
-
-  const onAdd = (node: EditorInnerStep | EditorFollowStep) => {
-    if (isInnerStep(node)) {
-      section.innerSteps.push(node);
-    }
-    if (isEndStep(node) && !section.endStep) {
-      section.endStep = node;
-    }
-  };
-  const innerStepNodeChoices: EditorInnerStep[] = [
-    {
-      type: EditorStepType.Read,
-      id: getNextStepId(section),
-    },
-  ];
+  const { dispatch } = useEditorProgramContext();
 
   return (
     <div className="section" id={section.id}>
@@ -41,22 +21,11 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         <p>{section.url}</p>
       </div>
       <InnerStepContainer innerSteps={section.innerSteps} />
-      <AddNodeButton<EditorInnerStep> onAdd={onAdd} nodeChoices={innerStepNodeChoices} />
-      {section.endStep ? (
-        <EndStepNode endStep={section.endStep} />
-      ) : (
-        <AddNodeButton<EditorFollowStep>
-          onAdd={onAdd}
-          nodeChoices={[
-            {
-              type: EditorStepType.Follow,
-              id: getNextStepId(section, true),
-              parentSectionId: section.id,
-              nextSectionId: getNextSectionId(editorProgram),
-            },
-          ]}
-        />
-      )}
+      <AddNodeButton<EditorInnerStep>
+        onAdd={(step) => addEditorStepToSection(dispatch, section, step)}
+        nodeChoices={innerStepNodeChoices(section)}
+      />
+      {section.endStep && <EndStepNode endStep={section.endStep} />}
     </div>
   );
 };

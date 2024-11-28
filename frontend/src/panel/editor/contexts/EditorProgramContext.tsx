@@ -2,6 +2,12 @@ import { createContext, useContext, useReducer } from 'react';
 import { EditorProgram } from '../../models/programComponent/ProgramComponent';
 import testEditorProgram from '../consts/testEditorProgram';
 import { EditorAction, EditorReducerActionType } from '../../models/EditorReducerActions';
+import { getEditorComponentById } from '../../models/programComponent/getters';
+import { isSection, isSubsection } from '../../models/programComponent/testers';
+import {
+  mapProgramToProgramWithUpdatedSections,
+  mapSectionToSectionWithUpdatedInnerSteps,
+} from '../../models/programComponent/mappers';
 
 interface EditorProgramState {
   editorProgram: EditorProgram;
@@ -28,6 +34,7 @@ const EditorProgramContextProvider: React.FC<React.PropsWithChildren> = ({ child
 };
 
 const editorProgramReducer = (editorProgram: EditorProgram, action: EditorAction): EditorProgram => {
+  console.log(`Dispatching to editorProgramReducer action:${action.type}`);
   switch (action.type) {
     case EditorReducerActionType.EditProgramName:
       return {
@@ -39,10 +46,29 @@ const editorProgramReducer = (editorProgram: EditorProgram, action: EditorAction
         ...editorProgram,
         author: action.newAuthor,
       };
-    case EditorReducerActionType.EditInnerStep:
+    case EditorReducerActionType.EditInnerStep: {
       return editorProgram;
-    case EditorReducerActionType.AddInnerStep:
-      return editorProgram;
+    }
+    case EditorReducerActionType.AddInnerStep: {
+      const section = getEditorComponentById(editorProgram, action.sectionId);
+      if (!section) {
+        console.log(`Did not find section with id ${action.sectionId}`);
+        console.log(editorProgram);
+        return editorProgram;
+      }
+      if (!isSection(section) || !isSubsection(section)) {
+        console.log(`Found a program component with id ${action.sectionId} but it is not a section`);
+        return editorProgram;
+      }
+      console.log(`Adding step to section ${section.id}`);
+      const newEditorProgram = mapProgramToProgramWithUpdatedSections(
+        editorProgram,
+        section.id,
+        mapSectionToSectionWithUpdatedInnerSteps([...section.innerSteps, action.innerStep]),
+      );
+      console.log(newEditorProgram);
+      return newEditorProgram;
+    }
     case EditorReducerActionType.DeleteInnerStep:
       return editorProgram;
     case EditorReducerActionType.EditEndStep:

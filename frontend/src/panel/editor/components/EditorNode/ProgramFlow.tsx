@@ -1,15 +1,15 @@
 import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
-import { EditorFollowStep, EditorProgram } from '../../../models/programComponent/ProgramComponent';
+import { EditorFollowStep } from '../../../models/programComponent/ProgramComponent';
 import SectionNode from './SectionNode';
 import { getFollowSteps } from '../../flowUtils/getNodes';
 import { getFollowEdge } from '../../flowUtils/getEdges';
 import './styles/program.css';
+import { useEditorProgramContext } from '../../contexts/EditorProgramContext';
 
-interface ProgramFlowProps {
-  program: EditorProgram;
-}
+const ProgramFlow: React.FC = () => {
+  const { editorProgram: program } = useEditorProgramContext();
+  console.log('Rendering ProgramFlow');
 
-const ProgramFlow: React.FC<ProgramFlowProps> = ({ program }) => {
   const initialEdge = { id: 'start-1', source: 'start', target: program.sections[0].id };
   const followSteps: EditorFollowStep[] = program.sections.map(getFollowSteps).flat();
   const followEdges = followSteps.map(getFollowEdge);

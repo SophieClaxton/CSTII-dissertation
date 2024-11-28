@@ -13,47 +13,47 @@ import {
 } from '../../models/programComponent/ProgramComponent';
 
 const followNode: EditorFollowStep = {
-  id: '5',
+  id: 'S1.E',
   type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'A', url: 'www.url1.com' },
-  nextSectionId: '2',
-  parentSectionId: '1',
+  nextSectionId: 'S2',
+  parentSectionId: 'S1',
 };
 
 const readNode: EditorReadStep = {
-  id: '1',
+  id: 'S1.1',
   type: EditorStepType.Read,
   element: { outerHTML: '', tag: 'P', url: 'www.url1.com' },
 };
 
 const clickNode: EditorClickStep = {
-  id: '3',
+  id: 'S1.2.s1.1',
   type: EditorStepType.Click,
   element: { outerHTML: '', tag: 'BUTTON', url: 'www.url1.com' },
 };
 
 const writeNode: EditorWriteStep = {
-  id: '4',
+  id: 'S1.2.s2.1',
   type: EditorStepType.Write,
   element: { outerHTML: '', tag: 'INPUT', url: 'www.url1.com' },
 };
 
 const subsection1: EditorSubsection = {
-  id: '3',
+  id: 'S1.2.s1',
   answer: 'yes',
   innerSteps: [clickNode],
   endStep: undefined,
 };
 
 const subsection2: EditorSubsection = {
-  id: '4',
+  id: 'S1.2.s2',
   answer: 'no',
   innerSteps: [writeNode],
   endStep: undefined,
 };
 
 const decisionNode: EditorUserDecisionStep = {
-  id: 2,
+  id: 'S1.2',
   type: EditorStepType.UserDecision,
   question: 'Are you older than 20?',
   choice1: subsection1,
@@ -62,50 +62,50 @@ const decisionNode: EditorUserDecisionStep = {
 };
 
 const section1: EditorSection = {
-  id: '1',
+  id: 'S1',
   url: 'www.url1.com',
   innerSteps: [readNode, decisionNode],
   endStep: followNode,
 };
 
 const readNode2: EditorReadStep = {
-  id: '1',
+  id: 'S2.1',
   type: EditorStepType.Read,
   element: { outerHTML: '', tag: 'P', url: 'www.url2.com' },
 };
 
 const followNodeSub21: EditorFollowStep = {
-  id: '3',
+  id: 'S2.E.s1.E',
   type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'P', url: 'www.url3.com' },
-  nextSectionId: '3',
-  parentSectionId: '2S1',
+  nextSectionId: 'S3',
+  parentSectionId: 'S1.E.s1',
 };
 
 const followNodeSub22: EditorFollowStep = {
-  id: '4',
+  id: 'S2.E.s2.E',
   type: EditorStepType.Follow,
   element: { outerHTML: '', tag: 'P', url: 'www.url4.com' },
-  nextSectionId: '4',
-  parentSectionId: '2S2',
+  nextSectionId: 'S4',
+  parentSectionId: 'S1.E.s2',
 };
 
 const subsection12: EditorSubsection = {
-  id: '2S1',
+  id: 'S2.E.s1',
   answer: 'yes',
   innerSteps: [],
   endStep: followNodeSub21,
 };
 
 const subsection22: EditorSubsection = {
-  id: '2S2',
+  id: 'S2.E.s2',
   answer: 'no',
   innerSteps: [],
   endStep: followNodeSub22,
 };
 
 const userDecision2: EditorUserDecisionEndStep = {
-  id: 2,
+  id: 'S2.E',
   type: EditorStepType.UserDecision,
   question: 'Are you hungry?',
   choice1: subsection12,
@@ -114,21 +114,21 @@ const userDecision2: EditorUserDecisionEndStep = {
 };
 
 const section2: EditorSection = {
-  id: '2',
+  id: 'S2',
   url: 'www.url2.com',
   innerSteps: [readNode2],
   endStep: userDecision2,
 };
 
 const section3: EditorSection = {
-  id: '3',
+  id: 'S3',
   url: 'www.url3.com',
   innerSteps: [],
   endStep: undefined,
 };
 
 const section4: EditorSection = {
-  id: '4',
+  id: 'S4',
   url: 'www.url4.com',
   innerSteps: [],
   endStep: undefined,

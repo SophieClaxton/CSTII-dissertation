@@ -42,33 +42,39 @@ interface EditProgramAuthorAction extends BaseEditorAction {
 
 interface EditInnerStepAction extends BaseEditorAction {
   type: EditorReducerActionType.EditInnerStep;
+  stepId: string;
   comment?: string;
   element?: InterfaceElement;
 }
 
 interface AddInnerStepAction extends BaseEditorAction {
   type: EditorReducerActionType.AddInnerStep;
+  sectionId: string;
   innerStep: EditorInnerStep;
 }
 
 interface DeleteInnerStepAction extends BaseEditorAction {
   type: EditorReducerActionType.DeleteInnerStep;
+  sectionId: string;
   innerStepId: string;
 }
 
 interface EditEndStepAction extends BaseEditorAction {
   type: EditorReducerActionType.EditEndStep;
+  stepId: string;
   comment?: string;
   element?: InterfaceElement;
 }
 
 interface AddEndStepAction extends BaseEditorAction {
   type: EditorReducerActionType.AddEndStep;
+  sectionId: string;
   endStep: EditorEndStep;
 }
 
 interface DeleteEndStepAction extends BaseEditorAction {
   type: EditorReducerActionType.DeleteEndStep;
+  sectionId: string;
   endStepId: string;
 }
 

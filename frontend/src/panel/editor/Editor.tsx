@@ -1,5 +1,4 @@
 import XarrowProgramFlow from './components/EditorNode/ProgramFlow';
-import testEditorProgram from './consts/testEditorProgram';
 import { EditorProgramContextProvider } from './contexts/EditorProgramContext';
 import './styles/editor.css';
 
@@ -17,7 +16,7 @@ const Editor: React.FC<EditorProps> = ({ goHome }) => {
         </button>
       </div>
       <EditorProgramContextProvider>
-        <XarrowProgramFlow program={testEditorProgram} />
+        <XarrowProgramFlow />
       </EditorProgramContextProvider>
     </div>
   );

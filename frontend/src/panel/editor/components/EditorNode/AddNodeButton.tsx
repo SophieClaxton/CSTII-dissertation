@@ -8,7 +8,13 @@ interface AddNodeButtonProps<T extends EditorStep> {
 const AddNodeButton = <T extends EditorStep>(props: AddNodeButtonProps<T>) => {
   const { onAdd, nodeChoices } = props;
   return (
-    <button className="step add-node-button" onClick={() => onAdd(nodeChoices[0])}>
+    <button
+      className="step add-node-button"
+      onClick={() => {
+        console.log('CLICK');
+        onAdd(nodeChoices[0]);
+      }}
+    >
       + Instruction
     </button>
   );

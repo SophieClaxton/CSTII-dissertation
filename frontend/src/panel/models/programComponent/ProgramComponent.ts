@@ -13,17 +13,18 @@ interface EditorComponent {
   id: string;
 }
 
-interface EditorSubsection extends EditorComponent {
-  answer: 'yes' | 'no';
+interface EditorProgramSection extends EditorComponent {
   innerSteps: EditorInnerStep[];
   endStep: EditorEndStep | undefined;
 }
 
-interface EditorSection extends EditorComponent {
+interface EditorSubsection extends EditorProgramSection {
+  answer: 'yes' | 'no';
+}
+
+interface EditorSection extends EditorProgramSection {
   url: string;
   name?: string;
-  innerSteps: EditorInnerStep[];
-  endStep: EditorEndStep | undefined;
 }
 
 enum EditorStepType {
@@ -71,7 +72,7 @@ interface EditorReadStep extends BaseEditorStep {
 }
 
 interface EditorScrollToStep extends BaseEditorStep {
-  type: EditorStepType.Read;
+  type: EditorStepType.ScrollTo;
 }
 
 interface EditorDragStep extends BaseEditorStep {
@@ -85,8 +86,7 @@ enum EditorUserDecisionEndsWithType {
 
 type EditorUserDecisionStep = EditorUserDecisionInnerStep | EditorUserDecisionEndStep;
 
-interface BaseEditorUserDecisionStep {
-  id: number;
+interface BaseEditorUserDecisionStep extends EditorComponent {
   type: EditorStepType.UserDecision;
   question: string | undefined;
   choice1: EditorSubsection;
@@ -128,6 +128,7 @@ export { EditorStepType, EditorUserDecisionEndsWithType };
 export type {
   EditorProgram,
   EditorProgramComponent,
+  EditorProgramSection,
   EditorSection,
   EditorSubsection,
   EditorStep,

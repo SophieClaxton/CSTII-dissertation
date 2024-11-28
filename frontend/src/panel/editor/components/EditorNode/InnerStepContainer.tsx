@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   closestCenter,
   DndContext,
   DragEndEvent,
   KeyboardSensor,
-  PointerSensor,
   UniqueIdentifier,
   useSensor,
   useSensors,
@@ -18,6 +17,7 @@ import {
 import InnerStepNode from './InnerStepNode';
 import { useXarrow } from 'react-xarrows';
 import { EditorInnerStep } from '../../../models/programComponent/ProgramComponent';
+import { MouseSensor } from '../../flowUtils/sensors';
 
 interface InnerStepContainerProps {
   innerSteps: EditorInnerStep[];
@@ -25,8 +25,20 @@ interface InnerStepContainerProps {
 
 const InnerStepContainer: React.FC<InnerStepContainerProps> = ({ innerSteps }) => {
   const [items, setItems] = useState<UniqueIdentifier[]>(innerSteps.map((step) => step.id));
+
+  // Need the useEffect to update the items when innerSteps changes,
+  // because useState creates a separate variable
+  useEffect(() => {
+    setItems(innerSteps.map((step) => step.id));
+  }, [innerSteps]);
+
+  if (innerSteps.length !== items.length) {
+    console.log('InnerSteps and items are not the same length');
+    setItems(innerSteps.map((step) => step.id));
+  }
+
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(MouseSensor),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
   const updateArrows = useXarrow();
