@@ -6,7 +6,9 @@ import {
   EditorSubsection,
 } from '../../models/programComponent/ProgramComponent';
 
-const innerStepNodeChoices = (section: EditorSection | EditorSubsection): EditorInnerStep[] => [
+const innerStepNodeChoices = (
+  section: EditorSection | EditorSubsection,
+): EditorInnerStep[] => [
   {
     id: getNextStepId(section),
     type: EditorStepType.Click,

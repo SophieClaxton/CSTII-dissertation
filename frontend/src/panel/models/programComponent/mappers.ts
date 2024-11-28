@@ -20,7 +20,9 @@ const mapProgramToProgramWithUpdatedSections = (
 ) => {
   return {
     ...program,
-    sections: program.sections.map((section) => onUpdateSection(section, sectionId)),
+    sections: program.sections.map((section) =>
+      onUpdateSection(section, sectionId),
+    ),
   };
 };
 
@@ -38,10 +40,19 @@ const mapSectionToSectionWithUpdatedInnerSteps =
     return {
       ...section,
       innerSteps: section.innerSteps.map(
-        (step) => mapStepToStepWithUpdatedInnerSteps(step, sectionId, innerSteps) as EditorInnerStep,
+        (step) =>
+          mapStepToStepWithUpdatedInnerSteps(
+            step,
+            sectionId,
+            innerSteps,
+          ) as EditorInnerStep,
       ),
       endStep: section.endStep
-        ? (mapStepToStepWithUpdatedInnerSteps(section.endStep, sectionId, innerSteps) as EditorEndStep)
+        ? (mapStepToStepWithUpdatedInnerSteps(
+            section.endStep,
+            sectionId,
+            innerSteps,
+          ) as EditorEndStep)
         : section.endStep,
     };
   };
@@ -61,23 +72,48 @@ const mapSubsectionToSubsectionWithUpdatedInnerSteps = (
   return {
     ...subsection,
     innerSteps: subsection.innerSteps.map(
-      (step) => mapStepToStepWithUpdatedInnerSteps(step, sectionId, innerSteps) as EditorInnerStep,
+      (step) =>
+        mapStepToStepWithUpdatedInnerSteps(
+          step,
+          sectionId,
+          innerSteps,
+        ) as EditorInnerStep,
     ),
     endStep: subsection.endStep
-      ? (mapStepToStepWithUpdatedInnerSteps(subsection.endStep, sectionId, innerSteps) as EditorEndStep)
+      ? (mapStepToStepWithUpdatedInnerSteps(
+          subsection.endStep,
+          sectionId,
+          innerSteps,
+        ) as EditorEndStep)
       : subsection.endStep,
   };
 };
 
-const mapStepToStepWithUpdatedInnerSteps = (step: EditorStep, sectionId: string, innerSteps: EditorInnerStep[]) => {
+const mapStepToStepWithUpdatedInnerSteps = (
+  step: EditorStep,
+  sectionId: string,
+  innerSteps: EditorInnerStep[],
+) => {
   if (step.type == EditorStepType.UserDecision) {
     return {
       ...step,
-      choice1: mapSubsectionToSubsectionWithUpdatedInnerSteps(step.choice1, sectionId, innerSteps),
-      choice2: mapSubsectionToSubsectionWithUpdatedInnerSteps(step.choice2, sectionId, innerSteps),
+      choice1: mapSubsectionToSubsectionWithUpdatedInnerSteps(
+        step.choice1,
+        sectionId,
+        innerSteps,
+      ),
+      choice2: mapSubsectionToSubsectionWithUpdatedInnerSteps(
+        step.choice2,
+        sectionId,
+        innerSteps,
+      ),
     };
   }
   return step;
 };
 
-export { mapEditorFollowStepToId, mapProgramToProgramWithUpdatedSections, mapSectionToSectionWithUpdatedInnerSteps };
+export {
+  mapEditorFollowStepToId,
+  mapProgramToProgramWithUpdatedSections,
+  mapSectionToSectionWithUpdatedInnerSteps,
+};

@@ -2,14 +2,18 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import './styles/step.css';
 import UserDecisionNode from './UserDecisionNode';
-import { EditorInnerStep, EditorStepType } from '../../../models/programComponent/ProgramComponent';
+import {
+  EditorInnerStep,
+  EditorStepType,
+} from '../../../models/programComponent/ProgramComponent';
 
 interface InnerStepNodeProps {
   step: EditorInnerStep;
 }
 
 const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: step.id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: step.id });
 
   const style = { transform: CSS.Transform.toString(transform), transition };
 
@@ -18,7 +22,12 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
       return (
         <UserDecisionNode
           step={step}
-          sortableProps={{ setNodeRef: setNodeRef, style: style, attributes: attributes, listeners: listeners }}
+          sortableProps={{
+            setNodeRef: setNodeRef,
+            style: style,
+            attributes: attributes,
+            listeners: listeners,
+          }}
         />
       );
     default:

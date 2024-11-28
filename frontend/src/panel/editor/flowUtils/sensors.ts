@@ -1,9 +1,21 @@
-import { MouseSensor as LibMouseSensor, TouchSensor as LibTouchSensor } from '@dnd-kit/core';
+import {
+  MouseSensor as LibMouseSensor,
+  TouchSensor as LibTouchSensor,
+} from '@dnd-kit/core';
 import { MouseEvent, TouchEvent } from 'react';
 
 const isInteractiveElement = (element: Element | null) => {
-  const interactiveElements = ['button', 'input', 'textarea', 'select', 'option'];
-  if (element?.tagName && interactiveElements.includes(element.tagName.toLowerCase())) {
+  const interactiveElements = [
+    'button',
+    'input',
+    'textarea',
+    'select',
+    'option',
+  ];
+  if (
+    element?.tagName &&
+    interactiveElements.includes(element.tagName.toLowerCase())
+  ) {
     return true;
   }
 
@@ -25,9 +37,13 @@ const handler = ({ nativeEvent: event }: MouseEvent | TouchEvent) => {
 };
 
 export class MouseSensor extends LibMouseSensor {
-  static activators = [{ eventName: 'onMouseDown', handler }] as (typeof LibMouseSensor)['activators'];
+  static activators = [
+    { eventName: 'onMouseDown', handler },
+  ] as (typeof LibMouseSensor)['activators'];
 }
 
 export class TouchSensor extends LibTouchSensor {
-  static activators = [{ eventName: 'onTouchStart', handler }] as (typeof LibTouchSensor)['activators'];
+  static activators = [
+    { eventName: 'onTouchStart', handler },
+  ] as (typeof LibTouchSensor)['activators'];
 }

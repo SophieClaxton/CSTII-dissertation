@@ -1,4 +1,8 @@
-import { ContextMenuActions, openSidePanelAction, closeSidePanelAction } from './contextMenuActions';
+import {
+  ContextMenuActions,
+  openSidePanelAction,
+  closeSidePanelAction,
+} from './contextMenuActions';
 import { Message, MessageType, Port } from '../common/message';
 
 /*

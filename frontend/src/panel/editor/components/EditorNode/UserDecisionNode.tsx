@@ -16,7 +16,10 @@ interface UserDecisionNodeProps {
   };
 }
 
-const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({ step, sortableProps }) => {
+const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({
+  step,
+  sortableProps,
+}) => {
   const { setNodeRef, style, attributes, listeners } = sortableProps ?? {
     setNodeRef: undefined,
     style: undefined,

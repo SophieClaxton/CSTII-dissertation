@@ -6,8 +6,12 @@ import {
   EditorSubsection,
 } from '../../models/programComponent/ProgramComponent';
 
-const getFollowSteps = (section: EditorSection | EditorSubsection): EditorFollowStep[] => {
-  const innerFollowNodes = section.innerSteps.map(getFollowStepsFromInnerStep).flat();
+const getFollowSteps = (
+  section: EditorSection | EditorSubsection,
+): EditorFollowStep[] => {
+  const innerFollowNodes = section.innerSteps
+    .map(getFollowStepsFromInnerStep)
+    .flat();
   if (!section.endStep) {
     return innerFollowNodes;
   }
@@ -17,12 +21,16 @@ const getFollowSteps = (section: EditorSection | EditorSubsection): EditorFollow
     case EditorStepType.UserDecision: {
       const choice1FollowNodes = getFollowSteps(section.endStep.choice1);
       const choice2FollowNodes = getFollowSteps(section.endStep.choice2);
-      return innerFollowNodes.concat(choice1FollowNodes).concat(choice2FollowNodes);
+      return innerFollowNodes
+        .concat(choice1FollowNodes)
+        .concat(choice2FollowNodes);
     }
   }
 };
 
-const getFollowStepsFromInnerStep = (step: EditorInnerStep): EditorFollowStep[] => {
+const getFollowStepsFromInnerStep = (
+  step: EditorInnerStep,
+): EditorFollowStep[] => {
   if (step.type != EditorStepType.UserDecision) {
     return [];
   }

@@ -7,7 +7,11 @@ interface EditorProgram {
   sections: EditorSection[];
 }
 
-type EditorProgramComponent = EditorSection | EditorSubsection | EditorInnerStep | EditorEndStep;
+type EditorProgramComponent =
+  | EditorSection
+  | EditorSubsection
+  | EditorInnerStep
+  | EditorEndStep;
 
 interface EditorComponent {
   id: string;
@@ -59,7 +63,7 @@ type EditorEndStep = EditorFollowStep | EditorUserDecisionEndStep;
 
 interface EditorFollowStep extends BaseEditorStep {
   type: EditorStepType.Follow;
-  nextSectionId: string;
+  nextSectionId: string | undefined;
   parentSectionId: string;
 }
 
@@ -84,7 +88,9 @@ enum EditorUserDecisionEndsWithType {
   InnerStep = 'InnerStep',
 }
 
-type EditorUserDecisionStep = EditorUserDecisionInnerStep | EditorUserDecisionEndStep;
+type EditorUserDecisionStep =
+  | EditorUserDecisionInnerStep
+  | EditorUserDecisionEndStep;
 
 interface BaseEditorUserDecisionStep extends EditorComponent {
   type: EditorStepType.UserDecision;
@@ -102,7 +108,11 @@ interface EditorUserDecisionEndStep extends BaseEditorUserDecisionStep {
   endsWithFollow: EditorUserDecisionEndsWithType.Follow;
 }
 
-type EditorInputStep = EditorWriteStep | EditorSelectStep | EditorCheckStep | EditorDrawStep;
+type EditorInputStep =
+  | EditorWriteStep
+  | EditorSelectStep
+  | EditorCheckStep
+  | EditorDrawStep;
 
 interface EditorInputStepBase extends BaseEditorStep {
   description?: string;

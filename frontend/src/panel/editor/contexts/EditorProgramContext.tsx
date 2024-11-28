@@ -1,7 +1,10 @@
 import { createContext, useContext, useReducer } from 'react';
 import { EditorProgram } from '../../models/programComponent/ProgramComponent';
 import testEditorProgram from '../consts/testEditorProgram';
-import { EditorAction, EditorReducerActionType } from '../../models/EditorReducerActions';
+import {
+  EditorAction,
+  EditorReducerActionType,
+} from '../../models/EditorReducerActions';
 import { getEditorComponentById } from '../../models/programComponent/getters';
 import { isSection, isSubsection } from '../../models/programComponent/testers';
 import {
@@ -14,7 +17,9 @@ interface EditorProgramState {
   dispatch: React.Dispatch<EditorAction>;
 }
 
-const EditorProgramContext = createContext<EditorProgramState | undefined>(undefined);
+const EditorProgramContext = createContext<EditorProgramState | undefined>(
+  undefined,
+);
 
 const useEditorProgramContext = () => {
   const editorProgramContext = useContext(EditorProgramContext);
@@ -24,16 +29,26 @@ const useEditorProgramContext = () => {
   return editorProgramContext;
 };
 
-const EditorProgramContextProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const [editorProgram, dispatch] = useReducer(editorProgramReducer, testEditorProgram);
+const EditorProgramContextProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
+  const [editorProgram, dispatch] = useReducer(
+    editorProgramReducer,
+    testEditorProgram,
+  );
   return (
-    <EditorProgramContext.Provider value={{ editorProgram: editorProgram, dispatch: dispatch }}>
+    <EditorProgramContext.Provider
+      value={{ editorProgram: editorProgram, dispatch: dispatch }}
+    >
       {children}
     </EditorProgramContext.Provider>
   );
 };
 
-const editorProgramReducer = (editorProgram: EditorProgram, action: EditorAction): EditorProgram => {
+const editorProgramReducer = (
+  editorProgram: EditorProgram,
+  action: EditorAction,
+): EditorProgram => {
   console.log(`Dispatching to editorProgramReducer action:${action.type}`);
   switch (action.type) {
     case EditorReducerActionType.EditProgramName:
@@ -57,14 +72,19 @@ const editorProgramReducer = (editorProgram: EditorProgram, action: EditorAction
         return editorProgram;
       }
       if (!isSection(section) || !isSubsection(section)) {
-        console.log(`Found a program component with id ${action.sectionId} but it is not a section`);
+        console.log(
+          `Found a program component with id ${action.sectionId} but it is not a section`,
+        );
         return editorProgram;
       }
       console.log(`Adding step to section ${section.id}`);
       const newEditorProgram = mapProgramToProgramWithUpdatedSections(
         editorProgram,
         section.id,
-        mapSectionToSectionWithUpdatedInnerSteps([...section.innerSteps, action.innerStep]),
+        mapSectionToSectionWithUpdatedInnerSteps([
+          ...section.innerSteps,
+          action.innerStep,
+        ]),
       );
       console.log(newEditorProgram);
       return newEditorProgram;
@@ -84,4 +104,8 @@ const editorProgramReducer = (editorProgram: EditorProgram, action: EditorAction
   }
 };
 
-export { EditorProgramContext, useEditorProgramContext, EditorProgramContextProvider };
+export {
+  EditorProgramContext,
+  useEditorProgramContext,
+  EditorProgramContextProvider,
+};

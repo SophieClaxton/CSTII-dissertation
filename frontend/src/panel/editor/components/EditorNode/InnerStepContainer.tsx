@@ -23,8 +23,12 @@ interface InnerStepContainerProps {
   innerSteps: EditorInnerStep[];
 }
 
-const InnerStepContainer: React.FC<InnerStepContainerProps> = ({ innerSteps }) => {
-  const [items, setItems] = useState<UniqueIdentifier[]>(innerSteps.map((step) => step.id));
+const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
+  innerSteps,
+}) => {
+  const [items, setItems] = useState<UniqueIdentifier[]>(
+    innerSteps.map((step) => step.id),
+  );
 
   // Need the useEffect to update the items when innerSteps changes,
   // because useState creates a separate variable
@@ -39,7 +43,9 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({ innerSteps }) =
 
   const sensors = useSensors(
     useSensor(MouseSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
   );
   const updateArrows = useXarrow();
 

@@ -1,4 +1,7 @@
-import { EditorInnerStep, EditorSection } from '../../../models/programComponent/ProgramComponent';
+import {
+  EditorInnerStep,
+  EditorSection,
+} from '../../../models/programComponent/ProgramComponent';
 import './styles/section.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';

@@ -1,5 +1,9 @@
 import InterfaceElement from './InterfaceElement';
-import { EditorEndStep, EditorInnerStep, EditorUserDecisionStep } from './programComponent/ProgramComponent';
+import {
+  EditorEndStep,
+  EditorInnerStep,
+  EditorUserDecisionStep,
+} from './programComponent/ProgramComponent';
 
 enum EditorReducerActionType {
   EditProgramName = 'editProgramName',

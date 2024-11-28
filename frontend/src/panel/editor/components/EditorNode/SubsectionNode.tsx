@@ -2,7 +2,10 @@ import './styles/subsection.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
-import { EditorInnerStep, EditorSubsection } from '../../../models/programComponent/ProgramComponent';
+import {
+  EditorInnerStep,
+  EditorSubsection,
+} from '../../../models/programComponent/ProgramComponent';
 import { innerStepNodeChoices } from '../../consts/nodeChoices';
 import { addEditorStepToSection } from '../../../models/programComponent/setters';
 import { useEditorProgramContext } from '../../contexts/EditorProgramContext';

@@ -10,9 +10,17 @@ const ProgramFlow: React.FC = () => {
   const { editorProgram: program } = useEditorProgramContext();
   console.log('Rendering ProgramFlow');
 
-  const initialEdge = { id: 'start-1', source: 'start', target: program.sections[0].id };
-  const followSteps: EditorFollowStep[] = program.sections.map(getFollowSteps).flat();
-  const followEdges = followSteps.map(getFollowEdge);
+  const initialEdge = {
+    id: 'start-1',
+    source: 'start',
+    target: program.sections[0].id,
+  };
+  const followSteps: EditorFollowStep[] = program.sections
+    .map(getFollowSteps)
+    .flat();
+  const followEdges = followSteps
+    .map(getFollowEdge)
+    .filter((edge) => edge != undefined);
   const edges = [initialEdge, ...followEdges];
 
   const updateArrows = useXarrow();
@@ -34,7 +42,11 @@ const ProgramFlow: React.FC = () => {
               <SectionNode section={section} />
             ))}
             {edges.map((edge) => (
-              <Xarrow start={edge.source} end={edge.target} startAnchor={'bottom'} />
+              <Xarrow
+                start={edge.source}
+                end={edge.target}
+                startAnchor={'bottom'}
+              />
             ))}
           </Xwrapper>
         </div>
