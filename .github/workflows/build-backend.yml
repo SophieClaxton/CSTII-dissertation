@@ -21,4 +21,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Build
-      run: fastapi dev ./app/main.py
+      run: python ./build.py
