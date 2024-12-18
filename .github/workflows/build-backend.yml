@@ -7,7 +7,7 @@ defaults:
     working-directory: ./backend
 
 jobs:
-  build:
+  lint-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,4 +21,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Build
-      run: python ./build.py
+      run: fastapi dev ./app/main.py
