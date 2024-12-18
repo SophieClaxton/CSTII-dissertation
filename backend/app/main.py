@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .models import StatusReport
+from .models.StatusReport import StatusReport
 from .routers import scripts, unpublished_scripts, users, websites
 
 app = FastAPI()
