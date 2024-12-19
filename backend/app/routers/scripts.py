@@ -42,8 +42,10 @@ def create_script(
     website = session.get(Website, script.website_id)
     if not author or not website:
         raise user_or_website_not_found_exception(
-            user_id=None if not author else author.id,
-            website_id=None if not website else website.id,
+            user_id=script.author_id,
+            user_found=True if author else False,
+            website_id=script.website_id,
+            website_found=True if website else False,
         )
     # TODO: add logic to save program to file
     new_script = Script(
