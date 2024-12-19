@@ -72,7 +72,7 @@ class UnpublishedScriptWithWebsiteResponse(BaseUnpublishedScriptResponse):
 
 
 class UnpublishedScriptWithProgramResponse(UnpublishedScriptWithWebsiteResponse):
-    author: BaseUserResponse
+    author: BaseUserResponse | None
     program: WipProgram | None = None
 
 

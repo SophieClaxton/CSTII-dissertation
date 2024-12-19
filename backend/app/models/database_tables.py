@@ -2,16 +2,19 @@ from sqlmodel import Field, SQLModel, Relationship, desc  # type: ignore
 from datetime import datetime
 from typing import List
 
+from ..models.wip_program import WipProgram
 from .program import Program
 from .responses import (
     AnnotationResponse,
     BaseScriptResponse,
+    BaseUnpublishedScriptResponse,
     BaseUserResponse,
     BaseWebsiteResponse,
     ScriptWithAuthorAndWebsiteResponse,
     ScriptWithAuthorResponse,
     ScriptWithProgramResponse,
     ScriptWithWebsiteResponse,
+    UnpublishedScriptWithProgramResponse,
     UnpublishedScriptWithWebsiteResponse,
     UserWithScriptsResponse,
     WebsiteWithScriptsResponse,
@@ -46,7 +49,7 @@ class Script(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     title: str
     author_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
-    created_at: datetime = Field(default=datetime.now)
+    created_at: datetime = Field(default=datetime.now())
     description: str
     script_url: str
     website_id: int = Field(foreign_key="website.id", ondelete="RESTRICT")
@@ -138,17 +141,25 @@ class Website(SQLModel, table=True):
 
 class UnpublishedScript(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    title: str | None = Field(nullable=True)
+    title: str | None = Field(default=None, nullable=True)
     author_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
     created_at: datetime = Field(default=datetime.now, nullable=True)
-    description: str | None = Field(nullable=True)
+    description: str | None = Field(default=None, nullable=True)
     script_url: str
     website_id: int | None = Field(
-        foreign_key="website.id", nullable=True, ondelete="RESTRICT"
+        foreign_key="website.id", default=None, nullable=True, ondelete="RESTRICT"
     )
 
     author: User | None = Relationship(back_populates="unpublished_scripts")
     website: Website | None = Relationship(back_populates="unpublished_scripts")
+
+    def toBaseUnpublishedScriptResponse(self) -> BaseUnpublishedScriptResponse:
+        return BaseUnpublishedScriptResponse(
+            id=self.id,
+            title=self.title,
+            created_at=self.created_at,
+            description=self.description,
+        )
 
     def toUnpublishedScriptWithWebsiteResponse(
         self,
@@ -161,6 +172,19 @@ class UnpublishedScript(SQLModel, table=True):
             website=(
                 None if not self.website else self.website.toBaseWesbiteResponse()
             ),
+        )
+
+    def toUnpublishedScriptWithProgramResponse(
+        self, program: WipProgram
+    ) -> UnpublishedScriptWithProgramResponse:
+        return UnpublishedScriptWithProgramResponse(
+            id=self.id,
+            title=self.title,
+            created_at=self.created_at,
+            description=self.description,
+            author=None if not self.author else self.author.toBaseUserResponse(),
+            website=None if not self.website else self.website.toBaseWesbiteResponse(),
+            program=program,
         )
 
 
