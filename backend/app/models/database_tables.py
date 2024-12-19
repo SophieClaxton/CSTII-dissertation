@@ -2,10 +2,15 @@ from sqlmodel import Field, SQLModel, Relationship, desc  # type: ignore
 from datetime import datetime
 from typing import List
 
+from .program import Program
 from .responses import (
+    AnnotationResponse,
+    BaseScriptResponse,
     BaseUserResponse,
     BaseWebsiteResponse,
+    ScriptWithAuthorAndWebsiteResponse,
     ScriptWithAuthorResponse,
+    ScriptWithProgramResponse,
     ScriptWithWebsiteResponse,
     UnpublishedScriptWithWebsiteResponse,
     UserWithScriptsResponse,
@@ -52,6 +57,14 @@ class Script(SQLModel, table=True):
         back_populates="script", cascade_delete=True
     )
 
+    def toBaseScriptResponse(self) -> BaseScriptResponse:
+        return BaseScriptResponse(
+            id=self.id,
+            title=self.title,
+            created_at=self.created_at,
+            description=self.description,
+        )
+
     def toScriptWithWebsiteResponse(self) -> ScriptWithWebsiteResponse:
         return ScriptWithWebsiteResponse(
             id=self.id,
@@ -68,6 +81,34 @@ class Script(SQLModel, table=True):
             created_at=self.created_at,
             description=self.description,
             author=self.author.toBaseUserResponse(),
+        )
+
+    def toScriptWithAuthorAndWebsiteResponse(
+        self,
+    ) -> ScriptWithAuthorAndWebsiteResponse:
+        return ScriptWithAuthorAndWebsiteResponse(
+            id=self.id,
+            title=self.title,
+            created_at=self.created_at,
+            description=self.description,
+            author=self.author.toBaseUserResponse(),
+            website=self.website.toBaseWesbiteResponse(),
+        )
+
+    def toScriptWithProgramResponse(
+        self, program: Program
+    ) -> ScriptWithProgramResponse:
+        return ScriptWithProgramResponse(
+            id=self.id,
+            title=self.title,
+            created_at=self.created_at,
+            description=self.description,
+            author=self.author.toBaseUserResponse(),
+            website=self.website.toBaseWesbiteResponse(),
+            program=program,
+            annotations=[
+                annotation.toAnnotationResponse() for annotation in self.annotations
+            ],
         )
 
 
@@ -130,3 +171,8 @@ class Annotation(SQLModel, table=True):
     description: str
 
     script: Script = Relationship(back_populates="annotations")
+
+    def toAnnotationResponse(self) -> AnnotationResponse:
+        return AnnotationResponse(
+            id=self.id, location=self.location, description=self.description
+        )

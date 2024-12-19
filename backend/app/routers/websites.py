@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter
 from typing import List
 from sqlmodel import select
 
+from ..exceptions.not_found import website_not_found_exception
 from ..database import DatabaseDep
 from ..models.responses import BaseWebsiteResponse, WebsiteWithScriptsResponse
 from ..models.requests import CreateWebsiteRequest
@@ -34,8 +35,5 @@ def create_website(
 def get_website(website_id: int, session: DatabaseDep) -> WebsiteWithScriptsResponse:
     website = session.get(Website, website_id)
     if not website:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Could not find a website with id {website_id}",
-        )
+        raise website_not_found_exception(website_id)
     return website.toWebsiteWithScriptsResponse()

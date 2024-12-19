@@ -36,6 +36,5 @@ class UpdateUnpublishedScriptRequest(BaseModel):
 
 
 class CreateAnnotationRequest(BaseModel):
-    script_id: int
     location: str
     description: str
