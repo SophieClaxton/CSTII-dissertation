@@ -1,5 +1,6 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter
 
+from ..exceptions.not_found import user_not_found_exception
 from ..database import DatabaseDep
 from ..models.database_tables import User
 from ..models.responses import BaseUserResponse, UserWithScriptsResponse
@@ -21,10 +22,7 @@ def create_user(user: CreateUserRequest, session: DatabaseDep) -> BaseUserRespon
 def get_user(user_id: int, session: DatabaseDep) -> UserWithScriptsResponse:
     user = session.get(User, user_id)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Did not find user with id {user_id}",
-        )
+        raise user_not_found_exception(user_id)
     return user.toUserWithScriptsResponse()
 
 
@@ -32,10 +30,7 @@ def get_user(user_id: int, session: DatabaseDep) -> UserWithScriptsResponse:
 def update_user(user: UpdateUserRequest, session: DatabaseDep) -> BaseUserResponse:
     existing_user = session.get(User, user.id)
     if not existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Did not find user with id {user.id}",
-        )
+        raise user_not_found_exception(user.id)
 
     if user.name:
         existing_user.name = user.name
