@@ -11,7 +11,7 @@ def build_and_close():
             stderr=subprocess.PIPE,
         )
 
-        time.sleep(2)
+        time.sleep(5)
 
         status_check_response = requests.get("http://localhost:8000/")
         status_check = status_check_response.json()
