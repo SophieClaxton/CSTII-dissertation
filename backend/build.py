@@ -28,6 +28,7 @@ def build_and_close():
 
     except Exception as e:
         print(f"Build failed: {e}")
+        print(f"Exception Type: {type(e)}")
         return 1
 
 
