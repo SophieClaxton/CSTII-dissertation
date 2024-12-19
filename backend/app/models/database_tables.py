@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, SQLModel, Relationship  # type: ignore
 from datetime import datetime
 from typing import List
 
@@ -15,7 +15,7 @@ class User(SQLModel, table=True):
 
 class Script(SQLModel, table=True):
     id: int = Field(primary_key=True)
-    name: str
+    title: str
     author_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
     created_at: datetime = Field(default=datetime.now)
     description: str
@@ -42,11 +42,9 @@ class Website(SQLModel, table=True):
 
 class UnpublishedScript(SQLModel, table=True):
     id: int = Field(primary_key=True)
-    name: str | None = Field(nullable=True)
-    author_id: int | None = Field(
-        foreign_key="user.id", nullable=True, ondelete="CASCADE"
-    )
-    created_at: datetime | None = Field(default=datetime.now, nullable=True)
+    title: str | None = Field(nullable=True)
+    author_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
+    created_at: datetime = Field(default=datetime.now, nullable=True)
     description: str | None = Field(nullable=True)
     script_url: str
     website_id: int | None = Field(
