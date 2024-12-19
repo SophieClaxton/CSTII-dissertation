@@ -20,7 +20,7 @@ async def get_session():
         yield session
 
 
-DbDep = Annotated[Session, Depends(get_session)]
+DatabaseDep = Annotated[Session, Depends(get_session)]
 
 
 def insert_default_data():
