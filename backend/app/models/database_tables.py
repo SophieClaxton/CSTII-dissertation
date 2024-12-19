@@ -5,8 +5,11 @@ from typing import List
 from .responses import (
     BaseUserResponse,
     BaseWebsiteResponse,
+    ScriptWithAuthorResponse,
     ScriptWithWebsiteResponse,
     UnpublishedScriptWithWebsiteResponse,
+    UserWithScriptsResponse,
+    WebsiteWithScriptsResponse,
 )
 
 
@@ -22,9 +25,20 @@ class User(SQLModel, table=True):
     def toBaseUserResponse(self) -> BaseUserResponse:
         return BaseUserResponse(id=self.id, name=self.name)
 
+    def toUserWithScriptsResponse(self) -> UserWithScriptsResponse:
+        return UserWithScriptsResponse(
+            id=self.id,
+            name=self.name,
+            scripts=[script.toScriptWithWebsiteResponse() for script in self.scripts],
+            unpublished_scripts=[
+                script.toUnpublishedScriptWithWebsiteResponse()
+                for script in self.unpublished_scripts
+            ],
+        )
+
 
 class Script(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     title: str
     author_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
     created_at: datetime = Field(default=datetime.now)
@@ -47,9 +61,18 @@ class Script(SQLModel, table=True):
             website=self.website.toBaseWesbiteResponse(),
         )
 
+    def toScriptWithAuthorResponse(self) -> ScriptWithAuthorResponse:
+        return ScriptWithAuthorResponse(
+            id=self.id,
+            title=self.title,
+            created_at=self.created_at,
+            description=self.description,
+            author=self.author.toBaseUserResponse(),
+        )
+
 
 class Website(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     url: str
     descrpition: str
 
@@ -63,9 +86,17 @@ class Website(SQLModel, table=True):
             id=self.id, url=self.url, description=self.descrpition
         )
 
+    def toWebsiteWithScriptsResponse(self) -> WebsiteWithScriptsResponse:
+        return WebsiteWithScriptsResponse(
+            id=self.id,
+            url=self.url,
+            description=self.descrpition,
+            scripts=[script.toScriptWithAuthorResponse() for script in self.scripts],
+        )
+
 
 class UnpublishedScript(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     title: str | None = Field(nullable=True)
     author_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
     created_at: datetime = Field(default=datetime.now, nullable=True)
@@ -93,7 +124,7 @@ class UnpublishedScript(SQLModel, table=True):
 
 
 class Annotation(SQLModel, table=True):
-    id: int = Field(primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     script_id: int = Field(foreign_key="script.id", ondelete="CASCADE")
     location: str
     description: str
