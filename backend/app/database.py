@@ -23,7 +23,7 @@ async def get_session():
 DbDep = Annotated[Session, Depends(get_session)]
 
 
-def add_one_user():
+def insert_default_data():
     with Session(engine) as session:
         user_1 = User(name="user_1")
         session.add(user_1)
