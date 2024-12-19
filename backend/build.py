@@ -26,6 +26,10 @@ def build_and_close():
         print("Build successful")
         return 0
 
+    except ConnectionError as e:
+        print(f"Could not setup connection - double check server runs locally")
+        return 0
+
     except Exception as e:
         print(f"Build failed: {e}")
         print(f"Exception Type: {type(e)}")
