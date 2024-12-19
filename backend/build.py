@@ -11,7 +11,7 @@ def build_and_close():
             stderr=subprocess.PIPE,
         )
 
-        time.sleep(5)
+        time.sleep(10)
 
         status_check_response = requests.get("http://localhost:8000/")
         status_check = status_check_response.json()
@@ -26,7 +26,7 @@ def build_and_close():
         print("Build successful")
         return 0
 
-    except ConnectionError as e:
+    except requests.ConnectionError as e:
         print(f"Could not setup connection - double check server runs locally")
         return 0
 
