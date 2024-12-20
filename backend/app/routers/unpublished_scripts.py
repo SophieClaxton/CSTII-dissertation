@@ -2,13 +2,18 @@ from datetime import datetime
 from fastapi import APIRouter
 from typing import List
 
+from ..static_files import (
+    create_unpublished_script_url,
+    delete_unpublished_script_file,
+    get_unpublished_script_program,
+    update_unpublished_script_program,
+)
 from ..exceptions.not_found import (
     unpublished_script_not_found_exception,
     user_not_found_exception,
     user_or_website_not_found_exception,
 )
 from ..database import DatabaseDep
-from ..models.wip_program import WipProgram
 from ..models.database_tables import UnpublishedScript, User, Website
 from ..models.responses import (
     BaseUnpublishedScriptResponse,
@@ -31,6 +36,7 @@ def get_user_unpublished_scripts(
     user = session.get(User, user_id)
     if not user:
         raise user_not_found_exception(user_id)
+
     return [
         script.toUnpublishedScriptWithWebsiteResponse()
         for script in user.unpublished_scripts
@@ -44,13 +50,15 @@ def create_user_unpublished_script(
     user = session.get(User, user_id)
     if not user:
         raise user_not_found_exception(user_id)
-    # TODO: create a script url
+
+    script_url = create_unpublished_script_url()
     new_script = UnpublishedScript(
-        author_id=user.id, script_url="URL", created_at=datetime.now()
+        author_id=user.id, script_url=script_url, created_at=datetime.now()
     )
     session.add(new_script)
     session.commit()
     session.refresh(new_script)
+
     return new_script.toBaseUnpublishedScriptResponse()
 
 
@@ -61,8 +69,9 @@ def get_unpublished_script(
     script = session.get(UnpublishedScript, script_id)
     if not script:
         raise unpublished_script_not_found_exception(script_id)
-    # TODO: retrieve stored program
-    program = WipProgram()
+
+    program = get_unpublished_script_program(script.script_url)
+
     return script.toUnpublishedScriptWithProgramResponse(program)
 
 
@@ -81,14 +90,12 @@ def update_unpublished_script(
     if script.website_id:
         existing_script.website_id = script.website_id
     if script.program:
-        # TODO: save the program to the file at script.url
-        pass
+        update_unpublished_script_program(existing_script.script_url, script.program)
 
     session.commit()
     session.refresh(existing_script)
 
-    # TODO: retrieve program
-    program = WipProgram()
+    program = get_unpublished_script_program(existing_script.script_url)
 
     return existing_script.toUnpublishedScriptWithProgramResponse(program)
 
@@ -99,7 +106,8 @@ def delete_unpublished_script(script_id: int, session: DatabaseDep) -> SuccessRe
     if not script:
         raise unpublished_script_not_found_exception(script_id)
 
-    # TODO: delete the program file
+    delete_unpublished_script_file(script.script_url)
+
     session.delete(script)
     session.commit()
     return SuccessResponse()
@@ -125,4 +133,5 @@ def get_user_website_unpublished_scripts(
     scripts_at_website = filter(
         (lambda script: script.website_id == website_id), scripts
     )
+
     return [script.toBaseUnpublishedScriptResponse() for script in scripts_at_website]

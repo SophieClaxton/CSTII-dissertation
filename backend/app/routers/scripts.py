@@ -2,6 +2,8 @@ from fastapi import APIRouter
 from typing import List
 from sqlmodel import select
 
+from ..static_files import create_script_file, delete_script_file, get_script_program
+
 from ..exceptions.not_found import (
     script_not_found_exception,
     user_not_found_exception,
@@ -10,7 +12,6 @@ from ..exceptions.not_found import (
 )
 from ..database import DatabaseDep
 from ..models.database_tables import Annotation, Script, User, Website
-from ..models.program import Program
 from ..models.responses import (
     BaseScriptResponse,
     ScriptWithAuthorAndWebsiteResponse,
@@ -47,18 +48,21 @@ def create_script(
             website_id=script.website_id,
             website_found=True if website else False,
         )
-    # TODO: add logic to save program to file
+
+    filename = create_script_file(program=script.program)
     new_script = Script(
         title=script.title,
         author_id=script.author_id,
         created_at=script.created_at,
         description=script.description,
         website_id=script.website_id,
-        script_url="url_name",
+        script_url=filename,
     )
+
     session.add(new_script)
     session.commit()
     session.refresh(new_script)
+
     return new_script.toBaseScriptResponse()
 
 
@@ -67,8 +71,9 @@ def get_script(script_id: int, session: DatabaseDep) -> ScriptWithProgramRespons
     script = session.get(Script, script_id)
     if not script:
         raise script_not_found_exception(script_id)
-    # TODO: retrieve the stored program
-    program = Program()
+
+    program = get_script_program(script.script_url)
+
     return script.toScriptWithProgramResponse(program)
 
 
@@ -77,9 +82,12 @@ def delete_script(script_id: int, session: DatabaseDep) -> SuccessResponse:
     script = session.get(Script, script_id)
     if not script:
         raise script_not_found_exception(script_id)
-    # TODO: remove the stored program corresponding to this script
+
+    delete_script_file(script.script_url)
+
     session.delete(script)
     session.commit()
+
     return SuccessResponse()
 
 
@@ -90,6 +98,7 @@ def create_annotation(
     script = session.get(Script, script_id)
     if not script:
         raise script_not_found_exception(script_id)
+
     new_annotation = Annotation(
         script_id=script.id,
         location=annotation.location,
@@ -97,6 +106,7 @@ def create_annotation(
     )
     session.add(new_annotation)
     session.commit()
+
     return SuccessResponse()
 
 
@@ -107,6 +117,7 @@ def get_user_scripts(
     user = session.get(User, user_id)
     if not user:
         raise user_not_found_exception(user_id)
+
     return [script.toScriptWithWebsiteResponse() for script in user.scripts]
 
 
@@ -117,4 +128,5 @@ def get_website_scripts(
     website = session.get(Website, website_id)
     if not website:
         raise website_not_found_exception(website_id)
+
     return [script.toScriptWithAuthorResponse() for script in website.scripts]

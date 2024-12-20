@@ -175,7 +175,7 @@ class UnpublishedScript(SQLModel, table=True):
         )
 
     def toUnpublishedScriptWithProgramResponse(
-        self, program: WipProgram
+        self, program: WipProgram | None
     ) -> UnpublishedScriptWithProgramResponse:
         return UnpublishedScriptWithProgramResponse(
             id=self.id,
