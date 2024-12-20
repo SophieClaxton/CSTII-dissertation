@@ -30,9 +30,8 @@ router = APIRouter(prefix="/unpublished_scripts", tags=["unpublished_scripts"])
     "/user/{user_id}", response_model=List[UnpublishedScriptWithWebsiteResponse]
 )
 def get_user_unpublished_scripts(
-    user_id: int, session: DatabaseDep, name_query: str | None = None
+    user_id: int, session: DatabaseDep
 ) -> List[UnpublishedScriptWithWebsiteResponse]:
-    # TODO: include `name_query` in search
     user = session.get(User, user_id)
     if not user:
         raise user_not_found_exception(user_id)

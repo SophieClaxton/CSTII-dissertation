@@ -3,7 +3,6 @@ from typing import List
 from sqlmodel import select
 
 from ..static_files import create_script_file, delete_script_file, get_script_program
-
 from ..exceptions.not_found import (
     script_not_found_exception,
     user_not_found_exception,
@@ -28,9 +27,7 @@ router = APIRouter(prefix="/scripts", tags=["scripts"])
 @router.get("/", response_model=List[ScriptWithAuthorAndWebsiteResponse])
 def get_scripts(
     session: DatabaseDep,
-    name_query: str | None = None,
 ) -> List[ScriptWithAuthorAndWebsiteResponse]:
-    # TODO: include `name_query` when searching for scripts
     scripts = session.exec(select(Script)).all()
     return [script.toScriptWithAuthorAndWebsiteResponse() for script in scripts]
 
