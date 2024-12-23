@@ -1,5 +1,5 @@
-import XarrowProgramFlow from './components/EditorNode/ProgramFlow';
-import { EditorProgramContextProvider } from './contexts/EditorProgramContext';
+import XarrowProgramFlow from './components/CST/ProgramFlow';
+import { UnpublishedScriptContextProvider } from './contexts/UnpublishedScriptContext';
 import './styles/editor.css';
 
 interface EditorProps {
@@ -15,9 +15,9 @@ const Editor: React.FC<EditorProps> = ({ goHome }) => {
           Back
         </button>
       </div>
-      <EditorProgramContextProvider>
+      <UnpublishedScriptContextProvider>
         <XarrowProgramFlow />
-      </EditorProgramContextProvider>
+      </UnpublishedScriptContextProvider>
     </div>
   );
 };

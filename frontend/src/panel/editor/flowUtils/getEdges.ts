@@ -1,16 +1,16 @@
-import { EditorFollowStep } from '../../models/programComponent/ProgramComponent';
-import { mapEditorFollowStepToId } from '../../models/programComponent/mappers';
+import { CSTFollowNode } from '../../models/CST/CST';
+import { mapNodeIdToString } from '../../models/CST/mappers';
 
 const getFollowEdge = (
-  followStep: EditorFollowStep,
+  followStep: CSTFollowNode,
 ): { id: string; source: string; target: string } | undefined => {
   if (!followStep.nextSectionId) {
     return undefined;
   }
   return {
-    id: `${mapEditorFollowStepToId(followStep)}-${followStep.nextSectionId}`,
-    source: mapEditorFollowStepToId(followStep),
-    target: followStep.nextSectionId,
+    id: `${mapNodeIdToString(followStep.id)}-${mapNodeIdToString(followStep.nextSectionId)}`,
+    source: mapNodeIdToString(followStep.id),
+    target: mapNodeIdToString(followStep.nextSectionId),
   };
 };
 

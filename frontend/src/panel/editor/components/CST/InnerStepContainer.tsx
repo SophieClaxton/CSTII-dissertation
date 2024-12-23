@@ -16,29 +16,30 @@ import {
 } from '@dnd-kit/sortable';
 import InnerStepNode from './InnerStepNode';
 import { useXarrow } from 'react-xarrows';
-import { EditorInnerStep } from '../../../models/programComponent/ProgramComponent';
+import { CSTInnerStepNode } from '../../../models/CST/CST';
 import { MouseSensor } from '../../flowUtils/sensors';
+import { mapNodeIdToString } from '../../../models/CST/mappers';
 
 interface InnerStepContainerProps {
-  innerSteps: EditorInnerStep[];
+  innerSteps: CSTInnerStepNode[];
 }
 
 const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
   innerSteps,
 }) => {
   const [items, setItems] = useState<UniqueIdentifier[]>(
-    innerSteps.map((step) => step.id),
+    innerSteps.map((step) => mapNodeIdToString(step.id)),
   );
 
   // Need the useEffect to update the items when innerSteps changes,
   // because useState creates a separate variable
   useEffect(() => {
-    setItems(innerSteps.map((step) => step.id));
+    setItems(innerSteps.map((step) => mapNodeIdToString(step.id)));
   }, [innerSteps]);
 
   if (innerSteps.length !== items.length) {
     console.log('InnerSteps and items are not the same length');
-    setItems(innerSteps.map((step) => step.id));
+    setItems(innerSteps.map((step) => mapNodeIdToString(step.id)));
   }
 
   const sensors = useSensors(
@@ -72,7 +73,9 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
     >
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {items.map((id) => (
-          <InnerStepNode step={innerSteps.find((step) => step.id === id)!} />
+          <InnerStepNode
+            step={innerSteps.find((step) => mapNodeIdToString(step.id) === id)!}
+          />
         ))}
       </SortableContext>
     </DndContext>

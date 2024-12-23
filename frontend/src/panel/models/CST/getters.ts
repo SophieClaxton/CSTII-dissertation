@@ -1,28 +1,29 @@
 import {
-  EditorEndStep,
-  EditorInnerStep,
-  EditorProgram,
-  EditorProgramComponent,
-  EditorProgramSection,
-  EditorSection,
-  EditorStep,
-  EditorStepType,
-  EditorSubsection,
-} from './ProgramComponent';
+  CSTEndStepNode,
+  CSTInnerStepNode,
+  CSTProgram,
+  CSTNode,
+  CSTSectionNode,
+  CSTStepNode,
+  CSTStepNodeType,
+  CSTSubsectionNode,
+  CSTNodeId,
+  CSTInnerStepId,
+} from './CST';
 
 const getEditorComponentById = (
-  editorProgram: EditorProgram,
-  id: string,
-): EditorProgramComponent | undefined => {
+  editorProgram: CSTProgram,
+  id: CSTNodeId,
+): CSTNode | undefined => {
   return editorProgram.sections
     .map((section) => getEditorComponentByIdFromSection(section, id))
     .reduce((prev, curr) => (prev ? prev : curr), undefined);
 };
 
 const getEditorComponentByIdFromSection = (
-  editorSection: EditorSubsection | EditorSection,
-  id: string,
-): EditorProgramComponent | undefined => {
+  editorSection: CSTSubsectionNode | CSTSectionNode,
+  id: CSTNodeId,
+): CSTNode | undefined => {
   if (editorSection.id == id) {
     return editorSection;
   }
@@ -36,13 +37,13 @@ const getEditorComponentByIdFromSection = (
 };
 
 const getEditorComponentByIdFromStep = (
-  editorStep: EditorStep,
-  id: string,
-): EditorProgramComponent | undefined => {
+  editorStep: CSTStepNode,
+  id: CSTNodeId,
+): CSTNode | undefined => {
   if (editorStep.id == id) {
     return editorStep;
   }
-  if (editorStep.type == EditorStepType.UserDecision) {
+  if (editorStep.type == CSTStepNodeType.UserDecision) {
     const choice1Result = getEditorComponentByIdFromSection(
       editorStep.choice1,
       id,
@@ -56,20 +57,21 @@ const getEditorComponentByIdFromStep = (
   return undefined;
 };
 
-const getNextStepId = (
-  editorSection: EditorSection | EditorSubsection,
-  isEndStep: boolean = false,
-): string => {
-  return `${editorSection.id}.${isEndStep ? 'E' : editorSection.innerSteps.length + 1}`;
+const getNextInnerStepId = (
+  sectionNode: CSTSectionNode | CSTSubsectionNode,
+): CSTInnerStepId => {
+  const innerStepIds = sectionNode.innerSteps.map((step) => step.id.stepId);
+  const maxInnerStepId = innerStepIds.length ? Math.max(...innerStepIds) : 0;
+  return { parentId: sectionNode.id, stepId: maxInnerStepId + 1 };
 };
 
-const getNextSectionId = (editorProgram: EditorProgram): string => {
+const getNextSectionId = (editorProgram: CSTProgram): string => {
   return `S${editorProgram.sections.length}`;
 };
 
 const getNodeChoices = (
-  section: EditorSection | EditorSubsection,
-): EditorStep[] => {
+  section: CSTSectionNode | CSTSubsectionNode,
+): CSTStepNode[] => {
   const innerNodeChoices = getInnerStepNodeChoices(section);
   return section.endStep
     ? innerNodeChoices
@@ -77,39 +79,38 @@ const getNodeChoices = (
 };
 
 const getInnerStepNodeChoices = (
-  section: EditorSection | EditorSubsection,
-): EditorInnerStep[] => [
+  section: CSTSectionNode | CSTSubsectionNode,
+): CSTInnerStepNode[] => [
   {
-    id: getNextStepId(section),
-    type: EditorStepType.Click,
+    id: getNextInnerStepId(section),
+    type: CSTStepNodeType.Click,
   },
   {
-    id: getNextStepId(section),
-    type: EditorStepType.Read,
+    id: getNextInnerStepId(section),
+    type: CSTStepNodeType.Read,
   },
   {
-    id: getNextStepId(section),
-    type: EditorStepType.ScrollTo,
+    id: getNextInnerStepId(section),
+    type: CSTStepNodeType.ScrollTo,
   },
   {
-    id: getNextStepId(section),
-    type: EditorStepType.Drag,
+    id: getNextInnerStepId(section),
+    type: CSTStepNodeType.Drag,
   },
 ];
 
 const getEndStepNodeChoices = (
-  section: EditorSection | EditorProgramSection,
-): EditorEndStep[] => [
+  section: CSTSectionNode | CSTSubsectionNode,
+): CSTEndStepNode[] => [
   {
-    id: `${section.id}.E`,
-    type: EditorStepType.Follow,
-    parentSectionId: section.id,
+    id: { parentId: section.id, stepId: 'E' },
+    type: CSTStepNodeType.Follow,
   },
 ];
 
 export {
   getEditorComponentById,
-  getNextStepId,
+  getNextInnerStepId as getNextStepId,
   getNextSectionId,
   getNodeChoices,
 };

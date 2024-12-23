@@ -1,8 +1,11 @@
 import InterfaceElement from './InterfaceElement';
 
+interface ASTProgram {
+  start: ASTSectionNode;
+}
+
 enum ASTNodeType {
   Placeholder = 'Placeholder',
-  Program = 'Program',
   Section = 'Section',
   Subsection = 'Subsection',
   End = 'End',
@@ -18,28 +21,15 @@ enum ASTNodeType {
   Draw = 'Draw',
 }
 
-interface ASTPlaceholderNode {
-  type: ASTNodeType.Placeholder;
-}
-
-interface ASTProgramNode {
-  type: ASTNodeType.Program;
-  name: string;
-  author: string;
-  dateCreated: string;
-  start: ASTSectionNode | ASTPlaceholderNode;
-}
-
 interface ASTSubsectionNode {
   type: ASTNodeType.Subsection;
-  start: ASTStepNode | ASTPlaceholderNode;
+  start: ASTStepNode;
 }
 
 interface ASTSectionNode {
   type: ASTNodeType.Section;
+  start: ASTStepNode;
   url: string;
-  start: ASTStepNode | ASTPlaceholderNode;
-  name?: string;
 }
 
 type ASTStepNode =
@@ -52,9 +42,9 @@ type ASTStepNode =
   | ASTInputNode
   | ASTUserDecisionNode;
 
-interface ASTBaseStepNode {
+interface ASTStepBase {
   element: InterfaceElement;
-  next: ASTStepNode | ASTPlaceholderNode;
+  next: ASTStepNode;
   comment?: string;
 }
 
@@ -69,44 +59,44 @@ interface ASTFollowNode {
   comment?: string;
 }
 
-interface ASTClickNode extends ASTBaseStepNode {
+interface ASTClickNode extends ASTStepBase {
   type: ASTNodeType.Click;
 }
 
-interface ASTReadNode extends ASTBaseStepNode {
+interface ASTReadNode extends ASTStepBase {
   type: ASTNodeType.Read;
 }
 
-interface ASTScrollToNode extends ASTBaseStepNode {
+interface ASTScrollToNode extends ASTStepBase {
   type: ASTNodeType.ScrollTo;
 }
 
-interface ASTDragNode extends ASTBaseStepNode {
+interface ASTDragNode extends ASTStepBase {
   type: ASTNodeType.Drag;
   location: { x: number; y: number };
 }
 
 type ASTInputNode = ASTWriteNode | ASTSelectNode | ASTCheckNode | ASTDrawNode;
 
-interface ASTWriteNode extends ASTBaseStepNode {
+interface ASTWriteNode extends ASTStepBase {
   type: ASTNodeType.Write;
   text: string;
   description?: string;
 }
 
-interface ASTSelectNode extends ASTBaseStepNode {
+interface ASTSelectNode extends ASTStepBase {
   type: ASTNodeType.Select;
   option: string;
   description?: string;
 }
 
-interface ASTCheckNode extends ASTBaseStepNode {
+interface ASTCheckNode extends ASTStepBase {
   type: ASTNodeType.Check;
   isChecked: boolean;
   description?: string;
 }
 
-interface ASTDrawNode extends ASTBaseStepNode {
+interface ASTDrawNode extends ASTStepBase {
   type: ASTNodeType.Draw;
   description: string;
 }
@@ -120,8 +110,7 @@ interface ASTUserDecisionNode {
 
 export { ASTNodeType };
 export type {
-  ASTPlaceholderNode,
-  ASTProgramNode,
+  ASTProgram as ASTProgramNode,
   ASTSectionNode,
   ASTSubsectionNode,
   ASTStepNode,

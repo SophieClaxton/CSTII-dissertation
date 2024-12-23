@@ -1,14 +1,13 @@
-import { ASTStepNode, ASTNodeType, ASTPlaceholderNode } from '../../../models/AST';
+import { ASTStepNode, ASTNodeType } from '../../../models/AST';
 import DisplaySubsection from './DisplaySubsection';
 
 interface DisplayStepProps {
-  step: ASTStepNode | ASTPlaceholderNode;
+  step: ASTStepNode;
 }
 
 const DisplayStep: React.FC<DisplayStepProps> = ({ step }) => {
   switch (step.type) {
     case ASTNodeType.End:
-    case ASTNodeType.Placeholder:
       return <></>;
     case ASTNodeType.UserDecision:
       return (

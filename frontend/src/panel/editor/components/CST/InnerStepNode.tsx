@@ -2,23 +2,21 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import './styles/step.css';
 import UserDecisionNode from './UserDecisionNode';
-import {
-  EditorInnerStep,
-  EditorStepType,
-} from '../../../models/programComponent/ProgramComponent';
+import { CSTInnerStepNode, CSTStepNodeType } from '../../../models/CST/CST';
+import { mapNodeIdToString } from '../../../models/CST/mappers';
 
 interface InnerStepNodeProps {
-  step: EditorInnerStep;
+  step: CSTInnerStepNode;
 }
 
 const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: step.id });
+    useSortable({ id: mapNodeIdToString(step.id) });
 
   const style = { transform: CSS.Transform.toString(transform), transition };
 
   switch (step.type) {
-    case EditorStepType.UserDecision:
+    case CSTStepNodeType.UserDecision:
       return (
         <UserDecisionNode
           step={step}
@@ -38,7 +36,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
           style={style}
           {...attributes}
           {...listeners}
-          key={step.id}
+          key={mapNodeIdToString(step.id)}
         >
           <p>{step.type.toUpperCase()}</p>
           {step.element && <p>{step.element.tag}</p>}

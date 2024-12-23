@@ -1,30 +1,27 @@
-import {
-  EditorSection,
-  EditorStep,
-} from '../../../models/programComponent/ProgramComponent';
+import { CSTSectionNode, CSTStepNode } from '../../../models/CST/CST';
 import './styles/section.css';
 import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
-import { addEditorStepToSection } from '../../../models/programComponent/setters';
-import { useEditorProgramContext } from '../../contexts/useEditorProgramContext';
-import { getNodeChoices } from '../../../models/programComponent/getters';
+import { addEditorStepToSection } from '../../../models/CST/setters';
+import { useUnpublishedScriptContext } from '../../contexts/useUnpublishedScriptContext';
+import { getNodeChoices } from '../../../models/CST/getters';
+import { mapNodeIdToString } from '../../../models/CST/mappers';
 
 interface SectionProps {
-  section: EditorSection;
+  section: CSTSectionNode;
 }
 
 const SectionNode: React.FC<SectionProps> = ({ section }) => {
-  const { dispatch } = useEditorProgramContext();
+  const { dispatch } = useUnpublishedScriptContext();
 
   return (
-    <div className="section" id={section.id}>
+    <div className="section" id={mapNodeIdToString(section.id)}>
       <div className="section-meta-data">
-        {section.name && <p>{section.name}</p>}
         <p>{section.url}</p>
       </div>
       <InnerStepContainer innerSteps={section.innerSteps} />
-      <AddNodeButton<EditorStep>
+      <AddNodeButton<CSTStepNode>
         onAdd={(step) => addEditorStepToSection(dispatch, section, step)}
         nodeChoices={getNodeChoices(section)}
       />

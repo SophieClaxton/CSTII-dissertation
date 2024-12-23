@@ -1,21 +1,22 @@
 import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
-import { EditorFollowStep } from '../../../models/programComponent/ProgramComponent';
+import { CSTFollowNode } from '../../../models/CST/CST';
 import SectionNode from './SectionNode';
 import { getFollowSteps } from '../../flowUtils/getNodes';
 import { getFollowEdge } from '../../flowUtils/getEdges';
 import './styles/program.css';
-import { useEditorProgramContext } from '../../contexts/useEditorProgramContext';
+import { useUnpublishedScriptContext } from '../../contexts/useUnpublishedScriptContext';
+import { mapNodeIdToString } from '../../../models/CST/mappers';
 
 const ProgramFlow: React.FC = () => {
-  const { editorProgram: program } = useEditorProgramContext();
+  const { unpublishedScript } = useUnpublishedScriptContext();
   console.log('Rendering ProgramFlow');
 
   const initialEdge = {
     id: 'start-1',
     source: 'start',
-    target: program.sections[0].id,
+    target: mapNodeIdToString(unpublishedScript.program.sections[0].id),
   };
-  const followSteps: EditorFollowStep[] = program.sections
+  const followSteps: CSTFollowNode[] = unpublishedScript.program.sections
     .map(getFollowSteps)
     .flat();
   const followEdges = followSteps
@@ -28,9 +29,9 @@ const ProgramFlow: React.FC = () => {
   return (
     <>
       <div className="program-meta-data">
-        <h2>{program.name}</h2>
-        <h3>{program.author}</h3>
-        <h3>{program.dateCreated}</h3>
+        <h2>{unpublishedScript.title}</h2>
+        <h3>{unpublishedScript.author.name}</h3>
+        <h3>{unpublishedScript.created_at.toLocaleDateString()}</h3>
       </div>
       <div className="program-code-env" onScroll={updateArrows}>
         <div className="program-code">
@@ -38,7 +39,7 @@ const ProgramFlow: React.FC = () => {
             <div className="start-block" id="start">
               START
             </div>
-            {program.sections.map((section) => (
+            {unpublishedScript.program.sections.map((section) => (
               <SectionNode section={section} />
             ))}
             {edges.map((edge) => (

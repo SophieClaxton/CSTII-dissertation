@@ -1,14 +1,14 @@
 import {
-  EditorSection,
-  EditorFollowStep,
-  EditorInnerStep,
-  EditorStepType,
-  EditorSubsection,
-} from '../../models/programComponent/ProgramComponent';
+  CSTSectionNode,
+  CSTFollowNode,
+  CSTInnerStepNode,
+  CSTStepNodeType,
+  CSTSubsectionNode,
+} from '../../models/CST/CST';
 
 const getFollowSteps = (
-  section: EditorSection | EditorSubsection,
-): EditorFollowStep[] => {
+  section: CSTSectionNode | CSTSubsectionNode,
+): CSTFollowNode[] => {
   const innerFollowNodes = section.innerSteps
     .map(getFollowStepsFromInnerStep)
     .flat();
@@ -16,9 +16,9 @@ const getFollowSteps = (
     return innerFollowNodes;
   }
   switch (section.endStep.type) {
-    case EditorStepType.Follow:
+    case CSTStepNodeType.Follow:
       return innerFollowNodes.concat([section.endStep]);
-    case EditorStepType.UserDecision: {
+    case CSTStepNodeType.UserDecision: {
       const choice1FollowNodes = getFollowSteps(section.endStep.choice1);
       const choice2FollowNodes = getFollowSteps(section.endStep.choice2);
       return innerFollowNodes
@@ -29,9 +29,9 @@ const getFollowSteps = (
 };
 
 const getFollowStepsFromInnerStep = (
-  step: EditorInnerStep,
-): EditorFollowStep[] => {
-  if (step.type != EditorStepType.UserDecision) {
+  step: CSTInnerStepNode,
+): CSTFollowNode[] => {
+  if (step.type != CSTStepNodeType.UserDecision) {
     return [];
   }
   const subsection1InnerFollowNodes = getFollowSteps(step.choice1);

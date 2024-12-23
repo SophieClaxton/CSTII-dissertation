@@ -2,12 +2,13 @@ import { DraggableAttributes } from '@dnd-kit/core';
 import SubsectionNode from './SubsectionNode';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import {
-  EditorUserDecisionEndsWithType,
-  EditorUserDecisionStep,
-} from '../../../models/programComponent/ProgramComponent';
+  CSTUserDecisionEndType,
+  CSTUserDecisionNode,
+} from '../../../models/CST/CST';
+import { mapNodeIdToString } from '../../../models/CST/mappers';
 
 interface UserDecisionNodeProps {
-  step: EditorUserDecisionStep;
+  step: CSTUserDecisionNode;
   sortableProps?: {
     setNodeRef: (node: HTMLElement | null) => void;
     style: { transform: string | undefined; transition: string | undefined };
@@ -29,12 +30,12 @@ const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({
 
   return (
     <div
-      className={`step ${step.endsWithFollow == EditorUserDecisionEndsWithType.InnerStep ? 'draggableStep' : ''}`}
+      className={`step ${step.endsWithFollow == CSTUserDecisionEndType.InnerStep ? 'draggableStep' : ''}`}
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      key={step.id}
+      key={mapNodeIdToString(step.id)}
     >
       <p>{step.type.toUpperCase()}</p>
       <p>{step.question}</p>

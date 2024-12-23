@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { EditorStep } from '../../../models/programComponent/ProgramComponent';
+import { CSTStepNode } from '../../../models/CST/CST';
 import { useXarrow } from 'react-xarrows';
 
-interface AddNodeButtonProps<T extends EditorStep> {
+interface AddNodeButtonProps<T extends CSTStepNode> {
   onAdd: (node: T) => void;
   nodeChoices: T[];
 }
 
-const AddNodeButton = <T extends EditorStep>(props: AddNodeButtonProps<T>) => {
+const AddNodeButton = <T extends CSTStepNode>(props: AddNodeButtonProps<T>) => {
   const { onAdd, nodeChoices } = props;
   const [showNodeChoices, setShowNodeChoices] = useState(false);
   const updateArrows = useXarrow();

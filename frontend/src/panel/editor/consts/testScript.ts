@@ -2,11 +2,11 @@ import {
   ASTClickNode,
   ASTEndNode,
   ASTNodeType,
-  ASTProgramNode,
   ASTReadNode,
   ASTSubsectionNode,
   ASTUserDecisionNode,
 } from '../../models/AST';
+import { Script } from '../../models/Script';
 
 const endNode: ASTEndNode = {
   type: ASTNodeType.End,
@@ -41,16 +41,25 @@ const clickNode: ASTClickNode = {
   next: decisionNode,
 };
 
-const testASTProgram: ASTProgramNode = {
-  type: ASTNodeType.Program,
-  name: 'Test Program',
-  author: 'Sophie',
-  dateCreated: '19/11/2024',
-  start: {
-    type: ASTNodeType.Section,
-    url: 'www.gov.co.uk/',
-    start: clickNode,
+const testScript: Script = {
+  id: 1,
+  title: 'Test Program',
+  author: { id: 1, name: 'Sophie' },
+  created_at: new Date(2024, 12, 1),
+  description: 'A script to test the layout of programs',
+  website: {
+    id: 1,
+    url: 'www.test.com',
+    description: 'A non-existent test website',
   },
+  program: {
+    start: {
+      type: ASTNodeType.Section,
+      url: 'www.gov.co.uk/',
+      start: clickNode,
+    },
+  },
+  annotations: [],
 };
 
-export default testASTProgram;
+export default testScript;

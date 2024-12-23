@@ -1,34 +1,34 @@
-import { EditorAction, EditorReducerActionType } from '../EditorReducerActions';
+import { EditorAction, EditorActionType } from '../EditorAction';
 import {
-  EditorEndStep,
-  EditorInnerStep,
-  EditorSection,
-  EditorStep,
-  EditorSubsection,
-} from './ProgramComponent';
+  CSTEndStepNode,
+  CSTInnerStepNode,
+  CSTSectionNode,
+  CSTStepNode,
+  CSTSubsectionNode,
+} from './CST';
 import { isEndStep, isInnerStep } from './testers';
 
 const addEditorStepToSection = (
   programDispatch: React.Dispatch<EditorAction>,
-  section: EditorSection | EditorSubsection,
-  step: EditorStep,
+  section: CSTSectionNode | CSTSubsectionNode,
+  step: CSTStepNode,
 ) => {
   if (isInnerStep(step)) {
     console.log('The following step is an inner step');
     console.log(step);
     return programDispatch({
-      type: EditorReducerActionType.AddInnerStep,
+      type: EditorActionType.AddInnerStep,
       sectionId: section.id,
-      innerStep: step as EditorInnerStep,
+      innerStep: step as CSTInnerStepNode,
     });
   }
   if (isEndStep(step) && !section.endStep) {
     console.log('The following step is an end step');
     console.log(step);
     return programDispatch({
-      type: EditorReducerActionType.AddEndStep,
+      type: EditorActionType.AddEndStep,
       sectionId: section.id,
-      endStep: step as EditorEndStep,
+      endStep: step as CSTEndStepNode,
     });
   }
 };

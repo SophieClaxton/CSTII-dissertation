@@ -1,19 +1,16 @@
-import {
-  EditorEndStep,
-  EditorStepType,
-} from '../../../models/programComponent/ProgramComponent';
+import { CSTEndStepNode, CSTStepNodeType } from '../../../models/CST/CST';
 import FollowNode from './FollowNode';
 import UserDecisionNode from './UserDecisionNode';
 
 interface EndStepNodeProps {
-  endStep: EditorEndStep;
+  endStep: CSTEndStepNode;
 }
 
 const EndStepNode: React.FC<EndStepNodeProps> = ({ endStep }) => {
   switch (endStep.type) {
-    case EditorStepType.Follow:
+    case CSTStepNodeType.Follow:
       return <FollowNode step={endStep} />;
-    case EditorStepType.UserDecision:
+    case CSTStepNodeType.UserDecision:
       return <UserDecisionNode step={endStep} />;
   }
 };

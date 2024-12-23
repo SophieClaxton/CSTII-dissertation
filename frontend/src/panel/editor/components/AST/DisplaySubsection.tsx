@@ -5,7 +5,9 @@ interface DisplaySubsectionProps {
   subsection: ASTSubsectionNode;
 }
 
-const DisplaySubsection: React.FC<DisplaySubsectionProps> = ({ subsection }) => {
+const DisplaySubsection: React.FC<DisplaySubsectionProps> = ({
+  subsection,
+}) => {
   return (
     <div className="subsection">
       <DisplayStep step={subsection.start} />

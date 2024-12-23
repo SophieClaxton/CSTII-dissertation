@@ -1,22 +1,34 @@
 import {
-  EditorEndStep,
-  EditorFollowStep,
-  EditorInnerStep,
-  EditorProgram,
-  EditorSection,
-  EditorStep,
-  EditorStepType,
-  EditorSubsection,
-} from './ProgramComponent';
+  CSTEndStepNode,
+  CSTInnerStepNode,
+  CSTNodeId,
+  CSTProgram,
+  CSTSectionId,
+  CSTSectionNode,
+  CSTStepNode,
+  CSTStepNodeType,
+  CSTSubsectionId,
+  CSTSubsectionNode,
+} from './CST';
 
-const mapEditorFollowStepToId = (followStep: EditorFollowStep) => {
-  return `${followStep.parentSectionId}F`;
+const mapNodeIdToString = (nodeId: CSTNodeId): string => {
+  if ('sectionId' in nodeId) {
+    return `S${nodeId.sectionId}`;
+  } else if ('subsectionId' in nodeId) {
+    return `${mapNodeIdToString(nodeId.parentId)}.s${nodeId.subsectionId}`;
+  } else if ('stepId' in nodeId) {
+    return `${mapNodeIdToString(nodeId.parentId)}.${nodeId.stepId}`;
+  }
+  throw new Error(`Could not translate node id ${nodeId}`);
 };
 
 const mapProgramToProgramWithUpdatedSections = (
-  program: EditorProgram,
-  sectionId: string,
-  onUpdateSection: (section: EditorSection, sectionId: string) => EditorSection,
+  program: CSTProgram,
+  sectionId: CSTSectionId | CSTSubsectionId,
+  onUpdateSection: (
+    section: CSTSectionNode,
+    sectionId: CSTSectionId | CSTSubsectionId,
+  ) => CSTSectionNode,
 ) => {
   return {
     ...program,
@@ -27,8 +39,11 @@ const mapProgramToProgramWithUpdatedSections = (
 };
 
 const mapSectionToSectionWithUpdatedInnerSteps =
-  (innerSteps: EditorInnerStep[]) =>
-  (section: EditorSection, sectionId: string): EditorSection => {
+  (innerSteps: CSTInnerStepNode[]) =>
+  (
+    section: CSTSectionNode,
+    sectionId: CSTSectionId | CSTSubsectionId,
+  ): CSTSectionNode => {
     if (section.id == sectionId) {
       console.log('Found section to update steps');
       return {
@@ -44,23 +59,23 @@ const mapSectionToSectionWithUpdatedInnerSteps =
             step,
             sectionId,
             innerSteps,
-          ) as EditorInnerStep,
+          ) as CSTInnerStepNode,
       ),
       endStep: section.endStep
         ? (mapStepToStepWithUpdatedInnerSteps(
             section.endStep,
             sectionId,
             innerSteps,
-          ) as EditorEndStep)
+          ) as CSTEndStepNode)
         : section.endStep,
     };
   };
 
 const mapSubsectionToSubsectionWithUpdatedInnerSteps = (
-  subsection: EditorSubsection,
-  sectionId: string,
-  innerSteps: EditorInnerStep[],
-): EditorSubsection => {
+  subsection: CSTSubsectionNode,
+  sectionId: CSTSectionId | CSTSubsectionId,
+  innerSteps: CSTInnerStepNode[],
+): CSTSubsectionNode => {
   if (subsection.id == sectionId) {
     console.log('Found subsection to update steps');
     return {
@@ -76,24 +91,24 @@ const mapSubsectionToSubsectionWithUpdatedInnerSteps = (
           step,
           sectionId,
           innerSteps,
-        ) as EditorInnerStep,
+        ) as CSTInnerStepNode,
     ),
     endStep: subsection.endStep
       ? (mapStepToStepWithUpdatedInnerSteps(
           subsection.endStep,
           sectionId,
           innerSteps,
-        ) as EditorEndStep)
+        ) as CSTEndStepNode)
       : subsection.endStep,
   };
 };
 
 const mapStepToStepWithUpdatedInnerSteps = (
-  step: EditorStep,
-  sectionId: string,
-  innerSteps: EditorInnerStep[],
-) => {
-  if (step.type == EditorStepType.UserDecision) {
+  step: CSTStepNode,
+  sectionId: CSTSectionId | CSTSubsectionId,
+  innerSteps: CSTInnerStepNode[],
+): CSTStepNode => {
+  if (step.type == CSTStepNodeType.UserDecision) {
     return {
       ...step,
       choice1: mapSubsectionToSubsectionWithUpdatedInnerSteps(
@@ -112,8 +127,11 @@ const mapStepToStepWithUpdatedInnerSteps = (
 };
 
 const mapSectionToSectionWithUpdatedEndStep =
-  (endStep: EditorEndStep) =>
-  (section: EditorSection, sectionId: string): EditorSection => {
+  (endStep: CSTEndStepNode) =>
+  (
+    section: CSTSectionNode,
+    sectionId: CSTSectionId | CSTSubsectionId,
+  ): CSTSectionNode => {
     if (section.id == sectionId) {
       console.log('Found section to update steps');
       return {
@@ -129,23 +147,23 @@ const mapSectionToSectionWithUpdatedEndStep =
             step,
             sectionId,
             endStep,
-          ) as EditorInnerStep,
+          ) as CSTInnerStepNode,
       ),
       endStep: section.endStep
         ? (mapStepToStepWithUpdatedEndStep(
             section.endStep,
             sectionId,
             endStep,
-          ) as EditorEndStep)
+          ) as CSTEndStepNode)
         : section.endStep,
     };
   };
 
 const mapSubsectionToSubsectionWithUpdatedEndStep = (
-  subsection: EditorSubsection,
-  sectionId: string,
-  endStep: EditorEndStep,
-): EditorSubsection => {
+  subsection: CSTSubsectionNode,
+  sectionId: CSTSectionId | CSTSubsectionId,
+  endStep: CSTEndStepNode,
+): CSTSubsectionNode => {
   if (subsection.id == sectionId) {
     console.log('Found subsection to update steps');
     return {
@@ -161,24 +179,24 @@ const mapSubsectionToSubsectionWithUpdatedEndStep = (
           step,
           sectionId,
           endStep,
-        ) as EditorInnerStep,
+        ) as CSTInnerStepNode,
     ),
     endStep: subsection.endStep
       ? (mapStepToStepWithUpdatedEndStep(
           subsection.endStep,
           sectionId,
           endStep,
-        ) as EditorEndStep)
+        ) as CSTEndStepNode)
       : subsection.endStep,
   };
 };
 
 const mapStepToStepWithUpdatedEndStep = (
-  step: EditorStep,
-  sectionId: string,
-  endStep: EditorEndStep,
+  step: CSTStepNode,
+  sectionId: CSTSectionId | CSTSubsectionId,
+  endStep: CSTEndStepNode,
 ) => {
-  if (step.type == EditorStepType.UserDecision) {
+  if (step.type == CSTStepNodeType.UserDecision) {
     return {
       ...step,
       choice1: mapSubsectionToSubsectionWithUpdatedEndStep(
@@ -197,7 +215,7 @@ const mapStepToStepWithUpdatedEndStep = (
 };
 
 export {
-  mapEditorFollowStepToId,
+  mapNodeIdToString,
   mapProgramToProgramWithUpdatedSections,
   mapSectionToSectionWithUpdatedInnerSteps,
   mapSectionToSectionWithUpdatedEndStep,
