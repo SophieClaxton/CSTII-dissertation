@@ -5,7 +5,7 @@ import { getFollowSteps } from '../../flowUtils/getNodes';
 import { getFollowEdge } from '../../flowUtils/getEdges';
 import './styles/program.css';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
-import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
+import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript } = useUnpublishedScriptContext();

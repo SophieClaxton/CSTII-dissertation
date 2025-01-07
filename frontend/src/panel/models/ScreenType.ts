@@ -1,6 +1,7 @@
 enum ScreenType {
   Editor = 'Editor',
-  Support = 'Support',
+  ScriptSelector = 'ScriptSelector',
+  ScriptSupport = 'ScriptSupport',
 }
 
 export { ScreenType };

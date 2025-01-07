@@ -6,7 +6,7 @@ import AddNodeButton from './AddNodeButton';
 import { addEditorStepToSection } from '../../../models/CST/setters';
 import { getNodeChoices } from '../../../models/CST/getters';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
-import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
+import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
 
 interface SectionProps {
   section: CSTSectionNode;
