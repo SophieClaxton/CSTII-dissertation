@@ -1,6 +1,17 @@
 // managing element clickability
 let isClickable = false;
-const selectableElementTags = ['img', 'a', 'button', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+const selectableElementTags = [
+  'img',
+  'a',
+  'button',
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+];
 
 const setupClickabilityListener = () => {
   chrome.runtime.onMessage.addListener((message) => {
@@ -64,7 +75,11 @@ const addClickListeners = () => {
     if (selectableElementTags.includes(element.tagName.toLowerCase())) {
       element.addEventListener('click', () => {
         if (isClickable) {
-          const message = { type: 'clicked_element', element: element.outerHTML, tag: element.tagName };
+          const message = {
+            type: 'clicked_element',
+            element: element.outerHTML,
+            tag: element.tagName,
+          };
           console.log('sending message');
           chrome.runtime.sendMessage(message);
         }
