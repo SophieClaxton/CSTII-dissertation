@@ -5,8 +5,8 @@ from fastapi import Depends
 
 
 class Settings(BaseSettings):
-    create_tables: bool
-    database_name: str
+    create_tables: bool = False
+    database_name: str = "database.db"
 
     model_config = SettingsConfigDict(env_file="./app/.env")
 

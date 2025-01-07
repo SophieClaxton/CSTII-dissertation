@@ -145,15 +145,15 @@ interface CSTWriteNode extends CSTInputBase {
 }
 
 interface CSTSelectNode extends CSTInputBase {
-  type: CSTStepNodeType.Write;
+  type: CSTStepNodeType.Select;
 }
 
 interface CSTCheckNode extends CSTInputBase {
-  type: CSTStepNodeType.Write;
+  type: CSTStepNodeType.Check;
 }
 
 interface CSTDrawNode extends CSTInputBase {
-  type: CSTStepNodeType.Write;
+  type: CSTStepNodeType.Draw;
 }
 
 export { CSTStepNodeType, CSTUserDecisionEndType };

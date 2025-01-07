@@ -55,7 +55,7 @@ interface ASTEndNode {
 interface ASTFollowNode {
   type: ASTNodeType.Follow;
   element: InterfaceElement;
-  nextSection: ASTNodeType.Section;
+  nextSection: ASTSectionNode;
   comment?: string;
 }
 
