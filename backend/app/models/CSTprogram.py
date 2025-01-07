@@ -1,7 +1,7 @@
 from __future__ import annotations
 from enum import Enum
 from typing import Literal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from .element import Element
 
@@ -52,7 +52,7 @@ class CSTSectionNode(CSTSectionBase):
     url: str
 
 
-class CSTStepNodeType(Enum):
+class CSTStepNodeType(str, Enum):
     Follow = "Follow"
     Click = "Click"
     Read = "Read"
@@ -74,32 +74,44 @@ class CSTInnerStepBase(CSTStepBase):
 
 
 class CSTFollowNode(CSTStepBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     id: CSTEndStepId
     type: Literal[CSTStepNodeType.Follow]
 
 
 class CSTClickNode(CSTInnerStepBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.Click]
 
 
 class CSTReadNode(CSTInnerStepBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.Read]
 
 
 class CSTScrollToNode(CSTInnerStepBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.ScrollTo]
 
 
 class CSTDragNode(CSTInnerStepBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.Drag]
 
 
-class CSTUserDecisionEndType(Enum):
+class CSTUserDecisionEndType(str, Enum):
     Follow = "Follow"
     InnerStep = "InnerStep"
 
 
 class CSTUserDecisionBase(BaseModel):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.UserDecision]
     question: str | None = None
     choice1: CSTSubsectionNode
@@ -107,11 +119,15 @@ class CSTUserDecisionBase(BaseModel):
 
 
 class CSTUserDecisionInnerStepNode(CSTUserDecisionBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     id: CSTInnerStepId
     endsWithFollow: Literal[CSTUserDecisionEndType.InnerStep]
 
 
 class CSTUserDecisionEndStepNode(CSTUserDecisionBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     id: CSTEndStepId
     endsWithFollow: Literal[CSTUserDecisionEndType.Follow]
 
@@ -121,18 +137,26 @@ class CSTInputBase(CSTInnerStepBase):
 
 
 class CSTWriteNode(CSTInputBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.Write]
 
 
 class CSTSelectNode(CSTInputBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.Select]
 
 
 class CSTCheckNode(CSTInputBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.Check]
 
 
 class CSTDrawNode(CSTInputBase):
+    model_config = ConfigDict(use_enum_values=True)
+
     type: Literal[CSTStepNodeType.Draw]
 
 
