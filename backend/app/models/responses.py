@@ -3,8 +3,8 @@ from typing import List
 from pydantic import BaseModel
 from datetime import datetime
 
-from .program import Program
-from .wip_program import WipProgram
+from .ASTprogram import ASTProgram
+from .CSTprogram import CSTProgram
 
 
 class StatusResponse(BaseModel):
@@ -46,7 +46,7 @@ class ScriptWithAuthorAndWebsiteResponse(BaseScriptResponse):
 
 
 class ScriptWithProgramResponse(ScriptWithAuthorAndWebsiteResponse):
-    program: Program
+    program: ASTProgram
     annotations: List[AnnotationResponse]
 
 
@@ -73,7 +73,7 @@ class UnpublishedScriptWithWebsiteResponse(BaseUnpublishedScriptResponse):
 
 class UnpublishedScriptWithProgramResponse(UnpublishedScriptWithWebsiteResponse):
     author: BaseUserResponse | None
-    program: WipProgram | None = None
+    program: CSTProgram | None = None
 
 
 class AnnotationResponse(BaseModel):

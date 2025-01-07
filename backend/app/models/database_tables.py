@@ -1,9 +1,9 @@
-from sqlmodel import Field, SQLModel, Relationship, desc  # type: ignore
+from sqlmodel import Field, SQLModel, Relationship  # type: ignore
 from datetime import datetime
 from typing import List
 
-from ..models.wip_program import WipProgram
-from .program import Program
+from .CSTprogram import CSTProgram
+from .ASTprogram import ASTProgram
 from .responses import (
     AnnotationResponse,
     BaseScriptResponse,
@@ -99,7 +99,7 @@ class Script(SQLModel, table=True):
         )
 
     def toScriptWithProgramResponse(
-        self, program: Program
+        self, program: ASTProgram
     ) -> ScriptWithProgramResponse:
         return ScriptWithProgramResponse(
             id=self.id,
@@ -175,7 +175,7 @@ class UnpublishedScript(SQLModel, table=True):
         )
 
     def toUnpublishedScriptWithProgramResponse(
-        self, program: WipProgram | None
+        self, program: CSTProgram | None
     ) -> UnpublishedScriptWithProgramResponse:
         return UnpublishedScriptWithProgramResponse(
             id=self.id,

@@ -1,8 +1,8 @@
 from datetime import datetime
 from pydantic import BaseModel
 
-from .program import Program
-from .wip_program import WipProgram
+from .ASTprogram import ASTProgram
+from .CSTprogram import CSTProgram
 
 
 class CreateUserRequest(BaseModel):
@@ -19,7 +19,7 @@ class PublishScriptRequest(BaseModel):
     author_id: int
     created_at: datetime
     description: str
-    program: Program
+    program: ASTProgram
     website_id: int
 
 
@@ -32,7 +32,7 @@ class UpdateUnpublishedScriptRequest(BaseModel):
     title: str | None = None
     description: str | None = None
     website_id: int | None = None
-    program: WipProgram | None = None
+    program: CSTProgram | None = None
 
 
 class CreateAnnotationRequest(BaseModel):
