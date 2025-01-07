@@ -1,14 +1,17 @@
 import ClickedElementsDisplay from './ClickedElementsDisplay';
+import { ScreenType } from '../models/ScreenType';
+import { useScreenContext } from '../editor/contexts/contextHooks';
 
-interface HomeScreenProps {
-  goEditor: () => void;
-}
+const HomeScreen: React.FC = () => {
+  const { addScreen } = useScreenContext();
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ goEditor }) => {
   return (
     <>
       <h1>SC2370 Project</h1>
-      <button onClick={goEditor}>Go to Editor</button>
+      <button onClick={() => addScreen(ScreenType.Editor)}>Go to Editor</button>
+      <button onClick={() => addScreen(ScreenType.Support)}>
+        Go to Script Selector
+      </button>
       <ClickedElementsDisplay />
     </>
   );

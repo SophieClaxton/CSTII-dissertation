@@ -4,9 +4,9 @@ import InnerStepContainer from './InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
 import { addEditorStepToSection } from '../../../models/CST/setters';
-import { useUnpublishedScriptContext } from '../../contexts/useUnpublishedScriptContext';
 import { getNodeChoices } from '../../../models/CST/getters';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
+import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
 
 interface SectionProps {
   section: CSTSectionNode;

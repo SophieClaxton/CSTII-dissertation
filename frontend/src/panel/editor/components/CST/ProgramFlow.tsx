@@ -4,8 +4,8 @@ import SectionNode from './SectionNode';
 import { getFollowSteps } from '../../flowUtils/getNodes';
 import { getFollowEdge } from '../../flowUtils/getEdges';
 import './styles/program.css';
-import { useUnpublishedScriptContext } from '../../contexts/useUnpublishedScriptContext';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
+import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript } = useUnpublishedScriptContext();
