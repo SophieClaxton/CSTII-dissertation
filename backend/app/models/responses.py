@@ -20,8 +20,11 @@ class BaseUserResponse(BaseModel):
     name: str
 
 
-class UserWithScriptsResponse(BaseUserResponse):
+class PublicUserWithScriptsResponse(BaseUserResponse):
     scripts: List[ScriptWithWebsiteResponse]
+
+
+class UserWithScriptsResponse(PublicUserWithScriptsResponse):
     unpublished_scripts: List[UnpublishedScriptWithWebsiteResponse]
 
 

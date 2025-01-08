@@ -10,6 +10,7 @@ from .responses import (
     BaseUnpublishedScriptResponse,
     BaseUserResponse,
     BaseWebsiteResponse,
+    PublicUserWithScriptsResponse,
     ScriptWithAuthorAndWebsiteResponse,
     ScriptWithAuthorResponse,
     ScriptWithProgramResponse,
@@ -32,6 +33,13 @@ class User(SQLModel, table=True):
 
     def toBaseUserResponse(self) -> BaseUserResponse:
         return BaseUserResponse(id=self.id, name=self.name)
+
+    def toPublicUserWithScriptsResponse(self) -> PublicUserWithScriptsResponse:
+        return PublicUserWithScriptsResponse(
+            id=self.id,
+            name=self.name,
+            scripts=[script.toScriptWithWebsiteResponse() for script in self.scripts],
+        )
 
     def toUserWithScriptsResponse(self) -> UserWithScriptsResponse:
         return UserWithScriptsResponse(
