@@ -14,9 +14,7 @@ from ..models.database_tables import Annotation, Script, User, Website
 from ..models.responses import (
     BaseScriptResponse,
     ScriptWithAuthorAndWebsiteResponse,
-    ScriptWithAuthorResponse,
     ScriptWithProgramResponse,
-    ScriptWithWebsiteResponse,
     SuccessResponse,
 )
 from ..models.requests import PublishScriptRequest, CreateAnnotationRequest
@@ -107,23 +105,25 @@ def create_annotation(
     return SuccessResponse()
 
 
-@router.get("/user/{user_id}", response_model=List[ScriptWithWebsiteResponse])
+@router.get("/user/{user_id}", response_model=List[ScriptWithAuthorAndWebsiteResponse])
 def get_user_scripts(
     user_id: int, session: DatabaseDep
-) -> List[ScriptWithWebsiteResponse]:
+) -> List[ScriptWithAuthorAndWebsiteResponse]:
     user = session.get(User, user_id)
     if not user:
         raise user_not_found_exception(user_id)
 
-    return [script.toScriptWithWebsiteResponse() for script in user.scripts]
+    return [script.toScriptWithAuthorAndWebsiteResponse() for script in user.scripts]
 
 
-@router.get("/website/{website_id}", response_model=List[ScriptWithAuthorResponse])
+@router.get(
+    "/website/{website_id}", response_model=List[ScriptWithAuthorAndWebsiteResponse]
+)
 def get_website_scripts(
     website_id: int, session: DatabaseDep
-) -> List[ScriptWithAuthorResponse]:
+) -> List[ScriptWithAuthorAndWebsiteResponse]:
     website = session.get(Website, website_id)
     if not website:
         raise website_not_found_exception(website_id)
 
-    return [script.toScriptWithAuthorResponse() for script in website.scripts]
+    return [script.toScriptWithAuthorAndWebsiteResponse() for script in website.scripts]

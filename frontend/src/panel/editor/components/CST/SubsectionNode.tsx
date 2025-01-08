@@ -4,8 +4,8 @@ import EndStepNode from './EndStepNode';
 import AddNodeButton from './AddNodeButton';
 import { CSTSubsectionNode } from '../../../models/CST/CST';
 import { addEditorStepToSection } from '../../../models/CST/setters';
-import { useUnpublishedScriptContext } from '../../contexts/useUnpublishedScriptContext';
 import { getNodeChoices } from '../../../models/CST/getters';
+import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
 
 interface SubsectionNodeProps {
   subsection: CSTSubsectionNode;

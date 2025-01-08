@@ -1,14 +1,14 @@
 import { createContext, useReducer } from 'react';
-import testUnpublishedScript from '../consts/testUnpublishedScript';
-import { EditorAction, EditorActionType } from '../../models/EditorAction';
-import { getEditorComponentById } from '../../models/CST/getters';
-import { isSection, isSubsection } from '../../models/CST/testers';
+import testUnpublishedScript from '../editor/consts/testUnpublishedScript';
+import { EditorAction, EditorActionType } from '../models/EditorAction';
+import { getEditorComponentById } from '../models/CST/getters';
+import { isSection, isSubsection } from '../models/CST/testers';
 import {
   mapProgramToProgramWithUpdatedSections,
   mapSectionToSectionWithUpdatedEndStep,
   mapSectionToSectionWithUpdatedInnerSteps,
-} from '../../models/CST/mappers';
-import { UnpublishedScript } from '../../models/UnpublishedScript';
+} from '../models/CST/mappers';
+import { UnpublishedScript } from '../models/UnpublishedScript';
 
 interface UnpublishedScriptState {
   unpublishedScript: UnpublishedScript;

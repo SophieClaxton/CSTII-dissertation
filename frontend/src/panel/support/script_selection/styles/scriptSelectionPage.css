@@ -1,0 +1,11 @@
+.all-scripts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.script-list {
+  width: 40rem;
+}

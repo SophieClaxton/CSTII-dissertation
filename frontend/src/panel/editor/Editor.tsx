@@ -1,17 +1,16 @@
 import XarrowProgramFlow from './components/CST/ProgramFlow';
-import { UnpublishedScriptContextProvider } from './contexts/UnpublishedScriptContext';
+import { UnpublishedScriptContextProvider } from '../contexts/UnpublishedScriptContext';
+import '../panel.css';
 import './styles/editor.css';
+import { useNavigationContext } from '../contexts/contextHooks';
 
-interface EditorProps {
-  goHome: () => void;
-}
-
-const Editor: React.FC<EditorProps> = ({ goHome }) => {
+const Editor: React.FC = () => {
+  const { removeCurrentScreen } = useNavigationContext();
   return (
-    <div className="editor">
-      <div className="editor-title">
+    <div className="editor page">
+      <div className="page-title">
         <h1>Program Editor</h1>
-        <button className="back-button" onClick={goHome}>
+        <button className="back-button" onClick={removeCurrentScreen}>
           Back
         </button>
       </div>

@@ -1,0 +1,10 @@
+.script-card {
+  width: 100%;
+}
+
+.script-author-and-date {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

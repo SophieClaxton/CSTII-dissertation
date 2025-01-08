@@ -1,25 +1,48 @@
 import './App.css';
 import { setUpMessageHandler } from './panel/messageHandler';
-import { useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import HomeScreen from './panel/components/HomeScreen';
 import Editor from './panel/editor/Editor';
+import ScriptSelectionPage from './panel/support/script_selection/ScriptSelectionPage';
+import { ScreenType } from './panel/models/ScreenType';
+import { ScreenContext } from './panel/contexts/ScreenContext';
+import ScriptSupport from './panel/support/script_support/ScriptSupport';
+import UserScriptSelectionPage from './panel/support/script_selection/UserScriptSelectionPage';
+import WebsiteScriptSelectionPage from './panel/support/script_selection/WebsiteScriptSelectionPage';
 
-enum Screen {
-  Home = 'Home',
-  Editor = 'Editor',
-}
+const getScreenComponent = (screen: ScreenType | undefined) => {
+  const screenComponents: Record<ScreenType, ReactNode> = {
+    [ScreenType.Editor]: <Editor />,
+    [ScreenType.ScriptSelector]: <ScriptSelectionPage />,
+    [ScreenType.UserScriptSelector]: <UserScriptSelectionPage />,
+    [ScreenType.WebsiteScriptSelector]: <WebsiteScriptSelectionPage />,
+    [ScreenType.ScriptSupport]: <ScriptSupport />,
+  };
+
+  if (!screen) {
+    return <HomeScreen />;
+  }
+  return screenComponents[screen];
+};
 
 function App() {
-  setUpMessageHandler();
+  useEffect(setUpMessageHandler, []);
 
-  const [screen, setScreen] = useState<Screen>(Screen.Home);
+  const [screenStack, setScreenStack] = useState<ScreenType[]>([]);
+  const [paramStack, setParamStack] = useState<number[]>([]);
 
-  switch (screen) {
-    case Screen.Home:
-      return <HomeScreen goEditor={() => setScreen(Screen.Editor)} />;
-    case Screen.Editor:
-      return <Editor goHome={() => setScreen(Screen.Home)} />;
-  }
+  return (
+    <ScreenContext.Provider
+      value={{
+        screenStack: screenStack,
+        setScreenStack: setScreenStack,
+        paramStack: paramStack,
+        setParamStack: setParamStack,
+      }}
+    >
+      {getScreenComponent(screenStack.at(0))}
+    </ScreenContext.Provider>
+  );
 }
 
 export default App;
