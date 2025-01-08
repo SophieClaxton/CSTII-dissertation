@@ -7,12 +7,13 @@ import { getScripts } from '../../api/scripts';
 import ScriptListItem from './ScriptListItem';
 import './styles/scriptSelectionPage.css';
 import List from '@mui/material/List/List';
-import { Button, Chip, Stack } from '@mui/material';
 import Website from '../../models/Website';
 import User from '../../models/User';
 import { getWebsites } from '../../api/websites';
 import { getUsers } from '../../api/users';
 import ScriptFilterDialog from './ScriptFilterDialog';
+import FilterBar from './FilterBar';
+import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 
 const ScriptSelectionPage: React.FC = () => {
   const { removeCurrentScreen } = useNavigationContext();
@@ -22,7 +23,6 @@ const ScriptSelectionPage: React.FC = () => {
   const [scripts, setScripts] = useState<ScriptWithAuthorAndWebsite[]>([]);
   const [websites, setWebsites] = useState<Website[]>([]);
   const [authors, setAuthors] = useState<User[]>([]);
-  console.log(websites);
 
   useEffect(() => {
     const getData = async () => {
@@ -70,40 +70,18 @@ const ScriptSelectionPage: React.FC = () => {
 
   const scriptsContent =
     scriptsData.status === 'Loading' ? (
-      <div>Loading...</div>
+      <CircularProgress />
     ) : scriptsData.status === 'Error' ? (
       <div>{scriptsData.error.message}</div>
     ) : (
       <>
-        <Stack direction={'row'} spacing={1} sx={{ width: '100%' }}>
-          <Button onClick={() => setOpenFilterDialog(true)} variant="contained">
-            Filters
-          </Button>
-          {websiteFilters.map((website) => (
-            <Chip
-              key={`W${website.id}`}
-              label={website.url}
-              onDelete={() => {
-                const newWebsiteFilters = websiteFilters.filter(
-                  (other) => other.id != website.id,
-                );
-                setWebsiteFilters(newWebsiteFilters);
-              }}
-            />
-          ))}
-          {authorFilters.map((author) => (
-            <Chip
-              key={`U${author.id}`}
-              label={author.name}
-              onDelete={() => {
-                const newAuthorFilters = authorFilters.filter(
-                  (other) => other.id != author.id,
-                );
-                setAuthorFilters(newAuthorFilters);
-              }}
-            />
-          ))}
-        </Stack>
+        <FilterBar
+          setOpenFilterDialog={setOpenFilterDialog}
+          websiteFilters={websiteFilters}
+          setWebsiteFilters={setWebsiteFilters}
+          authorFilters={authorFilters}
+          setAuthorFilters={setAuthorFilters}
+        />
         <List className="script-list">
           {scripts.map((script) => (
             <ScriptListItem script={script} />
