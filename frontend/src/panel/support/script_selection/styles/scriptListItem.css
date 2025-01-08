@@ -1,15 +1,5 @@
-.script-item {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  background-color: white;
-  border-radius: 0.5rem;
-  box-sizing: border-box;
-  padding: 1rem;
-  border: none;
-  margin: 0;
-  text-align: inherit;
-  font: inherit;
+.script-card {
+  width: 100%;
 }
 
 .script-author-and-date {

@@ -1,11 +1,6 @@
 import axios from 'axios';
 import { handleError } from '../models/APIError';
-import {
-  Script,
-  ScriptWithAuthor,
-  ScriptWithAuthorAndWebsite,
-  ScriptWithWebsite,
-} from '../models/Script';
+import { Script, ScriptWithAuthorAndWebsite } from '../models/Script';
 import APISuccess from '../models/APISuccess';
 import APIResponse from '../models/APIResponse';
 
@@ -67,12 +62,12 @@ const deleteScript = async (id: number): Promise<APIResponse<APISuccess>> => {
 
 const getUserScripts = async (
   userId: number,
-): Promise<APIResponse<ScriptWithWebsite[]>> => {
+): Promise<APIResponse<ScriptWithAuthorAndWebsite[]>> => {
   try {
     const response = await scriptsEndpoint.get(`user/${userId}`);
     return {
       status: 'Loaded',
-      data: response.data as ScriptWithWebsite[],
+      data: response.data as ScriptWithAuthorAndWebsite[],
     };
   } catch (err: unknown) {
     return {
@@ -84,12 +79,12 @@ const getUserScripts = async (
 
 const getWebsiteScripts = async (
   websiteId: number,
-): Promise<APIResponse<ScriptWithAuthor[]>> => {
+): Promise<APIResponse<ScriptWithAuthorAndWebsite[]>> => {
   try {
     const response = await scriptsEndpoint.get(`website/${websiteId}`);
     return {
       status: 'Loaded',
-      data: response.data as ScriptWithAuthor[],
+      data: response.data as ScriptWithAuthorAndWebsite[],
     };
   } catch (err: unknown) {
     return {
