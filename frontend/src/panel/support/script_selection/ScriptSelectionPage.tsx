@@ -13,7 +13,7 @@ import { getWebsites } from '../../api/websites';
 import { getUsers } from '../../api/users';
 import ScriptFilterDialog from './ScriptFilterDialog';
 import FilterBar from './FilterBar';
-import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
+import Loadable from '../../components/Loadable';
 
 const ScriptSelectionPage: React.FC = () => {
   const { removeCurrentScreen } = useNavigationContext();
@@ -68,28 +68,6 @@ const ScriptSelectionPage: React.FC = () => {
     }
   }, [scriptsData, websiteFilters, authorFilters]);
 
-  const scriptsContent =
-    scriptsData.status === 'Loading' ? (
-      <CircularProgress />
-    ) : scriptsData.status === 'Error' ? (
-      <div>{scriptsData.error.message}</div>
-    ) : (
-      <>
-        <FilterBar
-          setOpenFilterDialog={setOpenFilterDialog}
-          websiteFilters={websiteFilters}
-          setWebsiteFilters={setWebsiteFilters}
-          authorFilters={authorFilters}
-          setAuthorFilters={setAuthorFilters}
-        />
-        <List className="script-list">
-          {scripts.map((script) => (
-            <ScriptListItem script={script} />
-          ))}
-        </List>
-      </>
-    );
-
   return (
     <div className="script-selection-page page">
       <div className="page-title">
@@ -98,7 +76,27 @@ const ScriptSelectionPage: React.FC = () => {
           Back
         </button>
       </div>
-      <div className="all-scripts-container">{scriptsContent}</div>
+      <div className="all-scripts-container">
+        <Loadable
+          response={scriptsData}
+          onLoad={() => (
+            <>
+              <FilterBar
+                setOpenFilterDialog={setOpenFilterDialog}
+                websiteFilters={websiteFilters}
+                setWebsiteFilters={setWebsiteFilters}
+                authorFilters={authorFilters}
+                setAuthorFilters={setAuthorFilters}
+              />
+              <List className="script-list">
+                {scripts.map((script) => (
+                  <ScriptListItem script={script} />
+                ))}
+              </List>
+            </>
+          )}
+        ></Loadable>
+      </div>
       <ScriptFilterDialog
         open={openFilterDialog}
         setOpen={setOpenFilterDialog}

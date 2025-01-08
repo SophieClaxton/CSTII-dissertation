@@ -1,7 +1,7 @@
 import axios from 'axios';
 import APIResponse from '../models/APIResponse';
 import { handleError } from '../models/APIError';
-import User from '../models/User';
+import User, { PublicUserWithScripts } from '../models/User';
 
 const usersEndpoint = axios.create({
   baseURL: 'http://localhost:8000/users/',
@@ -26,4 +26,21 @@ const getUsers = async (): Promise<APIResponse<User[]>> => {
   }
 };
 
-export { getUsers };
+const getPublicUser = async (
+  userId: number,
+): Promise<APIResponse<PublicUserWithScripts>> => {
+  try {
+    const response = await usersEndpoint.get(`public/${userId}`);
+    return {
+      status: 'Loaded',
+      data: response.data as PublicUserWithScripts,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
+export { getUsers, getPublicUser };
