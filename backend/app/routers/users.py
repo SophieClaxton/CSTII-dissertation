@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from sqlmodel import select
 
 from ..exceptions.not_found import user_not_found_exception
 from ..database import DatabaseDep
@@ -7,6 +8,12 @@ from ..models.responses import BaseUserResponse, UserWithScriptsResponse
 from ..models.requests import CreateUserRequest, UpdateUserRequest
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+
+@router.get("/", response_model=list[BaseUserResponse])
+def get_users(session: DatabaseDep) -> list[BaseUserResponse]:
+    users = session.exec(select(User)).all()
+    return [user.toBaseUserResponse() for user in users]
 
 
 @router.post("/", response_model=BaseUserResponse)
