@@ -28,6 +28,7 @@ const ScriptSelectionPage: React.FC = () => {
   const [scriptsData, setScriptsData] = useState<
     APIResponse<ScriptWithAuthorAndWebsite[]>
   >({ status: 'Loading' });
+  const [scripts, setScripts] = useState<ScriptWithAuthorAndWebsite[]>([]);
   const [websites, setWebsites] = useState<Website[]>([]);
   const [authors, setAuthors] = useState<User[]>([]);
   console.log(websites);
@@ -36,6 +37,9 @@ const ScriptSelectionPage: React.FC = () => {
     const getData = async () => {
       const scriptResponse = await getScripts();
       setScriptsData(scriptResponse);
+      if (scriptResponse.status === 'Loaded') {
+        setScripts(scriptResponse.data);
+      }
 
       const websitesResponse = await getWebsites();
       if (websitesResponse.status == 'Loaded') {
@@ -48,11 +52,30 @@ const ScriptSelectionPage: React.FC = () => {
       }
     };
     getData();
-  }, [setScriptsData]);
+  }, []);
 
   const [websiteFilters, setWebsiteFilters] = useState<Website[]>([]);
   const [authorFilters, setAuthorFilters] = useState<User[]>([]);
   const [openFilterDialog, setOpenFilterDialog] = useState(false);
+
+  useEffect(() => {
+    if (scriptsData.status != 'Loaded') {
+      return;
+    }
+    if (websiteFilters.length > 0 || authorFilters.length > 0) {
+      setScripts(
+        scriptsData.data.filter(
+          (script) =>
+            websiteFilters
+              .map((website) => website.id)
+              .includes(script.website.id) ||
+            authorFilters.map((author) => author.id).includes(script.author.id),
+        ),
+      );
+    } else {
+      setScripts(scriptsData.data);
+    }
+  }, [scriptsData, websiteFilters, authorFilters]);
 
   const [selectedWebsite, setSelectedWebsite] = useState<Website | null>(null);
   const [selectedAuthor, setSelectedAuthor] = useState<User | null>(null);
@@ -64,8 +87,10 @@ const ScriptSelectionPage: React.FC = () => {
       <div>{scriptsData.error.message}</div>
     ) : (
       <>
-        <Stack direction={'row'} sx={{ width: '100%' }}>
-          <Button onClick={() => setOpenFilterDialog(true)}>Filters</Button>
+        <Stack direction={'row'} spacing={1} sx={{ width: '100%' }}>
+          <Button onClick={() => setOpenFilterDialog(true)} variant="contained">
+            Filters
+          </Button>
           {websiteFilters.map((website) => (
             <Chip
               key={`W${website.id}`}
@@ -92,7 +117,7 @@ const ScriptSelectionPage: React.FC = () => {
           ))}
         </Stack>
         <List className="script-list">
-          {scriptsData.data.map((script) => (
+          {scripts.map((script) => (
             <ScriptListItem script={script} />
           ))}
         </List>
