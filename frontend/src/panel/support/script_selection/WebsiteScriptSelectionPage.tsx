@@ -7,9 +7,11 @@ import ScriptListItem from './ScriptListItem';
 import { WebsiteWithScripts } from '../../models/Website';
 import { getWebsite } from '../../api/websites';
 import './styles/scriptSelectionPage.css';
+import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChecks';
 
 const UserScriptSelectionPage = () => {
   const { currentScreen, goBack } = useNavigationContext();
+  assertIsWebsiteScriptSelectorScreen(currentScreen);
 
   const [websiteData, setWebsiteData] = useState<
     APIResponse<WebsiteWithScripts>
@@ -17,9 +19,6 @@ const UserScriptSelectionPage = () => {
 
   useEffect(() => {
     const getData = async () => {
-      if (currentScreen?.type != 'WebsiteScriptSelector') {
-        throw new Error('On WebsiteScriptSelectionPage with wrong screen');
-      }
       const response = await getWebsite(currentScreen.params.websiteId);
       setWebsiteData(response);
     };

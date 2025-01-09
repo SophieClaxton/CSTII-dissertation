@@ -7,9 +7,11 @@ import ScriptListItem from './ScriptListItem';
 import './styles/scriptSelectionPage.css';
 import { getPublicUser } from '../../api/users';
 import { PublicUserWithScripts } from '../../models/User';
+import { assertIsUserScriptSelectorScreen } from '../../navigation/screenChecks';
 
 const UserScriptSelectionPage = () => {
   const { currentScreen, goBack } = useNavigationContext();
+  assertIsUserScriptSelectorScreen(currentScreen);
 
   const [publicUserData, setPublicUserData] = useState<
     APIResponse<PublicUserWithScripts>
@@ -17,9 +19,6 @@ const UserScriptSelectionPage = () => {
 
   useEffect(() => {
     const getData = async () => {
-      if (currentScreen?.type != 'UserScriptSelector') {
-        throw new Error('On UserScriptSelectionPage with wrong screen');
-      }
       const response = await getPublicUser(currentScreen.params.userId);
       setPublicUserData(response);
     };

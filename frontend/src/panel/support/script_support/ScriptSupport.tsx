@@ -3,18 +3,18 @@ import { useNavigationContext } from '../../contexts/contextHooks';
 import APIResponse from '../../models/APIResponse';
 import { Script } from '../../models/Script';
 import { getScript } from '../../api/scripts';
+import { assertIsScriptSupportScreen } from '../../navigation/screenChecks';
 
 const ScriptSupport: React.FC = () => {
   const { currentScreen, goBack } = useNavigationContext();
+  assertIsScriptSupportScreen(currentScreen);
+
   const [scriptData, setScriptData] = useState<APIResponse<Script>>({
     status: 'Loading',
   });
 
   useEffect(() => {
     const getData = async () => {
-      if (currentScreen?.type != 'ScriptSupport') {
-        throw new Error('On ScriptSupportPage with wrong screen');
-      }
       const response = await getScript(currentScreen.params.scriptId);
       setScriptData(response);
     };
