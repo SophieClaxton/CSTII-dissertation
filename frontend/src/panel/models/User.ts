@@ -11,7 +11,7 @@ interface PublicUserWithScripts extends User {
 }
 
 interface UserWithScripts extends PublicUserWithScripts {
-  unpublishedScripts: UnpublishedScriptWithWebsite[];
+  unpublished_scripts: UnpublishedScriptWithWebsite[];
 }
 
 export default User;

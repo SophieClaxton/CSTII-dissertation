@@ -26,6 +26,21 @@ const getUsers = async (): Promise<APIResponse<User[]>> => {
   }
 };
 
+const createUser = async (username: string): Promise<APIResponse<User>> => {
+  try {
+    const response = await usersEndpoint.post('', { name: username });
+    return {
+      status: 'Loaded',
+      data: response.data as User,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
 const getUser = async (
   userId: number,
 ): Promise<APIResponse<UserWithScripts>> => {
@@ -60,4 +75,4 @@ const getPublicUser = async (
   }
 };
 
-export { getUsers, getUser, getPublicUser };
+export { getUsers, createUser, getUser, getPublicUser };

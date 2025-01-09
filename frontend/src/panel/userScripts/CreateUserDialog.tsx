@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography/Typography';
 import { useEffect, useState } from 'react';
 import APIResponse from '../models/APIResponse';
 import User from '../models/User';
-import { getUsers } from '../api/users';
+import { createUser, getUsers } from '../api/users';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import Button from '@mui/material/Button/Button';
 
@@ -76,14 +76,24 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
           }}
           helperText={helperText}
           error={!!helperText}
+          sx={{ width: '100%' }}
         />
       </DialogContent>
       <DialogActions>
         <Button
           disabled={username.length === 0 || !!helperText}
           onClick={() => {
-            // const createUser
-            setUserId(1);
+            const createNewUser = async () => {
+              const response = await createUser(username);
+              if (response.status === 'Loaded') {
+                setUserId(response.data.id);
+                await chrome.storage.local.set({ userId: response.data.id });
+                setOpen(false);
+              } else {
+                console.log('Failed to create new user');
+              }
+            };
+            createNewUser();
           }}
         >
           Create

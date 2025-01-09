@@ -8,6 +8,9 @@ import List from '@mui/material/List/List';
 import ScriptListItem from '../support/script_selection/ScriptListItem';
 import UnpublishedScriptListItem from './UnpublishedScriptListItem';
 import CreateUserDialog from './CreateUserDialog';
+import Typography from '@mui/material/Typography/Typography';
+import { Button, Container, ListSubheader } from '@mui/material';
+import { createUnpublishedScript } from '../api/unpublishedScripts';
 
 const HelperScriptSelector = () => {
   const { goBack } = useNavigationContext();
@@ -21,17 +24,19 @@ const HelperScriptSelector = () => {
 
   useEffect(() => {
     const getUserId = async () => {
-      const storedData = await chrome.storage.local.get({ userId: undefined });
-      const storedUserId = storedData.userId as number | undefined;
-      console.log(`Foudn userId: ${storedUserId}`);
+      const storedData = await chrome.storage.local.get('userId');
+      const storedUserId = storedData['userId'] as number;
+      console.log(`Found userId: ${storedUserId}`);
       if (storedUserId) {
         setUserId(storedUserId);
       } else {
         setOpenCreateUserDialog(true);
       }
     };
-    getUserId();
-  }, [goBack]);
+    if (!userId) {
+      getUserId();
+    }
+  }, [userId]);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -40,35 +45,55 @@ const HelperScriptSelector = () => {
       }
       const response = await getUser(userId);
       setUserData(response);
+      console.log(response);
     };
     getUserData();
   }, [userId]);
 
   return (
-    <>
+    <div className="script-selection-page page">
+      <div className="page-title">
+        <h1>Your Scripts</h1>
+        <button className="back-button" onClick={goBack}>
+          Back
+        </button>
+      </div>
       <Loadable
         response={userData}
         onLoad={(user) => (
-          <div className="script-selection-page page">
-            <div className="page-title">
-              <h1>Your Scripts</h1>
-              <button className="back-button" onClick={goBack}>
-                Back
-              </button>
-            </div>
+          <Container maxWidth={'md'}>
+            <Typography variant="subtitle2">Username: {user.name}</Typography>
             <div className="all-scripts-container">
-              <List>
+              <List sx={{ width: '100%' }}>
+                <ListSubheader>Published Scripts</ListSubheader>
                 {user.scripts.map((script) => (
                   <ScriptListItem script={script} />
                 ))}
               </List>
-              <List>
-                {user.unpublishedScripts.map((script) => (
+              <List sx={{ width: '100%' }}>
+                <ListSubheader>Unpublished Scripts</ListSubheader>
+                <Button
+                  onClick={() => {
+                    const createNewScript = async () => {
+                      const response = await createUnpublishedScript(user.id);
+                      if (response.status === 'Loaded') {
+                        console.log('Created new script');
+                        setUserId(userId);
+                      } else {
+                        console.log('Could not create new script');
+                      }
+                    };
+                    createNewScript();
+                  }}
+                >
+                  Create New Script
+                </Button>
+                {user.unpublished_scripts.map((script) => (
                   <UnpublishedScriptListItem script={script} />
                 ))}
               </List>
             </div>
-          </div>
+          </Container>
         )}
       />
       <CreateUserDialog
@@ -76,7 +101,7 @@ const HelperScriptSelector = () => {
         setOpen={setOpenCreateUserDialog}
         setUserId={setUserId}
       />
-    </>
+    </div>
   );
 };
 
