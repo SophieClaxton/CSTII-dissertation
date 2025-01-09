@@ -16,7 +16,7 @@ import FilterBar from './FilterBar';
 import Loadable from '../../components/Loadable';
 
 const ScriptSelectionPage: React.FC = () => {
-  const { removeCurrentScreen } = useNavigationContext();
+  const { goBack } = useNavigationContext();
   const [scriptsData, setScriptsData] = useState<
     APIResponse<ScriptWithAuthorAndWebsite[]>
   >({ status: 'Loading' });
@@ -72,7 +72,7 @@ const ScriptSelectionPage: React.FC = () => {
     <div className="script-selection-page page">
       <div className="page-title">
         <h1>Select a Script</h1>
-        <button className="back-button" onClick={removeCurrentScreen}>
+        <button className="back-button" onClick={goBack}>
           Back
         </button>
       </div>

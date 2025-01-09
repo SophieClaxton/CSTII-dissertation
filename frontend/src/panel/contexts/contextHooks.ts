@@ -5,7 +5,7 @@ import {
   ScreenContext,
   ScreenContextState,
 } from './ScreenContext';
-import { ScreenType } from '../models/ScreenType';
+import { PanelScreen } from '../navigation/ScreenType';
 
 const useUnpublishedScriptContext = () => {
   const editorProgramContext = useContext(UnpublishedScriptContext);
@@ -27,21 +27,14 @@ const useNavigationContext = () => {
 const getNavigationContext = ({
   screenStack,
   setScreenStack,
-  paramStack,
-  setParamStack,
 }: ScreenContextState): NavigationContext => {
   const [topScreen, ...bottomScreens] = screenStack;
-  const [topParam, ...bottomParams] = paramStack;
 
   return {
     currentScreen: screenStack.length > 0 ? topScreen : undefined,
-    removeCurrentScreen: () =>
+    goBack: () =>
       screenStack.length > 0 ? setScreenStack(bottomScreens) : undefined,
-    addScreen: (screen: ScreenType) => setScreenStack([screen, ...screenStack]),
-    currentParam: paramStack.length > 0 ? topParam : undefined,
-    removeCurrentParam: () =>
-      paramStack.length > 0 ? setParamStack(bottomParams) : undefined,
-    addParam: (id: number) => setParamStack([id, ...paramStack]),
+    goTo: (screen: PanelScreen) => setScreenStack([screen, ...screenStack]),
   };
 };
 

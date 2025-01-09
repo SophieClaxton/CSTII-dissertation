@@ -1,15 +1,15 @@
 import ClickedElementsDisplay from './ClickedElementsDisplay';
-import { ScreenType } from '../models/ScreenType';
 import { useNavigationContext } from '../contexts/contextHooks';
+import { editorScreen, scriptSelectorScreen } from '../navigation/screens';
 
 const HomeScreen: React.FC = () => {
-  const { addScreen } = useNavigationContext();
+  const { goTo } = useNavigationContext();
 
   return (
     <>
       <h1>SC2370 Project</h1>
-      <button onClick={() => addScreen(ScreenType.Editor)}>Go to Editor</button>
-      <button onClick={() => addScreen(ScreenType.ScriptSelector)}>
+      <button onClick={() => goTo(editorScreen())}>Go to Editor</button>
+      <button onClick={() => goTo(scriptSelectorScreen())}>
         Go to Script Selector
       </button>
       <ClickedElementsDisplay />
