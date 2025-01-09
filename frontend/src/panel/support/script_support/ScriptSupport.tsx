@@ -1,27 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useNavigationContext } from '../../contexts/contextHooks';
-import APIResponse, { ErrorResponse } from '../../models/APIResponse';
+import APIResponse from '../../models/APIResponse';
 import { Script } from '../../models/Script';
 import { getScript } from '../../api/scripts';
+import { assertIsScriptSupportScreen } from '../../navigation/screenChecks';
 
 const ScriptSupport: React.FC = () => {
-  const { currentParam, removeCurrentScreen, removeCurrentParam } =
-    useNavigationContext();
+  const { currentScreen, goBack } = useNavigationContext();
+  assertIsScriptSupportScreen(currentScreen);
+
   const [scriptData, setScriptData] = useState<APIResponse<Script>>({
     status: 'Loading',
   });
 
   useEffect(() => {
     const getData = async () => {
-      const idError: ErrorResponse = {
-        status: 'Error',
-        error: { type: 'Unknown', message: 'No script id found' },
-      };
-      const response = currentParam ? await getScript(currentParam) : idError;
+      const response = await getScript(currentScreen.params.scriptId);
       setScriptData(response);
     };
     getData();
-  }, [currentParam, setScriptData]);
+  }, [currentScreen]);
 
   const content =
     scriptData.status === 'Loading' ? (
@@ -37,13 +35,7 @@ const ScriptSupport: React.FC = () => {
   return (
     <div className="script-support page">
       <div className="page-title">
-        <button
-          className="back-button"
-          onClick={() => {
-            removeCurrentParam();
-            removeCurrentScreen();
-          }}
-        >
+        <button className="back-button" onClick={() => goBack}>
           Back
         </button>
       </div>

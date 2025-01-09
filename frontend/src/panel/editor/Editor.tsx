@@ -5,12 +5,12 @@ import './styles/editor.css';
 import { useNavigationContext } from '../contexts/contextHooks';
 
 const Editor: React.FC = () => {
-  const { removeCurrentScreen } = useNavigationContext();
+  const { goBack } = useNavigationContext();
   return (
     <div className="editor page">
       <div className="page-title">
         <h1>Program Editor</h1>
-        <button className="back-button" onClick={removeCurrentScreen}>
+        <button className="back-button" onClick={goBack}>
           Back
         </button>
       </div>

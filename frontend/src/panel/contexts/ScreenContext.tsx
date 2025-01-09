@@ -1,20 +1,15 @@
 import { createContext } from 'react';
-import { ScreenType } from '../models/ScreenType';
+import { PanelScreen } from '../navigation/ScreenType';
 
 interface ScreenContextState {
-  screenStack: ScreenType[];
-  setScreenStack: (value: ScreenType[]) => void;
-  paramStack: number[];
-  setParamStack: (value: number[]) => void;
+  screenStack: PanelScreen[];
+  setScreenStack: (value: PanelScreen[]) => void;
 }
 
 interface NavigationContext {
-  currentScreen: ScreenType | undefined;
-  removeCurrentScreen: () => void;
-  addScreen: (screen: ScreenType) => void;
-  currentParam: number | undefined;
-  removeCurrentParam: () => void;
-  addParam: (id: number) => void;
+  currentScreen: PanelScreen | undefined;
+  goBack: () => void;
+  goTo: (screen: PanelScreen) => void;
 }
 
 const ScreenContext = createContext<ScreenContextState | undefined>(undefined);

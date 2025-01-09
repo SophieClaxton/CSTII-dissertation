@@ -1,6 +1,5 @@
 import ListItem from '@mui/material/ListItem/ListItem';
 import { useNavigationContext } from '../../contexts/contextHooks';
-import { ScreenType } from '../../models/ScreenType';
 import {
   ScriptWithAuthor,
   ScriptWithAuthorAndWebsite,
@@ -14,20 +13,24 @@ import Typography from '@mui/material/Typography/Typography';
 import Stack from '@mui/material/Stack/Stack';
 import Button from '@mui/material/Button/Button';
 import CardActions from '@mui/material/CardActions/CardActions';
+import {
+  scriptSupportScreen,
+  userScriptSelectorScreen,
+  websiteScriptSelectorScreen,
+} from '../../navigation/screens';
 
 const ScriptListItem: React.FC<{
   script: ScriptWithAuthorAndWebsite | ScriptWithAuthor | ScriptWithWebsite;
 }> = ({ script }) => {
   const dateString = script.created_at.toString();
-  const { addScreen, addParam } = useNavigationContext();
+  const { goTo } = useNavigationContext();
 
   return (
     <ListItem key={script.id}>
       <Card className="script-card">
         <CardActionArea
           onClick={() => {
-            addParam(script.id);
-            addScreen(ScreenType.ScriptSupport);
+            goTo(scriptSupportScreen(script.id));
           }}
         >
           <CardContent>
@@ -45,8 +48,7 @@ const ScriptListItem: React.FC<{
             <Button
               variant="text"
               onClick={() => {
-                addParam(script.author.id);
-                addScreen(ScreenType.UserScriptSelector);
+                goTo(userScriptSelectorScreen(script.author.id));
               }}
             >
               <Typography variant="subtitle1">{script.author.name}</Typography>
@@ -56,8 +58,7 @@ const ScriptListItem: React.FC<{
             <Button
               variant="text"
               onClick={() => {
-                addParam(script.website.id);
-                addScreen(ScreenType.WebsiteScriptSelector);
+                goTo(websiteScriptSelectorScreen(script.website.id));
               }}
             >
               <Typography variant="subtitle1">{script.website.url}</Typography>
