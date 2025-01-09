@@ -8,8 +8,8 @@ const HomeScreen: React.FC = () => {
   return (
     <>
       <h1>SC2370 Project</h1>
-      <button onClick={() => goTo(editorScreen())}>Go to Editor</button>
-      <button onClick={() => goTo(scriptSelectorScreen())}>
+      <button onClick={() => goTo(editorScreen)}>Go to Editor</button>
+      <button onClick={() => goTo(scriptSelectorScreen)}>
         Go to Script Selector
       </button>
       <ClickedElementsDisplay />

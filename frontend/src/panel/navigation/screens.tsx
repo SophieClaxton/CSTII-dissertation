@@ -11,45 +11,37 @@ import {
   WebsiteScriptSelectorScreen,
 } from './ScreenType';
 
-const editorScreen = (): EditorScreen => {
-  return {
-    type: 'Editor',
-    component: <Editor />,
-  };
+const editorScreen: EditorScreen = {
+  type: 'Editor',
+  component: <Editor />,
 };
 
-const scriptSelectorScreen = (): ScriptSelectorScreen => {
-  return {
-    type: 'ScriptSelector',
-    component: <ScriptSelectionPage />,
-  };
+const scriptSelectorScreen: ScriptSelectorScreen = {
+  type: 'ScriptSelector',
+  component: <ScriptSelectionPage />,
 };
 
-const userScriptSelectorScreen = (userId: number): UserScriptSelectorScreen => {
-  return {
-    type: 'UserScriptSelector',
-    params: { userId: userId },
-    component: <UserScriptSelectionPage />,
-  };
-};
+const userScriptSelectorScreen = (
+  userId: number,
+): UserScriptSelectorScreen => ({
+  type: 'UserScriptSelector',
+  params: { userId: userId },
+  component: <UserScriptSelectionPage />,
+});
 
 const websiteScriptSelectorScreen = (
   websiteId: number,
-): WebsiteScriptSelectorScreen => {
-  return {
-    type: 'WebsiteScriptSelector',
-    params: { websiteId: websiteId },
-    component: <WebsiteScriptSelectionPage />,
-  };
-};
+): WebsiteScriptSelectorScreen => ({
+  type: 'WebsiteScriptSelector',
+  params: { websiteId: websiteId },
+  component: <WebsiteScriptSelectionPage />,
+});
 
-const scriptSupportScreen = (scriptId: number): ScriptSupportScreen => {
-  return {
-    type: 'ScriptSupport',
-    params: { scriptId: scriptId },
-    component: <ScriptSupport />,
-  };
-};
+const scriptSupportScreen = (scriptId: number): ScriptSupportScreen => ({
+  type: 'ScriptSupport',
+  params: { scriptId: scriptId },
+  component: <ScriptSupport />,
+});
 
 export {
   editorScreen,
