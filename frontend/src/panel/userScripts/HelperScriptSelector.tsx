@@ -11,9 +11,10 @@ import CreateUserDialog from './CreateUserDialog';
 import Typography from '@mui/material/Typography/Typography';
 import { Button, Container, ListSubheader } from '@mui/material';
 import { createUnpublishedScript } from '../api/unpublishedScripts';
+import { editorScreen } from '../navigation/screens';
 
 const HelperScriptSelector = () => {
-  const { goBack } = useNavigationContext();
+  const { goTo, goBack } = useNavigationContext();
 
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const [userData, setUserData] = useState<APIResponse<UserWithScripts>>({
@@ -78,7 +79,7 @@ const HelperScriptSelector = () => {
                       const response = await createUnpublishedScript(user.id);
                       if (response.status === 'Loaded') {
                         console.log('Created new script');
-                        setUserId(userId);
+                        goTo(editorScreen(response.data.id));
                       } else {
                         console.log('Could not create new script');
                       }

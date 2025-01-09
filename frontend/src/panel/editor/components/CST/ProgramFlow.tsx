@@ -6,10 +6,12 @@ import { getFollowEdge } from '../../flowUtils/getEdges';
 import './styles/program.css';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
 import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import Button from '@mui/material/Button/Button';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript } = useUnpublishedScriptContext();
-  console.log('Rendering ProgramFlow');
+  const createdAtDate = new Date(unpublishedScript.created_at);
+  const dateString = createdAtDate.toLocaleDateString();
 
   const initialEdge = {
     id: 'start-1',
@@ -31,8 +33,11 @@ const ProgramFlow: React.FC = () => {
       <div className="program-meta-data">
         <h2>{unpublishedScript.title}</h2>
         <h3>{unpublishedScript.author.name}</h3>
-        <h3>{unpublishedScript.created_at.toLocaleDateString()}</h3>
+        <h3>{dateString}</h3>
       </div>
+      <Button variant={'contained'} onClick={() => {}}>
+        Save
+      </Button>
       <div className="program-code-env" onScroll={updateArrows}>
         <div className="program-code">
           <Xwrapper>
@@ -47,6 +52,7 @@ const ProgramFlow: React.FC = () => {
                 start={edge.source}
                 end={edge.target}
                 startAnchor={'bottom'}
+                endAnchor={'top'}
               />
             ))}
           </Xwrapper>

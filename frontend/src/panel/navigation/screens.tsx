@@ -18,10 +18,11 @@ const helperScriptsScreen: HelperScriptsScreen = {
   component: <HelperScriptSelector />,
 };
 
-const editorScreen: EditorScreen = {
+const editorScreen = (scriptId: number): EditorScreen => ({
   type: 'Editor',
+  params: { scriptId: scriptId },
   component: <Editor />,
-};
+});
 
 const scriptSelectorScreen: ScriptSelectorScreen = {
   type: 'ScriptSelector',

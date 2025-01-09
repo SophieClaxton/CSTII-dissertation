@@ -3,7 +3,16 @@ import {
   UserScriptSelectorScreen,
   WebsiteScriptSelectorScreen,
   ScriptSupportScreen,
+  EditorScreen,
 } from './ScreenType';
+
+function assertIsEditorScreen(
+  screen: PanelScreen | undefined,
+): asserts screen is EditorScreen {
+  if (screen?.type != 'Editor') {
+    throw new Error(`Assert ${screen} as EditorScreen failed`);
+  }
+}
 
 function assertIsUserScriptSelectorScreen(
   screen: PanelScreen | undefined,
@@ -30,6 +39,7 @@ function assertIsScriptSupportScreen(
 }
 
 export {
+  assertIsEditorScreen,
   assertIsUserScriptSelectorScreen,
   assertIsWebsiteScriptSelectorScreen,
   assertIsScriptSupportScreen,

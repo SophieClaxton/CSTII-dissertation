@@ -1,5 +1,4 @@
 import { createContext, useReducer } from 'react';
-import testUnpublishedScript from '../editor/consts/testUnpublishedScript';
 import { EditorAction, EditorActionType } from '../models/EditorAction';
 import { getEditorComponentById } from '../models/CST/getters';
 import { isSection, isSubsection } from '../models/CST/testers';
@@ -19,12 +18,12 @@ const UnpublishedScriptContext = createContext<
   UnpublishedScriptState | undefined
 >(undefined);
 
-const UnpublishedScriptContextProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
+const UnpublishedScriptContextProvider: React.FC<
+  React.PropsWithChildren & { script: UnpublishedScript }
+> = ({ children, script }) => {
   const [editorProgram, dispatch] = useReducer(
     unpublishedScriptReducer,
-    testUnpublishedScript,
+    script,
   );
   return (
     <UnpublishedScriptContext.Provider

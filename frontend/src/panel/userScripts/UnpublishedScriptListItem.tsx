@@ -5,15 +5,15 @@ import Card from '@mui/material/Card/Card';
 import CardActionArea from '@mui/material/CardActionArea/CardActionArea';
 import CardContent from '@mui/material/CardContent/CardContent';
 import Typography from '@mui/material/Typography/Typography';
-import Button from '@mui/material/Button/Button';
 import CardActions from '@mui/material/CardActions/CardActions';
-import { scriptSupportScreen } from '../navigation/screens';
+import { editorScreen } from '../navigation/screens';
 import { UnpublishedScriptWithWebsite } from '../models/UnpublishedScript';
 
 const UnpublishedScriptListItem: React.FC<{
   script: UnpublishedScriptWithWebsite;
 }> = ({ script }) => {
-  const dateString = script.created_at.toString();
+  const createdAtDate = new Date(script.created_at);
+  const dateString = createdAtDate.toLocaleDateString();
   const { goTo } = useNavigationContext();
 
   return (
@@ -21,7 +21,7 @@ const UnpublishedScriptListItem: React.FC<{
       <Card className="script-card">
         <CardActionArea
           onClick={() => {
-            goTo(scriptSupportScreen(script.id));
+            goTo(editorScreen(script.id));
           }}
         >
           <CardContent>
@@ -35,9 +35,7 @@ const UnpublishedScriptListItem: React.FC<{
         </CardActionArea>
         <CardActions>
           {script.website && (
-            <Button variant="text" onClick={() => {}}>
-              <Typography variant="subtitle1">{script.website.url}</Typography>
-            </Button>
+            <Typography variant="subtitle1">{script.website.url}</Typography>
           )}
           <Typography variant="subtitle1">{dateString}</Typography>
         </CardActions>

@@ -29,6 +29,7 @@ interface HelperScriptsScreen extends ScreenBase {
 
 interface EditorScreen extends ScreenBase {
   type: 'Editor';
+  params: { scriptId: number };
 }
 
 interface ScriptSelectorScreen extends ScreenBase {

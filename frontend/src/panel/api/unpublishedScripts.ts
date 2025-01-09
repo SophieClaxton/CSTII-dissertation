@@ -1,6 +1,9 @@
 import axios from 'axios';
 import APIResponse from '../models/APIResponse';
-import { UnpublishedScriptBase } from '../models/UnpublishedScript';
+import {
+  UnpublishedScript,
+  UnpublishedScriptBase,
+} from '../models/UnpublishedScript';
 import { handleError } from '../models/APIError';
 
 const unpublishedScriptsEndpoint = axios.create({
@@ -29,4 +32,22 @@ const createUnpublishedScript = async (
   }
 };
 
-export { createUnpublishedScript };
+const getUnpublishedScript = async (
+  scriptId: number,
+): Promise<APIResponse<UnpublishedScript>> => {
+  try {
+    console.log('Making request for scripts');
+    const response = await unpublishedScriptsEndpoint.get(`${scriptId}`);
+    return {
+      status: 'Loaded',
+      data: response.data as UnpublishedScript,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
+export { createUnpublishedScript, getUnpublishedScript };

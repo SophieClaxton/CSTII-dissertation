@@ -5,7 +5,7 @@ import Website from './Website';
 interface UnpublishedScriptBase {
   id: number;
   title: string;
-  created_at: Date;
+  created_at: string;
   description?: string;
 }
 

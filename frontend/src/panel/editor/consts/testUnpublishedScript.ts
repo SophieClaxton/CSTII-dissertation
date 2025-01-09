@@ -157,7 +157,7 @@ const testUnpublishedScript: UnpublishedScript = {
   id: 1,
   title: 'Test Program',
   author: { id: 1, name: 'Sophie' },
-  created_at: new Date(2024, 12, 1),
+  created_at: '2025-01-09T15:47:54.506677',
   program: { sections: [section1, section2, section3] },
 };
 
