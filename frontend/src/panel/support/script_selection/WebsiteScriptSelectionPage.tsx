@@ -23,7 +23,7 @@ const UserScriptSelectionPage = () => {
       setWebsiteData(response);
     };
     getData();
-  }, []);
+  }, [currentScreen]);
 
   return (
     <Loadable

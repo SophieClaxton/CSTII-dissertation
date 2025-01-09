@@ -1,4 +1,4 @@
-import HelperScriptSelector from '../components/HelperScriptSelector';
+import HelperScriptSelector from '../userScripts/HelperScriptSelector';
 import Editor from '../editor/Editor';
 import ScriptSelectionPage from '../support/script_selection/ScriptSelectionPage';
 import UserScriptSelectionPage from '../support/script_selection/UserScriptSelectionPage';
