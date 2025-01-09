@@ -65,7 +65,7 @@ class WebsiteWithScriptsResponse(BaseWebsiteResponse):
 
 class BaseUnpublishedScriptResponse(BaseModel):
     id: int
-    title: str | None = None
+    title: str
     created_at: datetime
     description: str | None = None
 

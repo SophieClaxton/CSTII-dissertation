@@ -149,7 +149,7 @@ class Website(SQLModel, table=True):
 
 class UnpublishedScript(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    title: str | None = Field(default=None, nullable=True)
+    title: str
     author_id: int = Field(foreign_key="user.id", ondelete="CASCADE")
     created_at: datetime = Field(default=datetime.now, nullable=True)
     description: str | None = Field(default=None, nullable=True)
