@@ -22,6 +22,7 @@ from ..models.responses import (
     UnpublishedScriptWithProgramResponse,
 )
 from ..models.requests import UpdateUnpublishedScriptRequest
+from ..models.CSTprogram import CSTProgram, CSTSectionId, CSTSectionNode
 
 router = APIRouter(prefix="/unpublished_scripts", tags=["unpublished_scripts"])
 
@@ -78,6 +79,12 @@ def get_unpublished_script(
         raise unpublished_script_not_found_exception(script_id)
 
     program = get_unpublished_script_program(script.script_url)
+    if not program:
+        program = CSTProgram(
+            sections=[
+                CSTSectionNode(id=CSTSectionId(sectionId=1), url="", innerSteps=[])
+            ]
+        )
 
     return script.toUnpublishedScriptWithProgramResponse(program)
 
