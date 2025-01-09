@@ -1,5 +1,4 @@
 import {
-  CSTClickNode,
   CSTFollowNode,
   CSTReadNode,
   CSTSectionNode,
@@ -7,8 +6,6 @@ import {
   CSTSubsectionNode,
   CSTUserDecisionEndType,
   CSTUserDecisionEndStepNode,
-  CSTWriteNode,
-  CSTUserDecisionInnerStepNode,
 } from '../../models/CST/CST';
 import { UnpublishedScript } from '../../models/UnpublishedScript';
 
@@ -25,57 +22,57 @@ const readNode: CSTReadNode = {
   element: { outerHTML: '', tag: 'P', url: 'www.url1.com' },
 };
 
-const clickNode: CSTClickNode = {
-  id: {
-    parentId: {
-      parentId: { parentId: { sectionId: 1 }, stepId: 2 },
-      subsectionId: 1,
-    },
-    stepId: 1,
-  },
-  type: CSTStepNodeType.Click,
-  element: { outerHTML: '', tag: 'BUTTON', url: 'www.url1.com' },
-};
+// const clickNode: CSTClickNode = {
+//   id: {
+//     parentId: {
+//       parentId: { parentId: { sectionId: 1 }, stepId: 2 },
+//       subsectionId: 1,
+//     },
+//     stepId: 1,
+//   },
+//   type: CSTStepNodeType.Click,
+//   element: { outerHTML: '', tag: 'BUTTON', url: 'www.url1.com' },
+// };
 
-const writeNode: CSTWriteNode = {
-  id: {
-    parentId: {
-      parentId: { parentId: { sectionId: 1 }, stepId: 2 },
-      subsectionId: 2,
-    },
-    stepId: 1,
-  },
-  type: CSTStepNodeType.Write,
-  element: { outerHTML: '', tag: 'INPUT', url: 'www.url1.com' },
-};
+// const writeNode: CSTWriteNode = {
+//   id: {
+//     parentId: {
+//       parentId: { parentId: { sectionId: 1 }, stepId: 2 },
+//       subsectionId: 2,
+//     },
+//     stepId: 1,
+//   },
+//   type: CSTStepNodeType.Write,
+//   element: { outerHTML: '', tag: 'INPUT', url: 'www.url1.com' },
+// };
 
-const subsection1: CSTSubsectionNode = {
-  id: { parentId: { parentId: { sectionId: 1 }, stepId: 2 }, subsectionId: 1 },
-  answer: 'yes',
-  innerSteps: [clickNode],
-  endStep: undefined,
-};
+// const subsection1: CSTSubsectionNode = {
+//   id: { parentId: { parentId: { sectionId: 1 }, stepId: 2 }, subsectionId: 1 },
+//   answer: 'yes',
+//   innerSteps: [clickNode],
+//   endStep: undefined,
+// };
 
-const subsection2: CSTSubsectionNode = {
-  id: { parentId: { parentId: { sectionId: 1 }, stepId: 2 }, subsectionId: 2 },
-  answer: 'no',
-  innerSteps: [writeNode],
-  endStep: undefined,
-};
+// const subsection2: CSTSubsectionNode = {
+//   id: { parentId: { parentId: { sectionId: 1 }, stepId: 2 }, subsectionId: 2 },
+//   answer: 'no',
+//   innerSteps: [writeNode],
+//   endStep: undefined,
+// };
 
-const decisionNode: CSTUserDecisionInnerStepNode = {
-  id: { parentId: { sectionId: 1 }, stepId: 2 },
-  type: CSTStepNodeType.UserDecision,
-  question: 'Are you older than 20?',
-  choice1: subsection1,
-  choice2: subsection2,
-  endsWithFollow: CSTUserDecisionEndType.InnerStep,
-};
+// const decisionNode: CSTUserDecisionInnerStepNode = {
+//   id: { parentId: { sectionId: 1 }, stepId: 2 },
+//   type: CSTStepNodeType.UserDecision,
+//   question: 'Are you older than 20?',
+//   choice1: subsection1,
+//   choice2: subsection2,
+//   endsWithFollow: CSTUserDecisionEndType.InnerStep,
+// };
 
 const section1: CSTSectionNode = {
   id: { sectionId: 1 },
   url: 'www.url1.com',
-  innerSteps: [readNode, decisionNode],
+  innerSteps: [readNode],
   endStep: followNode,
 };
 
@@ -98,17 +95,17 @@ const followNodeSub21: CSTFollowNode = {
   nextSectionId: { sectionId: 3 },
 };
 
-const followNodeSub22: CSTFollowNode = {
-  id: {
-    parentId: {
-      parentId: { parentId: { sectionId: 2 }, stepId: 'E' },
-      subsectionId: 2,
-    },
-    stepId: 'E',
-  },
-  type: CSTStepNodeType.Follow,
-  nextSectionId: undefined,
-};
+// const followNodeSub22: CSTFollowNode = {
+//   id: {
+//     parentId: {
+//       parentId: { parentId: { sectionId: 2 }, stepId: 'E' },
+//       subsectionId: 2,
+//     },
+//     stepId: 'E',
+//   },
+//   type: CSTStepNodeType.Follow,
+//   nextSectionId: undefined,
+// };
 
 const subsection12: CSTSubsectionNode = {
   id: {
@@ -127,7 +124,7 @@ const subsection22: CSTSubsectionNode = {
   },
   answer: 'no',
   innerSteps: [],
-  endStep: followNodeSub22,
+  endStep: undefined,
 };
 
 const userDecision2: CSTUserDecisionEndStepNode = {

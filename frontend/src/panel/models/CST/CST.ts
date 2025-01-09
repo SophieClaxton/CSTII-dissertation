@@ -105,6 +105,7 @@ interface CSTScrollToNode extends CSTInnerStepBase {
 
 interface CSTDragNode extends CSTInnerStepBase {
   type: CSTStepNodeType.Drag;
+  location?: { x: number; y: number };
 }
 
 enum CSTUserDecisionEndType {
@@ -142,14 +143,17 @@ interface CSTInputBase extends CSTInnerStepBase {
 
 interface CSTWriteNode extends CSTInputBase {
   type: CSTStepNodeType.Write;
+  text?: string;
 }
 
 interface CSTSelectNode extends CSTInputBase {
   type: CSTStepNodeType.Select;
+  option?: string;
 }
 
 interface CSTCheckNode extends CSTInputBase {
   type: CSTStepNodeType.Check;
+  isChecked: boolean;
 }
 
 interface CSTDrawNode extends CSTInputBase {

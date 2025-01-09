@@ -110,7 +110,7 @@ interface ASTUserDecisionNode {
 
 export { ASTNodeType };
 export type {
-  ASTProgram as ASTProgramNode,
+  ASTProgram,
   ASTSectionNode,
   ASTSubsectionNode,
   ASTStepNode,
