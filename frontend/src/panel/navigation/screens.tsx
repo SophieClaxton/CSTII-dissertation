@@ -1,3 +1,4 @@
+import HelperScriptSelector from '../components/HelperScriptSelector';
 import Editor from '../editor/Editor';
 import ScriptSelectionPage from '../support/script_selection/ScriptSelectionPage';
 import UserScriptSelectionPage from '../support/script_selection/UserScriptSelectionPage';
@@ -5,11 +6,17 @@ import WebsiteScriptSelectionPage from '../support/script_selection/WebsiteScrip
 import ScriptSupport from '../support/script_support/ScriptSupport';
 import {
   EditorScreen,
+  HelperScriptsScreen,
   ScriptSelectorScreen,
   ScriptSupportScreen,
   UserScriptSelectorScreen,
   WebsiteScriptSelectorScreen,
 } from './ScreenType';
+
+const helperScriptsScreen: HelperScriptsScreen = {
+  type: 'HelperScripts',
+  component: <HelperScriptSelector />,
+};
 
 const editorScreen: EditorScreen = {
   type: 'Editor',
@@ -44,6 +51,7 @@ const scriptSupportScreen = (scriptId: number): ScriptSupportScreen => ({
 });
 
 export {
+  helperScriptsScreen,
   editorScreen,
   scriptSelectorScreen,
   userScriptSelectorScreen,

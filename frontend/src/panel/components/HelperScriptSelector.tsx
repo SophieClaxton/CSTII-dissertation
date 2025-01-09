@@ -1,13 +1,13 @@
 import { useNavigationContext } from '../contexts/contextHooks';
 
 const HelperScriptSelector = () => {
-  const { removeCurrentScreen } = useNavigationContext();
+  const { goBack } = useNavigationContext();
 
   return (
     <div className="script-selection-page page">
       <div className="page-title">
         <h1>Your Scripts</h1>
-        <button className="back-button" onClick={removeCurrentScreen}>
+        <button className="back-button" onClick={goBack}>
           Back
         </button>
       </div>
