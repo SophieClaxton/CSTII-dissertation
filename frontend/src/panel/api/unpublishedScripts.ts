@@ -3,6 +3,7 @@ import APIResponse from '../models/APIResponse';
 import {
   UnpublishedScript,
   UnpublishedScriptBase,
+  UpdateUnpublishedScriptRequest,
 } from '../models/UnpublishedScript';
 import { handleError } from '../models/APIError';
 
@@ -50,4 +51,30 @@ const getUnpublishedScript = async (
   }
 };
 
-export { createUnpublishedScript, getUnpublishedScript };
+const updateUnpublishedScript = async (
+  scriptId: number,
+  updates: UpdateUnpublishedScriptRequest,
+): Promise<APIResponse<UnpublishedScript>> => {
+  try {
+    console.log('Making request for scripts');
+    const response = await unpublishedScriptsEndpoint.patch(
+      `${scriptId}`,
+      updates,
+    );
+    return {
+      status: 'Loaded',
+      data: response.data as UnpublishedScript,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
+export {
+  createUnpublishedScript,
+  getUnpublishedScript,
+  updateUnpublishedScript,
+};
