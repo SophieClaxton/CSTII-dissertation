@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 type PanelScreen =
+  | HelperScriptsScreen
   | EditorScreen
   | ScriptSelectorScreen
   | UserScriptSelectorScreen
@@ -15,15 +16,20 @@ interface ScreenBase {
 
 type ScreenType = HelperScreenType | HelpeeScreenType;
 
-type HelperScreenType = 'Editor';
+type HelperScreenType = 'HelperScripts' | 'Editor';
 type HelpeeScreenType =
   | 'ScriptSelector'
   | 'UserScriptSelector'
   | 'WebsiteScriptSelector'
   | 'ScriptSupport';
 
+interface HelperScriptsScreen extends ScreenBase {
+  type: 'HelperScripts';
+}
+
 interface EditorScreen extends ScreenBase {
   type: 'Editor';
+  params: { scriptId: number };
 }
 
 interface ScriptSelectorScreen extends ScreenBase {
@@ -48,6 +54,7 @@ interface ScriptSupportScreen extends ScreenBase {
 export type {
   ScreenType,
   PanelScreen,
+  HelperScriptsScreen,
   EditorScreen,
   ScriptSelectorScreen,
   UserScriptSelectorScreen,

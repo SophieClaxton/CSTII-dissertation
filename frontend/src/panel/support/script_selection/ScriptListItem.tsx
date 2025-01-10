@@ -10,7 +10,6 @@ import Card from '@mui/material/Card/Card';
 import CardActionArea from '@mui/material/CardActionArea/CardActionArea';
 import CardContent from '@mui/material/CardContent/CardContent';
 import Typography from '@mui/material/Typography/Typography';
-import Stack from '@mui/material/Stack/Stack';
 import Button from '@mui/material/Button/Button';
 import CardActions from '@mui/material/CardActions/CardActions';
 import {
@@ -37,10 +36,7 @@ const ScriptListItem: React.FC<{
             <Typography variant="h5" gutterBottom>
               {script.title}
             </Typography>
-            <Stack>
-              <Stack direction={'row'} spacing={2}></Stack>
-              <Typography variant="body1">{script.description}</Typography>
-            </Stack>
+            <Typography variant="body1">{script.description}</Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>

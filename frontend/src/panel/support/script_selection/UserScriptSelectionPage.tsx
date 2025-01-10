@@ -23,7 +23,7 @@ const UserScriptSelectionPage = () => {
       setPublicUserData(response);
     };
     getData();
-  }, []);
+  }, [currentScreen]);
 
   return (
     <Loadable

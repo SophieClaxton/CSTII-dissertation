@@ -1,11 +1,33 @@
-import XarrowProgramFlow from './components/CST/ProgramFlow';
+import ProgramFlow from './components/CST/ProgramFlow';
 import { UnpublishedScriptContextProvider } from '../contexts/UnpublishedScriptContext';
 import '../panel.css';
 import './styles/editor.css';
 import { useNavigationContext } from '../contexts/contextHooks';
+import { useEffect, useState } from 'react';
+import APIResponse from '../models/APIResponse';
+import { getUnpublishedScript } from '../api/unpublishedScripts';
+import { UnpublishedScript } from '../models/UnpublishedScript';
+import { assertIsEditorScreen } from '../navigation/screenChecks';
+import Loadable from '../components/Loadable';
 
 const Editor: React.FC = () => {
-  const { goBack } = useNavigationContext();
+  const { goBack, currentScreen } = useNavigationContext();
+  assertIsEditorScreen(currentScreen);
+
+  const [unpublishedScriptData, setUnpublishedScriptData] = useState<
+    APIResponse<UnpublishedScript>
+  >({ status: 'Loading' });
+
+  useEffect(() => {
+    const getUnpublishedScriptData = async () => {
+      const response = await getUnpublishedScript(
+        currentScreen.params.scriptId,
+      );
+      setUnpublishedScriptData(response);
+    };
+    getUnpublishedScriptData();
+  }, [currentScreen]);
+
   return (
     <div className="editor page">
       <div className="page-title">
@@ -14,9 +36,14 @@ const Editor: React.FC = () => {
           Back
         </button>
       </div>
-      <UnpublishedScriptContextProvider>
-        <XarrowProgramFlow />
-      </UnpublishedScriptContextProvider>
+      <Loadable
+        response={unpublishedScriptData}
+        onLoad={(script) => (
+          <UnpublishedScriptContextProvider script={script}>
+            <ProgramFlow />
+          </UnpublishedScriptContextProvider>
+        )}
+      />
     </div>
   );
 };

@@ -22,6 +22,7 @@ from ..models.responses import (
     UnpublishedScriptWithProgramResponse,
 )
 from ..models.requests import UpdateUnpublishedScriptRequest
+from ..models.CSTprogram import CSTProgram, CSTSectionId, CSTSectionNode
 
 router = APIRouter(prefix="/unpublished_scripts", tags=["unpublished_scripts"])
 
@@ -50,9 +51,17 @@ def create_user_unpublished_script(
     if not user:
         raise user_not_found_exception(user_id)
 
+    new_script_num = (
+        max([script.id for script in user.unpublished_scripts], default=0) + 1
+    )
+    new_script_title = f"WIP #{new_script_num}"
+
     script_url = create_unpublished_script_url()
     new_script = UnpublishedScript(
-        author_id=user.id, script_url=script_url, created_at=datetime.now()
+        title=new_script_title,
+        author_id=user.id,
+        script_url=script_url,
+        created_at=datetime.now(),
     )
     session.add(new_script)
     session.commit()
@@ -70,6 +79,12 @@ def get_unpublished_script(
         raise unpublished_script_not_found_exception(script_id)
 
     program = get_unpublished_script_program(script.script_url)
+    if not program:
+        program = CSTProgram(
+            sections=[
+                CSTSectionNode(id=CSTSectionId(sectionId=1), url="", innerSteps=[])
+            ]
+        )
 
     return script.toUnpublishedScriptWithProgramResponse(program)
 
@@ -113,7 +128,7 @@ def delete_unpublished_script(script_id: int, session: DatabaseDep) -> SuccessRe
 
 
 @router.get(
-    "user/{user_id}/{website_id}", response_model=List[BaseUnpublishedScriptResponse]
+    "/user/{user_id}/{website_id}", response_model=List[BaseUnpublishedScriptResponse]
 )
 def get_user_website_unpublished_scripts(
     user_id: int, website_id: int, session: DatabaseDep

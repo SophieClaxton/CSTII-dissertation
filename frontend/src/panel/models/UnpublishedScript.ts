@@ -4,8 +4,8 @@ import Website from './Website';
 
 interface UnpublishedScriptBase {
   id: number;
-  title?: string;
-  created_at: Date;
+  title: string;
+  created_at: string;
   description?: string;
 }
 
@@ -17,8 +17,16 @@ type UnpublishedScript = UnpublishedScriptWithWebsite & {
   program: CSTProgram;
 };
 
+interface UpdateUnpublishedScriptRequest {
+  title?: string;
+  description?: string;
+  website_id?: number;
+  program?: CSTProgram;
+}
+
 export type {
   UnpublishedScriptBase,
   UnpublishedScriptWithWebsite,
   UnpublishedScript,
+  UpdateUnpublishedScriptRequest,
 };
