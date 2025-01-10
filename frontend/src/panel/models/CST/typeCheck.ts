@@ -49,12 +49,16 @@ import {
 } from './CST';
 import { mapNodeIdToString } from './mappers';
 
+type TypeCheckResult =
+  | { success: true; program: ASTProgram }
+  | { success: false; errors: TypeCheckError[] };
+
 interface TypeCheckError {
   location: CSTNodeId;
   reason: string;
 }
 
-const typeCheck = (program: CSTProgram): ASTProgram | TypeCheckError[] => {
+const typeCheck = (program: CSTProgram): TypeCheckResult => {
   // Require sections to be sorted topologically
   const sections = [...program.sections].reverse();
   // take a copy to avoid mutating the original program
@@ -75,9 +79,12 @@ const typeCheck = (program: CSTProgram): ASTProgram | TypeCheckError[] => {
   );
   return firstSection
     ? isASTSectionNode(firstSection)
-      ? { start: firstSection }
-      : firstSection
-    : [{ location: { sectionId: 0 }, reason: 'Missing section 1' }];
+      ? { success: true, program: { start: firstSection } }
+      : { success: false, errors: firstSection }
+    : {
+        success: false,
+        errors: [{ location: { sectionId: 0 }, reason: 'Missing section 1' }],
+      };
 };
 
 const mapSection = <I extends CSTSection, O extends ASTSection>(
