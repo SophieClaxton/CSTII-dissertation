@@ -12,12 +12,25 @@
   gap: 0.5rem;
 }
 
+.step>* {
+  flex-grow: 1;
+}
+
 .drag-handle {
   height: 100%;
+  flex-grow: 0;
+  padding-top: 0.5rem;
+  box-sizing: border-box;
 }
 
 .drag-handle:hover {
   background-color: lightblue;
+}
+
+.drag-handle-placeholder {
+  width: 24px;
+  height: 100%;
+  flex-grow: 0;
 }
 
 .step-with-error {

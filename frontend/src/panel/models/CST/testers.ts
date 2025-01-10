@@ -4,6 +4,9 @@ import {
   CSTSubsectionNode,
   CSTStepNodeType,
   CSTUserDecisionEndType,
+  CSTInnerStepId,
+  CSTNodeId,
+  CSTEndStepId,
 } from './CST';
 
 const isSection = (node: CSTNode): node is CSTSectionNode => {
@@ -57,4 +60,19 @@ const isEndStep = (node: CSTNode): boolean => {
   );
 };
 
-export { isSection, isSubsection, isInnerStep, isEndStep };
+const isInnerStepId = (id: CSTNodeId): id is CSTInnerStepId => {
+  return 'stepId' in id && typeof id.stepId === 'number';
+};
+
+const isEndStepId = (id: CSTNodeId): id is CSTEndStepId => {
+  return 'stepId' in id && typeof id.stepId === 'string';
+};
+
+export {
+  isSection,
+  isSubsection,
+  isInnerStep,
+  isEndStep,
+  isInnerStepId,
+  isEndStepId,
+};

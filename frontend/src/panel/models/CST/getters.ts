@@ -10,6 +10,7 @@ import {
   CSTNodeId,
   CSTInnerStepId,
 } from './CST';
+import { mapNodeIdToString } from './mappers';
 
 const getEditorComponentById = (
   editorProgram: CSTProgram,
@@ -24,7 +25,7 @@ const getEditorComponentByIdFromSection = (
   editorSection: CSTSubsectionNode | CSTSectionNode,
   id: CSTNodeId,
 ): CSTNode | undefined => {
-  if (editorSection.id == id) {
+  if (mapNodeIdToString(editorSection.id) === mapNodeIdToString(id)) {
     return editorSection;
   }
   const innerStepsResult = editorSection.innerSteps
@@ -40,7 +41,7 @@ const getEditorComponentByIdFromStep = (
   editorStep: CSTStepNode,
   id: CSTNodeId,
 ): CSTNode | undefined => {
-  if (editorStep.id == id) {
+  if (mapNodeIdToString(editorStep.id) === mapNodeIdToString(id)) {
     return editorStep;
   }
   if (editorStep.type == CSTStepNodeType.UserDecision) {

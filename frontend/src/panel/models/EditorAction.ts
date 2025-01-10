@@ -65,7 +65,6 @@ interface AddInnerStepAction extends BaseEditorAction {
 
 interface DeleteInnerStepAction extends BaseEditorAction {
   type: EditorActionType.DeleteInnerStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
   innerStepId: CSTInnerStepId;
 }
 
@@ -90,7 +89,6 @@ interface AddEndStepAction extends BaseEditorAction {
 
 interface DeleteEndStepAction extends BaseEditorAction {
   type: EditorActionType.DeleteEndStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
   endStepId: CSTEndStepId;
 }
 

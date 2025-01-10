@@ -17,6 +17,8 @@ import {
   AddInnerStepAction,
   RearrangeInnerStepsAction,
   AddEndStepAction,
+  DeleteInnerStepAction,
+  DeleteEndStepAction,
 } from '../models/EditorAction';
 import { UnpublishedScript } from '../models/UnpublishedScript';
 
@@ -84,6 +86,30 @@ const rearrangeInnerSteps = (
   return { ...unpublishedScript, program: newEditorProgram };
 };
 
+const deleteInnerStep = (
+  unpublishedScript: UnpublishedScript,
+  action: DeleteInnerStepAction,
+): UnpublishedScript => {
+  const section = getSection(
+    action.innerStepId.parentId,
+    unpublishedScript.program,
+  );
+  if (!section) {
+    return unpublishedScript;
+  }
+  const newEditorProgram = mapProgramToProgramWithUpdatedSections(
+    unpublishedScript.program,
+    section.id,
+    mapSectionToSectionWithUpdatedInnerSteps(
+      section.innerSteps.filter(
+        (step) =>
+          mapNodeIdToString(step.id) != mapNodeIdToString(action.innerStepId),
+      ),
+    ),
+  );
+  return { ...unpublishedScript, program: newEditorProgram };
+};
+
 /* End Step Actions */
 
 const addEndStep = (
@@ -107,4 +133,33 @@ const addEndStep = (
   };
 };
 
-export { addInnerStep, rearrangeInnerSteps, addEndStep };
+const deleteEndStep = (
+  unpublishedScript: UnpublishedScript,
+  action: DeleteEndStepAction,
+): UnpublishedScript => {
+  const section = getSection(
+    action.endStepId.parentId,
+    unpublishedScript.program,
+  );
+  if (!section) {
+    return unpublishedScript;
+  }
+  const newEditorProgram = mapProgramToProgramWithUpdatedSections(
+    unpublishedScript.program,
+    section.id,
+    mapSectionToSectionWithUpdatedEndStep(undefined),
+  );
+  // console.log(newEditorProgram);
+  return {
+    ...unpublishedScript,
+    program: newEditorProgram,
+  };
+};
+
+export {
+  addInnerStep,
+  rearrangeInnerSteps,
+  deleteInnerStep,
+  addEndStep,
+  deleteEndStep,
+};

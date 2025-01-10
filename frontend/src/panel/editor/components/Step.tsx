@@ -1,14 +1,21 @@
 import React from 'react';
-import { useTypeErrorsContext } from '../../contexts/contextHooks';
+import {
+  useTypeErrorsContext,
+  useUnpublishedScriptContext,
+} from '../../contexts/contextHooks';
 import { mapNodeIdToString } from '../../models/CST/mappers';
-import { CSTNodeId } from '../../models/CST/CST';
+import { CSTEndStepId, CSTInnerStepId } from '../../models/CST/CST';
 import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities/useSyntheticListeners';
 import './CST/styles/step.css';
 import DragIndicator from '@mui/icons-material/DragIndicator';
+import IconButton from '@mui/material/IconButton/IconButton';
+import Delete from '@mui/icons-material/Delete';
+import { EditorActionType } from '../../models/EditorAction';
+import { isInnerStepId } from '../../models/CST/testers';
 
 interface StepProps {
-  stepId: CSTNodeId;
+  stepId: CSTInnerStepId | CSTEndStepId;
   sortableProps?: {
     setNodeRef: (node: HTMLElement | null) => void;
     style: { transform: string | undefined; transition: string | undefined };
@@ -24,6 +31,8 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
   className,
   children,
 }) => {
+  const { dispatch } = useUnpublishedScriptContext();
+
   const idString = mapNodeIdToString(stepId);
 
   const typeErrors = useTypeErrorsContext();
@@ -51,12 +60,31 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
       // {...attributes}
       // {...listeners}
     >
-      {sortableProps && (
+      {sortableProps ? (
         <div className={'drag-handle'} {...attributes} {...listeners}>
           <DragIndicator />
         </div>
+      ) : (
+        <div className="drag-handle-placeholder"></div>
       )}
       {children}
+      <IconButton
+        onClick={() => {
+          if (isInnerStepId(stepId)) {
+            return dispatch({
+              type: EditorActionType.DeleteInnerStep,
+              innerStepId: stepId,
+            });
+          }
+          return dispatch({
+            type: EditorActionType.DeleteEndStep,
+            endStepId: stepId,
+          });
+        }}
+        sx={{ height: '100%', padding: '0.5rem 0 0 0', borderRadius: 0 }}
+      >
+        <Delete />
+      </IconButton>
       {stepError && (
         <div id={`${stepId}-Error`} className="step-error">
           {stepError}

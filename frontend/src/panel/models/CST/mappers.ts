@@ -127,7 +127,7 @@ const mapStepToStepWithUpdatedInnerSteps = (
 };
 
 const mapSectionToSectionWithUpdatedEndStep =
-  (endStep: CSTEndStepNode) =>
+  (endStep: CSTEndStepNode | undefined) =>
   (
     section: CSTSectionNode,
     sectionId: CSTSectionId | CSTSubsectionId,
@@ -162,7 +162,7 @@ const mapSectionToSectionWithUpdatedEndStep =
 const mapSubsectionToSubsectionWithUpdatedEndStep = (
   subsection: CSTSubsectionNode,
   sectionId: CSTSectionId | CSTSubsectionId,
-  endStep: CSTEndStepNode,
+  endStep: CSTEndStepNode | undefined,
 ): CSTSubsectionNode => {
   if (subsection.id == sectionId) {
     console.log('Found subsection to update steps');
@@ -192,11 +192,11 @@ const mapSubsectionToSubsectionWithUpdatedEndStep = (
 };
 
 const mapStepToStepWithUpdatedEndStep = (
-  step: CSTStepNode,
+  step: CSTStepNode | undefined,
   sectionId: CSTSectionId | CSTSubsectionId,
-  endStep: CSTEndStepNode,
+  endStep: CSTEndStepNode | undefined,
 ) => {
-  if (step.type == CSTStepNodeType.UserDecision) {
+  if (step && step.type == CSTStepNodeType.UserDecision) {
     return {
       ...step,
       choice1: mapSubsectionToSubsectionWithUpdatedEndStep(
