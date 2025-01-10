@@ -36,6 +36,8 @@ interface CSTNodeBase {
   id: CSTNodeId;
 }
 
+type CSTSection = CSTSubsectionNode | CSTSectionNode;
+
 interface CSTSectionBase extends CSTNodeBase {
   innerSteps: CSTInnerStepNode[];
   endStep?: CSTEndStepNode;
@@ -55,9 +57,9 @@ enum CSTStepNodeType {
   Follow = 'Follow',
   Click = 'Click',
   Read = 'Read',
-  ScrollTo = 'Scroll-To',
+  ScrollTo = 'ScrollTo',
   Drag = 'Drag',
-  UserDecision = 'User Decision',
+  UserDecision = 'UserDecision',
   Write = 'Write',
   Select = 'Select',
   Check = 'Check',
@@ -170,12 +172,14 @@ export type {
   CSTSubsectionId,
   CSTInnerStepId,
   CSTEndStepId,
+  CSTSection,
   CSTSectionBase,
   CSTSectionNode,
   CSTSubsectionNode,
   CSTStepNode,
   CSTInnerStepNode,
   CSTEndStepNode,
+  CSTStepBase,
   CSTFollowNode,
   CSTClickNode,
   CSTReadNode,

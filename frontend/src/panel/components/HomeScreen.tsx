@@ -8,9 +8,6 @@ import {
 const HomeScreen: React.FC = () => {
   const { goTo } = useNavigationContext();
 
-  const typeCheckResult = typeCheck(testUnpublishedScript.program);
-  console.log(typeCheckResult);
-
   return (
     <>
       <h1>SC2370 Project</h1>

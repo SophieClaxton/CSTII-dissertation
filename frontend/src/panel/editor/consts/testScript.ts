@@ -5,7 +5,7 @@ import {
   ASTReadNode,
   ASTSubsectionNode,
   ASTUserDecisionNode,
-} from '../../models/AST';
+} from '../../models/AST/AST';
 import { Script } from '../../models/Script';
 
 const endNode: ASTEndNode = {
