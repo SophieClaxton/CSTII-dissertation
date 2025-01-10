@@ -9,6 +9,10 @@
   color: black;
 }
 
+.step-with-error {
+  outline: 2px dashed rgb(230, 40, 40);
+}
+
 .draggable-step:hover {
   cursor: pointer;
   outline: 2px solid black;

@@ -1,6 +1,5 @@
-import { mapNodeIdToString } from '../../../models/CST/mappers';
 import { CSTFollowNode } from '../../../models/CST/CST';
-import './styles/step.css';
+import Step from '../Step';
 
 interface FollowNodeProps {
   step: CSTFollowNode;
@@ -8,10 +7,10 @@ interface FollowNodeProps {
 
 const FollowNode: React.FC<FollowNodeProps> = ({ step }) => {
   return (
-    <div className="step follow-step" id={mapNodeIdToString(step.id)}>
+    <Step nodeId={step.id} className="follow-step">
       <p>{step.type.toUpperCase()}</p>
       {step.element && <p>{step.element.tag}</p>}
-    </div>
+    </Step>
   );
 };
 
