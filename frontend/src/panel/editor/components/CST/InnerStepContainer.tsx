@@ -16,25 +16,40 @@ import {
 } from '@dnd-kit/sortable';
 import InnerStepNode from './InnerStepNode';
 import { useXarrow } from 'react-xarrows';
-import { CSTInnerStepNode } from '../../../models/CST/CST';
+import {
+  CSTInnerStepNode,
+  CSTSectionId,
+  CSTSubsectionId,
+} from '../../../models/CST/CST';
 import { MouseSensor } from '../../flowUtils/sensors';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
+import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import { EditorActionType } from '../../../models/EditorAction';
 
 interface InnerStepContainerProps {
   innerSteps: CSTInnerStepNode[];
+  parentId: CSTSectionId | CSTSubsectionId;
 }
 
 const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
   innerSteps,
+  parentId,
 }) => {
-  const [items, setItems] = useState<UniqueIdentifier[]>(
-    innerSteps.map((step) => mapNodeIdToString(step.id)),
-  );
+  const { dispatch } = useUnpublishedScriptContext();
+
+  const [innerStepMap, setInnerStepMap] =
+    useState<Map<UniqueIdentifier, CSTInnerStepNode>>();
+  const [items, setItems] = useState<UniqueIdentifier[]>([]);
 
   // Need the useEffect to update the items when innerSteps changes,
   // because useState creates a separate variable
   useEffect(() => {
-    setItems(innerSteps.map((step) => mapNodeIdToString(step.id)));
+    const innerStepMap = new Map<UniqueIdentifier, CSTInnerStepNode>();
+    innerSteps.forEach((innerStep) =>
+      innerStepMap.set(mapNodeIdToString(innerStep.id), innerStep),
+    );
+    setItems([...innerStepMap.keys()]);
+    setInnerStepMap(innerStepMap);
   }, [innerSteps]);
 
   if (innerSteps.length !== items.length) {
@@ -53,11 +68,18 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
   const handleDragEvent = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+      const oldIndex = items.indexOf(active.id);
+      const newIndex = items.indexOf(over.id);
+      const newItems = arrayMove(items, oldIndex, newIndex);
+      setItems(newItems);
 
-        return arrayMove(items, oldIndex, newIndex);
+      const newInnerSteps = newItems
+        .map((item) => innerStepMap!.get(item))
+        .filter((step) => step != undefined);
+      dispatch({
+        type: EditorActionType.RearrangeInnerSteps,
+        sectionId: parentId,
+        innerSteps: newInnerSteps,
       });
     }
   };

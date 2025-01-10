@@ -18,7 +18,10 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
   return (
     <div className="subsection">
       <p>{subsection.answer}</p>
-      <InnerStepContainer innerSteps={subsection.innerSteps} />
+      <InnerStepContainer
+        innerSteps={subsection.innerSteps}
+        parentId={subsection.id}
+      />
       <AddNodeButton
         onAdd={(step) => addEditorStepToSection(dispatch, subsection, step)}
         nodeChoices={getNodeChoices(subsection)}

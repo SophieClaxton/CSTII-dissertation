@@ -15,6 +15,7 @@ enum EditorActionType {
   EditInnerStep = 'editInnerStep',
   AddInnerStep = 'addInnerStep',
   DeleteInnerStep = 'deleteInnerStep',
+  RearrangeInnerSteps = 'rearrangeInnerSteps',
   EditEndStep = 'editEndStep',
   AddEndStep = 'addEndStep',
   DeleteEndStep = 'deleteEndStep',
@@ -32,6 +33,7 @@ type EditorAction =
   | EditInnerStepAction
   | AddInnerStepAction
   | DeleteInnerStepAction
+  | RearrangeInnerStepsAction
   | EditEndStepAction
   | AddEndStepAction
   | DeleteEndStepAction
@@ -65,6 +67,12 @@ interface DeleteInnerStepAction extends BaseEditorAction {
   type: EditorActionType.DeleteInnerStep;
   sectionId: CSTSectionId | CSTSubsectionId;
   innerStepId: CSTInnerStepId;
+}
+
+interface RearrangeInnerStepsAction extends BaseEditorAction {
+  type: EditorActionType.RearrangeInnerSteps;
+  sectionId: CSTSectionId | CSTSubsectionId;
+  innerSteps: CSTInnerStepNode[];
 }
 
 interface EditEndStepAction extends BaseEditorAction {
@@ -106,6 +114,7 @@ export type {
   EditInnerStepAction,
   AddInnerStepAction,
   DeleteInnerStepAction,
+  RearrangeInnerStepsAction,
   EditEndStepAction,
   AddEndStepAction,
   DeleteEndStepAction,

@@ -7,11 +7,22 @@ import {
 } from './CST';
 
 const isSection = (node: CSTNode): node is CSTSectionNode => {
-  return 'id' in node;
+  return (
+    'id' in node &&
+    'sectionId' in node.id &&
+    'innerSteps' in node &&
+    'url' in node
+  );
 };
 
 const isSubsection = (node: CSTNode): node is CSTSubsectionNode => {
-  return 'id' in node;
+  return (
+    'id' in node &&
+    'parentId' in node.id &&
+    'subsectionId' in node.id &&
+    'innerSteps' in node &&
+    'answer' in node
+  );
 };
 
 const isInnerStep = (node: CSTNode): boolean => {

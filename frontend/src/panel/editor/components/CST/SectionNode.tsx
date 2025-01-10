@@ -20,7 +20,10 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
       <div className="section-meta-data">
         <p>{section.url}</p>
       </div>
-      <InnerStepContainer innerSteps={section.innerSteps} />
+      <InnerStepContainer
+        innerSteps={section.innerSteps}
+        parentId={section.id}
+      />
       <AddNodeButton<CSTStepNode>
         onAdd={(step) => addEditorStepToSection(dispatch, section, step)}
         nodeChoices={getNodeChoices(section)}
