@@ -6,11 +6,34 @@
   padding: 0.5rem;
   background-color: rgb(255, 255, 255);
   outline: 2px solid rgb(60, 60, 60);
+  position: relative;
   color: black;
 }
 
 .step-with-error {
   outline: 2px dashed rgb(230, 40, 40);
+}
+
+.step-error {
+  position: absolute;
+  left: 95%;
+  top: 50%;
+  width: 4rem;
+  text-align: left;
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: rgb(227, 151, 151);
+  color: rgb(145, 3, 3);
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+
+.step-error:hover {
+  width: 8rem;
+  text-wrap: wrap;
+  z-index: 10;
 }
 
 .draggable-step:hover {

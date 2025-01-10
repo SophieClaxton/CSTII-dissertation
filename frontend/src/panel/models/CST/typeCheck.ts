@@ -144,7 +144,10 @@ const mapStepNode = <I extends CSTInnerStepNode, R extends ASTStepNode>(
   const missingProperties = getMissingProperties(node, schema);
 
   if (missingProperties.length > 0) {
-    const nodeError = { location: node.id, reason: missingProperties.join() };
+    const nodeError = {
+      location: node.id,
+      reason: missingProperties.join(', '),
+    };
     if (isASTStepNode(next)) {
       return [nodeError];
     }

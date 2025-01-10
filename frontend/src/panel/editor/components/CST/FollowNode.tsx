@@ -7,7 +7,7 @@ interface FollowNodeProps {
 
 const FollowNode: React.FC<FollowNodeProps> = ({ step }) => {
   return (
-    <Step nodeId={step.id} className="follow-step">
+    <Step stepId={step.id} className="follow-step">
       <p>{step.type.toUpperCase()}</p>
       {step.element && <p>{step.element.tag}</p>}
     </Step>

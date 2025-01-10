@@ -31,7 +31,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
     default:
       return (
         <Step
-          nodeId={step.id}
+          stepId={step.id}
           sortableProps={{
             setNodeRef: setNodeRef,
             style: style,

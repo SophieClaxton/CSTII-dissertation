@@ -7,7 +7,7 @@ import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities/useSynt
 import './CST/styles/step.css';
 
 interface StepProps {
-  nodeId: CSTNodeId;
+  stepId: CSTNodeId;
   sortableProps?: {
     setNodeRef: (node: HTMLElement | null) => void;
     style: { transform: string | undefined; transition: string | undefined };
@@ -18,13 +18,15 @@ interface StepProps {
 }
 
 const Step: React.FC<StepProps & React.PropsWithChildren> = ({
-  nodeId,
+  stepId,
   sortableProps,
   className,
   children,
 }) => {
+  const idString = mapNodeIdToString(stepId);
+
   const typeErrors = useTypeErrorsContext();
-  const stepError = typeErrors.get(mapNodeIdToString(nodeId));
+  const stepError = typeErrors.get(idString);
 
   const { setNodeRef, style, attributes, listeners } = sortableProps ?? {
     setNodeRef: undefined,
@@ -35,8 +37,8 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
 
   return (
     <div
-      id={mapNodeIdToString(nodeId)}
-      key={mapNodeIdToString(nodeId)}
+      id={idString}
+      key={idString}
       className={[
         'step',
         stepError ? 'step-with-error' : '',
@@ -49,6 +51,11 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
       {...listeners}
     >
       {children}
+      {stepError && (
+        <div id={`${stepId}-Error`} className="step-error">
+          {stepError}
+        </div>
+      )}
     </div>
   );
 };
