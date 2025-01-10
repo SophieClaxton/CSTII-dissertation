@@ -3,11 +3,21 @@
   min-width: 8rem;
   border-radius: 0.5rem;
   box-sizing: border-box;
-  padding: 0.5rem;
   background-color: rgb(255, 255, 255);
   outline: 2px solid rgb(60, 60, 60);
   position: relative;
   color: black;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.drag-handle {
+  height: 100%;
+}
+
+.drag-handle:hover {
+  background-color: lightblue;
 }
 
 .step-with-error {
@@ -39,7 +49,6 @@
 .draggable-step:hover {
   cursor: pointer;
   outline: 2px solid black;
-  background-color: lightblue;
 }
 
 .add-node-button {

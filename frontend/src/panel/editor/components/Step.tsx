@@ -5,6 +5,7 @@ import { CSTNodeId } from '../../models/CST/CST';
 import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities/useSyntheticListeners';
 import './CST/styles/step.css';
+import DragIndicator from '@mui/icons-material/DragIndicator';
 
 interface StepProps {
   stepId: CSTNodeId;
@@ -47,9 +48,14 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
       ].join(' ')}
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
+      // {...attributes}
+      // {...listeners}
     >
+      {sortableProps && (
+        <div className={'drag-handle'} {...attributes} {...listeners}>
+          <DragIndicator />
+        </div>
+      )}
       {children}
       {stepError && (
         <div id={`${stepId}-Error`} className="step-error">
