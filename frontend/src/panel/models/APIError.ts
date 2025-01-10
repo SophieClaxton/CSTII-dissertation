@@ -8,6 +8,7 @@ interface APIError {
 const handleError = (err: unknown): APIError => {
   if (err instanceof AxiosError) {
     if (err.response) {
+      console.warn(err.message);
       return {
         type: 'Response',
         message: `${err.status} : ${err.message}`,

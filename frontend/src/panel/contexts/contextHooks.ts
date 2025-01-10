@@ -6,6 +6,9 @@ import {
   ScreenContextState,
 } from './ScreenContext';
 import { PanelScreen } from '../navigation/ScreenType';
+import { TypeErrorsContext } from './TypeErrorsContext';
+import { TypeCheckError } from '../models/CST/typeCheck';
+import { mapNodeIdToString } from '../models/CST/mappers';
 
 const useUnpublishedScriptContext = () => {
   const editorProgramContext = useContext(UnpublishedScriptContext);
@@ -38,7 +41,27 @@ const getNavigationContext = ({
   };
 };
 
+const createTypeErrorsContext = (
+  typeErrors: TypeCheckError[],
+): Map<string, string> => {
+  const typeErrorsMap = new Map<string, string>();
+  typeErrors.forEach((error: TypeCheckError) => {
+    typeErrorsMap.set(mapNodeIdToString(error.location), error.reason);
+  });
+  return typeErrorsMap;
+};
+
+const useTypeErrorsContext = () => {
+  const typeErrorContext = useContext(TypeErrorsContext);
+  if (!typeErrorContext) {
+    throw new Error('No type errors context found');
+  }
+  return typeErrorContext;
+};
+
 export {
   useUnpublishedScriptContext,
-  useNavigationContext as useNavigationContext,
+  useNavigationContext,
+  createTypeErrorsContext,
+  useTypeErrorsContext,
 };

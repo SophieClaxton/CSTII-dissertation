@@ -1,4 +1,4 @@
-import { ASTStepNode, ASTNodeType } from '../../../models/AST';
+import { ASTStepNode, ASTNodeType } from '../../../models/AST/AST';
 import DisplaySubsection from './DisplaySubsection';
 
 interface DisplayStepProps {

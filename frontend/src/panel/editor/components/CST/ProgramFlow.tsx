@@ -1,16 +1,18 @@
 import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
-import { CSTFollowNode } from '../../../models/CST/CST';
 import SectionNode from './SectionNode';
-import { getFollowSteps } from '../../flowUtils/getNodes';
-import { getFollowEdge } from '../../flowUtils/getEdges';
+import { getEdges } from '../../flowUtils/getEdges';
 import './styles/program.css';
-import { mapNodeIdToString } from '../../../models/CST/mappers';
-import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import {
+  createTypeErrorsContext,
+  useUnpublishedScriptContext,
+} from '../../../contexts/contextHooks';
 import Button from '@mui/material/Button/Button';
-import { UpdateUnpublishedScriptRequest } from '../../../models/UnpublishedScript';
-import { updateUnpublishedScript } from '../../../api/unpublishedScripts';
 import { useState } from 'react';
-import { Alert, Snackbar } from '@mui/material';
+import AlertSnackBar from '../AlertSnackBar';
+import Stack from '@mui/material/Stack/Stack';
+import { saveUnpublishedScript } from '../../scriptUtils/updateUnpublishedScript';
+import typeCheck, { TypeCheckError } from '../../../models/CST/typeCheck';
+import { TypeErrorsContext } from '../../../contexts/TypeErrorsContext';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript } = useUnpublishedScriptContext();
@@ -23,18 +25,9 @@ const ProgramFlow: React.FC = () => {
     error: false,
   });
 
-  const initialEdge = {
-    id: 'start-1',
-    source: 'start',
-    target: mapNodeIdToString(unpublishedScript.program.sections[0].id),
-  };
-  const followSteps: CSTFollowNode[] = unpublishedScript.program.sections
-    .map(getFollowSteps)
-    .flat();
-  const followEdges = followSteps
-    .map(getFollowEdge)
-    .filter((edge) => edge != undefined);
-  const edges = [initialEdge, ...followEdges];
+  const [typeErrors, setTypeErrors] = useState<TypeCheckError[]>([]);
+
+  const edges = getEdges(unpublishedScript.program.sections);
 
   const updateArrows = useXarrow();
 
@@ -45,37 +38,38 @@ const ProgramFlow: React.FC = () => {
         <h3>{unpublishedScript.author.name}</h3>
         <h3>{dateString}</h3>
       </div>
-      <Button
-        variant={'contained'}
-        onClick={() => {
-          const saveScript = async () => {
-            const update: UpdateUnpublishedScriptRequest = {
-              program: unpublishedScript.program,
-            };
-            const response = await updateUnpublishedScript(
-              unpublishedScript.id,
-              update,
-            );
-            setSnackBar({
-              open: true,
-              message: `Save ${response.status === 'Loaded' ? 'successful' : 'unsuccessful'}`,
-              error: response.status != 'Loaded',
-            });
-          };
-          saveScript();
-        }}
-      >
-        Save
-      </Button>
+      <Stack direction={'row'} spacing={1}>
+        <Button
+          variant={'contained'}
+          onClick={() => saveUnpublishedScript(unpublishedScript, setSnackBar)}
+        >
+          Save
+        </Button>
+        <Button
+          variant={'contained'}
+          onClick={() => {
+            const typeCheckResult = typeCheck(unpublishedScript.program);
+            if (!typeCheckResult.success) {
+              setTypeErrors(typeCheckResult.errors);
+            }
+          }}
+        >
+          Publish Script
+        </Button>
+      </Stack>
       <div className="program-code-env" onScroll={updateArrows}>
         <div className="program-code">
           <Xwrapper>
             <div className="start-block" id="start">
               START
             </div>
-            {unpublishedScript.program.sections.map((section) => (
-              <SectionNode section={section} />
-            ))}
+            <TypeErrorsContext.Provider
+              value={createTypeErrorsContext(typeErrors)}
+            >
+              {unpublishedScript.program.sections.map((section) => (
+                <SectionNode section={section} />
+              ))}
+            </TypeErrorsContext.Provider>
             {edges.map((edge) => (
               <Xarrow
                 start={edge.source}
@@ -86,22 +80,7 @@ const ProgramFlow: React.FC = () => {
             ))}
           </Xwrapper>
         </div>
-        <Snackbar
-          open={snackBar.open}
-          autoHideDuration={3000}
-          onClose={() =>
-            setSnackBar({ open: false, message: '', error: false })
-          }
-        >
-          <Alert
-            severity={snackBar.error ? 'error' : 'success'}
-            onClose={() =>
-              setSnackBar({ open: false, message: '', error: false })
-            }
-          >
-            {snackBar.message}
-          </Alert>
-        </Snackbar>
+        <AlertSnackBar snackBar={snackBar} setSnackBar={setSnackBar} />
       </div>
     </>
   );

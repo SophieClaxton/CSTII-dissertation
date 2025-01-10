@@ -1,5 +1,4 @@
 import {
-  CSTClickNode,
   CSTFollowNode,
   CSTReadNode,
   CSTSectionNode,
@@ -7,8 +6,8 @@ import {
   CSTSubsectionNode,
   CSTUserDecisionEndType,
   CSTUserDecisionEndStepNode,
+  CSTClickNode,
   CSTWriteNode,
-  CSTUserDecisionInnerStepNode,
 } from '../../models/CST/CST';
 import { UnpublishedScript } from '../../models/UnpublishedScript';
 
@@ -63,19 +62,19 @@ const subsection2: CSTSubsectionNode = {
   endStep: undefined,
 };
 
-const decisionNode: CSTUserDecisionInnerStepNode = {
-  id: { parentId: { sectionId: 1 }, stepId: 2 },
+const decisionNode: CSTUserDecisionEndStepNode = {
+  id: { parentId: { sectionId: 3 }, stepId: 'E' },
   type: CSTStepNodeType.UserDecision,
   question: 'Are you older than 20?',
   choice1: subsection1,
   choice2: subsection2,
-  endsWithFollow: CSTUserDecisionEndType.InnerStep,
+  endsWithFollow: CSTUserDecisionEndType.Follow,
 };
 
 const section1: CSTSectionNode = {
   id: { sectionId: 1 },
   url: 'www.url1.com',
-  innerSteps: [readNode, decisionNode],
+  innerSteps: [readNode],
   endStep: followNode,
 };
 
@@ -150,7 +149,7 @@ const section3: CSTSectionNode = {
   id: { sectionId: 3 },
   url: 'www.url3.com',
   innerSteps: [],
-  endStep: undefined,
+  endStep: decisionNode,
 };
 
 const testUnpublishedScript: UnpublishedScript = {

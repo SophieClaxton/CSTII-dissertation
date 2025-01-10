@@ -1,9 +1,9 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import './styles/step.css';
 import UserDecisionNode from './UserDecisionNode';
 import { CSTInnerStepNode, CSTStepNodeType } from '../../../models/CST/CST';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
+import Step from '../Step';
 
 interface InnerStepNodeProps {
   step: CSTInnerStepNode;
@@ -30,17 +30,18 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
       );
     default:
       return (
-        <div
-          className="step draggable-step"
-          ref={setNodeRef}
-          style={style}
-          {...attributes}
-          {...listeners}
-          key={mapNodeIdToString(step.id)}
+        <Step
+          stepId={step.id}
+          sortableProps={{
+            setNodeRef: setNodeRef,
+            style: style,
+            attributes: attributes,
+            listeners: listeners,
+          }}
         >
           <p>{step.type.toUpperCase()}</p>
           {step.element && <p>{step.element.tag}</p>}
-        </div>
+        </Step>
       );
   }
 };

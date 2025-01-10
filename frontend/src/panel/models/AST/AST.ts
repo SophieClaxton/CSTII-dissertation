@@ -1,4 +1,4 @@
-import InterfaceElement from './InterfaceElement';
+import InterfaceElement from '../InterfaceElement';
 
 interface ASTProgram {
   start: ASTSectionNode;
@@ -20,6 +20,10 @@ enum ASTNodeType {
   Check = 'Check',
   Draw = 'Draw',
 }
+
+type ASTNode = ASTSectionNode | ASTSubsectionNode | ASTStepNode;
+
+type ASTSection = ASTSubsectionNode | ASTSectionNode;
 
 interface ASTSubsectionNode {
   type: ASTNodeType.Subsection;
@@ -110,10 +114,13 @@ interface ASTUserDecisionNode {
 
 export { ASTNodeType };
 export type {
-  ASTProgram as ASTProgramNode,
+  ASTProgram,
+  ASTNode,
+  ASTSection,
   ASTSectionNode,
   ASTSubsectionNode,
   ASTStepNode,
+  ASTStepBase,
   ASTEndNode,
   ASTClickNode,
   ASTFollowNode,

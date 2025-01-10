@@ -1,11 +1,8 @@
 import { DraggableAttributes } from '@dnd-kit/core';
 import SubsectionNode from './SubsectionNode';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import {
-  CSTUserDecisionEndType,
-  CSTUserDecisionNode,
-} from '../../../models/CST/CST';
-import { mapNodeIdToString } from '../../../models/CST/mappers';
+import { CSTUserDecisionNode } from '../../../models/CST/CST';
+import Step from '../Step';
 
 interface UserDecisionNodeProps {
   step: CSTUserDecisionNode;
@@ -21,29 +18,15 @@ const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({
   step,
   sortableProps,
 }) => {
-  const { setNodeRef, style, attributes, listeners } = sortableProps ?? {
-    setNodeRef: undefined,
-    style: undefined,
-    attributes: undefined,
-    listeners: undefined,
-  };
-
   return (
-    <div
-      className={`step ${step.endsWithFollow == CSTUserDecisionEndType.InnerStep ? 'draggableStep' : ''}`}
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      key={mapNodeIdToString(step.id)}
-    >
+    <Step stepId={step.id} sortableProps={sortableProps}>
       <p>{step.type.toUpperCase()}</p>
       <p>{step.question}</p>
       <div className="decision-outcomes">
         <SubsectionNode subsection={step.choice1} />
         <SubsectionNode subsection={step.choice2} />
       </div>
-    </div>
+    </Step>
   );
 };
 

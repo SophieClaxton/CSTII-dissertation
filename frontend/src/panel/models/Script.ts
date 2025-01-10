@@ -1,5 +1,5 @@
 import Annotation from './Annotation';
-import { ASTProgramNode } from './AST';
+import { ASTProgram } from './AST/AST';
 import User from './User';
 import Website from './Website';
 
@@ -14,7 +14,7 @@ type ScriptWithAuthor = BaseScript & { author: User };
 type ScriptWithWebsite = BaseScript & { website: Website };
 type ScriptWithAuthorAndWebsite = ScriptWithAuthor & ScriptWithWebsite;
 type Script = ScriptWithAuthorAndWebsite & {
-  program: ASTProgramNode;
+  program: ASTProgram;
   annotations: Annotation[];
 };
 
