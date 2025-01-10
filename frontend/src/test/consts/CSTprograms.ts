@@ -1,4 +1,4 @@
-import { CSTProgram } from '../../../panel/models/CST/CST';
+import { CSTProgram } from '../../panel/models/CST/CST';
 
 const emptyProgram: CSTProgram = {
   sections: [

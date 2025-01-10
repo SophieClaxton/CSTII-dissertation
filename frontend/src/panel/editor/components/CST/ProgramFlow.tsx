@@ -48,9 +48,9 @@ const ProgramFlow: React.FC = () => {
         <Button
           variant={'contained'}
           onClick={() => {
-            const errors = typeCheck(unpublishedScript.program);
-            if (Array.isArray(errors)) {
-              setTypeErrors(errors);
+            const typeCheckResult = typeCheck(unpublishedScript.program);
+            if (!typeCheckResult.success) {
+              setTypeErrors(typeCheckResult.errors);
             }
           }}
         >
