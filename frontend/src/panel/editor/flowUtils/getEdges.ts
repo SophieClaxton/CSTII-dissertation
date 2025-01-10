@@ -1,9 +1,30 @@
-import { CSTFollowNode } from '../../models/CST/CST';
+import { CSTFollowNode, CSTSectionNode } from '../../models/CST/CST';
 import { mapNodeIdToString } from '../../models/CST/mappers';
+import { getFollowSteps } from './getNodes';
 
-const getFollowEdge = (
-  followStep: CSTFollowNode,
-): { id: string; source: string; target: string } | undefined => {
+interface Edge {
+  id: string;
+  source: string;
+  target: string;
+}
+
+const getEdges = (sections: CSTSectionNode[]): Edge[] => {
+  const initialEdge = {
+    id: 'start-1',
+    source: 'start',
+    target: mapNodeIdToString(sections[0].id),
+  };
+
+  const followSteps: CSTFollowNode[] = sections.map(getFollowSteps).flat();
+
+  const followEdges = followSteps
+    .map(getFollowEdge)
+    .filter((edge) => edge != undefined);
+
+  return [initialEdge, ...followEdges];
+};
+
+const getFollowEdge = (followStep: CSTFollowNode): Edge | undefined => {
   if (!followStep.nextSectionId) {
     return undefined;
   }
@@ -14,4 +35,5 @@ const getFollowEdge = (
   };
 };
 
-export { getFollowEdge };
+export { getEdges };
+export type { Edge };
