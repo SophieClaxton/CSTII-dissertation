@@ -2,6 +2,7 @@ import {
   CSTEndStepId,
   CSTEndStepNode,
   CSTFollowNode,
+  CSTNodeId,
   CSTProgram,
   CSTSectionId,
   CSTSectionNode,
@@ -19,7 +20,14 @@ import {
   mapSectionToSectionWithUpdatedEndStep,
   mapNodeIdToString,
 } from '../models/CST/mappers';
-import { isSubsection, isSection, isEndStep } from '../models/CST/testers';
+import {
+  isSubsection,
+  isSection,
+  isEndStep,
+  isEndStepId,
+  isInnerStepId,
+  isSubsectionId,
+} from '../models/CST/testers';
 import {
   AddInnerStepAction,
   RearrangeInnerStepsAction,
@@ -32,6 +40,21 @@ import {
   DeleteSectionAction,
 } from '../models/EditorAction';
 import { UnpublishedScript } from '../models/API/UnpublishedScript';
+
+const getParentSection = (
+  nodeId: CSTNodeId,
+  program: CSTProgram,
+): CSTSectionNode => {
+  if (isInnerStepId(nodeId) || isEndStepId(nodeId) || isSubsectionId(nodeId)) {
+    return getParentSection(nodeId.parentId, program);
+  } else {
+    const section = getSection(nodeId, program);
+    if (!section || !isSection(section)) {
+      throw Error(`No section with id ${mapNodeIdToString(nodeId)}`);
+    }
+    return section;
+  }
+};
 
 const getSection = (
   sectionId: CSTSectionId | CSTSubsectionId,
@@ -117,6 +140,17 @@ const deleteSection = (
   unpublishedScript: UnpublishedScript,
   action: DeleteSectionAction,
 ): UnpublishedScript => {
+  if (action.sectionId.sectionId === 1) {
+    const newEditorProgram: CSTProgram = {
+      ...unpublishedScript.program,
+      sections: unpublishedScript.program.sections.map((section) =>
+        section.id === action.sectionId
+          ? { url: '', id: section.id, innerSteps: [], endStep: undefined }
+          : section,
+      ),
+    };
+    return { ...unpublishedScript, program: newEditorProgram };
+  }
   const newEditorProgram: CSTProgram = {
     ...unpublishedScript.program,
     sections: unpublishedScript.program.sections.filter(
@@ -187,8 +221,8 @@ const editInnerStepElement = (
       ),
     ),
   );
-  if (action.element && isSection(section) && section.url === '') {
-    const url = action.element.url;
+  if (isSection(section) && section.url === '') {
+    const url = action.oldUrl;
     return {
       ...unpublishedScript,
       program: {
@@ -276,8 +310,8 @@ const editEndStepElement = (
     mapSectionToSectionWithUpdatedEndStep(newEndStep),
   );
 
-  if (action.element && isSection(section) && section.url === '') {
-    const url = action.element.url;
+  if (isSection(section) && section.url === '') {
+    const url = action.oldUrl;
     return {
       ...unpublishedScript,
       program: {
@@ -317,6 +351,7 @@ const deleteEndStep = (
 
 export {
   addSection,
+  getParentSection,
   deleteSection,
   addInnerStep,
   editInnerStepElement,

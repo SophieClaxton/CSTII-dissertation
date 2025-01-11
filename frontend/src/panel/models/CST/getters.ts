@@ -116,7 +116,7 @@ const getEndStepNodeChoices = (
 
 export {
   getEditorComponentById,
-  getNextInnerStepId as getNextStepId,
+  getNextInnerStepId,
   getNextSectionId,
   getNodeChoices,
 };

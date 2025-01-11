@@ -78,6 +78,7 @@ class CSTFollowNode(CSTStepBase):
 
     id: CSTEndStepId
     type: Literal[CSTStepNodeType.Follow]
+    nextSectionId: CSTSectionId | None = None
 
 
 class CSTClickNode(CSTInnerStepBase):

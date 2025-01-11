@@ -69,6 +69,7 @@ interface EditInnerStepElementAction extends BaseEditorAction {
   type: EditorActionType.EditInnerStepElement;
   stepId: CSTInnerStepId;
   element: InterfaceElement | undefined;
+  oldUrl: string;
 }
 
 interface AddInnerStepAction extends BaseEditorAction {
@@ -92,6 +93,7 @@ interface EditEndStepElementAction extends BaseEditorAction {
   type: EditorActionType.EditEndStepElement;
   stepId: CSTEndStepId;
   element: InterfaceElement | undefined;
+  oldUrl: string;
 }
 
 interface AddEndStepAction extends BaseEditorAction {

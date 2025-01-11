@@ -6,7 +6,6 @@
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
-  overflow: hidden;
 }
 
 .step>* {
@@ -18,6 +17,7 @@
   flex-grow: 0;
   align-content: center;
   box-sizing: border-box;
+  border-right: 2px solid grey;
 }
 
 .drag-handle:hover {
@@ -26,9 +26,9 @@
 
 .drag-handle-placeholder {
   width: 24px;
-  background-color: lightgray;
   height: 100%;
   flex-grow: 0;
+  border-right: 2px solid grey;
 }
 
 .step-with-error {

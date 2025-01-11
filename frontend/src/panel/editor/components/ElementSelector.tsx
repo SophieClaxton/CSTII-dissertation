@@ -53,25 +53,32 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
         type: EditorActionType.EditInnerStepElement,
         stepId: stepId,
         element: undefined,
+        oldUrl: '',
       });
     } else {
       dispatch({
         type: EditorActionType.EditEndStepElement,
         stepId: stepId,
         element: undefined,
+        oldUrl: '',
       });
     }
   };
 
   const text = element ? (
-    <Stack alignItems={'flex-start'}>
+    <Stack alignItems={'flex-start'} width={'12rem'}>
       <Typography variant="subtitle1">
         {mapTagToElementName[element.tag]}
       </Typography>
       {element.textContent && (
         <Typography
           variant="body2"
-          sx={{ textOverflow: 'ellipsis', textWrap: 'noWrap' }}
+          sx={{
+            textOverflow: 'ellipsis',
+            textWrap: 'noWrap',
+            overflow: 'hidden',
+            width: 'inherit',
+          }}
         >
           {`"${element.textContent}"`}
         </Typography>
@@ -90,8 +97,8 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
       spacing={1}
       sx={{
         width: '100%',
-        overflow: 'hidden',
         flexGrow: 1,
+        flexShrink: 1,
         backgroundColor: 'primary.light',
         padding: '0.5rem',
         borderRadius: '0.25rem',
