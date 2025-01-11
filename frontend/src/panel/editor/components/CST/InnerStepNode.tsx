@@ -41,7 +41,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
           }}
         >
           <p>{step.type.toUpperCase()}</p>
-          <ElementSelector element={step.element} />
+          <ElementSelector stepId={step.id} element={step.element} />
         </Step>
       );
   }

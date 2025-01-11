@@ -1,7 +1,9 @@
 import {
+  CSTEndStepNode,
   CSTProgram,
   CSTSectionId,
   CSTSectionNode,
+  CSTStepNodeType,
   CSTSubsectionId,
   CSTSubsectionNode,
 } from '../models/CST/CST';
@@ -11,6 +13,7 @@ import {
   mapSectionToSectionWithUpdatedInnerSteps,
   mapSectionToSectionWithUpdatedEndStep,
   mapNodeIdToString,
+  mapInnerStepToChangedInnerStep,
 } from '../models/CST/mappers';
 import { isSubsection, isSection } from '../models/CST/testers';
 import {
@@ -19,6 +22,8 @@ import {
   AddEndStepAction,
   DeleteInnerStepAction,
   DeleteEndStepAction,
+  EditInnerStepAction,
+  EditEndStepAction,
 } from '../models/EditorAction';
 import { UnpublishedScript } from '../models/UnpublishedScript';
 
@@ -86,6 +91,28 @@ const rearrangeInnerSteps = (
   return { ...unpublishedScript, program: newEditorProgram };
 };
 
+const editInnerStep = (
+  unpublishedScript: UnpublishedScript,
+  action: EditInnerStepAction,
+): UnpublishedScript => {
+  const section = getSection(action.stepId.parentId, unpublishedScript.program);
+  if (!section) {
+    return unpublishedScript;
+  }
+  const newEditorProgram = mapProgramToProgramWithUpdatedSections(
+    unpublishedScript.program,
+    section.id,
+    mapSectionToSectionWithUpdatedInnerSteps(
+      section.innerSteps.map((step) =>
+        mapNodeIdToString(step.id) === mapNodeIdToString(action.stepId)
+          ? mapInnerStepToChangedInnerStep(step, action.element)
+          : step,
+      ),
+    ),
+  );
+  return { ...unpublishedScript, program: newEditorProgram };
+};
+
 const deleteInnerStep = (
   unpublishedScript: UnpublishedScript,
   action: DeleteInnerStepAction,
@@ -133,6 +160,35 @@ const addEndStep = (
   };
 };
 
+const editEndStep = (
+  unpublishedScript: UnpublishedScript,
+  action: EditEndStepAction,
+): UnpublishedScript => {
+  const section = getSection(action.stepId.parentId, unpublishedScript.program);
+  if (!section || !section.endStep) {
+    return unpublishedScript;
+  }
+  let newEndStep: CSTEndStepNode;
+  switch (section.endStep.type) {
+    case CSTStepNodeType.Follow:
+      newEndStep = {
+        type: section.endStep.type,
+        id: section.endStep.id,
+        element: action.element ? action.element : section.endStep.element,
+      };
+      break;
+    case CSTStepNodeType.UserDecision:
+      newEndStep = section.endStep;
+  }
+
+  const newEditorProgram = mapProgramToProgramWithUpdatedSections(
+    unpublishedScript.program,
+    section.id,
+    mapSectionToSectionWithUpdatedEndStep(newEndStep),
+  );
+  return { ...unpublishedScript, program: newEditorProgram };
+};
+
 const deleteEndStep = (
   unpublishedScript: UnpublishedScript,
   action: DeleteEndStepAction,
@@ -158,8 +214,10 @@ const deleteEndStep = (
 
 export {
   addInnerStep,
+  editInnerStep,
   rearrangeInnerSteps,
   deleteInnerStep,
   addEndStep,
+  editEndStep,
   deleteEndStep,
 };

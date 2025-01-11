@@ -6,6 +6,8 @@ import {
   rearrangeInnerSteps,
   deleteInnerStep,
   deleteEndStep,
+  editInnerStep,
+  editEndStep,
 } from './actions';
 
 const unpublishedScriptReducer = (
@@ -24,9 +26,8 @@ const unpublishedScriptReducer = (
         ...unpublishedScript,
         author: { ...unpublishedScript.author, name: action.newAuthor },
       };
-    case EditorActionType.EditInnerStep: {
-      return unpublishedScript;
-    }
+    case EditorActionType.EditInnerStep:
+      return editInnerStep(unpublishedScript, action);
     case EditorActionType.AddInnerStep:
       return addInnerStep(unpublishedScript, action);
     case EditorActionType.DeleteInnerStep:
@@ -34,7 +35,7 @@ const unpublishedScriptReducer = (
     case EditorActionType.RearrangeInnerSteps:
       return rearrangeInnerSteps(unpublishedScript, action);
     case EditorActionType.EditEndStep:
-      return unpublishedScript;
+      return editEndStep(unpublishedScript, action);
     case EditorActionType.AddEndStep:
       return addEndStep(unpublishedScript, action);
     case EditorActionType.DeleteEndStep:

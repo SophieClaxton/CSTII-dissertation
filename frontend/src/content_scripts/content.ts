@@ -1,4 +1,4 @@
-import { Message } from '../common/message';
+import { ClickedElementMessage, Message } from '../common/message';
 import './clickable.css';
 
 alert('Loaded content script');
@@ -6,6 +6,7 @@ console.log('Loaded content script');
 
 // managing element clickability
 let isClickable = false;
+let stepId = '';
 const selectableElementTags = [
   'img',
   'a',
@@ -19,16 +20,15 @@ const selectableElementTags = [
   'h6',
 ];
 
-const setupClickabilityListener = () => {
+const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: Message) => {
     switch (message.type) {
       case 'close_side_panel':
       case 'clicked_element':
         break;
-      case 'toggle_clickability': {
-        console.log('received clickability message');
-        isClickable = !isClickable;
-        console.log(`set clickability to ${isClickable}`);
+      case 'set_clickable': {
+        stepId = message.stepId;
+        isClickable = true;
         updateClassList();
         break;
       }
@@ -83,23 +83,31 @@ const updateClassList = () => {
 
 const addClickListeners = () => {
   console.log('adding click listeners');
-  document.querySelectorAll('*').forEach((element) => {
-    if (selectableElementTags.includes(element.tagName.toLowerCase())) {
+  selectableElementTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements.item(i);
+      if (!element) {
+        continue;
+      }
       element.addEventListener('click', () => {
         if (isClickable) {
-          const message = {
+          const message: ClickedElementMessage = {
             type: 'clicked_element',
-            element: element.outerHTML,
-            tag: element.tagName,
+            elementOuterHtml: element.outerHTML,
+            elementTag: element.tagName,
+            elementTextContent: element.textContent,
+            stepId: stepId,
           };
-          console.log('sending message');
           chrome.runtime.sendMessage(message);
+          isClickable = !isClickable;
+          updateClassList();
         }
       });
     }
   });
 };
 
-setupClickabilityListener();
+setupMessageListener();
 updateClassList();
 addClickListeners();

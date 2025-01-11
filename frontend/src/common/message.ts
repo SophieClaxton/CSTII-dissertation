@@ -4,15 +4,17 @@ enum Port {
 
 type MessageType =
   | 'close_side_panel'
+  | 'set_clickable'
   | 'clicked_element'
   | 'toggle_clickability'
   | 'toggle_focus'
-  | 'click_element';
+  | 'click_element'
+  | 'element';
 
 type Message =
   | CloseSidePanelMessage
+  | SetClickableMessage
   | ClickedElementMessage
-  | ToggleClickabilityMessage
   | ToggleFocusMessage
   | ClickElementMessage;
 
@@ -24,14 +26,17 @@ interface CloseSidePanelMessage extends MessageBase {
   type: 'close_side_panel';
 }
 
-interface ClickedElementMessage extends MessageBase {
-  type: 'clicked_element';
-  element: string;
-  tag: string;
+interface SetClickableMessage extends MessageBase {
+  type: 'set_clickable';
+  stepId: string;
 }
 
-interface ToggleClickabilityMessage extends MessageBase {
-  type: 'toggle_clickability';
+interface ClickedElementMessage extends MessageBase {
+  type: 'clicked_element';
+  elementOuterHtml: string;
+  elementTag: string;
+  elementTextContent: string | null;
+  stepId: string;
 }
 
 interface ToggleFocusMessage extends MessageBase {
@@ -49,8 +54,8 @@ export type {
   MessageType,
   Message,
   CloseSidePanelMessage,
+  SetClickableMessage,
   ClickedElementMessage,
-  ToggleClickabilityMessage,
   ToggleFocusMessage,
   ClickElementMessage,
 };
