@@ -72,6 +72,7 @@ const ProgramFlow: React.FC = () => {
             dispatch({
               type: EditorActionType.AddSection,
               sectionUrl: tab.url,
+              followStepId: stepId,
             });
           }
         }

@@ -89,7 +89,7 @@ const mapProgramToProgramWithUpdatedSections = (
     section: CSTSectionNode,
     sectionId: CSTSectionId | CSTSubsectionId,
   ) => CSTSectionNode,
-) => {
+): CSTProgram => {
   return {
     ...program,
     sections: program.sections.map((section) =>
@@ -104,7 +104,7 @@ const mapSectionToSectionWithUpdatedInnerSteps =
     section: CSTSectionNode,
     sectionId: CSTSectionId | CSTSubsectionId,
   ): CSTSectionNode => {
-    if (section.id == sectionId) {
+    if (mapNodeIdToString(section.id) == mapNodeIdToString(sectionId)) {
       console.log('Found section to update steps');
       return {
         ...section,
@@ -136,7 +136,7 @@ const mapSubsectionToSubsectionWithUpdatedInnerSteps = (
   sectionId: CSTSectionId | CSTSubsectionId,
   innerSteps: CSTInnerStepNode[],
 ): CSTSubsectionNode => {
-  if (subsection.id == sectionId) {
+  if (mapNodeIdToString(subsection.id) == mapNodeIdToString(sectionId)) {
     console.log('Found subsection to update steps');
     return {
       ...subsection,
@@ -192,7 +192,7 @@ const mapSectionToSectionWithUpdatedEndStep =
     section: CSTSectionNode,
     sectionId: CSTSectionId | CSTSubsectionId,
   ): CSTSectionNode => {
-    if (section.id == sectionId) {
+    if (mapNodeIdToString(section.id) == mapNodeIdToString(sectionId)) {
       console.log('Found section to update steps');
       return {
         ...section,
@@ -224,7 +224,7 @@ const mapSubsectionToSubsectionWithUpdatedEndStep = (
   sectionId: CSTSectionId | CSTSubsectionId,
   endStep: CSTEndStepNode | undefined,
 ): CSTSubsectionNode => {
-  if (subsection.id == sectionId) {
+  if (mapNodeIdToString(subsection.id) == mapNodeIdToString(sectionId)) {
     console.log('Found subsection to update steps');
     return {
       ...subsection,

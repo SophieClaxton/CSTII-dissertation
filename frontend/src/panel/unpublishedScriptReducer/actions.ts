@@ -1,5 +1,7 @@
 import {
+  CSTEndStepId,
   CSTEndStepNode,
+  CSTFollowNode,
   CSTProgram,
   CSTSectionId,
   CSTSectionNode,
@@ -17,7 +19,7 @@ import {
   mapSectionToSectionWithUpdatedEndStep,
   mapNodeIdToString,
 } from '../models/CST/mappers';
-import { isSubsection, isSection } from '../models/CST/testers';
+import { isSubsection, isSection, isEndStep } from '../models/CST/testers';
 import {
   AddInnerStepAction,
   RearrangeInnerStepsAction,
@@ -53,6 +55,28 @@ const getSection = (
   return section;
 };
 
+const getFollowStep = (
+  program: CSTProgram,
+  followStepId: CSTEndStepId,
+): CSTFollowNode | undefined => {
+  const step = getEditorComponentById(program, followStepId);
+  if (!step) {
+    console.warn(
+      `Did not find step with id ${mapNodeIdToString(followStepId)}`,
+    );
+    console.log(program);
+    return undefined;
+  }
+  if (!isEndStep(step) || step.type != CSTStepNodeType.Follow) {
+    console.warn(
+      `Found a program component with id ${mapNodeIdToString(followStepId)} but it is not a follow step`,
+    );
+    console.log(step);
+    return undefined;
+  }
+  return step;
+};
+
 /* Section Actions */
 
 const addSection = (
@@ -65,11 +89,27 @@ const addSection = (
     innerSteps: [],
     url: action.sectionUrl,
   };
+  const followStep = getFollowStep(
+    unpublishedScript.program,
+    action.followStepId,
+  );
+  if (!followStep) {
+    return unpublishedScript;
+  }
+  const newFollowStep: CSTFollowNode = { ...followStep, nextSectionId: id };
+  const updatedProgram = mapProgramToProgramWithUpdatedSections(
+    unpublishedScript.program,
+    action.followStepId.parentId,
+    mapSectionToSectionWithUpdatedEndStep(newFollowStep),
+  );
+  console.log(newFollowStep);
+  console.log(updatedProgram);
   const newEditorProgram: CSTProgram = {
     ...unpublishedScript.program,
-    sections: [...unpublishedScript.program.sections, newSection],
+    sections: [...updatedProgram.sections, newSection],
   };
   console.log(`Created section with id ${mapNodeIdToString(id)}`);
+  console.log(newEditorProgram);
   return { ...unpublishedScript, program: newEditorProgram };
 };
 

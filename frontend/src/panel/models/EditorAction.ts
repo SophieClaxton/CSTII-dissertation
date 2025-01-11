@@ -57,6 +57,7 @@ interface EditProgramAuthorAction extends BaseEditorAction {
 interface AddSectionAction extends BaseEditorAction {
   type: EditorActionType.AddSection;
   sectionUrl: string;
+  followStepId: CSTEndStepId;
 }
 
 interface DeleteSectionAction extends BaseEditorAction {
