@@ -10,7 +10,7 @@ const HomeScreen: React.FC = () => {
 
   return (
     <>
-      <h1>SC2370 Project</h1>
+      <h1>SC2370 Project Hi</h1>
       <button onClick={() => goTo(helperScriptsScreen)}>
         Start Writing Scripts
       </button>

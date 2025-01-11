@@ -1,3 +1,8 @@
+import './clickable.css';
+
+alert('Loaded content script');
+console.log('Loaded content script');
+
 // managing element clickability
 let isClickable = false;
 const selectableElementTags = [
@@ -71,6 +76,7 @@ const updateClassList = () => {
 };
 
 const addClickListeners = () => {
+  console.log('adding click listeners');
   document.querySelectorAll('*').forEach((element) => {
     if (selectableElementTags.includes(element.tagName.toLowerCase())) {
       element.addEventListener('click', () => {
