@@ -14,7 +14,7 @@ const endNode: ASTEndNode = {
 
 const readNode: ASTReadNode = {
   type: ASTNodeType.Read,
-  element: { outerHTML: '', url: '', tag: 'p' },
+  element: { outerHTML: '', url: '', tag: 'P' },
   next: endNode,
 };
 

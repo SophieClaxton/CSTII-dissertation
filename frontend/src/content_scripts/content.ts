@@ -1,24 +1,20 @@
 import { ClickedElementMessage, Message } from '../common/message';
+import {
+  allSelectableTags,
+  isSelectableTag,
+  SelectableTag,
+} from '../panel/models/InterfaceElement';
 import './clickable.css';
 
 alert('Loaded content script');
 console.log('Loaded content script');
 
+const selectableElementTags = allSelectableTags;
+
 // managing element clickability
 let isClickable = false;
 let stepId = '';
-const selectableElementTags = [
-  'img',
-  'a',
-  'button',
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-];
+let validTags: SelectableTag[] = [];
 
 const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: Message) => {
@@ -27,6 +23,7 @@ const setupMessageListener = () => {
       case 'clicked_element':
         break;
       case 'set_clickable': {
+        validTags = message.validTags;
         stepId = message.stepId;
         isClickable = true;
         updateClassList();
@@ -70,9 +67,18 @@ const setupMessageListener = () => {
 };
 
 const updateClassList = () => {
-  document.querySelectorAll('*').forEach((element) => {
-    if (selectableElementTags.includes(element.tagName.toLowerCase())) {
-      if (isClickable) {
+  selectableElementTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements.item(i);
+      if (!element) {
+        continue;
+      }
+      if (
+        isClickable &&
+        isSelectableTag(element.tagName) &&
+        validTags.includes(element.tagName)
+      ) {
         element.classList.add('clickable');
       } else {
         element.classList.remove('clickable');
@@ -91,7 +97,11 @@ const addClickListeners = () => {
         continue;
       }
       element.addEventListener('click', () => {
-        if (isClickable) {
+        if (
+          isClickable &&
+          isSelectableTag(element.tagName) &&
+          validTags.includes(element.tagName)
+        ) {
           const message: ClickedElementMessage = {
             type: 'clicked_element',
             elementOuterHtml: element.outerHTML,

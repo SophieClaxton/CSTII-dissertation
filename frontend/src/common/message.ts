@@ -1,3 +1,5 @@
+import { SelectableTag } from '../panel/models/InterfaceElement';
+
 enum Port {
   SidePanel = 'sidePanel',
 }
@@ -29,6 +31,7 @@ interface CloseSidePanelMessage extends MessageBase {
 interface SetClickableMessage extends MessageBase {
   type: 'set_clickable';
   stepId: string;
+  validTags: SelectableTag[];
 }
 
 interface ClickedElementMessage extends MessageBase {

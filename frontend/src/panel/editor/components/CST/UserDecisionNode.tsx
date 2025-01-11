@@ -19,8 +19,7 @@ const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({
   sortableProps,
 }) => {
   return (
-    <Step stepId={step.id} sortableProps={sortableProps}>
-      <p>{step.type.toUpperCase()}</p>
+    <Step stepId={step.id} stepType={step.type} sortableProps={sortableProps}>
       <p>{step.question}</p>
       <div className="decision-outcomes">
         <SubsectionNode subsection={step.choice1} />

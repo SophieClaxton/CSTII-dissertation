@@ -4,7 +4,11 @@ import {
   useUnpublishedScriptContext,
 } from '../../contexts/contextHooks';
 import { mapNodeIdToString } from '../../models/CST/mappers';
-import { CSTEndStepId, CSTInnerStepId } from '../../models/CST/CST';
+import {
+  CSTEndStepId,
+  CSTInnerStepId,
+  CSTStepNodeType,
+} from '../../models/CST/CST';
 import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities/useSyntheticListeners';
 import './styles/step.css';
@@ -13,9 +17,12 @@ import IconButton from '@mui/material/IconButton/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../models/EditorAction';
 import { isInnerStepId } from '../../models/CST/testers';
+import Box from '@mui/material/Box/Box';
+import { Typography } from '@mui/material';
 
 interface StepProps {
   stepId: CSTInnerStepId | CSTEndStepId;
+  stepType: CSTStepNodeType;
   sortableProps?: {
     setNodeRef: (node: HTMLElement | null) => void;
     style: { transform: string | undefined; transition: string | undefined };
@@ -27,6 +34,7 @@ interface StepProps {
 
 const Step: React.FC<StepProps & React.PropsWithChildren> = ({
   stepId,
+  stepType,
   sortableProps,
   className,
   children,
@@ -67,7 +75,28 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
       ) : (
         <div className="drag-handle-placeholder"></div>
       )}
-      {children}
+      <Box
+        sx={{
+          marginTop: '0.5rem',
+          marginBottom: '0.5rem',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '1rem',
+        }}
+      >
+        <Typography
+          variant={'h6'}
+          sx={{
+            width: '8rem',
+            textWrap: 'wrap',
+            textAlign: 'left',
+            flexGrow: 0,
+          }}
+        >
+          {stepType}
+        </Typography>
+        {children}
+      </Box>
       <IconButton
         onClick={() => {
           if (isInnerStepId(stepId)) {
@@ -81,7 +110,7 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
             endStepId: stepId,
           });
         }}
-        sx={{ height: '100%', padding: '0.5rem 0 0 0', borderRadius: 0 }}
+        sx={{ height: '100%', padding: 0, borderRadius: 0 }}
       >
         <Delete />
       </IconButton>

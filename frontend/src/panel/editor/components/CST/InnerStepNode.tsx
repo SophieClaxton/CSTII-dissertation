@@ -33,6 +33,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
       return (
         <Step
           stepId={step.id}
+          stepType={step.type}
           sortableProps={{
             setNodeRef: setNodeRef,
             style: style,
@@ -40,7 +41,6 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
             listeners: listeners,
           }}
         >
-          <p>{step.type.toUpperCase()}</p>
           <ElementSelector stepId={step.id} element={step.element} />
         </Step>
       );

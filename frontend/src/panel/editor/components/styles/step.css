@@ -1,15 +1,12 @@
 .step {
   width: 100%;
-  min-width: 8rem;
   border-radius: 0.5rem;
-  box-sizing: border-box;
   background-color: rgb(255, 255, 255);
-  outline: 2px solid rgb(60, 60, 60);
   position: relative;
-  color: black;
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
+  overflow: hidden;
 }
 
 .step>* {
@@ -19,7 +16,7 @@
 .drag-handle {
   height: 100%;
   flex-grow: 0;
-  padding-top: 0.5rem;
+  align-content: center;
   box-sizing: border-box;
 }
 
@@ -29,6 +26,7 @@
 
 .drag-handle-placeholder {
   width: 24px;
+  background-color: lightgray;
   height: 100%;
   flex-grow: 0;
 }
