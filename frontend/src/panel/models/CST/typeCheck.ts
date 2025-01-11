@@ -245,15 +245,18 @@ const mapFollowStep = (
   endStep: CSTFollowNode,
   nextSection: ASTSectionNode | TypeCheckError[] | undefined,
 ): ASTStepNode | TypeCheckError[] => {
-  if (endStep.element && nextSection) {
-    if (isASTSectionNode(nextSection)) {
-      return {
-        type: ASTNodeType.Follow,
-        element: endStep.element,
-        nextSection: nextSection,
-      };
+  if (endStep.element) {
+    if (nextSection) {
+      if (isASTSectionNode(nextSection)) {
+        return {
+          type: ASTNodeType.Follow,
+          element: endStep.element,
+          nextSection: nextSection,
+        };
+      }
+      return nextSection;
     }
-    return nextSection;
+    return [{ location: endStep.id, reason: 'Missing next section' }];
   }
 
   const endStepError = { location: endStep.id, reason: 'Missing element' };
