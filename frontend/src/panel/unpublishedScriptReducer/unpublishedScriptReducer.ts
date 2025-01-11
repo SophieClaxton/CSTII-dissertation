@@ -8,6 +8,8 @@ import {
   deleteEndStep,
   editInnerStep,
   editEndStep,
+  addSection,
+  deleteSection,
 } from './actions';
 
 const unpublishedScriptReducer = (
@@ -26,6 +28,10 @@ const unpublishedScriptReducer = (
         ...unpublishedScript,
         author: { ...unpublishedScript.author, name: action.newAuthor },
       };
+    case EditorActionType.AddSection:
+      return addSection(unpublishedScript, action);
+    case EditorActionType.DeleteSection:
+      return deleteSection(unpublishedScript, action);
     case EditorActionType.EditInnerStepElement:
       return editInnerStep(unpublishedScript, action);
     case EditorActionType.AddInnerStep:

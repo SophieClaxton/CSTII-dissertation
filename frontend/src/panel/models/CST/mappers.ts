@@ -10,6 +10,12 @@ import {
   CSTSubsectionId,
   CSTSubsectionNode,
 } from './CST';
+import {
+  isEndStepId,
+  isInnerStepId,
+  isSectionId,
+  isSubsectionId,
+} from './testers';
 
 const mapNodeIdToString = (nodeId: CSTNodeId): string => {
   if ('sectionId' in nodeId) {
@@ -20,6 +26,60 @@ const mapNodeIdToString = (nodeId: CSTNodeId): string => {
     return `${mapNodeIdToString(nodeId.parentId)}.${nodeId.stepId}`;
   }
   throw new Error(`Could not translate node id ${nodeId}`);
+};
+
+const getSuffixOfNodeIdString = (string: string): number => {
+  return parseInt(string.slice(1, string.length));
+};
+
+const mapStringToNodeId = (string: string): CSTNodeId => {
+  const nodeIdChunks = string.split('.');
+  if (nodeIdChunks.length === 0) {
+    throw Error(`invalid node id string ${string}: no chunks`);
+  }
+  let nodeId: CSTNodeId = {
+    sectionId: getSuffixOfNodeIdString(nodeIdChunks[0]),
+  };
+  for (const nodeIdChunk of nodeIdChunks.slice(1, nodeIdChunks.length)) {
+    switch (nodeIdChunk[0]) {
+      case 's':
+        if (isSectionId(nodeId) || isSubsectionId(nodeId)) {
+          console.warn(nodeId);
+          throw Error(
+            `invalid node id string ${string}: found subsection after Section`,
+          );
+        }
+        nodeId = {
+          parentId: nodeId,
+          subsectionId: getSuffixOfNodeIdString(nodeIdChunk),
+        };
+        break;
+      case 'E':
+        if (isInnerStepId(nodeId) || isEndStepId(nodeId)) {
+          console.warn(nodeId);
+          throw Error(
+            `invalid node id string ${string}: found endStep after innerNode or endNode`,
+          );
+        }
+        nodeId = {
+          parentId: nodeId,
+          stepId: 'E',
+        };
+        break;
+      default:
+        if (isInnerStepId(nodeId) || isEndStepId(nodeId)) {
+          console.warn(nodeId);
+          throw Error(
+            `invalid node id string ${string}: found innerStep after innerNode or endNode`,
+          );
+        }
+        nodeId = {
+          parentId: nodeId,
+          stepId: parseInt(nodeIdChunk),
+        };
+    }
+  }
+  return nodeId;
 };
 
 const mapProgramToProgramWithUpdatedSections = (
@@ -216,6 +276,7 @@ const mapStepToStepWithUpdatedEndStep = (
 
 export {
   mapNodeIdToString,
+  mapStringToNodeId,
   mapProgramToProgramWithUpdatedSections,
   mapSectionToSectionWithUpdatedInnerSteps,
   mapSectionToSectionWithUpdatedEndStep,

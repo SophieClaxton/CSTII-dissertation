@@ -13,6 +13,8 @@ enum EditorActionType {
   EditProgramName = 'editProgramName',
   EditProgramAuthor = 'editProgramAuthor',
   EditInnerStepElement = 'editInnerStepElement',
+  AddSection = 'addSection',
+  DeleteSection = 'deleteSection',
   AddInnerStep = 'addInnerStep',
   DeleteInnerStep = 'deleteInnerStep',
   RearrangeInnerSteps = 'rearrangeInnerSteps',
@@ -30,6 +32,8 @@ interface BaseEditorAction {
 type EditorAction =
   | EditProgramNameAction
   | EditProgramAuthorAction
+  | AddSectionAction
+  | DeleteSectionAction
   | EditInnerStepElementAction
   | AddInnerStepAction
   | DeleteInnerStepAction
@@ -48,6 +52,16 @@ interface EditProgramNameAction extends BaseEditorAction {
 interface EditProgramAuthorAction extends BaseEditorAction {
   type: EditorActionType.EditProgramAuthor;
   newAuthor: string;
+}
+
+interface AddSectionAction extends BaseEditorAction {
+  type: EditorActionType.AddSection;
+  sectionUrl: string;
+}
+
+interface DeleteSectionAction extends BaseEditorAction {
+  type: EditorActionType.DeleteSection;
+  sectionId: CSTSectionId;
 }
 
 interface EditInnerStepElementAction extends BaseEditorAction {
@@ -107,6 +121,8 @@ export type {
   EditorAction,
   EditProgramNameAction,
   EditProgramAuthorAction,
+  AddSectionAction,
+  DeleteSectionAction,
   EditInnerStepElementAction,
   AddInnerStepAction,
   DeleteInnerStepAction,

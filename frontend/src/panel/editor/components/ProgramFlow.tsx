@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
 import './styles/program.css';
 import Button from '@mui/material/Button/Button';
@@ -13,9 +13,14 @@ import { getEdges } from '../flowUtils/getEdges';
 import { saveUnpublishedScript } from '../scriptUtils/updateUnpublishedScript';
 import AlertSnackBar from './AlertSnackBar';
 import SectionNode from './CST/SectionNode';
+import { Message } from '../../../common/message';
+import { isEndStepId, isInnerStepId } from '../../models/CST/testers';
+import { EditorActionType } from '../../models/EditorAction';
+import { isSelectableTag } from '../../models/InterfaceElement';
+import { mapStringToNodeId } from '../../models/CST/mappers';
 
 const ProgramFlow: React.FC = () => {
-  const { unpublishedScript } = useUnpublishedScriptContext();
+  const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
   const createdAtDate = new Date(unpublishedScript.created_at);
   const dateString = createdAtDate.toLocaleDateString();
 
@@ -30,6 +35,51 @@ const ProgramFlow: React.FC = () => {
   const edges = getEdges(unpublishedScript.program.sections);
 
   const updateArrows = useXarrow();
+
+  const addMessageListener = useCallback(() => {
+    chrome.runtime.onMessage.addListener(async (message: Message) => {
+      if (message.type === 'clicked_element') {
+        if (!isSelectableTag(message.elementTag)) {
+          throw Error('Received an invalid element tag');
+        }
+        const stepId = mapStringToNodeId(message.stepId);
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          lastFocusedWindow: true,
+        });
+
+        const receivedElement = {
+          outerHTML: message.elementOuterHtml,
+          tag: message.elementTag,
+          textContent: message.elementTextContent ?? undefined,
+          url: tab.url || '',
+        };
+        console.log(receivedElement);
+        if (isInnerStepId(stepId)) {
+          dispatch({
+            type: EditorActionType.EditInnerStepElement,
+            stepId: stepId,
+            element: receivedElement,
+          });
+        } else if (isEndStepId(stepId)) {
+          dispatch({
+            type: EditorActionType.EditEndStepElement,
+            stepId: stepId,
+            element: receivedElement,
+          });
+
+          if (message.elementTag === 'A' && tab.url) {
+            dispatch({
+              type: EditorActionType.AddSection,
+              sectionUrl: tab.url,
+            });
+          }
+        }
+      }
+    });
+  }, [dispatch]);
+
+  useEffect(addMessageListener, [addMessageListener]);
 
   return (
     <>

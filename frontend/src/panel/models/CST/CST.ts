@@ -15,7 +15,7 @@ interface CSTSectionId {
 }
 
 interface CSTSubsectionId {
-  parentId: CSTSectionId | CSTEndStepId | CSTInnerStepId;
+  parentId: CSTEndStepId | CSTInnerStepId;
   subsectionId: number;
 }
 

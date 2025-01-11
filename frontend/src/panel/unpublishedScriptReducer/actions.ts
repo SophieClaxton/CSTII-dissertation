@@ -7,7 +7,10 @@ import {
   CSTSubsectionId,
   CSTSubsectionNode,
 } from '../models/CST/CST';
-import { getEditorComponentById } from '../models/CST/getters';
+import {
+  getEditorComponentById,
+  getNextSectionId,
+} from '../models/CST/getters';
 import {
   mapProgramToProgramWithUpdatedSections,
   mapSectionToSectionWithUpdatedInnerSteps,
@@ -23,6 +26,8 @@ import {
   DeleteEndStepAction,
   EditInnerStepElementAction,
   EditEndStepElementAction,
+  AddSectionAction,
+  DeleteSectionAction,
 } from '../models/EditorAction';
 import { UnpublishedScript } from '../models/API/UnpublishedScript';
 
@@ -48,6 +53,39 @@ const getSection = (
   return section;
 };
 
+/* Section Actions */
+
+const addSection = (
+  unpublishedScript: UnpublishedScript,
+  action: AddSectionAction,
+): UnpublishedScript => {
+  const id = getNextSectionId(unpublishedScript.program);
+  const newSection: CSTSectionNode = {
+    id: id,
+    innerSteps: [],
+    url: action.sectionUrl,
+  };
+  const newEditorProgram: CSTProgram = {
+    ...unpublishedScript.program,
+    sections: [...unpublishedScript.program.sections, newSection],
+  };
+  console.log(`Created section with id ${mapNodeIdToString(id)}`);
+  return { ...unpublishedScript, program: newEditorProgram };
+};
+
+const deleteSection = (
+  unpublishedScript: UnpublishedScript,
+  action: DeleteSectionAction,
+): UnpublishedScript => {
+  const newEditorProgram: CSTProgram = {
+    ...unpublishedScript.program,
+    sections: unpublishedScript.program.sections.filter(
+      (section) => section.id != action.sectionId,
+    ),
+  };
+  return { ...unpublishedScript, program: newEditorProgram };
+};
+
 /* InnerStep Actions */
 
 const addInnerStep = (
@@ -58,7 +96,7 @@ const addInnerStep = (
   if (!section) {
     return unpublishedScript;
   }
-  console.log(`Adding inner step to section ${section.id}`);
+  console.log(`Adding inner step to section ${mapNodeIdToString(section.id)}`);
   const newEditorProgram = mapProgramToProgramWithUpdatedSections(
     unpublishedScript.program,
     section.id,
@@ -146,7 +184,7 @@ const addEndStep = (
   if (!section) {
     return unpublishedScript;
   }
-  console.log(`Adding end step to section ${section.id}`);
+  console.log(`Adding end step to section ${mapNodeIdToString(section.id)}`);
   const newEditorProgram = mapProgramToProgramWithUpdatedSections(
     unpublishedScript.program,
     section.id,
@@ -211,6 +249,8 @@ const deleteEndStep = (
 };
 
 export {
+  addSection,
+  deleteSection,
   addInnerStep,
   editInnerStep,
   rearrangeInnerSteps,

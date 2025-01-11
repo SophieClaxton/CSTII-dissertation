@@ -9,6 +9,7 @@ import {
   CSTSubsectionNode,
   CSTNodeId,
   CSTInnerStepId,
+  CSTSectionId,
 } from './CST';
 import { mapNodeIdToString } from './mappers';
 
@@ -66,8 +67,12 @@ const getNextInnerStepId = (
   return { parentId: sectionNode.id, stepId: maxInnerStepId + 1 };
 };
 
-const getNextSectionId = (editorProgram: CSTProgram): string => {
-  return `S${editorProgram.sections.length}`;
+const getNextSectionId = (editorProgram: CSTProgram): CSTSectionId => {
+  const sectionIds = editorProgram.sections.map(
+    (section) => section.id.sectionId,
+  );
+  const maxSectionId = sectionIds.length > 0 ? Math.max(...sectionIds) : 0;
+  return { sectionId: maxSectionId + 1 };
 };
 
 const getNodeChoices = (

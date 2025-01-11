@@ -13,6 +13,7 @@ const FollowNode: React.FC<FollowNodeProps> = ({ step }) => {
         stepId={step.id}
         element={step.element}
         selectableTags={['A']}
+        isFollowStep
       />
     </Step>
   );

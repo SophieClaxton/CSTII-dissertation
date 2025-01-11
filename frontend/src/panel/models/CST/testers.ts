@@ -7,6 +7,8 @@ import {
   CSTInnerStepId,
   CSTNodeId,
   CSTEndStepId,
+  CSTSubsectionId,
+  CSTSectionId,
 } from './CST';
 
 const isSection = (node: CSTNode): node is CSTSectionNode => {
@@ -60,6 +62,14 @@ const isEndStep = (node: CSTNode): boolean => {
   );
 };
 
+const isSectionId = (id: CSTNodeId): id is CSTSectionId => {
+  return 'sectionId' in id;
+};
+
+const isSubsectionId = (id: CSTNodeId): id is CSTSubsectionId => {
+  return 'subsectionId' in id;
+};
+
 const isInnerStepId = (id: CSTNodeId): id is CSTInnerStepId => {
   return 'stepId' in id && typeof id.stepId === 'number';
 };
@@ -73,6 +83,8 @@ export {
   isSubsection,
   isInnerStep,
   isEndStep,
+  isSectionId,
+  isSubsectionId,
   isInnerStepId,
   isEndStepId,
 };

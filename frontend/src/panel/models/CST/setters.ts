@@ -14,8 +14,6 @@ const addEditorStepToSection = (
   step: CSTStepNode,
 ) => {
   if (isInnerStep(step)) {
-    console.log('The following step is an inner step');
-    console.log(step);
     return programDispatch({
       type: EditorActionType.AddInnerStep,
       sectionId: section.id,
@@ -23,8 +21,6 @@ const addEditorStepToSection = (
     });
   }
   if (isEndStep(step) && !section.endStep) {
-    console.log('The following step is an end step');
-    console.log(step);
     return programDispatch({
       type: EditorActionType.AddEndStep,
       sectionId: section.id,

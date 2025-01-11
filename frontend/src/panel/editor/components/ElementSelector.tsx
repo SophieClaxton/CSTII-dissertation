@@ -1,15 +1,13 @@
 import Stack from '@mui/material/Stack/Stack';
 import InterfaceElement, {
   defaultSelectableTags,
-  isSelectableTag,
   mapTagToElementName,
   SelectableTag,
 } from '../../models/InterfaceElement';
 import IconButton from '@mui/material/IconButton/IconButton';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
-import { useEffect } from 'react';
-import { Message, SetClickableMessage } from '../../../common/message';
+import { SetClickableMessage } from '../../../common/message';
 import { CSTEndStepId, CSTInnerStepId } from '../../models/CST/CST';
 import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
 import { isInnerStepId } from '../../models/CST/testers';
@@ -21,6 +19,7 @@ interface ElementSelectorProps {
   stepId: CSTInnerStepId | CSTEndStepId;
   element: InterfaceElement | undefined;
   selectableTags?: SelectableTag[];
+  isFollowStep?: boolean;
 }
 
 const ElementSelector: React.FC<ElementSelectorProps> = ({
@@ -29,49 +28,6 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
   selectableTags,
 }) => {
   const { dispatch } = useUnpublishedScriptContext();
-
-  const addMessageListener = () => {
-    chrome.runtime.onMessage.addListener(async (message: Message) => {
-      if (
-        message.type === 'clicked_element' &&
-        message.stepId === mapNodeIdToString(stepId)
-      ) {
-        if (!isSelectableTag(message.elementTag)) {
-          throw Error('Received an invalid element tag');
-        }
-
-        const [tab] = await chrome.tabs.query({
-          active: true,
-          lastFocusedWindow: true,
-        });
-        if (isInnerStepId(stepId)) {
-          dispatch({
-            type: EditorActionType.EditInnerStepElement,
-            stepId: stepId,
-            element: {
-              outerHTML: message.elementOuterHtml,
-              tag: message.elementTag,
-              textContent: message.elementTextContent ?? undefined,
-              url: tab.url || '',
-            },
-          });
-        } else {
-          dispatch({
-            type: EditorActionType.EditEndStepElement,
-            stepId: stepId,
-            element: {
-              outerHTML: message.elementOuterHtml,
-              tag: message.elementTag,
-              textContent: message.elementTextContent ?? undefined,
-              url: tab.url || '',
-            },
-          });
-        }
-      }
-    });
-  };
-
-  useEffect(addMessageListener, [dispatch, stepId]);
 
   const onAddElement = () => {
     const sendClickabilityMessage = async () => {
@@ -108,7 +64,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
   };
 
   const text = element ? (
-    <Stack alignItems={'flex-start'} sx={{ flexGrow: 1 }}>
+    <Stack alignItems={'flex-start'}>
       <Typography variant="subtitle1">
         {mapTagToElementName[element.tag]}
       </Typography>
@@ -130,10 +86,12 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
   return (
     <Stack
       direction={'row'}
+      justifyContent={'space-between'}
       spacing={1}
       sx={{
         width: '100%',
         overflow: 'hidden',
+        flexGrow: 1,
         backgroundColor: 'primary.light',
         padding: '0.5rem',
         borderRadius: '0.25rem',
@@ -144,7 +102,10 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
     >
       {text}
       <IconButton
-        sx={{ borderRadius: '0.25rem', padding: '0rem' }}
+        sx={{
+          borderRadius: '0.25rem',
+          padding: '0rem',
+        }}
         onClick={action}
       >
         {icon}
