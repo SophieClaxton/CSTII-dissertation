@@ -1,28 +1,56 @@
-export enum Port {
+enum Port {
   SidePanel = 'sidePanel',
 }
 
-export enum MessageType {
-  CloseSidePanel = 'close_side_panel',
-  ClickedElement = 'clicked_element',
-  ToggleClickability = 'toggle_clickability',
-  ToggleFocus = 'toggle_focus',
-  ClickElement = 'click_element',
+type MessageType =
+  | 'close_side_panel'
+  | 'clicked_element'
+  | 'toggle_clickability'
+  | 'toggle_focus'
+  | 'click_element';
+
+type Message =
+  | CloseSidePanelMessage
+  | ClickedElementMessage
+  | ToggleClickabilityMessage
+  | ToggleFocusMessage
+  | ClickElementMessage;
+
+interface MessageBase {
+  type: MessageType;
 }
 
-export interface Message {
-  type: string;
+interface CloseSidePanelMessage extends MessageBase {
+  type: 'close_side_panel';
 }
 
-export interface ClickedElementMessage extends Message {
+interface ClickedElementMessage extends MessageBase {
+  type: 'clicked_element';
   element: string;
   tag: string;
 }
 
-export interface FocusOnMessage extends Message {
+interface ToggleClickabilityMessage extends MessageBase {
+  type: 'toggle_clickability';
+}
+
+interface ToggleFocusMessage extends MessageBase {
+  type: 'toggle_focus';
   element: string;
 }
 
-export interface ClickElementMessage extends Message {
+interface ClickElementMessage extends MessageBase {
+  type: 'click_element';
   element: string;
 }
+
+export { Port };
+export type {
+  MessageType,
+  Message,
+  CloseSidePanelMessage,
+  ClickedElementMessage,
+  ToggleClickabilityMessage,
+  ToggleFocusMessage,
+  ClickElementMessage,
+};
