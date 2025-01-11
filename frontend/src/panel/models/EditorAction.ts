@@ -53,7 +53,6 @@ interface EditProgramAuthorAction extends BaseEditorAction {
 interface EditInnerStepAction extends BaseEditorAction {
   type: EditorActionType.EditInnerStep;
   stepId: CSTInnerStepId;
-  comment?: string;
   element?: InterfaceElement;
 }
 

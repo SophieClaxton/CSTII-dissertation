@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Element(BaseModel):
-    outerHtml: str
+    outerHTML: str
     url: str
     tag: str
+    textContent: str | None = None
