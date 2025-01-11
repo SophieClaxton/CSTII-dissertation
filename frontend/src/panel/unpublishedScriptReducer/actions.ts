@@ -13,7 +13,6 @@ import {
   mapSectionToSectionWithUpdatedInnerSteps,
   mapSectionToSectionWithUpdatedEndStep,
   mapNodeIdToString,
-  mapInnerStepToChangedInnerStep,
 } from '../models/CST/mappers';
 import { isSubsection, isSection } from '../models/CST/testers';
 import {
@@ -22,10 +21,10 @@ import {
   AddEndStepAction,
   DeleteInnerStepAction,
   DeleteEndStepAction,
-  EditInnerStepAction,
-  EditEndStepAction,
+  EditInnerStepElementAction,
+  EditEndStepElementAction,
 } from '../models/EditorAction';
-import { UnpublishedScript } from '../models/UnpublishedScript';
+import { UnpublishedScript } from '../models/API/UnpublishedScript';
 
 const getSection = (
   sectionId: CSTSectionId | CSTSubsectionId,
@@ -93,7 +92,7 @@ const rearrangeInnerSteps = (
 
 const editInnerStep = (
   unpublishedScript: UnpublishedScript,
-  action: EditInnerStepAction,
+  action: EditInnerStepElementAction,
 ): UnpublishedScript => {
   const section = getSection(action.stepId.parentId, unpublishedScript.program);
   if (!section) {
@@ -105,7 +104,7 @@ const editInnerStep = (
     mapSectionToSectionWithUpdatedInnerSteps(
       section.innerSteps.map((step) =>
         mapNodeIdToString(step.id) === mapNodeIdToString(action.stepId)
-          ? mapInnerStepToChangedInnerStep(step, action.element)
+          ? { ...step, element: action.element }
           : step,
       ),
     ),
@@ -153,7 +152,6 @@ const addEndStep = (
     section.id,
     mapSectionToSectionWithUpdatedEndStep(action.endStep),
   );
-  // console.log(newEditorProgram);
   return {
     ...unpublishedScript,
     program: newEditorProgram,
@@ -162,7 +160,7 @@ const addEndStep = (
 
 const editEndStep = (
   unpublishedScript: UnpublishedScript,
-  action: EditEndStepAction,
+  action: EditEndStepElementAction,
 ): UnpublishedScript => {
   const section = getSection(action.stepId.parentId, unpublishedScript.program);
   if (!section || !section.endStep) {
@@ -174,7 +172,7 @@ const editEndStep = (
       newEndStep = {
         type: section.endStep.type,
         id: section.endStep.id,
-        element: action.element ? action.element : section.endStep.element,
+        element: action.element,
       };
       break;
     case CSTStepNodeType.UserDecision:

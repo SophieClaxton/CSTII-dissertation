@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigationContext } from '../../contexts/contextHooks';
-import APIResponse from '../../models/APIResponse';
-import { Script } from '../../models/Script';
+import APIResponse from '../../models/API/APIResponse';
+import { Script } from '../../models/API/Script';
 import { getScript } from '../../api/scripts';
 import { assertIsScriptSupportScreen } from '../../navigation/screenChecks';
 

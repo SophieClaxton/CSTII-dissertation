@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { handleError } from '../models/APIError';
-import { Script, ScriptWithAuthorAndWebsite } from '../models/Script';
-import APISuccess from '../models/APISuccess';
-import APIResponse from '../models/APIResponse';
+import { handleError } from '../models/API/APIError';
+import { Script, ScriptWithAuthorAndWebsite } from '../models/API/Script';
+import APISuccess from '../models/API/APISuccess';
+import APIResponse from '../models/API/APIResponse';
 
 const scriptsEndpoint = axios.create({
   baseURL: 'http://localhost:8000/scripts/',

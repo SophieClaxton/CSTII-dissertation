@@ -1,5 +1,5 @@
 import { EditorAction, EditorActionType } from '../models/EditorAction';
-import { UnpublishedScript } from '../models/UnpublishedScript';
+import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import {
   addInnerStep,
   addEndStep,
@@ -26,7 +26,7 @@ const unpublishedScriptReducer = (
         ...unpublishedScript,
         author: { ...unpublishedScript.author, name: action.newAuthor },
       };
-    case EditorActionType.EditInnerStep:
+    case EditorActionType.EditInnerStepElement:
       return editInnerStep(unpublishedScript, action);
     case EditorActionType.AddInnerStep:
       return addInnerStep(unpublishedScript, action);
@@ -34,7 +34,7 @@ const unpublishedScriptReducer = (
       return deleteInnerStep(unpublishedScript, action);
     case EditorActionType.RearrangeInnerSteps:
       return rearrangeInnerSteps(unpublishedScript, action);
-    case EditorActionType.EditEndStep:
+    case EditorActionType.EditEndStepElement:
       return editEndStep(unpublishedScript, action);
     case EditorActionType.AddEndStep:
       return addEndStep(unpublishedScript, action);

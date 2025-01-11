@@ -1,4 +1,4 @@
-import { CSTProgram } from './CST/CST';
+import { CSTProgram } from '../CST/CST';
 import User from './User';
 import Website from './Website';
 

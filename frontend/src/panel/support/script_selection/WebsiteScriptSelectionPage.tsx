@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigationContext } from '../../contexts/contextHooks';
-import APIResponse from '../../models/APIResponse';
+import APIResponse from '../../models/API/APIResponse';
 import Loadable from '../../components/Loadable';
 import List from '@mui/material/List/List';
 import ScriptListItem from './ScriptListItem';
-import { WebsiteWithScripts } from '../../models/Website';
+import { WebsiteWithScripts } from '../../models/API/Website';
 import { getWebsite } from '../../api/websites';
 import './styles/scriptSelectionPage.css';
 import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChecks';

@@ -46,7 +46,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
         });
         if (isInnerStepId(stepId)) {
           dispatch({
-            type: EditorActionType.EditInnerStep,
+            type: EditorActionType.EditInnerStepElement,
             stepId: stepId,
             element: {
               outerHTML: message.elementOuterHtml,
@@ -57,7 +57,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
           });
         } else {
           dispatch({
-            type: EditorActionType.EditEndStep,
+            type: EditorActionType.EditEndStepElement,
             stepId: stepId,
             element: {
               outerHTML: message.elementOuterHtml,
@@ -94,13 +94,13 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
   const onDeleteElement = () => {
     if (isInnerStepId(stepId)) {
       dispatch({
-        type: EditorActionType.EditInnerStep,
+        type: EditorActionType.EditInnerStepElement,
         stepId: stepId,
         element: undefined,
       });
     } else {
       dispatch({
-        type: EditorActionType.EditEndStep,
+        type: EditorActionType.EditEndStepElement,
         stepId: stepId,
         element: undefined,
       });

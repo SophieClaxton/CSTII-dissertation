@@ -6,7 +6,7 @@ import {
   ASTSubsectionNode,
   ASTUserDecisionNode,
 } from '../../models/AST/AST';
-import { Script } from '../../models/Script';
+import { Script } from '../../models/API/Script';
 
 const endNode: ASTEndNode = {
   type: ASTNodeType.End,

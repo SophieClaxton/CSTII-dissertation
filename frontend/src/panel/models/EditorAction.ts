@@ -12,11 +12,11 @@ import {
 enum EditorActionType {
   EditProgramName = 'editProgramName',
   EditProgramAuthor = 'editProgramAuthor',
-  EditInnerStep = 'editInnerStep',
+  EditInnerStepElement = 'editInnerStepElement',
   AddInnerStep = 'addInnerStep',
   DeleteInnerStep = 'deleteInnerStep',
   RearrangeInnerSteps = 'rearrangeInnerSteps',
-  EditEndStep = 'editEndStep',
+  EditEndStepElement = 'editEndStepElement',
   AddEndStep = 'addEndStep',
   DeleteEndStep = 'deleteEndStep',
   ChangeUserDecisionStepToInnerStep = 'changeUserDecisionStepToInnerStep',
@@ -30,11 +30,11 @@ interface BaseEditorAction {
 type EditorAction =
   | EditProgramNameAction
   | EditProgramAuthorAction
-  | EditInnerStepAction
+  | EditInnerStepElementAction
   | AddInnerStepAction
   | DeleteInnerStepAction
   | RearrangeInnerStepsAction
-  | EditEndStepAction
+  | EditEndStepElementAction
   | AddEndStepAction
   | DeleteEndStepAction
   | ChangeUserDecisionStepToInnerStepAction
@@ -50,10 +50,10 @@ interface EditProgramAuthorAction extends BaseEditorAction {
   newAuthor: string;
 }
 
-interface EditInnerStepAction extends BaseEditorAction {
-  type: EditorActionType.EditInnerStep;
+interface EditInnerStepElementAction extends BaseEditorAction {
+  type: EditorActionType.EditInnerStepElement;
   stepId: CSTInnerStepId;
-  element?: InterfaceElement;
+  element: InterfaceElement | undefined;
 }
 
 interface AddInnerStepAction extends BaseEditorAction {
@@ -73,11 +73,10 @@ interface RearrangeInnerStepsAction extends BaseEditorAction {
   innerSteps: CSTInnerStepNode[];
 }
 
-interface EditEndStepAction extends BaseEditorAction {
-  type: EditorActionType.EditEndStep;
+interface EditEndStepElementAction extends BaseEditorAction {
+  type: EditorActionType.EditEndStepElement;
   stepId: CSTEndStepId;
-  comment?: string;
-  element?: InterfaceElement;
+  element: InterfaceElement | undefined;
 }
 
 interface AddEndStepAction extends BaseEditorAction {
@@ -108,11 +107,11 @@ export type {
   EditorAction,
   EditProgramNameAction,
   EditProgramAuthorAction,
-  EditInnerStepAction,
+  EditInnerStepElementAction,
   AddInnerStepAction,
   DeleteInnerStepAction,
   RearrangeInnerStepsAction,
-  EditEndStepAction,
+  EditEndStepElementAction,
   AddEndStepAction,
   DeleteEndStepAction,
   ChangeUserDecisionStepToInnerStepAction,

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigationContext } from '../../contexts/contextHooks';
 import '../../panel.css';
-import APIResponse from '../../models/APIResponse';
-import { ScriptWithAuthorAndWebsite } from '../../models/Script';
+import APIResponse from '../../models/API/APIResponse';
+import { ScriptWithAuthorAndWebsite } from '../../models/API/Script';
 import { getScripts } from '../../api/scripts';
 import ScriptListItem from './ScriptListItem';
 import './styles/scriptSelectionPage.css';
 import List from '@mui/material/List/List';
-import Website from '../../models/Website';
-import User from '../../models/User';
+import Website from '../../models/API/Website';
+import User from '../../models/API/User';
 import { getWebsites } from '../../api/websites';
 import { getUsers } from '../../api/users';
 import ScriptFilterDialog from './ScriptFilterDialog';

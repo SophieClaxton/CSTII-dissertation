@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button/Button';
 import Chip from '@mui/material/Chip/Chip';
 import Stack from '@mui/material/Stack/Stack';
-import Website from '../../models/Website';
-import User from '../../models/User';
+import Website from '../../models/API/Website';
+import User from '../../models/API/User';
 import React from 'react';
 
 interface FilterBarProps {

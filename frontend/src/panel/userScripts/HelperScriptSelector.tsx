@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigationContext } from '../contexts/contextHooks';
-import { UserWithScripts } from '../models/User';
+import { UserWithScripts } from '../models/API/User';
 import { getUser } from '../api/users';
-import APIResponse from '../models/APIResponse';
+import APIResponse from '../models/API/APIResponse';
 import Loadable from '../components/Loadable';
 import List from '@mui/material/List/List';
 import ScriptListItem from '../support/script_selection/ScriptListItem';

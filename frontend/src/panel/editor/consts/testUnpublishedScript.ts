@@ -9,7 +9,7 @@ import {
   CSTClickNode,
   CSTWriteNode,
 } from '../../models/CST/CST';
-import { UnpublishedScript } from '../../models/UnpublishedScript';
+import { UnpublishedScript } from '../../models/API/UnpublishedScript';
 
 const followNode: CSTFollowNode = {
   id: { parentId: { sectionId: 1 }, stepId: 'E' },

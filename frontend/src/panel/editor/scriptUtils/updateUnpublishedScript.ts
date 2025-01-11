@@ -2,7 +2,7 @@ import { updateUnpublishedScript } from '../../api/unpublishedScripts';
 import {
   UnpublishedScript,
   UpdateUnpublishedScriptRequest,
-} from '../../models/UnpublishedScript';
+} from '../../models/API/UnpublishedScript';
 import { SnackBarDetails } from '../components/AlertSnackBar';
 
 const saveUnpublishedScript = (

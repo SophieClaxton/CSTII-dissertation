@@ -6,8 +6,8 @@ import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import Stack from '@mui/material/Stack/Stack';
 import TextField from '@mui/material/TextField/TextField';
-import Website from '../../models/Website';
-import User from '../../models/User';
+import Website from '../../models/API/Website';
+import User from '../../models/API/User';
 import { useState } from 'react';
 
 interface ScriptFilterDialogProps {

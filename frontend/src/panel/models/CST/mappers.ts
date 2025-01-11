@@ -1,4 +1,3 @@
-import InterfaceElement from '../InterfaceElement';
 import {
   CSTEndStepNode,
   CSTInnerStepNode,
@@ -101,16 +100,6 @@ const mapSubsectionToSubsectionWithUpdatedInnerSteps = (
           innerSteps,
         ) as CSTEndStepNode)
       : subsection.endStep,
-  };
-};
-
-const mapInnerStepToChangedInnerStep = (
-  step: CSTInnerStepNode & { element?: InterfaceElement },
-  element: InterfaceElement | undefined,
-): CSTInnerStepNode & { element?: InterfaceElement } => {
-  return {
-    ...step,
-    element: element ? element : step.element,
   };
 };
 
@@ -230,5 +219,4 @@ export {
   mapProgramToProgramWithUpdatedSections,
   mapSectionToSectionWithUpdatedInnerSteps,
   mapSectionToSectionWithUpdatedEndStep,
-  mapInnerStepToChangedInnerStep,
 };

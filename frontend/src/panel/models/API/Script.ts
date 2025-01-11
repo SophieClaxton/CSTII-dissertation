@@ -1,5 +1,5 @@
 import Annotation from './Annotation';
-import { ASTProgram } from './AST/AST';
+import { ASTProgram } from '../AST/AST';
 import User from './User';
 import Website from './Website';
 
