@@ -1,3 +1,4 @@
+import { Schema } from '../Schema';
 import {
   ASTCheckNode,
   ASTDragNode,
@@ -8,17 +9,14 @@ import {
   ASTWriteNode,
 } from './AST';
 
-const astStepBaseSchema: Record<
-  keyof (ASTStepBase & { type: ASTNodeType }),
-  boolean
-> = {
+const astStepBaseSchema: Schema<ASTStepBase & { type: ASTNodeType }> = {
   type: true,
   element: true,
   next: false,
   comment: false,
 };
 
-const astDragNodeSchema: Record<keyof ASTDragNode, boolean> = {
+const astDragNodeSchema: Schema<ASTDragNode> = {
   element: true,
   location: true,
   next: false,
@@ -26,7 +24,7 @@ const astDragNodeSchema: Record<keyof ASTDragNode, boolean> = {
   type: true,
 };
 
-const astWriteNodeSchema: Record<keyof ASTWriteNode, boolean> = {
+const astWriteNodeSchema: Schema<ASTWriteNode> = {
   element: true,
   description: false,
   text: true,
@@ -35,7 +33,7 @@ const astWriteNodeSchema: Record<keyof ASTWriteNode, boolean> = {
   type: true,
 };
 
-const astSelectNodeSchema: Record<keyof ASTSelectNode, boolean> = {
+const astSelectNodeSchema: Schema<ASTSelectNode> = {
   element: true,
   description: false,
   option: true,
@@ -44,7 +42,7 @@ const astSelectNodeSchema: Record<keyof ASTSelectNode, boolean> = {
   type: true,
 };
 
-const astCheckNodeSchema: Record<keyof ASTCheckNode, boolean> = {
+const astCheckNodeSchema: Schema<ASTCheckNode> = {
   element: true,
   description: false,
   isChecked: true,
@@ -53,7 +51,7 @@ const astCheckNodeSchema: Record<keyof ASTCheckNode, boolean> = {
   type: true,
 };
 
-const astDrawNodeSchema: Record<keyof ASTDrawNode, boolean> = {
+const astDrawNodeSchema: Schema<ASTDrawNode> = {
   element: true,
   description: true,
   next: false,

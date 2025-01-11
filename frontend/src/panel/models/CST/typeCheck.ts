@@ -14,7 +14,6 @@ import {
   ASTSubsectionNode,
   ASTWriteNode,
 } from '../AST/AST';
-import { getMissingProperties } from '../AST/getters';
 import {
   astCheckNodeSchema,
   astDragNodeSchema,
@@ -28,6 +27,7 @@ import {
   isASTStepNode,
   isASTSubsectionNode,
 } from '../AST/testers';
+import { getMissingProperties, Schema } from '../Schema';
 import {
   CSTCheckNode,
   CSTClickNode,
@@ -146,14 +146,16 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
 const mapStepNode = <I extends CSTInnerStepNode, R extends ASTStepNode>(
   node: I,
   next: ASTStepNode | TypeCheckError[],
-  schema: Record<keyof R, boolean>,
+  schema: Schema<R>,
 ): R | TypeCheckError[] => {
   const missingProperties = getMissingProperties(node, schema);
 
   if (missingProperties.length > 0) {
     const nodeError = {
       location: node.id,
-      reason: missingProperties.join(', '),
+      reason: missingProperties
+        .map((property) => `Missing ${property}`)
+        .join(', '),
     };
     if (isASTStepNode(next)) {
       return [nodeError];
