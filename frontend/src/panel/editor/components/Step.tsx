@@ -7,7 +7,7 @@ import { mapNodeIdToString } from '../../models/CST/mappers';
 import { CSTEndStepId, CSTInnerStepId } from '../../models/CST/CST';
 import { DraggableAttributes } from '@dnd-kit/core/dist/hooks/useDraggable';
 import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities/useSyntheticListeners';
-import './CST/styles/step.css';
+import './styles/step.css';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import IconButton from '@mui/material/IconButton/IconButton';
 import Delete from '@mui/icons-material/Delete';

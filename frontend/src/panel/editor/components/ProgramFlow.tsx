@@ -1,18 +1,18 @@
-import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
-import SectionNode from './SectionNode';
-import { getEdges } from '../../flowUtils/getEdges';
-import './styles/program.css';
-import {
-  createTypeErrorsContext,
-  useUnpublishedScriptContext,
-} from '../../../contexts/contextHooks';
-import Button from '@mui/material/Button/Button';
 import { useState } from 'react';
-import AlertSnackBar from '../AlertSnackBar';
+import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
+import './styles/program.css';
+import Button from '@mui/material/Button/Button';
 import Stack from '@mui/material/Stack/Stack';
-import { saveUnpublishedScript } from '../../scriptUtils/updateUnpublishedScript';
-import typeCheck, { TypeCheckError } from '../../../models/CST/typeCheck';
-import { TypeErrorsContext } from '../../../contexts/TypeErrorsContext';
+import {
+  useUnpublishedScriptContext,
+  createTypeErrorsContext,
+} from '../../contexts/contextHooks';
+import { TypeErrorsContext } from '../../contexts/TypeErrorsContext';
+import typeCheck, { TypeCheckError } from '../../models/CST/typeCheck';
+import { getEdges } from '../flowUtils/getEdges';
+import { saveUnpublishedScript } from '../scriptUtils/updateUnpublishedScript';
+import AlertSnackBar from './AlertSnackBar';
+import SectionNode from './CST/SectionNode';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript } = useUnpublishedScriptContext();

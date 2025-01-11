@@ -1,11 +1,11 @@
-import './styles/subsection.css';
-import InnerStepContainer from './InnerStepContainer';
-import EndStepNode from './EndStepNode';
-import AddNodeButton from './AddNodeButton';
 import { CSTSubsectionNode } from '../../../models/CST/CST';
 import { addEditorStepToSection } from '../../../models/CST/setters';
 import { getNodeChoices } from '../../../models/CST/getters';
 import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import AddNodeButton from '../AddNodeButton';
+import InnerStepContainer from '../InnerStepContainer';
+import EndStepNode from './EndStepNode';
+import '../styles/subsection.css';
 
 interface SubsectionNodeProps {
   subsection: CSTSubsectionNode;

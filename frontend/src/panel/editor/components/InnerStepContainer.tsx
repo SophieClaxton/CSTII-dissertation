@@ -4,6 +4,7 @@ import {
   DndContext,
   DragEndEvent,
   KeyboardSensor,
+  MouseSensor,
   UniqueIdentifier,
   useSensor,
   useSensors,
@@ -14,17 +15,16 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import InnerStepNode from './InnerStepNode';
 import { useXarrow } from 'react-xarrows';
+import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
 import {
   CSTInnerStepNode,
   CSTSectionId,
   CSTSubsectionId,
-} from '../../../models/CST/CST';
-import { MouseSensor } from '../../flowUtils/sensors';
-import { mapNodeIdToString } from '../../../models/CST/mappers';
-import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
-import { EditorActionType } from '../../../models/EditorAction';
+} from '../../models/CST/CST';
+import { mapNodeIdToString } from '../../models/CST/mappers';
+import { EditorActionType } from '../../models/EditorAction';
+import InnerStepNode from './CST/InnerStepNode';
 
 interface InnerStepContainerProps {
   innerSteps: CSTInnerStepNode[];

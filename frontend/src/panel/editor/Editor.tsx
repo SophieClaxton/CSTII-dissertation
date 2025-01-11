@@ -1,4 +1,3 @@
-import ProgramFlow from './components/CST/ProgramFlow';
 import { UnpublishedScriptContextProvider } from '../contexts/UnpublishedScriptContext';
 import '../panel.css';
 import './styles/editor.css';
@@ -9,6 +8,7 @@ import { getUnpublishedScript } from '../api/unpublishedScripts';
 import { UnpublishedScript } from '../models/UnpublishedScript';
 import { assertIsEditorScreen } from '../navigation/screenChecks';
 import Loadable from '../components/Loadable';
+import ProgramFlow from './components/ProgramFlow';
 
 const Editor: React.FC = () => {
   const { goBack, currentScreen } = useNavigationContext();

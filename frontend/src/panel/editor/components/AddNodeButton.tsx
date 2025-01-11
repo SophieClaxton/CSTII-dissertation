@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { CSTStepNode } from '../../../models/CST/CST';
 import { useXarrow } from 'react-xarrows';
+import { CSTStepNode } from '../../models/CST/CST';
 
 interface AddNodeButtonProps<T extends CSTStepNode> {
   onAdd: (node: T) => void;

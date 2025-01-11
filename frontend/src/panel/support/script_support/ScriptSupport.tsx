@@ -35,7 +35,7 @@ const ScriptSupport: React.FC = () => {
   return (
     <div className="script-support page">
       <div className="page-title">
-        <button className="back-button" onClick={() => goBack}>
+        <button className="back-button" onClick={goBack}>
           Back
         </button>
       </div>
