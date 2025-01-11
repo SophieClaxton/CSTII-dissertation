@@ -6,8 +6,8 @@ import {
   rearrangeInnerSteps,
   deleteInnerStep,
   deleteEndStep,
-  editInnerStep,
-  editEndStep,
+  editInnerStepElement,
+  editEndStepElement,
   addSection,
   deleteSection,
 } from './actions';
@@ -33,7 +33,7 @@ const unpublishedScriptReducer = (
     case EditorActionType.DeleteSection:
       return deleteSection(unpublishedScript, action);
     case EditorActionType.EditInnerStepElement:
-      return editInnerStep(unpublishedScript, action);
+      return editInnerStepElement(unpublishedScript, action);
     case EditorActionType.AddInnerStep:
       return addInnerStep(unpublishedScript, action);
     case EditorActionType.DeleteInnerStep:
@@ -41,7 +41,7 @@ const unpublishedScriptReducer = (
     case EditorActionType.RearrangeInnerSteps:
       return rearrangeInnerSteps(unpublishedScript, action);
     case EditorActionType.EditEndStepElement:
-      return editEndStep(unpublishedScript, action);
+      return editEndStepElement(unpublishedScript, action);
     case EditorActionType.AddEndStep:
       return addEndStep(unpublishedScript, action);
     case EditorActionType.DeleteEndStep:

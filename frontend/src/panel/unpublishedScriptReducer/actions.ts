@@ -168,7 +168,7 @@ const rearrangeInnerSteps = (
   return { ...unpublishedScript, program: newEditorProgram };
 };
 
-const editInnerStep = (
+const editInnerStepElement = (
   unpublishedScript: UnpublishedScript,
   action: EditInnerStepElementAction,
 ): UnpublishedScript => {
@@ -187,6 +187,19 @@ const editInnerStep = (
       ),
     ),
   );
+  if (action.element && isSection(section) && section.url === '') {
+    const url = action.element.url;
+    return {
+      ...unpublishedScript,
+      program: {
+        sections: newEditorProgram.sections.map((s) =>
+          mapNodeIdToString(s.id) === mapNodeIdToString(section.id)
+            ? { ...s, url }
+            : s,
+        ),
+      },
+    };
+  }
   return { ...unpublishedScript, program: newEditorProgram };
 };
 
@@ -236,7 +249,7 @@ const addEndStep = (
   };
 };
 
-const editEndStep = (
+const editEndStepElement = (
   unpublishedScript: UnpublishedScript,
   action: EditEndStepElementAction,
 ): UnpublishedScript => {
@@ -262,6 +275,20 @@ const editEndStep = (
     section.id,
     mapSectionToSectionWithUpdatedEndStep(newEndStep),
   );
+
+  if (action.element && isSection(section) && section.url === '') {
+    const url = action.element.url;
+    return {
+      ...unpublishedScript,
+      program: {
+        sections: newEditorProgram.sections.map((s) =>
+          mapNodeIdToString(s.id) === mapNodeIdToString(section.id)
+            ? { ...s, url }
+            : s,
+        ),
+      },
+    };
+  }
   return { ...unpublishedScript, program: newEditorProgram };
 };
 
@@ -292,10 +319,10 @@ export {
   addSection,
   deleteSection,
   addInnerStep,
-  editInnerStep,
+  editInnerStepElement,
   rearrangeInnerSteps,
   deleteInnerStep,
   addEndStep,
-  editEndStep,
+  editEndStepElement,
   deleteEndStep,
 };
