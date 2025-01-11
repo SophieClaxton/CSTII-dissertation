@@ -1,18 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ClickedElementMessage,
   ClickElementMessage,
-  FocusOnMessage,
   Message,
-  MessageType,
+  ToggleClickabilityMessage,
+  ToggleFocusMessage,
 } from '../../common/message';
 import InterfaceElement from '../models/InterfaceElement';
 
 const ClickedElementsDisplay = () => {
+  const [selecting, setSelecting] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [element, setElement] = useState<InterfaceElement | undefined>(
+    undefined,
+  );
+  const [showMeError, setShowMeError] = useState<string | undefined>(undefined);
+
   const setupElementListener = async () => {
     console.log('running setup');
     chrome.runtime.onMessage.addListener(async (message: Message) => {
-      if (message.type === MessageType.ClickedElement) {
+      if (message.type === 'clicked_element') {
         console.log('setting element');
         const clickedElementMessage = message as ClickedElementMessage;
         const [tab] = await chrome.tabs.query({
@@ -29,7 +36,7 @@ const ClickedElementsDisplay = () => {
     });
   };
 
-  const setupTabChangeListener = async () => {
+  const setupTabChangeListener = useCallback(async () => {
     const tabChangeListener = (
       _: number,
       changeInfo: chrome.tabs.TabChangeInfo,
@@ -42,7 +49,7 @@ const ClickedElementsDisplay = () => {
       }
     };
     chrome.tabs.onUpdated.addListener(tabChangeListener);
-  };
+  }, [selecting]);
 
   const toggleSelectingElements = async (selecting: boolean) => {
     setSelecting(!selecting);
@@ -51,8 +58,11 @@ const ClickedElementsDisplay = () => {
       lastFocusedWindow: true,
     });
     console.log('sending toggle clickability message');
+    const toggleClickabilityMessage: ToggleClickabilityMessage = {
+      type: 'toggle_clickability',
+    };
     chrome.tabs
-      .sendMessage(tab.id!, { type: MessageType.ToggleClickability })
+      .sendMessage(tab.id!, toggleClickabilityMessage)
       .catch((error) => console.log(error));
   };
 
@@ -66,8 +76,8 @@ const ClickedElementsDisplay = () => {
       return;
     }
     console.log('sending focus on message');
-    const message: FocusOnMessage = {
-      type: MessageType.ToggleFocus,
+    const message: ToggleFocusMessage = {
+      type: 'toggle_focus',
       element: element.outerHTML,
     };
     chrome.tabs
@@ -93,7 +103,7 @@ const ClickedElementsDisplay = () => {
     }
     console.log('sending active-click message');
     const message: ClickElementMessage = {
-      type: MessageType.ClickElement,
+      type: 'click_element',
       element: element.outerHTML,
     };
     chrome.tabs
@@ -105,13 +115,7 @@ const ClickedElementsDisplay = () => {
   useEffect(() => {
     setupElementListener();
     setupTabChangeListener();
-  }, []);
-  const [selecting, setSelecting] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [element, setElement] = useState<InterfaceElement | undefined>(
-    undefined,
-  );
-  const [showMeError, setShowMeError] = useState<string | undefined>(undefined);
+  }, [setupTabChangeListener]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>

@@ -1,3 +1,4 @@
+import { Message } from '../common/message';
 import './clickable.css';
 
 alert('Loaded content script');
@@ -19,46 +20,51 @@ const selectableElementTags = [
 ];
 
 const setupClickabilityListener = () => {
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.type === 'toggle_clickability') {
-      console.log('received clickability message');
-      isClickable = !isClickable;
-      console.log(`set clickability to ${isClickable}`);
-      updateClassList();
-    }
+  chrome.runtime.onMessage.addListener((message: Message) => {
+    switch (message.type) {
+      case 'close_side_panel':
+      case 'clicked_element':
+        break;
+      case 'toggle_clickability': {
+        console.log('received clickability message');
+        isClickable = !isClickable;
+        console.log(`set clickability to ${isClickable}`);
+        updateClassList();
+        break;
+      }
+      case 'toggle_focus': {
+        console.log('received focussing message');
+        const elementOuterHTML = message.element;
 
-    if (message.type === 'toggle_focus') {
-      console.log('received focussing message');
-      const elementOuterHTML = message.element;
+        document.querySelectorAll('*').forEach((element) => {
+          if (element.outerHTML === elementOuterHTML) {
+            console.log('found element to focus');
+            element.classList.add('focussed-on');
+          } else if (element.outerHTML.includes('focussed-on')) {
+            console.log('found element to unfocus');
+            element.classList.remove('focussed-on');
+          }
+        });
+        break;
+      }
+      case 'click_element': {
+        console.log('received click element message');
+        const elementOuterHTML = message.element;
 
-      document.querySelectorAll('*').forEach((element) => {
-        if (element.outerHTML === elementOuterHTML) {
-          console.log('found element to focus');
-          element.classList.add('focussed-on');
-        } else if (element.outerHTML.includes('focussed-on')) {
-          console.log('found element to unfocus');
-          element.classList.remove('focussed-on');
-        }
-      });
-    }
+        document.querySelectorAll('button').forEach((element) => {
+          if (element.outerHTML === elementOuterHTML) {
+            console.log('found element to click');
+            element.click();
+          }
+        });
 
-    if (message.type === 'click_element') {
-      console.log('received click element message');
-      const elementOuterHTML = message.element;
-
-      document.querySelectorAll('button').forEach((element) => {
-        if (element.outerHTML === elementOuterHTML) {
-          console.log('found element to click');
-          element.click();
-        }
-      });
-
-      document.querySelectorAll('a').forEach((element) => {
-        if (element.outerHTML === elementOuterHTML) {
-          console.log('found element to click');
-          element.click();
-        }
-      });
+        document.querySelectorAll('a').forEach((element) => {
+          if (element.outerHTML === elementOuterHTML) {
+            console.log('found element to click');
+            element.click();
+          }
+        });
+      }
     }
   });
 };
