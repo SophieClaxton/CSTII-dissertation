@@ -1,4 +1,5 @@
 import { CSTFollowNode } from '../../../models/CST/CST';
+import ElementSelector from '../ElementSelector';
 import Step from '../Step';
 
 interface FollowNodeProps {
@@ -9,7 +10,7 @@ const FollowNode: React.FC<FollowNodeProps> = ({ step }) => {
   return (
     <Step stepId={step.id} className="follow-step">
       <p>{step.type.toUpperCase()}</p>
-      {step.element && <p>{step.element.tag}</p>}
+      <ElementSelector element={step.element} />
     </Step>
   );
 };

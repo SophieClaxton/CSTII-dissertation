@@ -4,6 +4,7 @@ import UserDecisionNode from './UserDecisionNode';
 import { CSTInnerStepNode, CSTStepNodeType } from '../../../models/CST/CST';
 import { mapNodeIdToString } from '../../../models/CST/mappers';
 import Step from '../Step';
+import ElementSelector from '../ElementSelector';
 
 interface InnerStepNodeProps {
   step: CSTInnerStepNode;
@@ -40,7 +41,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
           }}
         >
           <p>{step.type.toUpperCase()}</p>
-          {step.element && <p>{step.element.tag}</p>}
+          <ElementSelector element={step.element} />
         </Step>
       );
   }
