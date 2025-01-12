@@ -41,7 +41,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
             listeners: listeners,
           }}
         >
-          <ElementSelector stepId={step.id} element={step.element} />
+          <ElementSelector step={step} />
         </Step>
       );
   }

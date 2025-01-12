@@ -1,32 +1,24 @@
 import Stack from '@mui/material/Stack/Stack';
-import InterfaceElement, {
-  defaultSelectableTags,
+import {
+  mapStepNodeToValidTags,
   mapTagToElementName,
-  SelectableTag,
 } from '../../models/InterfaceElement';
 import IconButton from '@mui/material/IconButton/IconButton';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
 import { SetClickableMessage } from '../../../common/message';
-import { CSTEndStepId, CSTInnerStepId } from '../../models/CST/CST';
 import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
 import { isInnerStepId } from '../../models/CST/testers';
 import { EditorActionType } from '../../models/EditorAction';
 import Typography from '@mui/material/Typography/Typography';
 import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
+import { CSTElementNode } from '../../models/CST/CST';
 
 interface ElementSelectorProps {
-  stepId: CSTInnerStepId | CSTEndStepId;
-  element: InterfaceElement | undefined;
-  selectableTags?: SelectableTag[];
-  isFollowStep?: boolean;
+  step: CSTElementNode;
 }
 
-const ElementSelector: React.FC<ElementSelectorProps> = ({
-  stepId,
-  element,
-  selectableTags,
-}) => {
+const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
   const { dispatch } = useUnpublishedScriptContext();
 
   const onAddElement = () => {
@@ -37,8 +29,8 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
       });
       const message: SetClickableMessage = {
         type: 'set_clickable',
-        stepId: mapIdToString(stepId),
-        validTags: selectableTags ?? [...defaultSelectableTags],
+        stepId: mapIdToString(step.id),
+        validTags: mapStepNodeToValidTags[step.type],
       };
       chrome.tabs
         .sendMessage(tab.id!, message)
@@ -48,29 +40,29 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
   };
 
   const onDeleteElement = () => {
-    if (isInnerStepId(stepId)) {
+    if (isInnerStepId(step.id)) {
       dispatch({
         type: EditorActionType.EditInnerStepElement,
-        stepId: stepId,
+        stepId: step.id,
         element: undefined,
         oldUrl: '',
       });
     } else {
       dispatch({
         type: EditorActionType.EditEndStepElement,
-        stepId: stepId,
+        stepId: step.id,
         element: undefined,
         oldUrl: '',
       });
     }
   };
 
-  const text = element ? (
+  const text = step.element ? (
     <Stack alignItems={'flex-start'} width={'12rem'}>
       <Typography variant="subtitle1">
-        {mapTagToElementName[element.tag]}
+        {mapTagToElementName[step.element.tag]}
       </Typography>
-      {element.textContent && (
+      {step.element.textContent && (
         <Typography
           variant="body2"
           sx={{
@@ -78,17 +70,18 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
             textWrap: 'noWrap',
             overflow: 'hidden',
             width: 'inherit',
+            textAlign: 'left',
           }}
         >
-          {`"${element.textContent}"`}
+          {`"${step.element.textContent}"`}
         </Typography>
       )}
     </Stack>
   ) : (
     <Typography>Add Element</Typography>
   );
-  const action = element ? onDeleteElement : onAddElement;
-  const icon = element ? <Delete /> : <Add />;
+  const action = step.element ? onDeleteElement : onAddElement;
+  const icon = step.element ? <Delete /> : <Add />;
 
   return (
     <Stack

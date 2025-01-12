@@ -1,3 +1,5 @@
+import { CSTElementNode } from './CST/CST';
+
 interface InterfaceElement {
   outerHTML: string;
   textContent?: string;
@@ -7,8 +9,6 @@ interface InterfaceElement {
 
 const defaultSelectableTags = [
   'IMG',
-  'BUTTON',
-  'INPUT',
   'P',
   'H1',
   'H2',
@@ -18,7 +18,12 @@ const defaultSelectableTags = [
   'H6',
 ] as const;
 
-const allSelectableTags = ['A', ...defaultSelectableTags] as const;
+const allSelectableTags = [
+  'A',
+  'BUTTON',
+  'INPUT',
+  ...defaultSelectableTags,
+] as const;
 
 type SelectableTag = (typeof allSelectableTags)[number];
 
@@ -41,6 +46,19 @@ const mapTagToElementName: Record<SelectableTag, string> = {
   H6: 'Heading',
 };
 
+const mapStepNodeToValidTags: Record<CSTElementNode['type'], SelectableTag[]> =
+  {
+    Follow: ['A'],
+    Click: ['BUTTON'],
+    Read: [...defaultSelectableTags],
+    'Scroll To': [...defaultSelectableTags],
+    Drag: [],
+    Write: ['INPUT'],
+    Select: ['INPUT'],
+    Check: ['INPUT'],
+    Draw: [],
+  };
+
 export default InterfaceElement;
 export type { SelectableTag };
 export {
@@ -48,4 +66,5 @@ export {
   defaultSelectableTags,
   allSelectableTags,
   mapTagToElementName,
+  mapStepNodeToValidTags,
 };

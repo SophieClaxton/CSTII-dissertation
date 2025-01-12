@@ -1,5 +1,7 @@
 import InterfaceElement from '../InterfaceElement';
 
+type ExcludeFromUnion<U, E> = U extends E ? never : U;
+
 interface CSTProgram {
   sections: CSTSectionNode[];
 }
@@ -86,6 +88,11 @@ type CSTInnerStepNode =
   | CSTInputNode;
 
 type CSTEndStepNode = CSTFollowNode | CSTUserDecisionEndStepNode;
+
+type CSTElementNode = ExcludeFromUnion<
+  ExcludeFromUnion<CSTStepNode, CSTUserDecisionEndStepNode>,
+  CSTUserDecisionInnerStepNode
+>;
 
 interface CSTFollowNode extends CSTStepBase {
   id: CSTEndStepId;
@@ -179,6 +186,7 @@ export type {
   CSTStepNode,
   CSTInnerStepNode,
   CSTEndStepNode,
+  CSTElementNode,
   CSTStepBase,
   CSTFollowNode,
   CSTClickNode,
