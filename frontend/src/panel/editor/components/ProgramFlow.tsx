@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
 import './styles/program.css';
 import Button from '@mui/material/Button/Button';
@@ -13,12 +13,9 @@ import { getEdges } from '../flowUtils/getEdges';
 import { saveUnpublishedScript } from '../scriptUtils/updateUnpublishedScript';
 import AlertSnackBar from './AlertSnackBar';
 import SectionNode from './CST/SectionNode';
-import { Message } from '../../../common/message';
-import { isEndStepId, isInnerStepId } from '../../models/CST/testers';
-import { EditorActionType } from '../../models/EditorAction';
-import { isSelectableTag } from '../../models/InterfaceElement';
-import { mapStringToId } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import { publishScript } from '../../api/scripts';
+import { clickedElementListener } from '../../../common/receiveMessage';
+import { ASTProgram } from '../../models/AST/AST';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
@@ -30,49 +27,41 @@ const ProgramFlow: React.FC = () => {
     message: '',
     error: false,
   });
-
   const [typeErrors, setTypeErrors] = useState<TypeCheckError[]>([]);
 
   const edges = getEdges(unpublishedScript.program.sections);
 
   const updateArrows = useXarrow();
 
-  const addMessageListener = useCallback(() => {
-    chrome.runtime.onMessage.addListener(async (message: Message) => {
-      if (message.type === 'clicked_element') {
-        const stepId = mapStringToId(message.stepId);
-        if (
-          !isSelectableTag(message.elementTag) ||
-          !(isEndStepId(stepId) || isInnerStepId(stepId))
-        ) {
-          throw Error('Received an invalid element tag or invalid stepId');
-        }
-        const receivedElement = {
-          outerHTML: message.elementOuterHtml,
-          tag: message.elementTag,
-          textContent: message.elementTextContent ?? undefined,
-          url: message.url,
-        };
-        // console.log(receivedElement);
-        dispatch({
-          type: EditorActionType.EditStepElement,
-          stepId: stepId,
-          element: receivedElement,
-          oldUrl: message.url,
-        });
-
-        if (isEndStepId(stepId) && message.elementTag === 'A') {
-          dispatch({
-            type: EditorActionType.AddSection,
-            sectionUrl: message.newUrl,
-            followStepId: stepId,
-          });
-        }
-      }
+  const onPublishScript = async (program: ASTProgram) => {
+    // TODO: create website if it doesn't already exist
+    const response = await publishScript({
+      title: unpublishedScript.title,
+      author_id: unpublishedScript.author.id,
+      created_at: unpublishedScript.created_at,
+      description: '',
+      program: program,
+      website_id: 1,
     });
-  }, [dispatch]);
+    if (response.status === 'Loaded') {
+      setSnackBar({
+        open: true,
+        message: 'Script Published',
+        error: false,
+      });
+    } else {
+      setSnackBar({
+        open: true,
+        message: 'Failed to publish script',
+        error: true,
+      });
+    }
+  };
 
-  useEffect(addMessageListener, [addMessageListener]);
+  useEffect(() => clickedElementListener(dispatch), [dispatch]);
+
+  // TODO: make title editable
+  // TODO: add editable description
 
   return (
     <>
@@ -96,30 +85,7 @@ const ProgramFlow: React.FC = () => {
             if (typeCheckResult.success === false) {
               setTypeErrors(typeCheckResult.errors);
             } else {
-              const publish = async () => {
-                const response = await publishScript({
-                  title: unpublishedScript.title,
-                  author_id: unpublishedScript.author.id,
-                  created_at: unpublishedScript.created_at,
-                  description: '',
-                  program: typeCheckResult.program,
-                  website_id: 1,
-                });
-                if (response.status === 'Loaded') {
-                  setSnackBar({
-                    open: true,
-                    message: 'Script Published',
-                    error: false,
-                  });
-                } else {
-                  setSnackBar({
-                    open: true,
-                    message: 'Failed to publish script',
-                    error: true,
-                  });
-                }
-              };
-              publish();
+              onPublishScript(typeCheckResult.program);
             }
           }}
         >

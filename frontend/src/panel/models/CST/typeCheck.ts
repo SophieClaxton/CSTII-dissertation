@@ -303,4 +303,4 @@ const mapUserDecisionStep = (
 };
 
 export default typeCheck;
-export type { TypeCheckError };
+export type { TypeCheckError, TypeCheckResult };

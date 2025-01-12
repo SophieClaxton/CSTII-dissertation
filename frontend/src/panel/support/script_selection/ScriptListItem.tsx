@@ -21,7 +21,8 @@ import {
 const ScriptListItem: React.FC<{
   script: ScriptWithAuthorAndWebsite | ScriptWithAuthor | ScriptWithWebsite;
 }> = ({ script }) => {
-  const dateString = script.created_at.toString();
+  const createdAtDate = new Date(script.created_at);
+  const dateString = createdAtDate.toLocaleDateString();
   const { goTo } = useNavigationContext();
 
   return (
