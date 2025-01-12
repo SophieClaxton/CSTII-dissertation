@@ -4,12 +4,11 @@ import {
   mapTagToElementName,
 } from '../../models/InterfaceElement';
 import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
-import { isInnerStepId, isSection } from '../../models/CST/testers';
 import { EditorActionType } from '../../models/EditorAction';
 import Typography from '@mui/material/Typography/Typography';
 import { CSTElementNode } from '../../models/CST/CST';
 import Dialog from '@mui/material/Dialog/Dialog';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import Button from '@mui/material/Button/Button';
@@ -24,6 +23,7 @@ import {
   sendUnsetFocusMessage,
 } from '../../../common/sendMessage';
 import Add from '@mui/icons-material/Add';
+import { isSection } from '../../models/CST/testers';
 
 interface ElementSelectorProps {
   step: CSTElementNode;
@@ -32,27 +32,9 @@ interface ElementSelectorProps {
 const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
   const { dispatch, unpublishedScript } = useUnpublishedScriptContext();
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState('');
+  const currentUrl = useRef('');
   const section = getSection(step.id.parentId, unpublishedScript.program);
   const sectionUrl = section && isSection(section) ? section.url : '';
-
-  const onDeleteElement = () => {
-    if (isInnerStepId(step.id)) {
-      dispatch({
-        type: EditorActionType.EditInnerStepElement,
-        stepId: step.id,
-        element: undefined,
-        oldUrl: '',
-      });
-    } else {
-      dispatch({
-        type: EditorActionType.EditEndStepElement,
-        stepId: step.id,
-        element: undefined,
-        oldUrl: '',
-      });
-    }
-  };
 
   const text = step.element ? (
     <Stack alignItems={'flex-start'} width={'12rem'}>
@@ -104,7 +86,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
               active: true,
               lastFocusedWindow: true,
             });
-            setCurrentUrl(tab.url ?? '');
+            currentUrl.current = tab.url ?? '';
             if (step.element || (sectionUrl != '' && tab.url != sectionUrl)) {
               setOpenEditDialog(true);
             } else {
@@ -133,7 +115,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
       </Button>
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
         <DialogTitle>Edit Element</DialogTitle>
-        {sectionUrl != '' && sectionUrl != currentUrl && (
+        {sectionUrl != '' && sectionUrl != currentUrl.current && (
           <DialogContent>
             <DialogContentText>
               You are not on the correct website to select elements for this
@@ -147,12 +129,12 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
           {step.element && (
             <>
               <Button
-                disabled={sectionUrl != currentUrl}
+                disabled={sectionUrl != currentUrl.current}
                 onClick={() => {
                   sendClickabilityMessage(
                     step.id,
                     mapStepNodeToValidTags[step.type],
-                    currentUrl,
+                    currentUrl.current,
                   );
                   setOpenEditDialog(false);
                 }}
@@ -161,7 +143,12 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
               </Button>
               <Button
                 onClick={() => {
-                  onDeleteElement();
+                  dispatch({
+                    type: EditorActionType.EditStepElement,
+                    stepId: step.id,
+                    element: undefined,
+                    oldUrl: '',
+                  });
                   setOpenEditDialog(false);
                 }}
               >

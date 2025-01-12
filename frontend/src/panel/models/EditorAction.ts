@@ -1,26 +1,21 @@
 import InterfaceElement from './InterfaceElement';
 import {
   CSTEndStepId,
-  CSTEndStepNode,
-  CSTInnerStepId,
   CSTInnerStepNode,
+  CSTSection,
   CSTSectionId,
-  CSTSubsectionId,
+  CSTStepNode,
   CSTUserDecisionNode,
 } from './CST/CST';
 
 enum EditorActionType {
   EditProgramName = 'editProgramName',
-  EditProgramAuthor = 'editProgramAuthor',
-  EditInnerStepElement = 'editInnerStepElement',
   AddSection = 'addSection',
   DeleteSection = 'deleteSection',
-  AddInnerStep = 'addInnerStep',
-  DeleteInnerStep = 'deleteInnerStep',
+  AddStep = 'addStep',
+  EditStepElement = 'editStepElement',
+  DeleteStep = 'deleteStep',
   RearrangeInnerSteps = 'rearrangeInnerSteps',
-  EditEndStepElement = 'editEndStepElement',
-  AddEndStep = 'addEndStep',
-  DeleteEndStep = 'deleteEndStep',
   ChangeUserDecisionStepToInnerStep = 'changeUserDecisionStepToInnerStep',
   ChangeUserDecisionStepToEndStep = 'changeUserDecisionStepToEndStep',
 }
@@ -31,27 +26,18 @@ interface BaseEditorAction {
 
 type EditorAction =
   | EditProgramNameAction
-  | EditProgramAuthorAction
   | AddSectionAction
   | DeleteSectionAction
-  | EditInnerStepElementAction
-  | AddInnerStepAction
-  | DeleteInnerStepAction
+  | EditStepElementAction
+  | AddStepAction
+  | DeleteStepAction
   | RearrangeInnerStepsAction
-  | EditEndStepElementAction
-  | AddEndStepAction
-  | DeleteEndStepAction
   | ChangeUserDecisionStepToInnerStepAction
   | ChangeUserDecisionStepToEndStepAction;
 
 interface EditProgramNameAction extends BaseEditorAction {
   type: EditorActionType.EditProgramName;
   newName: string;
-}
-
-interface EditProgramAuthorAction extends BaseEditorAction {
-  type: EditorActionType.EditProgramAuthor;
-  newAuthor: string;
 }
 
 interface AddSectionAction extends BaseEditorAction {
@@ -65,57 +51,38 @@ interface DeleteSectionAction extends BaseEditorAction {
   sectionId: CSTSectionId;
 }
 
-interface EditInnerStepElementAction extends BaseEditorAction {
-  type: EditorActionType.EditInnerStepElement;
-  stepId: CSTInnerStepId;
+interface EditStepElementAction extends BaseEditorAction {
+  type: EditorActionType.EditStepElement;
+  stepId: CSTStepNode['id'];
   element: InterfaceElement | undefined;
   oldUrl: string;
 }
 
-interface AddInnerStepAction extends BaseEditorAction {
-  type: EditorActionType.AddInnerStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
-  innerStep: CSTInnerStepNode;
+interface AddStepAction extends BaseEditorAction {
+  type: EditorActionType.AddStep;
+  step: CSTStepNode;
 }
 
-interface DeleteInnerStepAction extends BaseEditorAction {
-  type: EditorActionType.DeleteInnerStep;
-  innerStepId: CSTInnerStepId;
+interface DeleteStepAction extends BaseEditorAction {
+  type: EditorActionType.DeleteStep;
+  stepId: CSTStepNode['id'];
 }
 
 interface RearrangeInnerStepsAction extends BaseEditorAction {
   type: EditorActionType.RearrangeInnerSteps;
-  sectionId: CSTSectionId | CSTSubsectionId;
+  sectionId: CSTSection['id'];
   innerSteps: CSTInnerStepNode[];
-}
-
-interface EditEndStepElementAction extends BaseEditorAction {
-  type: EditorActionType.EditEndStepElement;
-  stepId: CSTEndStepId;
-  element: InterfaceElement | undefined;
-  oldUrl: string;
-}
-
-interface AddEndStepAction extends BaseEditorAction {
-  type: EditorActionType.AddEndStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
-  endStep: CSTEndStepNode;
-}
-
-interface DeleteEndStepAction extends BaseEditorAction {
-  type: EditorActionType.DeleteEndStep;
-  endStepId: CSTEndStepId;
 }
 
 interface ChangeUserDecisionStepToInnerStepAction extends BaseEditorAction {
   type: EditorActionType.ChangeUserDecisionStepToInnerStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
+  sectionId: CSTSection['id'];
   userDecisionStep: CSTUserDecisionNode;
 }
 
 interface ChangeUserDecisionStepToEndStepAction extends BaseEditorAction {
   type: EditorActionType.ChangeUserDecisionStepToEndStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
+  sectionId: CSTSection['id'];
   userDecisionStep: CSTUserDecisionNode;
 }
 
@@ -123,16 +90,12 @@ export { EditorActionType };
 export type {
   EditorAction,
   EditProgramNameAction,
-  EditProgramAuthorAction,
   AddSectionAction,
   DeleteSectionAction,
-  EditInnerStepElementAction,
-  AddInnerStepAction,
-  DeleteInnerStepAction,
+  AddStepAction,
+  EditStepElementAction,
+  DeleteStepAction,
   RearrangeInnerStepsAction,
-  EditEndStepElementAction,
-  AddEndStepAction,
-  DeleteEndStepAction,
   ChangeUserDecisionStepToInnerStepAction,
   ChangeUserDecisionStepToEndStepAction,
 };

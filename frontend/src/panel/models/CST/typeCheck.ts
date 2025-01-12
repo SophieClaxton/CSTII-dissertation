@@ -48,6 +48,7 @@ import {
   CSTUserDecisionEndStepNode,
   CSTWriteNode,
 } from './CST';
+import { isSection } from './testers';
 
 type TypeCheckResult =
   | { success: true; program: ASTProgram }
@@ -127,17 +128,17 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
   }
 
   for (const innerStep of innerSteps) {
-    if (!nextStep) {
+    if (!isASTStepNode(nextStep)) {
       break;
     }
     nextStep = mapInnerStep(innerStep, nextStep);
   }
 
-  if (!nextStep) {
+  if (!isASTStepNode(nextStep)) {
     console.log(`Type check failed for ${mapIdToString(section.id)}`);
   }
   return isASTStepNode(nextStep)
-    ? 'url' in section
+    ? isSection(section)
       ? ({ type: sectionType, start: nextStep, url: section.url } as O)
       : ({ type: sectionType, start: nextStep } as O)
     : nextStep;
@@ -168,8 +169,9 @@ const mapStepNode = <I extends CSTInnerStepNode, R extends ASTStepNode>(
       key,
       node[key as keyof I],
     ]);
-    return Object.fromEntries(objectEntries) as R;
+    return { ...Object.fromEntries(objectEntries), next } as R;
   }
+  console.log(next);
   return next;
 };
 

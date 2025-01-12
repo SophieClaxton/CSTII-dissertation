@@ -15,7 +15,6 @@ import DragIndicator from '@mui/icons-material/DragIndicator';
 import IconButton from '@mui/material/IconButton/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../models/EditorAction';
-import { isInnerStepId } from '../../models/CST/testers';
 import Box from '@mui/material/Box/Box';
 import { Typography } from '@mui/material';
 import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
@@ -98,18 +97,7 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
         {children}
       </Box>
       <IconButton
-        onClick={() => {
-          if (isInnerStepId(stepId)) {
-            return dispatch({
-              type: EditorActionType.DeleteInnerStep,
-              innerStepId: stepId,
-            });
-          }
-          return dispatch({
-            type: EditorActionType.DeleteEndStep,
-            endStepId: stepId,
-          });
-        }}
+        onClick={() => dispatch({ type: EditorActionType.DeleteStep, stepId })}
         sx={{ height: '100%', padding: 0, borderRadius: 0 }}
       >
         <Delete />

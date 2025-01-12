@@ -12,7 +12,7 @@ enum ASTNodeType {
   Follow = 'Follow',
   Click = 'Click',
   Read = 'Read',
-  ScrollTo = 'Scroll-To',
+  ScrollTo = 'Scroll To',
   Drag = 'Drag',
   UserDecision = 'User Decision',
   Write = 'Write',

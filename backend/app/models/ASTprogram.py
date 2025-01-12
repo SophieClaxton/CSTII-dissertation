@@ -7,7 +7,7 @@ from .element import Element
 
 
 class ASTProgram(BaseModel):
-    section: ASTSectionNode
+    start: ASTSectionNode
 
 
 class ASTNodeType(str, Enum):
@@ -18,7 +18,7 @@ class ASTNodeType(str, Enum):
     Follow = "Follow"
     Click = "Click"
     Read = "Read"
-    ScrollTo = "Scroll-To"
+    ScrollTo = "Scroll To"
     Drag = "Drag"
     UserDecision = "User Decision"
     Write = "Write"

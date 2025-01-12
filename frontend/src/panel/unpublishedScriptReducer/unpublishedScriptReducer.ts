@@ -1,56 +1,51 @@
 import { EditorAction, EditorActionType } from '../models/EditorAction';
 import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import { addSection, deleteSection } from './sectionActions';
-import {
-  editEndStepElement,
-  addEndStep,
-  deleteEndStep,
-} from './endStepActions';
-import {
-  editInnerStepElement,
-  addInnerStep,
-  deleteInnerStep,
-  rearrangeInnerSteps,
-} from './innerStepActions';
+import { rearrangeInnerSteps } from './innerStepActions';
+import { CSTProgram } from '../models/CST/CST';
+import { addStep, deleteStep, editStepElement } from './stepActions';
+
+const editScriptProgram =
+  (script: UnpublishedScript) =>
+  <T extends EditorAction>(
+    action: T,
+    programChange: (program: CSTProgram, action: T) => CSTProgram,
+  ): UnpublishedScript => {
+    return { ...script, program: programChange(script.program, action) };
+  };
 
 const unpublishedScriptReducer = (
   unpublishedScript: UnpublishedScript,
   action: EditorAction,
 ): UnpublishedScript => {
   console.log(`Dispatching to editorProgramReducer action:${action.type}`);
+  const editProgram = editScriptProgram(unpublishedScript);
   switch (action.type) {
     case EditorActionType.EditProgramName:
       return {
         ...unpublishedScript,
         title: action.newName,
       };
-    case EditorActionType.EditProgramAuthor:
-      return {
-        ...unpublishedScript,
-        author: { ...unpublishedScript.author, name: action.newAuthor },
-      };
     case EditorActionType.AddSection:
-      return addSection(unpublishedScript, action);
+      return editProgram(action, addSection);
     case EditorActionType.DeleteSection:
-      return deleteSection(unpublishedScript, action);
-    case EditorActionType.EditInnerStepElement:
-      return editInnerStepElement(unpublishedScript, action);
-    case EditorActionType.AddInnerStep:
-      return addInnerStep(unpublishedScript, action);
-    case EditorActionType.DeleteInnerStep:
-      return deleteInnerStep(unpublishedScript, action);
+      return editProgram(action, deleteSection);
+    case EditorActionType.AddStep:
+      return editProgram(action, addStep);
+    case EditorActionType.EditStepElement:
+      return editProgram(action, editStepElement);
+    case EditorActionType.DeleteStep:
+      return editProgram(action, deleteStep);
     case EditorActionType.RearrangeInnerSteps:
-      return rearrangeInnerSteps(unpublishedScript, action);
-    case EditorActionType.EditEndStepElement:
-      return editEndStepElement(unpublishedScript, action);
-    case EditorActionType.AddEndStep:
-      return addEndStep(unpublishedScript, action);
-    case EditorActionType.DeleteEndStep:
-      return deleteEndStep(unpublishedScript, action);
+      return editProgram(action, rearrangeInnerSteps);
     case EditorActionType.ChangeUserDecisionStepToInnerStep:
       return unpublishedScript;
     case EditorActionType.ChangeUserDecisionStepToEndStep:
       return unpublishedScript;
+    default: {
+      const e: never = action;
+      return e;
+    }
   }
 };
 

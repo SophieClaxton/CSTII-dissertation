@@ -18,6 +18,7 @@ import { isEndStepId, isInnerStepId } from '../../models/CST/testers';
 import { EditorActionType } from '../../models/EditorAction';
 import { isSelectableTag } from '../../models/InterfaceElement';
 import { mapStringToId } from '../../unpublishedScriptReducer/mappers/nodeIds';
+import { publishScript } from '../../api/scripts';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
@@ -39,39 +40,33 @@ const ProgramFlow: React.FC = () => {
   const addMessageListener = useCallback(() => {
     chrome.runtime.onMessage.addListener(async (message: Message) => {
       if (message.type === 'clicked_element') {
-        if (!isSelectableTag(message.elementTag)) {
-          throw Error('Received an invalid element tag');
-        }
         const stepId = mapStringToId(message.stepId);
+        if (
+          !isSelectableTag(message.elementTag) ||
+          !(isEndStepId(stepId) || isInnerStepId(stepId))
+        ) {
+          throw Error('Received an invalid element tag or invalid stepId');
+        }
         const receivedElement = {
           outerHTML: message.elementOuterHtml,
           tag: message.elementTag,
           textContent: message.elementTextContent ?? undefined,
           url: message.url,
         };
-        console.log(receivedElement);
-        if (isInnerStepId(stepId)) {
-          dispatch({
-            type: EditorActionType.EditInnerStepElement,
-            stepId: stepId,
-            element: receivedElement,
-            oldUrl: message.url,
-          });
-        } else if (isEndStepId(stepId)) {
-          dispatch({
-            type: EditorActionType.EditEndStepElement,
-            stepId: stepId,
-            element: receivedElement,
-            oldUrl: message.url,
-          });
+        // console.log(receivedElement);
+        dispatch({
+          type: EditorActionType.EditStepElement,
+          stepId: stepId,
+          element: receivedElement,
+          oldUrl: message.url,
+        });
 
-          if (message.elementTag === 'A') {
-            dispatch({
-              type: EditorActionType.AddSection,
-              sectionUrl: message.newUrl,
-              followStepId: stepId,
-            });
-          }
+        if (isEndStepId(stepId) && message.elementTag === 'A') {
+          dispatch({
+            type: EditorActionType.AddSection,
+            sectionUrl: message.newUrl,
+            followStepId: stepId,
+          });
         }
       }
     });
@@ -97,8 +92,34 @@ const ProgramFlow: React.FC = () => {
           variant={'contained'}
           onClick={() => {
             const typeCheckResult = typeCheck(unpublishedScript.program);
-            if (!typeCheckResult.success) {
+            console.log(typeCheckResult);
+            if (typeCheckResult.success === false) {
               setTypeErrors(typeCheckResult.errors);
+            } else {
+              const publish = async () => {
+                const response = await publishScript({
+                  title: unpublishedScript.title,
+                  author_id: unpublishedScript.author.id,
+                  created_at: unpublishedScript.created_at,
+                  description: '',
+                  program: typeCheckResult.program,
+                  website_id: 1,
+                });
+                if (response.status === 'Loaded') {
+                  setSnackBar({
+                    open: true,
+                    message: 'Script Published',
+                    error: false,
+                  });
+                } else {
+                  setSnackBar({
+                    open: true,
+                    message: 'Failed to publish script',
+                    error: true,
+                  });
+                }
+              };
+              publish();
             }
           }}
         >

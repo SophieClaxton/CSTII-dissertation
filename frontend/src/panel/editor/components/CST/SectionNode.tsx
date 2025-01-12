@@ -1,6 +1,5 @@
 import { CSTSectionNode, CSTStepNode } from '../../../models/CST/CST';
 import EndStepNode from './EndStepNode';
-import { addEditorStepToSection } from '../../../models/CST/setters';
 import { getNodeChoices } from '../../../models/CST/getters';
 import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
 import InnerStepContainer from '../InnerStepContainer';
@@ -43,7 +42,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         parentId={section.id}
       />
       <AddNodeButton<CSTStepNode>
-        onAdd={(step) => addEditorStepToSection(dispatch, section, step)}
+        onAdd={(step) => dispatch({ type: EditorActionType.AddStep, step })}
         nodeChoices={getNodeChoices(section)}
       />
       {section.endStep && <EndStepNode endStep={section.endStep} />}

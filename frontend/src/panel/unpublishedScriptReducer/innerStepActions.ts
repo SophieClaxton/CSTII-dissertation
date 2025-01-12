@@ -1,11 +1,11 @@
-import { UnpublishedScript } from '../models/API/UnpublishedScript';
-import { isSection } from '../models/CST/testers';
 import {
-  AddInnerStepAction,
-  RearrangeInnerStepsAction,
-  EditInnerStepElementAction,
-  DeleteInnerStepAction,
-} from '../models/EditorAction';
+  CSTInnerStepId,
+  CSTInnerStepNode,
+  CSTProgram,
+} from '../models/CST/CST';
+import { isSection } from '../models/CST/testers';
+import { RearrangeInnerStepsAction } from '../models/EditorAction';
+import InterfaceElement from '../models/InterfaceElement';
 import { getSection } from './getters/nodes';
 import { mapIdToString } from './mappers/nodeIds';
 import {
@@ -14,96 +14,84 @@ import {
 } from './mappers/nodes';
 
 const addInnerStep = (
-  unpublishedScript: UnpublishedScript,
-  action: AddInnerStepAction,
-): UnpublishedScript => {
-  const section = getSection(action.sectionId, unpublishedScript.program);
+  program: CSTProgram,
+  innerStep: CSTInnerStepNode,
+): CSTProgram => {
+  const section = getSection(innerStep.id.parentId, program);
   if (!section) {
-    return unpublishedScript;
+    return program;
   }
   console.log(`Adding inner step to section ${mapIdToString(section.id)}`);
-  const newEditorProgram = updateProgramSections(
-    unpublishedScript.program,
+  return updateProgramSections(
+    program,
     section.id,
-    updateSectionInnerSteps([...section.innerSteps, action.innerStep]),
+    updateSectionInnerSteps([...section.innerSteps, innerStep]),
   );
-  // console.log(newEditorProgram);
-  return {
-    ...unpublishedScript,
-    program: newEditorProgram,
-  };
 };
 
 const rearrangeInnerSteps = (
-  unpublishedScript: UnpublishedScript,
+  program: CSTProgram,
   action: RearrangeInnerStepsAction,
-): UnpublishedScript => {
-  const section = getSection(action.sectionId, unpublishedScript.program);
+): CSTProgram => {
+  const section = getSection(action.sectionId, program);
   if (!section) {
-    return unpublishedScript;
+    return program;
   }
-  const newEditorProgram = updateProgramSections(
-    unpublishedScript.program,
+  return updateProgramSections(
+    program,
     section.id,
     updateSectionInnerSteps(action.innerSteps),
   );
-  return { ...unpublishedScript, program: newEditorProgram };
 };
 
 const editInnerStepElement = (
-  unpublishedScript: UnpublishedScript,
-  action: EditInnerStepElementAction,
-): UnpublishedScript => {
-  const section = getSection(action.stepId.parentId, unpublishedScript.program);
+  program: CSTProgram,
+  innerStepId: CSTInnerStepId,
+  element: InterfaceElement | undefined,
+  url: string,
+): CSTProgram => {
+  const section = getSection(innerStepId.parentId, program);
   if (!section) {
-    return unpublishedScript;
+    return program;
   }
   const newEditorProgram = updateProgramSections(
-    unpublishedScript.program,
+    program,
     section.id,
     updateSectionInnerSteps(
       section.innerSteps.map((step) =>
-        mapIdToString(step.id) === mapIdToString(action.stepId)
-          ? { ...step, element: action.element }
+        mapIdToString(step.id) === mapIdToString(innerStepId)
+          ? { ...step, element: element }
           : step,
       ),
     ),
   );
   if (isSection(section) && section.url === '') {
-    const url = action.oldUrl;
     return {
-      ...unpublishedScript,
-      program: {
-        sections: newEditorProgram.sections.map((s) =>
-          mapIdToString(s.id) === mapIdToString(section.id) ? { ...s, url } : s,
-        ),
-      },
+      sections: newEditorProgram.sections.map((s) =>
+        mapIdToString(s.id) === mapIdToString(section.id) ? { ...s, url } : s,
+      ),
     };
   }
-  return { ...unpublishedScript, program: newEditorProgram };
+  return newEditorProgram;
 };
 
 const deleteInnerStep = (
-  unpublishedScript: UnpublishedScript,
-  action: DeleteInnerStepAction,
-): UnpublishedScript => {
-  const section = getSection(
-    action.innerStepId.parentId,
-    unpublishedScript.program,
-  );
+  program: CSTProgram,
+  stepId: CSTInnerStepId,
+): CSTProgram => {
+  const section = getSection(stepId.parentId, program);
   if (!section) {
-    return unpublishedScript;
+    return program;
   }
-  const newEditorProgram = updateProgramSections(
-    unpublishedScript.program,
+  return updateProgramSections(
+    program,
     section.id,
     updateSectionInnerSteps(
       section.innerSteps.filter(
-        (step) => mapIdToString(step.id) != mapIdToString(action.innerStepId),
+        (step) => mapIdToString(step.id) != mapIdToString(stepId),
       ),
     ),
   );
-  return { ...unpublishedScript, program: newEditorProgram };
 };
 
 export {

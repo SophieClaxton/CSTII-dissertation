@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { handleError } from '../models/API/APIError';
-import { Script, ScriptWithAuthorAndWebsite } from '../models/API/Script';
+import {
+  BaseScript,
+  PublishScriptRequest,
+  Script,
+  ScriptWithAuthorAndWebsite,
+} from '../models/API/Script';
 import APISuccess from '../models/API/APISuccess';
 import APIResponse from '../models/API/APIResponse';
 
@@ -36,6 +41,23 @@ const getScript = async (id: number): Promise<APIResponse<Script>> => {
     return {
       status: 'Loaded',
       data: response.data as Script,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
+const publishScript = async (
+  script: PublishScriptRequest,
+): Promise<APIResponse<BaseScript>> => {
+  try {
+    const response = await scriptsEndpoint.post('', script);
+    return {
+      status: 'Loaded',
+      data: response.data as BaseScript,
     };
   } catch (err: unknown) {
     return {
@@ -97,6 +119,7 @@ const getWebsiteScripts = async (
 export {
   getScripts,
   getScript,
+  publishScript,
   deleteScript,
   getUserScripts,
   getWebsiteScripts,

@@ -1,42 +1,40 @@
-import { UnpublishedScript } from '../models/API/UnpublishedScript';
-import { CSTEndStepNode, CSTStepNodeType } from '../models/CST/CST';
-import { isSection } from '../models/CST/testers';
 import {
-  AddEndStepAction,
-  EditEndStepElementAction,
-  DeleteEndStepAction,
-} from '../models/EditorAction';
+  CSTEndStepId,
+  CSTEndStepNode,
+  CSTProgram,
+  CSTStepNodeType,
+} from '../models/CST/CST';
+import { isSection } from '../models/CST/testers';
+import InterfaceElement from '../models/InterfaceElement';
 import { getSection } from './getters/nodes';
 import { mapIdToString } from './mappers/nodeIds';
 import { updateProgramSections, updateSectionEndStep } from './mappers/nodes';
 
 const addEndStep = (
-  unpublishedScript: UnpublishedScript,
-  action: AddEndStepAction,
-): UnpublishedScript => {
-  const section = getSection(action.sectionId, unpublishedScript.program);
+  program: CSTProgram,
+  endStep: CSTEndStepNode,
+): CSTProgram => {
+  const section = getSection(endStep.id.parentId, program);
   if (!section) {
-    return unpublishedScript;
+    return program;
   }
   console.log(`Adding end step to section ${mapIdToString(section.id)}`);
-  const newEditorProgram = updateProgramSections(
-    unpublishedScript.program,
+  return updateProgramSections(
+    program,
     section.id,
-    updateSectionEndStep(action.endStep),
+    updateSectionEndStep(endStep),
   );
-  return {
-    ...unpublishedScript,
-    program: newEditorProgram,
-  };
 };
 
 const editEndStepElement = (
-  unpublishedScript: UnpublishedScript,
-  action: EditEndStepElementAction,
-): UnpublishedScript => {
-  const section = getSection(action.stepId.parentId, unpublishedScript.program);
+  program: CSTProgram,
+  endStepId: CSTEndStepId,
+  element: InterfaceElement | undefined,
+  url: string,
+): CSTProgram => {
+  const section = getSection(endStepId.parentId, program);
   if (!section || !section.endStep) {
-    return unpublishedScript;
+    return program;
   }
   let newEndStep: CSTEndStepNode;
   switch (section.endStep.type) {
@@ -44,7 +42,7 @@ const editEndStepElement = (
       newEndStep = {
         type: section.endStep.type,
         id: section.endStep.id,
-        element: action.element,
+        element: element,
       };
       break;
     case CSTStepNodeType.UserDecision:
@@ -52,46 +50,34 @@ const editEndStepElement = (
   }
 
   const newEditorProgram = updateProgramSections(
-    unpublishedScript.program,
+    program,
     section.id,
     updateSectionEndStep(newEndStep),
   );
 
   if (isSection(section) && section.url === '') {
-    const url = action.oldUrl;
     return {
-      ...unpublishedScript,
-      program: {
-        sections: newEditorProgram.sections.map((s) =>
-          mapIdToString(s.id) === mapIdToString(section.id) ? { ...s, url } : s,
-        ),
-      },
+      sections: newEditorProgram.sections.map((s) =>
+        mapIdToString(s.id) === mapIdToString(section.id) ? { ...s, url } : s,
+      ),
     };
   }
-  return { ...unpublishedScript, program: newEditorProgram };
+  return newEditorProgram;
 };
 
 const deleteEndStep = (
-  unpublishedScript: UnpublishedScript,
-  action: DeleteEndStepAction,
-): UnpublishedScript => {
-  const section = getSection(
-    action.endStepId.parentId,
-    unpublishedScript.program,
-  );
+  program: CSTProgram,
+  endStepId: CSTEndStepId,
+): CSTProgram => {
+  const section = getSection(endStepId.parentId, program);
   if (!section) {
-    return unpublishedScript;
+    return program;
   }
-  const newEditorProgram = updateProgramSections(
-    unpublishedScript.program,
+  return updateProgramSections(
+    program,
     section.id,
     updateSectionEndStep(undefined),
   );
-  // console.log(newEditorProgram);
-  return {
-    ...unpublishedScript,
-    program: newEditorProgram,
-  };
 };
 
 export { addEndStep, editEndStepElement, deleteEndStep };

@@ -22,10 +22,6 @@ const isASTSubsectionNode = (
 const isASTStepNode = (
   value: ASTNode | TypeCheckError[],
 ): value is ASTStepNode => {
-  if (!('type' in value)) {
-    return false;
-  }
-
   const stepNodeTypes = [
     ASTNodeType.End,
     ASTNodeType.Follow,
@@ -39,7 +35,8 @@ const isASTStepNode = (
     ASTNodeType.Check,
     ASTNodeType.Draw,
   ];
-  return stepNodeTypes.includes(value.type);
+
+  return 'type' in value && stepNodeTypes.includes(value.type);
 };
 
 export { isASTSectionNode, isASTSubsectionNode, isASTStepNode };

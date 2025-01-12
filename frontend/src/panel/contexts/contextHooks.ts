@@ -45,6 +45,8 @@ const createTypeErrorsContext = (
   typeErrors: TypeCheckError[],
 ): Map<string, string> => {
   const typeErrorsMap = new Map<string, string>();
+  console.log('Constructing type error context from');
+  console.log(typeErrors);
   typeErrors.forEach((error: TypeCheckError) => {
     typeErrorsMap.set(mapIdToString(error.location), error.reason);
   });

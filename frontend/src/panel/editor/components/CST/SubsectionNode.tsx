@@ -1,11 +1,11 @@
 import { CSTSubsectionNode } from '../../../models/CST/CST';
-import { addEditorStepToSection } from '../../../models/CST/setters';
 import { getNodeChoices } from '../../../models/CST/getters';
 import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
 import AddNodeButton from '../AddNodeButton';
 import InnerStepContainer from '../InnerStepContainer';
 import EndStepNode from './EndStepNode';
 import '../styles/subsection.css';
+import { EditorActionType } from '../../../models/EditorAction';
 
 interface SubsectionNodeProps {
   subsection: CSTSubsectionNode;
@@ -23,7 +23,7 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
         parentId={subsection.id}
       />
       <AddNodeButton
-        onAdd={(step) => addEditorStepToSection(dispatch, subsection, step)}
+        onAdd={(step) => dispatch({ type: EditorActionType.AddStep, step })}
         nodeChoices={getNodeChoices(subsection)}
       />
       {subsection.endStep && <EndStepNode endStep={subsection.endStep} />}

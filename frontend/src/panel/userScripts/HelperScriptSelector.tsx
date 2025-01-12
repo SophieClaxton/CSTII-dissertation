@@ -26,7 +26,7 @@ const HelperScriptSelector = () => {
   useEffect(() => {
     const getUserId = async () => {
       const storedData = await chrome.storage.local.get('userId');
-      const storedUserId = storedData['userId'] as number;
+      const storedUserId = Number(storedData['userId']);
       console.log(`Found userId: ${storedUserId}`);
       if (storedUserId) {
         setUserId(storedUserId);
@@ -46,7 +46,7 @@ const HelperScriptSelector = () => {
       }
       const response = await getUser(userId);
       setUserData(response);
-      console.log(response);
+      // console.log(response);
     };
     getUserData();
   }, [userId]);
