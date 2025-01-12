@@ -43,21 +43,11 @@ const ProgramFlow: React.FC = () => {
           throw Error('Received an invalid element tag');
         }
         const stepId = mapStringToId(message.stepId);
-        const [oldTab] = await chrome.tabs.query({
-          active: true,
-          lastFocusedWindow: true,
-        });
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        const [tab] = await chrome.tabs.query({
-          active: true,
-          lastFocusedWindow: true,
-        });
-
         const receivedElement = {
           outerHTML: message.elementOuterHtml,
           tag: message.elementTag,
           textContent: message.elementTextContent ?? undefined,
-          url: tab.url || '',
+          url: message.url,
         };
         console.log(receivedElement);
         if (isInnerStepId(stepId)) {
@@ -65,20 +55,20 @@ const ProgramFlow: React.FC = () => {
             type: EditorActionType.EditInnerStepElement,
             stepId: stepId,
             element: receivedElement,
-            oldUrl: oldTab.url || '',
+            oldUrl: message.url,
           });
         } else if (isEndStepId(stepId)) {
           dispatch({
             type: EditorActionType.EditEndStepElement,
             stepId: stepId,
             element: receivedElement,
-            oldUrl: oldTab.url || '',
+            oldUrl: message.url,
           });
 
-          if (message.elementTag === 'A' && tab.url) {
+          if (message.elementTag === 'A') {
             dispatch({
               type: EditorActionType.AddSection,
-              sectionUrl: tab.url,
+              sectionUrl: message.newUrl,
               followStepId: stepId,
             });
           }

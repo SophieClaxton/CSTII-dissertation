@@ -3,41 +3,38 @@ import {
   mapStepNodeToValidTags,
   mapTagToElementName,
 } from '../../models/InterfaceElement';
-import IconButton from '@mui/material/IconButton/IconButton';
-import Add from '@mui/icons-material/Add';
-import Delete from '@mui/icons-material/Delete';
-import { SetClickableMessage } from '../../../common/message';
 import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
-import { isInnerStepId } from '../../models/CST/testers';
+import { isInnerStepId, isSection } from '../../models/CST/testers';
 import { EditorActionType } from '../../models/EditorAction';
 import Typography from '@mui/material/Typography/Typography';
-import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import { CSTElementNode } from '../../models/CST/CST';
+import Dialog from '@mui/material/Dialog/Dialog';
+import { useState } from 'react';
+import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
+import DialogActions from '@mui/material/DialogActions/DialogActions';
+import Button from '@mui/material/Button/Button';
+import { getSection } from '../../unpublishedScriptReducer/getters/nodes';
+import DialogContent from '@mui/material/DialogContent/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText/DialogContentText';
+import Link from '@mui/material/Link/Link';
+import Edit from '@mui/icons-material/Edit';
+import {
+  sendClickabilityMessage,
+  sendSetFocusMessage,
+  sendUnsetFocusMessage,
+} from '../../../common/sendMessage';
+import Add from '@mui/icons-material/Add';
 
 interface ElementSelectorProps {
   step: CSTElementNode;
 }
 
 const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
-  const { dispatch } = useUnpublishedScriptContext();
-
-  const onAddElement = () => {
-    const sendClickabilityMessage = async () => {
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true,
-      });
-      const message: SetClickableMessage = {
-        type: 'set_clickable',
-        stepId: mapIdToString(step.id),
-        validTags: mapStepNodeToValidTags[step.type],
-      };
-      chrome.tabs
-        .sendMessage(tab.id!, message)
-        .catch((error) => console.log(error));
-    };
-    sendClickabilityMessage();
-  };
+  const { dispatch, unpublishedScript } = useUnpublishedScriptContext();
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [currentUrl, setCurrentUrl] = useState('');
+  const section = getSection(step.id.parentId, unpublishedScript.program);
+  const sectionUrl = section && isSection(section) ? section.url : '';
 
   const onDeleteElement = () => {
     if (isInnerStepId(step.id)) {
@@ -59,12 +56,13 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
 
   const text = step.element ? (
     <Stack alignItems={'flex-start'} width={'12rem'}>
-      <Typography variant="subtitle1">
+      <Typography variant="subtitle1" color="text.primary">
         {mapTagToElementName[step.element.tag]}
       </Typography>
       {step.element.textContent && (
         <Typography
           variant="body2"
+          color="text.primary"
           sx={{
             textOverflow: 'ellipsis',
             textWrap: 'noWrap',
@@ -80,37 +78,101 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
   ) : (
     <Typography>Add Element</Typography>
   );
-  const action = step.element ? onDeleteElement : onAddElement;
-  const icon = step.element ? <Delete /> : <Add />;
 
   return (
-    <Stack
-      direction={'row'}
-      justifyContent={'space-between'}
-      spacing={1}
-      sx={{
-        width: '100%',
-        flexGrow: 1,
-        flexShrink: 1,
-        backgroundColor: 'primary.light',
-        padding: '0.5rem',
-        borderRadius: '0.25rem',
-        paddingLeft: '5%',
-        paddingRight: '5%',
-        clipPath: 'polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0% 50%);',
-      }}
-    >
-      {text}
-      <IconButton
+    <>
+      <Button
         sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          gap: '1rem',
+          flexGrow: 1,
+          flexShrink: 1,
+          backgroundColor: step.element ? 'primary.light' : 'grey.200',
+          padding: '0.5rem',
           borderRadius: '0.25rem',
-          padding: '0rem',
+          paddingLeft: '5%',
+          paddingRight: '5%',
+          clipPath:
+            'polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0% 50%);',
         }}
-        onClick={action}
+        onClick={() => {
+          const editElement = async () => {
+            const [tab] = await chrome.tabs.query({
+              active: true,
+              lastFocusedWindow: true,
+            });
+            setCurrentUrl(tab.url ?? '');
+            if (step.element || (sectionUrl != '' && tab.url != sectionUrl)) {
+              setOpenEditDialog(true);
+            } else {
+              sendClickabilityMessage(
+                step.id,
+                mapStepNodeToValidTags[step.type],
+                tab.url ?? '',
+              );
+            }
+          };
+          editElement();
+        }}
+        onMouseEnter={() => {
+          if (step.element) {
+            sendSetFocusMessage(step.element);
+          }
+        }}
+        onMouseLeave={() => {
+          if (step.element) {
+            sendUnsetFocusMessage();
+          }
+        }}
       >
-        {icon}
-      </IconButton>
-    </Stack>
+        {step.element ? <Edit /> : <Add />}
+        {text}
+      </Button>
+      <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
+        <DialogTitle>Edit Element</DialogTitle>
+        {sectionUrl != '' && sectionUrl != currentUrl && (
+          <DialogContent>
+            <DialogContentText>
+              You are not on the correct website to select elements for this
+              section. You need to be on
+              <br />
+              <Link href={sectionUrl}>{sectionUrl}</Link>
+            </DialogContentText>
+          </DialogContent>
+        )}
+        <DialogActions>
+          {step.element && (
+            <>
+              <Button
+                disabled={sectionUrl != currentUrl}
+                onClick={() => {
+                  sendClickabilityMessage(
+                    step.id,
+                    mapStepNodeToValidTags[step.type],
+                    currentUrl,
+                  );
+                  setOpenEditDialog(false);
+                }}
+              >
+                Change
+              </Button>
+              <Button
+                onClick={() => {
+                  onDeleteElement();
+                  setOpenEditDialog(false);
+                }}
+              >
+                Delete
+              </Button>
+            </>
+          )}
+          <Button onClick={() => setOpenEditDialog(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 

@@ -8,16 +8,17 @@ type MessageType =
   | 'close_side_panel'
   | 'set_clickable'
   | 'clicked_element'
-  | 'toggle_clickability'
-  | 'toggle_focus'
+  | 'set_focus'
+  | 'unset_focus'
   | 'click_element'
   | 'element';
 
 type Message =
   | CloseSidePanelMessage
   | SetClickableMessage
+  | SetFocusMessage
+  | UnsetFocusMessage
   | ClickedElementMessage
-  | ToggleFocusMessage
   | ClickElementMessage;
 
 interface MessageBase {
@@ -32,6 +33,7 @@ interface SetClickableMessage extends MessageBase {
   type: 'set_clickable';
   stepId: string;
   validTags: SelectableTag[];
+  url: string;
 }
 
 interface ClickedElementMessage extends MessageBase {
@@ -40,11 +42,17 @@ interface ClickedElementMessage extends MessageBase {
   elementTag: string;
   elementTextContent: string | null;
   stepId: string;
+  url: string;
+  newUrl: string;
 }
 
-interface ToggleFocusMessage extends MessageBase {
-  type: 'toggle_focus';
+interface SetFocusMessage extends MessageBase {
+  type: 'set_focus';
   element: string;
+}
+
+interface UnsetFocusMessage extends MessageBase {
+  type: 'unset_focus';
 }
 
 interface ClickElementMessage extends MessageBase {
@@ -59,6 +67,7 @@ export type {
   CloseSidePanelMessage,
   SetClickableMessage,
   ClickedElementMessage,
-  ToggleFocusMessage,
+  SetFocusMessage,
+  UnsetFocusMessage,
   ClickElementMessage,
 };

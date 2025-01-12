@@ -6,7 +6,6 @@ import {
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
 
-alert('Loaded content script');
 console.log('Loaded content script');
 
 const selectableElementTags = allSelectableTags;
@@ -15,6 +14,7 @@ const selectableElementTags = allSelectableTags;
 let isClickable = false;
 let stepId = '';
 let validTags: SelectableTag[] = [];
+let url = '';
 
 const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: Message) => {
@@ -26,10 +26,11 @@ const setupMessageListener = () => {
         validTags = message.validTags;
         stepId = message.stepId;
         isClickable = true;
+        url = message.url;
         updateClassList();
         break;
       }
-      case 'toggle_focus': {
+      case 'set_focus': {
         console.log('received focussing message');
         const elementOuterHTML = message.element;
 
@@ -37,10 +38,14 @@ const setupMessageListener = () => {
           if (element.outerHTML === elementOuterHTML) {
             console.log('found element to focus');
             element.classList.add('focussed-on');
-          } else if (element.outerHTML.includes('focussed-on')) {
-            console.log('found element to unfocus');
-            element.classList.remove('focussed-on');
           }
+        });
+        break;
+      }
+      case 'unset_focus': {
+        console.log('received focussing message');
+        document.querySelectorAll('*').forEach((element) => {
+          element.classList.remove('focussed-on');
         });
         break;
       }
@@ -102,12 +107,17 @@ const addClickListeners = () => {
           isSelectableTag(element.tagName) &&
           validTags.includes(element.tagName)
         ) {
+          element.classList.remove('clickable');
           const message: ClickedElementMessage = {
             type: 'clicked_element',
             elementOuterHtml: element.outerHTML,
             elementTag: element.tagName,
             elementTextContent: element.textContent,
-            stepId: stepId,
+            stepId,
+            url,
+            newUrl: element.hasAttribute('href')
+              ? (element as HTMLLinkElement).href
+              : '',
           };
           chrome.runtime.sendMessage(message);
           isClickable = !isClickable;
