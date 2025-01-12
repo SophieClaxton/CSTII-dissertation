@@ -12,8 +12,8 @@ import { CSTEndStepId, CSTInnerStepId } from '../../models/CST/CST';
 import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
 import { isInnerStepId } from '../../models/CST/testers';
 import { EditorActionType } from '../../models/EditorAction';
-import { mapNodeIdToString } from '../../models/CST/mappers';
 import Typography from '@mui/material/Typography/Typography';
+import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 
 interface ElementSelectorProps {
   stepId: CSTInnerStepId | CSTEndStepId;
@@ -37,7 +37,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({
       });
       const message: SetClickableMessage = {
         type: 'set_clickable',
-        stepId: mapNodeIdToString(stepId),
+        stepId: mapIdToString(stepId),
         validTags: selectableTags ?? [...defaultSelectableTags],
       };
       chrome.tabs

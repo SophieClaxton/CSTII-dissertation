@@ -1,16 +1,17 @@
 import { EditorAction, EditorActionType } from '../models/EditorAction';
 import { UnpublishedScript } from '../models/API/UnpublishedScript';
+import { addSection, deleteSection } from './sectionActions';
 import {
-  addInnerStep,
-  addEndStep,
-  rearrangeInnerSteps,
-  deleteInnerStep,
-  deleteEndStep,
-  editInnerStepElement,
   editEndStepElement,
-  addSection,
-  deleteSection,
-} from './actions';
+  addEndStep,
+  deleteEndStep,
+} from './endStepActions';
+import {
+  editInnerStepElement,
+  addInnerStep,
+  deleteInnerStep,
+  rearrangeInnerSteps,
+} from './innerStepActions';
 
 const unpublishedScriptReducer = (
   unpublishedScript: UnpublishedScript,

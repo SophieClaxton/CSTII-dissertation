@@ -3,7 +3,6 @@ import {
   useTypeErrorsContext,
   useUnpublishedScriptContext,
 } from '../../contexts/contextHooks';
-import { mapNodeIdToString } from '../../models/CST/mappers';
 import {
   CSTEndStepId,
   CSTInnerStepId,
@@ -19,6 +18,7 @@ import { EditorActionType } from '../../models/EditorAction';
 import { isInnerStepId } from '../../models/CST/testers';
 import Box from '@mui/material/Box/Box';
 import { Typography } from '@mui/material';
+import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 
 interface StepProps {
   stepId: CSTInnerStepId | CSTEndStepId;
@@ -41,7 +41,7 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
 }) => {
   const { dispatch } = useUnpublishedScriptContext();
 
-  const idString = mapNodeIdToString(stepId);
+  const idString = mapIdToString(stepId);
 
   const typeErrors = useTypeErrorsContext();
   const stepError = typeErrors.get(idString);

@@ -17,7 +17,7 @@ import { Message } from '../../../common/message';
 import { isEndStepId, isInnerStepId } from '../../models/CST/testers';
 import { EditorActionType } from '../../models/EditorAction';
 import { isSelectableTag } from '../../models/InterfaceElement';
-import { mapStringToNodeId } from '../../models/CST/mappers';
+import { mapStringToId } from '../../unpublishedScriptReducer/mappers/nodeIds';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
@@ -42,7 +42,7 @@ const ProgramFlow: React.FC = () => {
         if (!isSelectableTag(message.elementTag)) {
           throw Error('Received an invalid element tag');
         }
-        const stepId = mapStringToNodeId(message.stepId);
+        const stepId = mapStringToId(message.stepId);
         const [oldTab] = await chrome.tabs.query({
           active: true,
           lastFocusedWindow: true,

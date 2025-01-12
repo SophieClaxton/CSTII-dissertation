@@ -22,9 +22,9 @@ import {
   CSTSectionId,
   CSTSubsectionId,
 } from '../../models/CST/CST';
-import { mapNodeIdToString } from '../../models/CST/mappers';
 import { EditorActionType } from '../../models/EditorAction';
 import InnerStepNode from './CST/InnerStepNode';
+import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 
 interface InnerStepContainerProps {
   innerSteps: CSTInnerStepNode[];
@@ -46,7 +46,7 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
   useEffect(() => {
     const innerStepMap = new Map<UniqueIdentifier, CSTInnerStepNode>();
     innerSteps.forEach((innerStep) =>
-      innerStepMap.set(mapNodeIdToString(innerStep.id), innerStep),
+      innerStepMap.set(mapIdToString(innerStep.id), innerStep),
     );
     setItems([...innerStepMap.keys()]);
     setInnerStepMap(innerStepMap);
@@ -54,7 +54,7 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
 
   if (innerSteps.length !== items.length) {
     console.log('InnerSteps and items are not the same length');
-    setItems(innerSteps.map((step) => mapNodeIdToString(step.id)));
+    setItems(innerSteps.map((step) => mapIdToString(step.id)));
   }
 
   const sensors = useSensors(
@@ -96,7 +96,7 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {items.map((id) => (
           <InnerStepNode
-            step={innerSteps.find((step) => mapNodeIdToString(step.id) === id)!}
+            step={innerSteps.find((step) => mapIdToString(step.id) === id)!}
           />
         ))}
       </SortableContext>

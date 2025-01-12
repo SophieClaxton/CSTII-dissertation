@@ -1,3 +1,4 @@
+import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import {
   ASTCheckNode,
   ASTClickNode,
@@ -47,7 +48,6 @@ import {
   CSTUserDecisionEndStepNode,
   CSTWriteNode,
 } from './CST';
-import { mapNodeIdToString } from './mappers';
 
 type TypeCheckResult =
   | { success: true; program: ASTProgram }
@@ -71,11 +71,11 @@ const typeCheck = (program: CSTProgram): TypeCheckResult => {
       ASTNodeType.Section,
       mappedSections,
     );
-    mappedSections.set(mapNodeIdToString(section.id), mappedSection);
+    mappedSections.set(mapIdToString(section.id), mappedSection);
   }
 
   const firstSection = mappedSections.get(
-    mapNodeIdToString(program.sections[0].id),
+    mapIdToString(program.sections[0].id),
   );
   return firstSection
     ? isASTSectionNode(firstSection)
@@ -102,7 +102,7 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
     case CSTStepNodeType.Follow: {
       const nextSectionId = section.endStep.nextSectionId;
       const nextSection = nextSectionId
-        ? mappedSections.get(mapNodeIdToString(nextSectionId))
+        ? mappedSections.get(mapIdToString(nextSectionId))
         : undefined;
       nextStep = mapFollowStep(section.endStep, nextSection);
       break;
@@ -134,7 +134,7 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
   }
 
   if (!nextStep) {
-    console.log(`Type check failed for ${mapNodeIdToString(section.id)}`);
+    console.log(`Type check failed for ${mapIdToString(section.id)}`);
   }
   return isASTStepNode(nextStep)
     ? 'url' in section

@@ -8,7 +8,7 @@ import {
 import { PanelScreen } from '../navigation/ScreenType';
 import { TypeErrorsContext } from './TypeErrorsContext';
 import { TypeCheckError } from '../models/CST/typeCheck';
-import { mapNodeIdToString } from '../models/CST/mappers';
+import { mapIdToString } from '../unpublishedScriptReducer/mappers/nodeIds';
 
 const useUnpublishedScriptContext = () => {
   const editorProgramContext = useContext(UnpublishedScriptContext);
@@ -46,7 +46,7 @@ const createTypeErrorsContext = (
 ): Map<string, string> => {
   const typeErrorsMap = new Map<string, string>();
   typeErrors.forEach((error: TypeCheckError) => {
-    typeErrorsMap.set(mapNodeIdToString(error.location), error.reason);
+    typeErrorsMap.set(mapIdToString(error.location), error.reason);
   });
   return typeErrorsMap;
 };
