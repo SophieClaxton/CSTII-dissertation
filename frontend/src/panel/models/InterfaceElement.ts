@@ -16,12 +16,22 @@ const defaultSelectableTags = [
   'H4',
   'H5',
   'H6',
+  'CAPTION',
+  'CODE',
+  'LABEL',
+  'LEGEND',
+  'TABLE',
+  'VIDEO',
 ] as const;
 
 const allSelectableTags = [
   'A',
   'BUTTON',
   'INPUT',
+  'TEXTAREA',
+  'SELECT',
+  'CANVAS',
+  'FORM',
   ...defaultSelectableTags,
 ] as const;
 
@@ -37,6 +47,7 @@ const mapTagToElementName: Record<SelectableTag, string> = {
   IMG: 'Image',
   BUTTON: 'Button',
   INPUT: 'Input',
+  TEXTAREA: 'Input',
   P: 'Paragraph',
   H1: 'Heading',
   H2: 'Heading',
@@ -44,6 +55,15 @@ const mapTagToElementName: Record<SelectableTag, string> = {
   H4: 'Heading',
   H5: 'Heading',
   H6: 'Heading',
+  LABEL: 'Label',
+  LEGEND: 'Caption',
+  CAPTION: 'Caption',
+  CODE: 'Code',
+  CANVAS: 'Canvas',
+  FORM: 'Form',
+  TABLE: 'Table',
+  VIDEO: 'Video',
+  SELECT: 'Selection',
 };
 
 const mapStepNodeToValidTags: Record<CSTElementNode['type'], SelectableTag[]> =
@@ -51,12 +71,12 @@ const mapStepNodeToValidTags: Record<CSTElementNode['type'], SelectableTag[]> =
     Follow: ['A'],
     Click: ['BUTTON'],
     Read: [...defaultSelectableTags],
-    'Scroll To': [...defaultSelectableTags],
+    'Scroll To': [...defaultSelectableTags, 'FORM'],
     Drag: [],
-    Write: ['INPUT'],
-    Select: ['INPUT'],
+    Write: ['INPUT', 'TEXTAREA'],
+    Select: ['SELECT'],
     Check: ['INPUT'],
-    Draw: [],
+    Draw: ['CANVAS'],
   };
 
 export default InterfaceElement;

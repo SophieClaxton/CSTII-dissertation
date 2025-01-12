@@ -9,12 +9,7 @@ interface FollowNodeProps {
 const FollowNode: React.FC<FollowNodeProps> = ({ step }) => {
   return (
     <Step stepId={step.id} stepType={step.type} className="follow-step">
-      <ElementSelector
-        stepId={step.id}
-        element={step.element}
-        selectableTags={['A']}
-        isFollowStep
-      />
+      <ElementSelector step={step} />
     </Step>
   );
 };
