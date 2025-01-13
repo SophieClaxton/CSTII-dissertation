@@ -6,7 +6,6 @@ import List from '@mui/material/List/List';
 import ScriptListItem from './ScriptListItem';
 import { WebsiteWithScripts } from '../../models/API/Website';
 import { getWebsite } from '../../api/websites';
-import './styles/scriptSelectionPage.css';
 import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChecks';
 import Page from '../../components/Page';
 import Stack from '@mui/material/Stack/Stack';

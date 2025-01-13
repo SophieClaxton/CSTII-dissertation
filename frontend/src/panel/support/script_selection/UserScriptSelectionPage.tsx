@@ -4,7 +4,6 @@ import APIResponse from '../../models/API/APIResponse';
 import Loadable from '../../components/Loadable';
 import List from '@mui/material/List/List';
 import ScriptListItem from './ScriptListItem';
-import './styles/scriptSelectionPage.css';
 import { getPublicUser } from '../../api/users';
 import { PublicUserWithScripts } from '../../models/API/User';
 import { assertIsUserScriptSelectorScreen } from '../../navigation/screenChecks';

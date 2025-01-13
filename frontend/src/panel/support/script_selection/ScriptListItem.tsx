@@ -5,7 +5,6 @@ import {
   ScriptWithAuthorAndWebsite,
   ScriptWithWebsite,
 } from '../../models/API/Script';
-import './styles/scriptListItem.css';
 import Card from '@mui/material/Card/Card';
 import CardActionArea from '@mui/material/CardActionArea/CardActionArea';
 import CardContent from '@mui/material/CardContent/CardContent';
