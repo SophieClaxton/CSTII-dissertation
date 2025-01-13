@@ -16,6 +16,7 @@ import SectionNode from './CST/SectionNode';
 import { publishScript } from '../../api/scripts';
 import { clickedElementListener } from '../../../common/receiveMessage';
 import { ASTProgram } from '../../models/AST/AST';
+import { createWebsite, getWebsites } from '../../api/websites';
 
 const ProgramFlow: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
@@ -34,27 +35,47 @@ const ProgramFlow: React.FC = () => {
   const updateArrows = useXarrow();
 
   const onPublishScript = async (program: ASTProgram) => {
-    // TODO: create website if it doesn't already exist
-    const response = await publishScript({
-      title: unpublishedScript.title,
-      author_id: unpublishedScript.author.id,
-      created_at: unpublishedScript.created_at,
-      description: '',
-      program: program,
-      website_id: 1,
-    });
-    if (response.status === 'Loaded') {
-      setSnackBar({
-        open: true,
-        message: 'Script Published',
-        error: false,
-      });
+    const errorMsg = {
+      open: true,
+      message: 'Failed to publish script',
+      error: true,
+    };
+    const websites = await getWebsites();
+    if (websites.status === 'Loaded') {
+      let website = websites.data
+        .filter((website) => website.url === program.start.url)
+        .at(0);
+      if (!website) {
+        // TODO: ask helper to enter description for website
+        const websiteResponse = await createWebsite({
+          url: program.start.url,
+          description: '',
+        });
+        if (websiteResponse.status === 'Loaded') {
+          website = websiteResponse.data;
+        }
+      }
+      if (!website) {
+        setSnackBar(errorMsg);
+      } else {
+        const response = await publishScript({
+          title: unpublishedScript.title,
+          author_id: unpublishedScript.author.id,
+          created_at: unpublishedScript.created_at,
+          description: '',
+          program: program,
+          website_id: website.id,
+        });
+        if (response.status === 'Loaded') {
+          setSnackBar({
+            open: true,
+            message: 'Script Published',
+            error: false,
+          });
+        }
+      }
     } else {
-      setSnackBar({
-        open: true,
-        message: 'Failed to publish script',
-        error: true,
-      });
+      setSnackBar(errorMsg);
     }
   };
 

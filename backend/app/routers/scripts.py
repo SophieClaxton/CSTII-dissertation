@@ -61,6 +61,9 @@ def create_script(
     return new_script.toBaseScriptResponse()
 
 
+# TODO: add patch method to update script
+
+
 @router.get("/{script_id}", response_model=ScriptWithProgramResponse)
 def get_script(script_id: int, session: DatabaseDep) -> ScriptWithProgramResponse:
     script = session.get(Script, script_id)

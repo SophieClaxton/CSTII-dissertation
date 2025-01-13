@@ -1,6 +1,9 @@
 import axios from 'axios';
 import APIResponse from '../models/API/APIResponse';
-import Website, { WebsiteWithScripts } from '../models/API/Website';
+import Website, {
+  WebsiteRequest,
+  WebsiteWithScripts,
+} from '../models/API/Website';
 import { handleError } from '../models/API/APIError';
 
 const websitesEndpoint = axios.create({
@@ -17,6 +20,23 @@ const getWebsites = async (): Promise<APIResponse<Website[]>> => {
     return {
       status: 'Loaded',
       data: response.data as Website[],
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
+const createWebsite = async (
+  websiteRequest: WebsiteRequest,
+): Promise<APIResponse<Website>> => {
+  try {
+    const response = await websitesEndpoint.post('', websiteRequest);
+    return {
+      status: 'Loaded',
+      data: response.data as Website,
     };
   } catch (err: unknown) {
     return {
@@ -43,4 +63,4 @@ const getWebsite = async (
   }
 };
 
-export { getWebsites, getWebsite };
+export { getWebsites, createWebsite, getWebsite };
