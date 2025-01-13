@@ -9,9 +9,10 @@ import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import { assertIsEditorScreen } from '../navigation/screenChecks';
 import Loadable from '../components/Loadable';
 import ProgramFlow from './components/ProgramFlow';
+import Page from '../components/Page';
 
 const Editor: React.FC = () => {
-  const { goBack, currentScreen } = useNavigationContext();
+  const { currentScreen } = useNavigationContext();
   assertIsEditorScreen(currentScreen);
 
   const [unpublishedScriptData, setUnpublishedScriptData] = useState<
@@ -29,13 +30,7 @@ const Editor: React.FC = () => {
   }, [currentScreen]);
 
   return (
-    <div className="editor page">
-      <div className="page-title">
-        <h1>Program Editor</h1>
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
-      </div>
+    <Page title={'Script Editor'}>
       <Loadable
         response={unpublishedScriptData}
         onLoad={(script) => (
@@ -44,7 +39,7 @@ const Editor: React.FC = () => {
           </UnpublishedScriptContextProvider>
         )}
       />
-    </div>
+    </Page>
   );
 };
 

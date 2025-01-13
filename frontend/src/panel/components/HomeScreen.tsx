@@ -5,13 +5,13 @@ import {
   scriptSelectorScreen,
 } from '../navigation/screens';
 import Button from '@mui/material/Button/Button';
+import Page from './Page';
 
 const HomeScreen: React.FC = () => {
   const { goTo } = useNavigationContext();
 
   return (
-    <>
-      <h1>SC2370 Project Hi</h1>
+    <Page title={'Home Screen'} noBackButton>
       <Stack spacing={2} margin={'4rem'}>
         <Button
           variant="contained"
@@ -28,7 +28,7 @@ const HomeScreen: React.FC = () => {
           Start Writing Scripts
         </Button>
       </Stack>
-    </>
+    </Page>
   );
 };
 

@@ -8,9 +8,10 @@ import { WebsiteWithScripts } from '../../models/API/Website';
 import { getWebsite } from '../../api/websites';
 import './styles/scriptSelectionPage.css';
 import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChecks';
+import Page from '../../components/Page';
 
 const UserScriptSelectionPage = () => {
-  const { currentScreen, goBack } = useNavigationContext();
+  const { currentScreen } = useNavigationContext();
   assertIsWebsiteScriptSelectorScreen(currentScreen);
 
   const [websiteData, setWebsiteData] = useState<
@@ -29,13 +30,7 @@ const UserScriptSelectionPage = () => {
     <Loadable
       response={websiteData}
       onLoad={(website) => (
-        <div className="script-selection-page page">
-          <div className="page-title">
-            <h1>Select a Script from {website.url}</h1>
-            <button className="back-button" onClick={goBack}>
-              Back
-            </button>
-          </div>
+        <Page title={`Scripts for ${website.url}`}>
           <div className="all-scripts-container">
             <List className="script-list">
               {website.scripts.map((script) => (
@@ -43,7 +38,7 @@ const UserScriptSelectionPage = () => {
               ))}
             </List>
           </div>
-        </div>
+        </Page>
       )}
     />
   );

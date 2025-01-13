@@ -12,9 +12,10 @@ import Typography from '@mui/material/Typography/Typography';
 import { Button, Container, ListSubheader } from '@mui/material';
 import { createUnpublishedScript } from '../api/unpublishedScripts';
 import { editorScreen } from '../navigation/screens';
+import Page from '../components/Page';
 
 const HelperScriptSelector = () => {
-  const { goTo, goBack } = useNavigationContext();
+  const { goTo } = useNavigationContext();
 
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const [userData, setUserData] = useState<APIResponse<UserWithScripts>>({
@@ -52,13 +53,7 @@ const HelperScriptSelector = () => {
   }, [userId]);
 
   return (
-    <div className="script-selection-page page">
-      <div className="page-title">
-        <h1>Your Scripts</h1>
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
-      </div>
+    <Page title={'Your Scripts'}>
       <Loadable
         response={userData}
         onLoad={(user) => (
@@ -102,7 +97,7 @@ const HelperScriptSelector = () => {
         setOpen={setOpenCreateUserDialog}
         setUserId={setUserId}
       />
-    </div>
+    </Page>
   );
 };
 

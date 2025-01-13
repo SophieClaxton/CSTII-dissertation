@@ -4,9 +4,10 @@ import APIResponse from '../../models/API/APIResponse';
 import { Script } from '../../models/API/Script';
 import { getScript } from '../../api/scripts';
 import { assertIsScriptSupportScreen } from '../../navigation/screenChecks';
+import Page from '../../components/Page';
 
 const ScriptSupport: React.FC = () => {
-  const { currentScreen, goBack } = useNavigationContext();
+  const { currentScreen } = useNavigationContext();
   assertIsScriptSupportScreen(currentScreen);
 
   const [scriptData, setScriptData] = useState<APIResponse<Script>>({
@@ -32,16 +33,7 @@ const ScriptSupport: React.FC = () => {
       </div>
     );
 
-  return (
-    <div className="script-support page">
-      <div className="page-title">
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
-      </div>
-      {content}
-    </div>
-  );
+  return <Page title={'Get Support'}>{content}</Page>;
 };
 
 export default ScriptSupport;

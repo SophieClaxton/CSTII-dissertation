@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigationContext } from '../../contexts/contextHooks';
 import '../../panel.css';
 import APIResponse from '../../models/API/APIResponse';
 import { ScriptWithAuthorAndWebsite } from '../../models/API/Script';
@@ -14,9 +13,9 @@ import { getUsers } from '../../api/users';
 import ScriptFilterDialog from './ScriptFilterDialog';
 import FilterBar from './FilterBar';
 import Loadable from '../../components/Loadable';
+import Page from '../../components/Page';
 
 const ScriptSelectionPage: React.FC = () => {
-  const { goBack } = useNavigationContext();
   const [scriptsData, setScriptsData] = useState<
     APIResponse<ScriptWithAuthorAndWebsite[]>
   >({ status: 'Loading' });
@@ -69,13 +68,7 @@ const ScriptSelectionPage: React.FC = () => {
   }, [scriptsData, websiteFilters, authorFilters]);
 
   return (
-    <div className="script-selection-page page">
-      <div className="page-title">
-        <h1>Select a Script</h1>
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
-      </div>
+    <Page title={'Script Selection Page'}>
       <div className="all-scripts-container">
         <Loadable
           response={scriptsData}
@@ -107,7 +100,7 @@ const ScriptSelectionPage: React.FC = () => {
         authorFilters={authorFilters}
         setAuthorFilters={setAuthorFilters}
       />
-    </div>
+    </Page>
   );
 };
 
