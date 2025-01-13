@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
+  transition: margin ease-in-out 0.5s;
 }
 
 .step>* {
@@ -17,18 +18,20 @@
   flex-grow: 0;
   align-content: center;
   box-sizing: border-box;
-  border-right: 2px solid grey;
+  border-right: 2px solid white;
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
 }
 
 .drag-handle:hover {
-  background-color: lightblue;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .drag-handle-placeholder {
   width: 24px;
   height: 100%;
   flex-grow: 0;
-  border-right: 2px solid grey;
+  border-right: 2px solid white;
 }
 
 .step-with-error {
@@ -57,9 +60,11 @@
   z-index: 10;
 }
 
-.draggable-step:hover {
+.draggable-step:has(.drag-handle:nth-of-type(1):hover) {
   cursor: pointer;
-  outline: 2px solid black;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  margin-top: -0.125rem;
+  margin-bottom: 0.125rem;
 }
 
 .add-node-button {

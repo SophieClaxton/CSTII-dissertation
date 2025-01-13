@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../../models/EditorAction';
 import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
+import Paper from '@mui/material/Paper/Paper';
 
 interface SectionProps {
   section: CSTSectionNode;
@@ -20,7 +21,17 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
   const { dispatch } = useUnpublishedScriptContext();
 
   return (
-    <div className="section" id={mapIdToString(section.id)}>
+    <Paper
+      id={mapIdToString(section.id)}
+      elevation={4}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        padding: '1rem',
+        borderRadius: '1rem',
+      }}
+    >
       <Stack direction={'row'} justifyContent={'space-between'}>
         <Link variant={'caption'} href={section.url}>
           {section.url}
@@ -46,7 +57,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         nodeChoices={getNodeChoices(section)}
       />
       {section.endStep && <EndStepNode endStep={section.endStep} />}
-    </div>
+    </Paper>
   );
 };
 

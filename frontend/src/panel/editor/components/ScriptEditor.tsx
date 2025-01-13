@@ -20,6 +20,7 @@ import { clickedElementListener } from '../../../common/receiveMessage';
 import Typography from '@mui/material/Typography/Typography';
 import Input from '@mui/material/Input/Input';
 import { EditorActionType } from '../../models/EditorAction';
+import Box from '@mui/material/Box/Box';
 
 const ScriptEditor: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
@@ -47,7 +48,11 @@ const ScriptEditor: React.FC = () => {
     <>
       <Stack
         direction={'column'}
-        sx={{ gap: '0.25rem', width: '100%', padding: '0.5rem' }}
+        sx={{
+          gap: '0.25rem',
+          width: '100%',
+          padding: '0.5rem',
+        }}
       >
         <Input
           value={title}
@@ -108,7 +113,16 @@ const ScriptEditor: React.FC = () => {
           }}
         />
       </Stack>
-      <Stack direction={'row'} spacing={1} padding={'0.5rem'} width={'100%'}>
+      <Stack
+        direction={'row'}
+        spacing={1}
+        padding={'0.5rem'}
+        width={'100%'}
+        sx={{
+          zIndex: 10,
+          boxShadow: 'rgba(0, 0, 0, 0.3) 0px 6px 5px 0px',
+        }}
+      >
         <Button
           sx={{ width: '100%' }}
           variant={'contained'}
@@ -138,7 +152,11 @@ const ScriptEditor: React.FC = () => {
           Publish Script
         </Button>
       </Stack>
-      <div className="program-code-env" onScroll={updateArrows}>
+      <Box
+        sx={{ backgroundColor: 'grey.100' }}
+        className="program-code-env"
+        onScroll={updateArrows}
+      >
         <div className="program-code">
           <Xwrapper>
             <div className="start-block" id="start">
@@ -162,7 +180,7 @@ const ScriptEditor: React.FC = () => {
           </Xwrapper>
         </div>
         <AlertSnackBar snackBar={snackBar} setSnackBar={setSnackBar} />
-      </div>
+      </Box>
     </>
   );
 };

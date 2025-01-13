@@ -31,6 +31,19 @@ interface StepProps {
   className?: string;
 }
 
+const stepColourMap: Record<CSTStepNodeType, string> = {
+  Follow: '#ff999c',
+  Click: '#ffde85',
+  Read: '#cceb98',
+  'Scroll To': '#93cdf1',
+  Drag: '#b4a1ce ',
+  'User Decision': '#c7eae4',
+  Write: '#a7e8bd',
+  Select: '#fcbcb8',
+  Check: '#efa7a7',
+  Draw: '#ffd972',
+};
+
 const Step: React.FC<StepProps & React.PropsWithChildren> = ({
   stepId,
   stepType,
@@ -63,7 +76,7 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
         className ?? [],
       ].join(' ')}
       ref={setNodeRef}
-      style={style}
+      style={{ ...style, backgroundColor: stepColourMap[stepType] }}
       // {...attributes}
       // {...listeners}
     >

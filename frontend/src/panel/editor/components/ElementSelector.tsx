@@ -72,13 +72,20 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
           gap: '1rem',
           flexGrow: 1,
           flexShrink: 1,
-          backgroundColor: step.element ? 'primary.light' : 'grey.200',
+          backgroundColor: step.element ? 'common.white' : 'grey.300',
           padding: '0.5rem',
-          borderRadius: '0.25rem',
           paddingLeft: '5%',
           paddingRight: '5%',
           clipPath:
             'polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0% 50%);',
+          border: 'none',
+          outline: 'none',
+          '&:hover': {
+            filter: 'brightness(0.95)',
+          },
+          '&:focus': {
+            outline: 'none',
+          },
         }}
         onClick={() => {
           const editElement = async () => {
