@@ -21,10 +21,15 @@ const unpublishedScriptReducer = (
   console.log(`Dispatching to editorProgramReducer action:${action.type}`);
   const editProgram = editScriptProgram(unpublishedScript);
   switch (action.type) {
-    case EditorActionType.EditProgramName:
+    case EditorActionType.EditScriptTitle:
       return {
         ...unpublishedScript,
-        title: action.newName,
+        title: action.title,
+      };
+    case EditorActionType.EditScriptDescription:
+      return {
+        ...unpublishedScript,
+        description: action.description,
       };
     case EditorActionType.AddSection:
       return editProgram(action, addSection);

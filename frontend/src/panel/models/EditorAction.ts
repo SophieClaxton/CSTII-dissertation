@@ -9,7 +9,8 @@ import {
 } from './CST/CST';
 
 enum EditorActionType {
-  EditProgramName = 'editProgramName',
+  EditScriptTitle = 'editScriptTitle',
+  EditScriptDescription = 'editScriptDescription',
   AddSection = 'addSection',
   DeleteSection = 'deleteSection',
   AddStep = 'addStep',
@@ -25,7 +26,8 @@ interface BaseEditorAction {
 }
 
 type EditorAction =
-  | EditProgramNameAction
+  | EditScriptTitle
+  | EditScriptDescription
   | AddSectionAction
   | DeleteSectionAction
   | EditStepElementAction
@@ -35,9 +37,14 @@ type EditorAction =
   | ChangeUserDecisionStepToInnerStepAction
   | ChangeUserDecisionStepToEndStepAction;
 
-interface EditProgramNameAction extends BaseEditorAction {
-  type: EditorActionType.EditProgramName;
-  newName: string;
+interface EditScriptTitle extends BaseEditorAction {
+  type: EditorActionType.EditScriptTitle;
+  title: string;
+}
+
+interface EditScriptDescription extends BaseEditorAction {
+  type: EditorActionType.EditScriptDescription;
+  description: string;
 }
 
 interface AddSectionAction extends BaseEditorAction {
@@ -89,7 +96,8 @@ interface ChangeUserDecisionStepToEndStepAction extends BaseEditorAction {
 export { EditorActionType };
 export type {
   EditorAction,
-  EditProgramNameAction,
+  EditScriptTitle,
+  EditScriptDescription,
   AddSectionAction,
   DeleteSectionAction,
   AddStepAction,

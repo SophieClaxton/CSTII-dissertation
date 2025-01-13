@@ -8,7 +8,7 @@ import { getUnpublishedScript } from '../api/unpublishedScripts';
 import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import { assertIsEditorScreen } from '../navigation/screenChecks';
 import Loadable from '../components/Loadable';
-import ProgramFlow from './components/ProgramFlow';
+import ScriptEditor from './components/ScriptEditor';
 import Page from '../components/Page';
 
 const Editor: React.FC = () => {
@@ -35,7 +35,7 @@ const Editor: React.FC = () => {
         response={unpublishedScriptData}
         onLoad={(script) => (
           <UnpublishedScriptContextProvider script={script}>
-            <ProgramFlow />
+            <ScriptEditor />
           </UnpublishedScriptContextProvider>
         )}
       />
