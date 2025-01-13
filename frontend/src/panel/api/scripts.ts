@@ -5,6 +5,7 @@ import {
   PublishScriptRequest,
   Script,
   ScriptWithAuthorAndWebsite,
+  UpdateScriptRequest,
 } from '../models/API/Script';
 import APISuccess from '../models/API/APISuccess';
 import APIResponse from '../models/API/APIResponse';
@@ -67,6 +68,24 @@ const publishScript = async (
   }
 };
 
+const updateScript = async (
+  script_id: number,
+  script: UpdateScriptRequest,
+): Promise<APIResponse<APISuccess>> => {
+  try {
+    const response = await scriptsEndpoint.patch(`${script_id}`, script);
+    return {
+      status: 'Loaded',
+      data: response.data as APISuccess,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
 const deleteScript = async (id: number): Promise<APIResponse<APISuccess>> => {
   try {
     const response = await scriptsEndpoint.delete(`${id}`);
@@ -120,6 +139,7 @@ export {
   getScripts,
   getScript,
   publishScript,
+  updateScript,
   deleteScript,
   getUserScripts,
   getWebsiteScripts,

@@ -18,13 +18,16 @@ type Script = ScriptWithAuthorAndWebsite & {
   annotations: Annotation[];
 };
 
-interface PublishScriptRequest {
+interface UpdateScriptRequest {
   title: string;
-  author_id: number;
-  created_at: string;
   description: string;
   program: ASTProgram;
   website_id: number;
+}
+
+interface PublishScriptRequest extends UpdateScriptRequest {
+  author_id: number;
+  created_at: string;
 }
 
 export type {
@@ -34,4 +37,5 @@ export type {
   ScriptWithAuthorAndWebsite,
   Script,
   PublishScriptRequest,
+  UpdateScriptRequest,
 };

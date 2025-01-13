@@ -11,6 +11,7 @@ import {
 enum EditorActionType {
   EditScriptTitle = 'editScriptTitle',
   EditScriptDescription = 'editScriptDescription',
+  SetPublishedScriptId = 'setPublishedScriptId',
   AddSection = 'addSection',
   DeleteSection = 'deleteSection',
   AddStep = 'addStep',
@@ -26,8 +27,9 @@ interface BaseEditorAction {
 }
 
 type EditorAction =
-  | EditScriptTitle
-  | EditScriptDescription
+  | EditScriptTitleAction
+  | EditScriptDescriptionAction
+  | SetPublishedScriptIdAction
   | AddSectionAction
   | DeleteSectionAction
   | EditStepElementAction
@@ -37,14 +39,19 @@ type EditorAction =
   | ChangeUserDecisionStepToInnerStepAction
   | ChangeUserDecisionStepToEndStepAction;
 
-interface EditScriptTitle extends BaseEditorAction {
+interface EditScriptTitleAction extends BaseEditorAction {
   type: EditorActionType.EditScriptTitle;
   title: string;
 }
 
-interface EditScriptDescription extends BaseEditorAction {
+interface EditScriptDescriptionAction extends BaseEditorAction {
   type: EditorActionType.EditScriptDescription;
   description: string;
+}
+
+interface SetPublishedScriptIdAction extends BaseEditorAction {
+  type: EditorActionType.SetPublishedScriptId;
+  id: number | undefined;
 }
 
 interface AddSectionAction extends BaseEditorAction {
@@ -96,8 +103,9 @@ interface ChangeUserDecisionStepToEndStepAction extends BaseEditorAction {
 export { EditorActionType };
 export type {
   EditorAction,
-  EditScriptTitle,
-  EditScriptDescription,
+  EditScriptTitleAction,
+  EditScriptDescriptionAction,
+  SetPublishedScriptIdAction,
   AddSectionAction,
   DeleteSectionAction,
   AddStepAction,

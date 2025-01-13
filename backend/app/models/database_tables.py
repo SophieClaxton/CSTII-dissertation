@@ -147,9 +147,6 @@ class Website(SQLModel, table=True):
         )
 
 
-# TODO: add scriptId property to link published script
-
-
 class UnpublishedScript(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     title: str
@@ -159,6 +156,9 @@ class UnpublishedScript(SQLModel, table=True):
     script_url: str
     website_id: int | None = Field(
         foreign_key="website.id", default=None, nullable=True, ondelete="RESTRICT"
+    )
+    published_script_id: int | None = Field(
+        foreign_key="script.id", default=None, nullable=True, ondelete="RESTRICT"
     )
 
     author: User | None = Relationship(back_populates="unpublished_scripts")
@@ -195,6 +195,7 @@ class UnpublishedScript(SQLModel, table=True):
             description=self.description,
             author=None if not self.author else self.author.toBaseUserResponse(),
             website=None if not self.website else self.website.toBaseWesbiteResponse(),
+            published_script_id=self.published_script_id,
             program=program,
         )
 

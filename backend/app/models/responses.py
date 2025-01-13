@@ -75,6 +75,7 @@ class UnpublishedScriptWithWebsiteResponse(BaseUnpublishedScriptResponse):
 
 
 class UnpublishedScriptWithProgramResponse(UnpublishedScriptWithWebsiteResponse):
+    published_script_id: int | None
     author: BaseUserResponse | None
     program: CSTProgram | None = None
 

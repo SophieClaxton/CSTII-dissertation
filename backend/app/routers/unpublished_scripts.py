@@ -103,6 +103,8 @@ def update_unpublished_script(
         existing_script.description = script.description
     if script.website_id:
         existing_script.website_id = script.website_id
+    if script.published_script_id:
+        existing_script.published_script_id = script.published_script_id
     if script.program:
         update_unpublished_script_program(existing_script.script_url, script.program)
 

@@ -31,6 +31,11 @@ const unpublishedScriptReducer = (
         ...unpublishedScript,
         description: action.description,
       };
+    case EditorActionType.SetPublishedScriptId:
+      return {
+        ...unpublishedScript,
+        published_script_id: action.id,
+      };
     case EditorActionType.AddSection:
       return editProgram(action, addSection);
     case EditorActionType.DeleteSection:
