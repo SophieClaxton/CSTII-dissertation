@@ -14,6 +14,7 @@ import ScriptFilterDialog from './ScriptFilterDialog';
 import FilterBar from './FilterBar';
 import Loadable from '../../components/Loadable';
 import Page from '../../components/Page';
+import Stack from '@mui/material/Stack/Stack';
 
 const ScriptSelectionPage: React.FC = () => {
   const [scriptsData, setScriptsData] = useState<
@@ -68,28 +69,26 @@ const ScriptSelectionPage: React.FC = () => {
   }, [scriptsData, websiteFilters, authorFilters]);
 
   return (
-    <Page title={'Script Selection Page'}>
-      <div className="all-scripts-container">
-        <Loadable
-          response={scriptsData}
-          onLoad={() => (
-            <>
-              <FilterBar
-                setOpenFilterDialog={setOpenFilterDialog}
-                websiteFilters={websiteFilters}
-                setWebsiteFilters={setWebsiteFilters}
-                authorFilters={authorFilters}
-                setAuthorFilters={setAuthorFilters}
-              />
-              <List className="script-list">
-                {scripts.map((script) => (
-                  <ScriptListItem script={script} />
-                ))}
-              </List>
-            </>
-          )}
-        ></Loadable>
-      </div>
+    <Page title={'Script Selection'}>
+      <Loadable
+        response={scriptsData}
+        onLoad={() => (
+          <Stack direction={'column'} spacing={1} padding={'0.5rem'}>
+            <FilterBar
+              setOpenFilterDialog={setOpenFilterDialog}
+              websiteFilters={websiteFilters}
+              setWebsiteFilters={setWebsiteFilters}
+              authorFilters={authorFilters}
+              setAuthorFilters={setAuthorFilters}
+            />
+            <List disablePadding>
+              {scripts.map((script) => (
+                <ScriptListItem script={script} />
+              ))}
+            </List>
+          </Stack>
+        )}
+      />
       <ScriptFilterDialog
         open={openFilterDialog}
         setOpen={setOpenFilterDialog}

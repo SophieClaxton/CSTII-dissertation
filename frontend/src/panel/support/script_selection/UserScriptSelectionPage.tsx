@@ -9,6 +9,7 @@ import { getPublicUser } from '../../api/users';
 import { PublicUserWithScripts } from '../../models/API/User';
 import { assertIsUserScriptSelectorScreen } from '../../navigation/screenChecks';
 import Page from '../../components/Page';
+import Stack from '@mui/material/Stack/Stack';
 
 const UserScriptSelectionPage = () => {
   const { currentScreen } = useNavigationContext();
@@ -31,13 +32,13 @@ const UserScriptSelectionPage = () => {
       response={publicUserData}
       onLoad={(user) => (
         <Page title={`${user.name}'s Scripts`}>
-          <div className="all-scripts-container">
-            <List className="script-list">
+          <Stack sx={{ padding: '0.5rem' }}>
+            <List>
               {user.scripts.map((script) => (
                 <ScriptListItem script={script} />
               ))}
             </List>
-          </div>
+          </Stack>
         </Page>
       )}
     />

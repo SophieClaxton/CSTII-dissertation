@@ -9,6 +9,7 @@ import { getWebsite } from '../../api/websites';
 import './styles/scriptSelectionPage.css';
 import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChecks';
 import Page from '../../components/Page';
+import Stack from '@mui/material/Stack/Stack';
 
 const UserScriptSelectionPage = () => {
   const { currentScreen } = useNavigationContext();
@@ -31,13 +32,13 @@ const UserScriptSelectionPage = () => {
       response={websiteData}
       onLoad={(website) => (
         <Page title={`Scripts for ${website.url}`}>
-          <div className="all-scripts-container">
-            <List className="script-list">
+          <Stack sx={{ padding: '0.5rem' }}>
+            <List>
               {website.scripts.map((script) => (
                 <ScriptListItem script={script} />
               ))}
             </List>
-          </div>
+          </Stack>
         </Page>
       )}
     />
