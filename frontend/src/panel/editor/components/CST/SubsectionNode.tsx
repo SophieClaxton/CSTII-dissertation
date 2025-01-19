@@ -21,6 +21,7 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
       elevation={0}
       variant={'outlined'}
       sx={{
+        width: 'fit-content',
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',

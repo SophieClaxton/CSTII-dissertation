@@ -18,18 +18,7 @@ import { EditorActionType } from '../../models/EditorAction';
 import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import Typography from '@mui/material/Typography/Typography';
 import Stack from '@mui/material/Stack/Stack';
-
-interface StepProps {
-  stepId: CSTInnerStepId | CSTEndStepId;
-  stepType: CSTStepNodeType;
-  sortableProps?: {
-    setNodeRef: (node: HTMLElement | null) => void;
-    style: { transform: string | undefined; transition: string | undefined };
-    attributes: DraggableAttributes;
-    listeners: SyntheticListenerMap | undefined;
-  };
-  className?: string;
-}
+import Box from '@mui/material/Box/Box';
 
 const stepColourMap: Record<CSTStepNodeType, string> = {
   Follow: '#ff999c',
@@ -44,17 +33,19 @@ const stepColourMap: Record<CSTStepNodeType, string> = {
   Draw: '#ffd972',
 };
 
-/** The child elements passed to the Step component should be
- * components that provide input mechanisms for the Step's
- * properties.
- *
- * Example input mechanisms include:
- * * An HTML element selector
- * * A comment input
- * * An input-description input
- *
- */
-const Step: React.FC<StepProps & React.PropsWithChildren> = ({
+interface StepProps {
+  stepId: CSTInnerStepId | CSTEndStepId;
+  stepType: CSTStepNodeType;
+  sortableProps?: {
+    setNodeRef: (node: HTMLElement | null) => void;
+    style: { transform: string | undefined; transition: string | undefined };
+    attributes: DraggableAttributes;
+    listeners: SyntheticListenerMap | undefined;
+  };
+  className?: string;
+}
+
+const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
   stepId,
   stepType,
   sortableProps,
@@ -80,7 +71,6 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
       id={idString}
       key={idString}
       className={[
-        'step',
         stepError ? 'step-with-error' : '',
         sortableProps ? 'draggable-step' : '',
         className ?? [],
@@ -92,7 +82,7 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
         position: 'relative',
         width: 'fit-content',
         borderRadius: '0.5rem',
-        display: 'grid',
+        display: 'flex',
         gridTemplateAreas: `'dragHandle stepName stepInputs deleteStep'`,
         gridTemplateColumns: '1.625rem 5rem 20rem 1.625rem',
         gap: '0.5rem',
@@ -106,33 +96,10 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
       ) : (
         <div className="drag-handle-placeholder"></div>
       )}
-      <Typography
-        variant={'h6'}
-        sx={{
-          gridArea: 'stepName',
-          textWrap: 'wrap',
-          textAlign: 'left',
-          marginTop: '0.5rem',
-          marginBottom: '0.5rem',
-        }}
-      >
-        {stepType}
-      </Typography>
-      <Stack
-        sx={{
-          gridArea: 'stepInputs',
-          marginTop: '0.25rem',
-          marginBottom: '0.25rem',
-          gap: '0.5rem',
-          justifyContent: 'center',
-        }}
-      >
-        {children}
-      </Stack>
+      {children}
       <IconButton
         onClick={() => dispatch({ type: EditorActionType.DeleteStep, stepId })}
         sx={{
-          gridArea: 'deleteStep',
           paddingRight: '0.125rem',
           height: '100%',
           padding: 0,
@@ -152,4 +119,59 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
   );
 };
 
+/** The child elements passed to the Step component should be
+ * components that provide input mechanisms for the Step's
+ * properties.
+ *
+ * Example input mechanisms include:
+ * * An HTML element selector
+ * * A comment input
+ * * An input-description input
+ *
+ */
+const Step: React.FC<StepProps & React.PropsWithChildren> = ({
+  children,
+  ...props
+}) => {
+  const { stepType } = props;
+
+  return (
+    <BaseStep {...props}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateAreas: `'stepName stepInputs'`,
+          gridTemplateColumns: '5rem 16rem',
+          gap: '0.5rem',
+        }}
+      >
+        <Typography
+          variant={'h6'}
+          sx={{
+            gridArea: 'stepName',
+            textWrap: 'wrap',
+            textAlign: 'left',
+            marginTop: '0.5rem',
+            marginBottom: '0.5rem',
+          }}
+        >
+          {stepType}
+        </Typography>
+        <Stack
+          sx={{
+            gridArea: 'stepInputs',
+            marginTop: '0.25rem',
+            marginBottom: '0.25rem',
+            gap: '0.5rem',
+            justifyContent: 'center',
+          }}
+        >
+          {children}
+        </Stack>
+      </Box>
+    </BaseStep>
+  );
+};
+
 export default Step;
+export { BaseStep };

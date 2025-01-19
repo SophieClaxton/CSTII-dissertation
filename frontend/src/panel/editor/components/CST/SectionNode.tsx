@@ -25,6 +25,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
       id={mapIdToString(section.id)}
       elevation={4}
       sx={{
+        width: 'fit-content',
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',

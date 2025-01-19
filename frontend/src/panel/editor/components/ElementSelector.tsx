@@ -38,7 +38,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
 
   const text = step.element ? (
     <Stack
-      sx={{ alignItems: 'flex-start', width: 'calc(20rem - 9% - 1.625rem)' }}
+      sx={{ alignItems: 'flex-start', width: 'calc(16rem - 9% - 1.625rem)' }}
     >
       <Typography
         variant="subtitle1"
