@@ -24,9 +24,11 @@ const sendClickabilityMessage = async (
     validTags,
     url,
   };
-  chrome.tabs
-    .sendMessage(tab.id!, message)
-    .catch((error) => console.log(error));
+  if (tab?.id) {
+    chrome.tabs
+      .sendMessage(tab.id, message)
+      .catch((error) => console.log(error));
+  }
 };
 
 const sendSetFocusMessage = async (element: InterfaceElement) => {
@@ -38,9 +40,11 @@ const sendSetFocusMessage = async (element: InterfaceElement) => {
     type: 'set_focus',
     element: element.outerHTML,
   };
-  chrome.tabs
-    .sendMessage(tab.id!, message)
-    .catch((error) => console.log(error));
+  if (tab?.id) {
+    chrome.tabs
+      .sendMessage(tab.id, message)
+      .catch((error) => console.log(error));
+  }
 };
 
 const sendUnsetFocusMessage = async () => {
@@ -51,9 +55,11 @@ const sendUnsetFocusMessage = async () => {
   const message: UnsetFocusMessage = {
     type: 'unset_focus',
   };
-  chrome.tabs
-    .sendMessage(tab.id!, message)
-    .catch((error) => console.log(error));
+  if (tab?.id) {
+    chrome.tabs
+      .sendMessage(tab.id, message)
+      .catch((error) => console.log(error));
+  }
 };
 
 export { sendClickabilityMessage, sendSetFocusMessage, sendUnsetFocusMessage };
