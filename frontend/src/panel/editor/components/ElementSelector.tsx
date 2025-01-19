@@ -37,8 +37,14 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
   const sectionUrl = section && isSection(section) ? section.url : '';
 
   const text = step.element ? (
-    <Stack alignItems={'flex-start'} width={'12rem'}>
-      <Typography variant="subtitle1" color="text.primary">
+    <Stack
+      sx={{ alignItems: 'flex-start', width: 'calc(20rem - 9% - 1.625rem)' }}
+    >
+      <Typography
+        variant="subtitle1"
+        color="text.primary"
+        sx={{ textAlign: 'left', lineHeight: '1.25' }}
+      >
         {mapTagToElementName[step.element.tag]}
       </Typography>
       {step.element.textContent && (
@@ -68,14 +74,9 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
           width: '100%',
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          gap: '1rem',
-          flexGrow: 1,
-          flexShrink: 1,
+          gap: '0.25rem',
           backgroundColor: step.element ? 'common.white' : 'grey.300',
-          padding: '0.5rem',
-          paddingLeft: '5%',
-          paddingRight: '5%',
+          padding: '0.25rem 5% 0.25rem 4%',
           clipPath:
             'polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0% 50%);',
           border: 'none',

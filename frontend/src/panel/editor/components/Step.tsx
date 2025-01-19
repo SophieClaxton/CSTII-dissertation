@@ -15,9 +15,9 @@ import DragIndicator from '@mui/icons-material/DragIndicator';
 import IconButton from '@mui/material/IconButton/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../models/EditorAction';
-import Box from '@mui/material/Box/Box';
-import { Typography } from '@mui/material';
 import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
+import Typography from '@mui/material/Typography/Typography';
+import Stack from '@mui/material/Stack/Stack';
 
 interface StepProps {
   stepId: CSTInnerStepId | CSTEndStepId;
@@ -44,6 +44,16 @@ const stepColourMap: Record<CSTStepNodeType, string> = {
   Draw: '#ffd972',
 };
 
+/** The child elements passed to the Step component should be
+ * components that provide input mechanisms for the Step's
+ * properties.
+ *
+ * Example input mechanisms include:
+ * * An HTML element selector
+ * * A comment input
+ * * An input-description input
+ *
+ */
 const Step: React.FC<StepProps & React.PropsWithChildren> = ({
   stepId,
   stepType,
@@ -76,9 +86,18 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
         className ?? [],
       ].join(' ')}
       ref={setNodeRef}
-      style={{ ...style, backgroundColor: stepColourMap[stepType] }}
-      // {...attributes}
-      // {...listeners}
+      style={{
+        ...style,
+        backgroundColor: stepColourMap[stepType],
+        position: 'relative',
+        width: 'fit-content',
+        borderRadius: '0.5rem',
+        display: 'grid',
+        gridTemplateAreas: `'dragHandle stepName stepInputs deleteStep'`,
+        gridTemplateColumns: '1.625rem 5rem 20rem 1.625rem',
+        gap: '0.5rem',
+        transition: 'margin ease-in-out 0.5s',
+      }}
     >
       {sortableProps ? (
         <div className={'drag-handle'} {...attributes} {...listeners}>
@@ -87,31 +106,40 @@ const Step: React.FC<StepProps & React.PropsWithChildren> = ({
       ) : (
         <div className="drag-handle-placeholder"></div>
       )}
-      <Box
+      <Typography
+        variant={'h6'}
         sx={{
+          gridArea: 'stepName',
+          textWrap: 'wrap',
+          textAlign: 'left',
           marginTop: '0.5rem',
           marginBottom: '0.5rem',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '1rem',
         }}
       >
-        <Typography
-          variant={'h6'}
-          sx={{
-            width: '8rem',
-            textWrap: 'wrap',
-            textAlign: 'left',
-            flexGrow: 0,
-          }}
-        >
-          {stepType}
-        </Typography>
+        {stepType}
+      </Typography>
+      <Stack
+        sx={{
+          gridArea: 'stepInputs',
+          marginTop: '0.25rem',
+          marginBottom: '0.25rem',
+          gap: '0.5rem',
+          justifyContent: 'center',
+        }}
+      >
         {children}
-      </Box>
+      </Stack>
       <IconButton
         onClick={() => dispatch({ type: EditorActionType.DeleteStep, stepId })}
-        sx={{ height: '100%', padding: 0, borderRadius: 0 }}
+        sx={{
+          gridArea: 'deleteStep',
+          paddingRight: '0.125rem',
+          height: '100%',
+          padding: 0,
+          borderRadius: 0,
+          borderTopRightRadius: '0.5rem',
+          borderBottomRightRadius: '0.5rem',
+        }}
       >
         <Delete />
       </IconButton>

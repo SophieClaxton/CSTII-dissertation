@@ -1,4 +1,4 @@
-.step {
+/* .step {
   width: 100%;
   border-radius: 0.5rem;
   background-color: rgb(255, 255, 255);
@@ -7,18 +7,18 @@
   flex-direction: row;
   gap: 0.5rem;
   transition: margin ease-in-out 0.5s;
-}
+} */
 
-.step>* {
+/* .step>* {
   flex-grow: 1;
-}
+} */
 
 .drag-handle {
+  grid-area: 'dragHandle';
   height: 100%;
-  flex-grow: 0;
   align-content: center;
   box-sizing: border-box;
-  border-right: 2px solid white;
+  border-right: 0.125rem solid white;
   border-top-left-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
 }
@@ -30,8 +30,8 @@
 .drag-handle-placeholder {
   width: 24px;
   height: 100%;
-  flex-grow: 0;
-  border-right: 2px solid white;
+  grid-area: 'dragHandle';
+  border-right: 0.125rem solid white;
 }
 
 .step-with-error {
