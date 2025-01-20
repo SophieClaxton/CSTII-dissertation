@@ -38,6 +38,7 @@ const setupMessageListener = () => {
           if (element.outerHTML === elementOuterHTML) {
             console.log('found element to focus');
             element.classList.add('focussed-on');
+            element.scrollIntoView({ behavior: 'smooth' });
           }
         });
         break;
