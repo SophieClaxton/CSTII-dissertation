@@ -20,7 +20,7 @@ const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: Message) => {
     switch (message.type) {
       case 'close_side_panel':
-      case 'clicked_element':
+      case 'user_clicked_element':
         break;
       case 'set_clickable': {
         validTags = message.validTags;
@@ -50,7 +50,7 @@ const setupMessageListener = () => {
         });
         break;
       }
-      case 'click_element': {
+      case 'system_click_element': {
         console.log('received click element message');
         const elementOuterHTML = message.element;
 
@@ -110,7 +110,7 @@ const addClickListeners = () => {
         ) {
           element.classList.remove('clickable');
           const message: ClickedElementMessage = {
-            type: 'clicked_element',
+            type: 'user_clicked_element',
             elementOuterHtml: element.outerHTML,
             elementTag: element.tagName,
             elementTextContent: element.textContent,

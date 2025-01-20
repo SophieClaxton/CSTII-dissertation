@@ -7,11 +7,12 @@ enum Port {
 type MessageType =
   | 'close_side_panel'
   | 'set_clickable'
-  | 'clicked_element'
+  | 'user_clicked_element'
   | 'set_focus'
   | 'unset_focus'
-  | 'click_element'
-  | 'element';
+  | 'system_click_element'
+  | 'start_support'
+  | 'end_support';
 
 type Message =
   | CloseSidePanelMessage
@@ -19,7 +20,9 @@ type Message =
   | SetFocusMessage
   | UnsetFocusMessage
   | ClickedElementMessage
-  | ClickElementMessage;
+  | ClickElementMessage
+  | StartSupportMessage
+  | EndSupportMessage;
 
 interface MessageBase {
   type: MessageType;
@@ -37,7 +40,7 @@ interface SetClickableMessage extends MessageBase {
 }
 
 interface ClickedElementMessage extends MessageBase {
-  type: 'clicked_element';
+  type: 'user_clicked_element';
   elementOuterHtml: string;
   elementTag: string;
   elementTextContent: string | null;
@@ -56,8 +59,16 @@ interface UnsetFocusMessage extends MessageBase {
 }
 
 interface ClickElementMessage extends MessageBase {
-  type: 'click_element';
+  type: 'system_click_element';
   element: string;
+}
+
+interface StartSupportMessage extends MessageBase {
+  type: 'start_support';
+}
+
+interface EndSupportMessage extends MessageBase {
+  type: 'end_support';
 }
 
 export { Port };
@@ -70,4 +81,6 @@ export type {
   SetFocusMessage,
   UnsetFocusMessage,
   ClickElementMessage,
+  StartSupportMessage,
+  EndSupportMessage,
 };

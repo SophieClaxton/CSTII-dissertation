@@ -6,7 +6,7 @@ import { Message } from './message';
 
 const clickedElementListener = (dispatch: React.Dispatch<EditorAction>) => {
   chrome.runtime.onMessage.addListener(async (message: Message) => {
-    if (message.type === 'clicked_element') {
+    if (message.type === 'user_clicked_element') {
       const stepId = mapStringToId(message.stepId);
       if (
         !isSelectableTag(message.elementTag) ||
