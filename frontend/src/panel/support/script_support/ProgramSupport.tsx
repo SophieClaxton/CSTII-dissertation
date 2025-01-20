@@ -8,7 +8,10 @@ import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import Box from '@mui/material/Box/Box';
 import { mapASTStepToDescription } from '../../models/AST/mappers';
-import { addUserStruggleDataListener } from '../../../common/receiveMessage';
+import {
+  addStepCompletedListener,
+  addUserStruggleDataListener,
+} from '../../../common/receiveMessage';
 import { sendNextPossibleStepsMessage } from '../../../common/sendMessage';
 import { useTabContext } from '../../contexts/contextHooks';
 
@@ -23,17 +26,27 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({
 }) => {
   const { tab } = useTabContext();
   const [baseStepNumber] = useState(0);
-  const [currentStepNumber] = useState(1);
+  const [currentStepNumber, setCurrentStepNumber] = useState(0);
   const [visibleSteps] = useState(getVisibleSteps(program.start.start));
+  const [nextSteps, setNextSteps] = useState(
+    getNextPossibleSteps(visibleSteps.slice(currentStepNumber)),
+  );
 
-  useEffect(addUserStruggleDataListener, []);
+  useEffect(() => {
+    addUserStruggleDataListener();
+    addStepCompletedListener((nextStepIndex) =>
+      setCurrentStepNumber((prevState) => prevState + nextStepIndex + 1),
+    );
+  }, []);
+
+  useEffect(() => {
+    setNextSteps(getNextPossibleSteps(visibleSteps.slice(currentStepNumber)));
+  }, [currentStepNumber, visibleSteps]);
+
   useEffect(() => {
     console.log('Sending next possible steps');
-    const nextSteps = getNextPossibleSteps(
-      visibleSteps.slice(currentStepNumber),
-    );
     sendNextPossibleStepsMessage(tab.id!, nextSteps);
-  }, [tab, currentStepNumber, visibleSteps]);
+  }, [tab, nextSteps]);
 
   return (
     <Stack direction={'column'} spacing={2} padding={'1rem'}>
@@ -48,14 +61,14 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({
               columnGap: '1rem',
               padding: '0.5rem',
               borderRadius: '0.5rem',
-              border:
-                currentStepNumber === stepNumber ? '2px solid red' : 'none',
+              border: `2px solid ${currentStepNumber === stepNumber ? '#1976d2' : 'transparent'}`,
               color:
                 stepNumber > currentStepNumber
                   ? 'text.disabled'
-                  : stepNumber < currentStepNumber
-                    ? 'success.dark'
-                    : 'text.primary',
+                  : 'text.primary',
+              backgroundColor:
+                stepNumber < currentStepNumber ? 'rgb(149, 242, 152)' : 'white',
+              transition: 'all 1s cubic-bezier(0.44,-0.1, 0.44, 1.1)',
               alignItems: 'center',
             }}
           >

@@ -17,7 +17,8 @@ type PanelMessageType =
 type ContentScriptMessageType =
   | 'close_side_panel'
   | 'user_clicked_element'
-  | 'user_struggle_data';
+  | 'user_struggle_data'
+  | 'step_completed';
 
 type PanelMessage =
   | SetClickableMessage
@@ -31,7 +32,8 @@ type PanelMessage =
 type ContentScriptMessage =
   | CloseSidePanelMessage
   | UserClickedElementMessage
-  | UserStruggleDataMessage;
+  | UserStruggleDataMessage
+  | StepCompletedMessage;
 
 interface MessageBase {
   type: PanelMessageType | ContentScriptMessageType;
@@ -99,6 +101,12 @@ interface UserStruggleDataMessage extends MessageBase {
   userStruggleData: UserStruggleData;
 }
 
+interface StepCompletedMessage extends MessageBase {
+  type: 'step_completed';
+  step: ASTStepNodeInfo;
+  index: number;
+}
+
 export { Port };
 export type {
   PanelMessage,
@@ -109,9 +117,10 @@ export type {
   SystemClickElementMessage,
   StartSupportMessage,
   EndSupportMessage,
+  NextPossibleStepsMessage,
   CloseSidePanelMessage,
   UserClickedElementMessage,
   UserStruggleData,
   UserStruggleDataMessage,
-  NextPossibleStepsMessage,
+  StepCompletedMessage,
 };

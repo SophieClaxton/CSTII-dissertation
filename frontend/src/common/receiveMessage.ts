@@ -50,4 +50,19 @@ const addUserStruggleDataListener = () => {
   });
 };
 
-export { addClickedElementListener, addUserStruggleDataListener };
+const addStepCompletedListener = (
+  updateCurrentStep: (nextStepIndex: number) => void,
+) => {
+  chrome.runtime.onMessage.addListener((message: ContentScriptMessage) => {
+    if (message.type === 'step_completed') {
+      console.log('Received step completed message');
+      updateCurrentStep(message.index);
+    }
+  });
+};
+
+export {
+  addClickedElementListener,
+  addUserStruggleDataListener,
+  addStepCompletedListener,
+};
