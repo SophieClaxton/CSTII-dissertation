@@ -1,3 +1,4 @@
+import { ASTStepNodeInfo } from '../panel/models/AST/AST';
 import { CSTNodeId } from '../panel/models/CST/CST';
 import InterfaceElement, {
   SelectableTag,
@@ -5,6 +6,7 @@ import InterfaceElement, {
 import { mapIdToString } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import {
   EndSupportMessage,
+  NextPossibleStepsMessage,
   SetClickableMessage,
   SetFocusMessage,
   StartSupportMessage,
@@ -62,10 +64,23 @@ const sendEndSupportMessage = async (tabId: number) => {
   chrome.tabs.sendMessage(tabId, message).catch((error) => console.log(error));
 };
 
+const sendNextPossibleStepsMessage = async (
+  tabId: number,
+  nextSteps: ASTStepNodeInfo[],
+) => {
+  const message: NextPossibleStepsMessage = {
+    type: 'next_possible_steps',
+    steps: nextSteps,
+  };
+
+  chrome.tabs.sendMessage(tabId, message).catch((error) => console.log(error));
+};
+
 export {
   sendClickabilityMessage,
   sendSetFocusMessage,
   sendUnsetFocusMessage,
   sendStartSupportMessage,
   sendEndSupportMessage,
+  sendNextPossibleStepsMessage,
 };

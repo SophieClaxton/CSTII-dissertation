@@ -5,7 +5,6 @@ interface ASTProgram {
 }
 
 enum ASTNodeType {
-  Placeholder = 'Placeholder',
   Section = 'Section',
   Subsection = 'Subsection',
   End = 'End',
@@ -45,6 +44,13 @@ type ASTStepNode =
   | ASTDragNode
   | ASTInputNode
   | ASTUserDecisionNode;
+
+type MappedOmit<T, K extends string> = T extends object ? Omit<T, K> : never;
+
+type ASTStepNodeInfo = MappedOmit<
+  ASTStepNode,
+  'next' | 'nextSection' | 'choice1' | 'choice2'
+>;
 
 interface ASTStepBase {
   element: InterfaceElement;
@@ -120,6 +126,7 @@ export type {
   ASTSectionNode,
   ASTSubsectionNode,
   ASTStepNode,
+  ASTStepNodeInfo,
   ASTStepBase,
   ASTEndNode,
   ASTClickNode,

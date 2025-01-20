@@ -54,4 +54,18 @@ const mapASTStepToDescription = (step: ASTStepNode): string => {
   }
 };
 
-export { mapCSTtoASTNodeType, mapASTStepToDescription };
+const isSkippable: Record<ASTStepNode['type'], boolean> = {
+  End: false,
+  Follow: false,
+  Click: false,
+  Read: true,
+  'Scroll To': true,
+  Drag: false,
+  'User Decision': false,
+  Write: false,
+  Select: false,
+  Check: false,
+  Draw: false,
+};
+
+export { mapCSTtoASTNodeType, mapASTStepToDescription, isSkippable };

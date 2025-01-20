@@ -1,3 +1,4 @@
+import { ASTStepNodeInfo } from '../panel/models/AST/AST';
 import { SelectableTag } from '../panel/models/InterfaceElement';
 
 enum Port {
@@ -10,7 +11,8 @@ type PanelMessageType =
   | 'unset_focus'
   | 'system_click_element'
   | 'start_support'
-  | 'end_support';
+  | 'end_support'
+  | 'next_possible_steps';
 
 type ContentScriptMessageType =
   | 'close_side_panel'
@@ -23,7 +25,8 @@ type PanelMessage =
   | UnsetFocusMessage
   | SystemClickElementMessage
   | StartSupportMessage
-  | EndSupportMessage;
+  | EndSupportMessage
+  | NextPossibleStepsMessage;
 
 type ContentScriptMessage =
   | CloseSidePanelMessage
@@ -63,6 +66,11 @@ interface StartSupportMessage extends MessageBase {
 
 interface EndSupportMessage extends MessageBase {
   type: 'end_support';
+}
+
+interface NextPossibleStepsMessage extends MessageBase {
+  type: 'next_possible_steps';
+  steps: ASTStepNodeInfo[];
 }
 
 // Content Script messages
@@ -105,4 +113,5 @@ export type {
   UserClickedElementMessage,
   UserStruggleData,
   UserStruggleDataMessage,
+  NextPossibleStepsMessage,
 };

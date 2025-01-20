@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { ASTProgram } from '../../models/AST/AST';
-import { getVisibleSteps } from '../../models/AST/getters';
+import {
+  getNextPossibleSteps,
+  getVisibleSteps,
+} from '../../models/AST/getters';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import Box from '@mui/material/Box/Box';
 import { mapASTStepToDescription } from '../../models/AST/mappers';
 import { addUserStruggleDataListener } from '../../../common/receiveMessage';
+import { sendNextPossibleStepsMessage } from '../../../common/sendMessage';
+import { useTabContext } from '../../contexts/contextHooks';
 
 interface ProgramSupportProps {
   program: ASTProgram;
@@ -16,11 +21,19 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({
   program,
   currentUrl,
 }) => {
+  const { tab } = useTabContext();
   const [baseStepNumber] = useState(0);
   const [currentStepNumber] = useState(1);
   const [visibleSteps] = useState(getVisibleSteps(program.start.start));
 
   useEffect(addUserStruggleDataListener, []);
+  useEffect(() => {
+    console.log('Sending next possible steps');
+    const nextSteps = getNextPossibleSteps(
+      visibleSteps.slice(currentStepNumber),
+    );
+    sendNextPossibleStepsMessage(tab.id!, nextSteps);
+  }, [tab, currentStepNumber, visibleSteps]);
 
   return (
     <Stack direction={'column'} spacing={2} padding={'1rem'}>

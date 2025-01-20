@@ -1,4 +1,5 @@
-import { ASTNodeType, ASTStepNode } from './AST';
+import { ASTNodeType, ASTStepNode, ASTStepNodeInfo } from './AST';
+import { isSkippable } from './mappers';
 
 const getVisibleSteps = (startStep: ASTStepNode): ASTStepNode[] => {
   if (startStep.type === ASTNodeType.End) {
@@ -21,4 +22,43 @@ const getVisibleSteps = (startStep: ASTStepNode): ASTStepNode[] => {
   return visibleSteps;
 };
 
-export { getVisibleSteps };
+const getNextPossibleSteps = (
+  visibleSteps: ASTStepNode[],
+): ASTStepNodeInfo[] => {
+  const possibleSteps: ASTStepNodeInfo[] = [];
+  for (const visibleStep of visibleSteps) {
+    switch (visibleStep.type) {
+      case ASTNodeType.End: {
+        break;
+      }
+      case ASTNodeType.Follow: {
+        const { type, element, comment } = visibleStep;
+        possibleSteps.push({ type, element, comment });
+        break;
+      }
+      case ASTNodeType.Click:
+      case ASTNodeType.Read:
+      case ASTNodeType.ScrollTo:
+      case ASTNodeType.Drag:
+      case ASTNodeType.Write:
+      case ASTNodeType.Select:
+      case ASTNodeType.Check:
+      case ASTNodeType.Draw: {
+        const { next: _, ...rest } = visibleStep;
+        possibleSteps.push(rest);
+        break;
+      }
+      case ASTNodeType.UserDecision: {
+        const { type, question } = visibleStep;
+        possibleSteps.push({ type, question });
+        break;
+      }
+    }
+    if (!isSkippable[visibleStep.type]) {
+      break;
+    }
+  }
+  return possibleSteps;
+};
+
+export { getVisibleSteps, getNextPossibleSteps };

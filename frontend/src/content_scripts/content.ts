@@ -98,6 +98,11 @@ const setupMessageListener = () => {
         clearInterval(intervalId);
         break;
       }
+      case 'next_possible_steps': {
+        console.log('Received next possible steps:');
+        console.log(message.steps);
+        break;
+      }
       default: {
         const e: never = message;
         return e;
