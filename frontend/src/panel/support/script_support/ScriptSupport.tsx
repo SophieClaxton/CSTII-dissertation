@@ -14,7 +14,11 @@ import Divider from '@mui/material/Divider/Divider';
 import Button from '@mui/material/Button/Button';
 import ProgramSupport from './ProgramSupport';
 import { useAPICall } from '../../api/apiHooks';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import {
+  sendEndSupportMessage,
+  sendStartSupportMessage,
+} from '../../../common/sendMessage';
 
 const ScriptSupport: React.FC = () => {
   const { currentScreen } = useNavigationContext();
@@ -27,6 +31,7 @@ const ScriptSupport: React.FC = () => {
       [currentScreen],
     ),
   );
+  const [providingSupport, setProvidingSupport] = useState(false);
 
   return (
     <Page title={'Get Support'}>
@@ -72,11 +77,21 @@ const ScriptSupport: React.FC = () => {
               </Stack>
               <Button
                 variant={'contained'}
+                color={providingSupport ? 'error' : 'primary'}
                 size={'large'}
-                disabled={tab.url != script.website.url}
+                disabled={!providingSupport && tab.url != script.website.url}
                 sx={{ width: '50%', minWidth: '8rem' }}
+                onClick={() => {
+                  if (!providingSupport) {
+                    setProvidingSupport(true);
+                    sendStartSupportMessage(tab.id!);
+                  } else {
+                    setProvidingSupport(false);
+                    sendEndSupportMessage(tab.id!);
+                  }
+                }}
               >
-                Start
+                {providingSupport ? 'End' : 'Start'}
               </Button>
               {tab.url != script.website.url && (
                 <Alert severity={'info'} sx={{ marginTop: '0.5rem' }}>
@@ -89,10 +104,12 @@ const ScriptSupport: React.FC = () => {
                 flexItem
                 sx={{ marginTop: '1rem', marginBottom: '1rem' }}
               />
-              <ProgramSupport
-                program={script.program}
-                currentUrl={tab.url ?? ''}
-              />
+              {providingSupport && (
+                <ProgramSupport
+                  program={script.program}
+                  currentUrl={tab.url ?? ''}
+                />
+              )}
             </>
           );
         }}
