@@ -9,11 +9,13 @@ import Box from '@mui/material/Box/Box';
 interface PageProps {
   title: string;
   noBackButton?: true;
+  onBack?: () => void;
 }
 
 const Page: React.FC<PageProps & PropsWithChildren> = ({
   title,
   noBackButton,
+  onBack,
   children,
 }) => {
   const { goBack } = useNavigationContext();
@@ -32,7 +34,10 @@ const Page: React.FC<PageProps & PropsWithChildren> = ({
       >
         {!noBackButton && (
           <Button
-            onClick={goBack}
+            onClick={() => {
+              (onBack ?? (() => undefined))();
+              goBack();
+            }}
             variant={'outlined'}
             sx={{ gridColumnStart: 1, justifySelf: 'start' }}
             startIcon={<ArrowBack />}

@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ASTProgram } from '../../models/AST/AST';
 import { getVisibleSteps } from '../../models/AST/getters';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import Box from '@mui/material/Box/Box';
 import { mapASTStepToDescription } from '../../models/AST/mappers';
+import { addUserStruggleDataListener } from '../../../common/receiveMessage';
 
 interface ProgramSupportProps {
   program: ASTProgram;
@@ -18,6 +19,9 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({
   const [baseStepNumber] = useState(0);
   const [currentStepNumber] = useState(1);
   const [visibleSteps] = useState(getVisibleSteps(program.start.start));
+
+  useEffect(addUserStruggleDataListener, []);
+
   return (
     <Stack direction={'column'} spacing={2} padding={'1rem'}>
       <p>{currentUrl}</p>

@@ -4,49 +4,43 @@ enum Port {
   SidePanel = 'sidePanel',
 }
 
-type MessageType =
-  | 'close_side_panel'
+type PanelMessageType =
   | 'set_clickable'
-  | 'user_clicked_element'
   | 'set_focus'
   | 'unset_focus'
   | 'system_click_element'
   | 'start_support'
   | 'end_support';
 
-type Message =
-  | CloseSidePanelMessage
+type ContentScriptMessageType =
+  | 'close_side_panel'
+  | 'user_clicked_element'
+  | 'user_struggle_data';
+
+type PanelMessage =
   | SetClickableMessage
   | SetFocusMessage
   | UnsetFocusMessage
-  | ClickedElementMessage
-  | ClickElementMessage
+  | SystemClickElementMessage
   | StartSupportMessage
   | EndSupportMessage;
 
+type ContentScriptMessage =
+  | CloseSidePanelMessage
+  | UserClickedElementMessage
+  | UserStruggleDataMessage;
+
 interface MessageBase {
-  type: MessageType;
+  type: PanelMessageType | ContentScriptMessageType;
 }
 
-interface CloseSidePanelMessage extends MessageBase {
-  type: 'close_side_panel';
-}
+// Panel Messages
 
 interface SetClickableMessage extends MessageBase {
   type: 'set_clickable';
   stepId: string;
   validTags: SelectableTag[];
   url: string;
-}
-
-interface ClickedElementMessage extends MessageBase {
-  type: 'user_clicked_element';
-  elementOuterHtml: string;
-  elementTag: string;
-  elementTextContent: string | null;
-  stepId: string;
-  url: string;
-  newUrl: string;
 }
 
 interface SetFocusMessage extends MessageBase {
@@ -58,7 +52,7 @@ interface UnsetFocusMessage extends MessageBase {
   type: 'unset_focus';
 }
 
-interface ClickElementMessage extends MessageBase {
+interface SystemClickElementMessage extends MessageBase {
   type: 'system_click_element';
   element: string;
 }
@@ -71,16 +65,44 @@ interface EndSupportMessage extends MessageBase {
   type: 'end_support';
 }
 
+// Content Script messages
+
+interface CloseSidePanelMessage extends MessageBase {
+  type: 'close_side_panel';
+}
+
+interface UserClickedElementMessage extends MessageBase {
+  type: 'user_clicked_element';
+  elementOuterHtml: string;
+  elementTag: string;
+  elementTextContent: string | null;
+  stepId: string;
+  url: string;
+  newUrl: string;
+}
+
+interface UserStruggleData {
+  totalDistance: number;
+  numMouseClicks: number;
+}
+
+interface UserStruggleDataMessage extends MessageBase {
+  type: 'user_struggle_data';
+  userStruggleData: UserStruggleData;
+}
+
 export { Port };
 export type {
-  MessageType,
-  Message,
-  CloseSidePanelMessage,
+  PanelMessage,
+  ContentScriptMessage,
   SetClickableMessage,
-  ClickedElementMessage,
   SetFocusMessage,
   UnsetFocusMessage,
-  ClickElementMessage,
+  SystemClickElementMessage,
   StartSupportMessage,
   EndSupportMessage,
+  CloseSidePanelMessage,
+  UserClickedElementMessage,
+  UserStruggleData,
+  UserStruggleDataMessage,
 };

@@ -16,7 +16,7 @@ import {
 } from '../scriptUtils/updateUnpublishedScript';
 import AlertSnackBar from './AlertSnackBar';
 import SectionNode from './CST/SectionNode';
-import { clickedElementListener } from '../../../common/receiveMessage';
+import { addClickedElementListener } from '../../../common/receiveMessage';
 import Typography from '@mui/material/Typography/Typography';
 import Input from '@mui/material/Input/Input';
 import { EditorActionType } from '../../models/EditorAction';
@@ -42,7 +42,7 @@ const ScriptEditor: React.FC = () => {
 
   const updateArrows = useXarrow();
 
-  useEffect(() => clickedElementListener(dispatch), [dispatch]);
+  useEffect(() => addClickedElementListener(dispatch), [dispatch]);
 
   return (
     <>
