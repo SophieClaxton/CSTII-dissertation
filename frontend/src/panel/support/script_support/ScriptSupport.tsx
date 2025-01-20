@@ -14,7 +14,7 @@ import Divider from '@mui/material/Divider/Divider';
 import Button from '@mui/material/Button/Button';
 import ProgramSupport from './ProgramSupport';
 import { useAPICall } from '../../api/apiHooks';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   sendEndSupportMessage,
   sendStartSupportMessage,
@@ -32,9 +32,17 @@ const ScriptSupport: React.FC = () => {
     ),
   );
   const [providingSupport, setProvidingSupport] = useState(false);
+  useEffect(() => {
+    console.log('Tab updated, resending support message');
+    if (providingSupport) {
+      sendStartSupportMessage(tab.id!);
+    } else {
+      sendEndSupportMessage(tab.id!);
+    }
+  }, [providingSupport, tab]);
 
   return (
-    <Page title={'Get Support'}>
+    <Page title={'Get Support'} onBack={() => sendEndSupportMessage(tab.id!)}>
       <Loadable
         response={scriptData}
         onLoad={(script) => {
@@ -81,15 +89,7 @@ const ScriptSupport: React.FC = () => {
                 size={'large'}
                 disabled={!providingSupport && tab.url != script.website.url}
                 sx={{ width: '50%', minWidth: '8rem' }}
-                onClick={() => {
-                  if (!providingSupport) {
-                    setProvidingSupport(true);
-                    sendStartSupportMessage(tab.id!);
-                  } else {
-                    setProvidingSupport(false);
-                    sendEndSupportMessage(tab.id!);
-                  }
-                }}
+                onClick={() => setProvidingSupport(!providingSupport)}
               >
                 {providingSupport ? 'End' : 'Start'}
               </Button>

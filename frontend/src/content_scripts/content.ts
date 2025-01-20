@@ -1,4 +1,9 @@
-import { ClickedElementMessage, Message } from '../common/message';
+import {
+  UserClickedElementMessage,
+  PanelMessage,
+  UserStruggleData,
+  UserStruggleDataMessage,
+} from '../common/message';
 import {
   allSelectableTags,
   isSelectableTag,
@@ -15,13 +20,16 @@ let isClickable = false;
 let stepId = '';
 let validTags: SelectableTag[] = [];
 let url = '';
+let collectUserStruggleData = false;
+let userStruggleData: UserStruggleData = {
+  totalDistance: 0,
+  numMouseClicks: 0,
+};
+let intervalId: NodeJS.Timeout | undefined = undefined;
 
 const setupMessageListener = () => {
-  chrome.runtime.onMessage.addListener((message: Message) => {
+  chrome.runtime.onMessage.addListener((message: PanelMessage) => {
     switch (message.type) {
-      case 'close_side_panel':
-      case 'user_clicked_element':
-        break;
       case 'set_clickable': {
         validTags = message.validTags;
         stepId = message.stepId;
@@ -67,6 +75,32 @@ const setupMessageListener = () => {
             element.click();
           }
         });
+        break;
+      }
+      case 'start_support': {
+        collectUserStruggleData = true;
+        intervalId = setInterval(() => {
+          const message: UserStruggleDataMessage = {
+            type: 'user_struggle_data',
+            userStruggleData: userStruggleData,
+          };
+
+          chrome.runtime.sendMessage(message).catch(() => {
+            collectUserStruggleData = false;
+            clearInterval(intervalId);
+          });
+          userStruggleData = { totalDistance: 0, numMouseClicks: 0 };
+        }, 5000);
+        break;
+      }
+      case 'end_support': {
+        collectUserStruggleData = false;
+        clearInterval(intervalId);
+        break;
+      }
+      default: {
+        const e: never = message;
+        return e;
       }
     }
   });
@@ -109,7 +143,7 @@ const addClickListeners = () => {
           validTags.includes(element.tagName)
         ) {
           element.classList.remove('clickable');
-          const message: ClickedElementMessage = {
+          const message: UserClickedElementMessage = {
             type: 'user_clicked_element',
             elementOuterHtml: element.outerHTML,
             elementTag: element.tagName,
@@ -127,6 +161,26 @@ const addClickListeners = () => {
       });
     }
   });
+};
+
+document.onmousemove = (ev: MouseEvent) => {
+  if (collectUserStruggleData) {
+    userStruggleData = {
+      ...userStruggleData,
+      totalDistance:
+        userStruggleData.totalDistance +
+        Math.sqrt(Math.pow(ev.movementX, 2) + Math.pow(ev.movementY, 2)),
+    };
+  }
+};
+
+document.onmousedown = () => {
+  if (collectUserStruggleData) {
+    userStruggleData = {
+      ...userStruggleData,
+      numMouseClicks: userStruggleData.numMouseClicks + 1,
+    };
+  }
 };
 
 setupMessageListener();
