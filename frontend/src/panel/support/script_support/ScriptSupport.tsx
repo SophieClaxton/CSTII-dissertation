@@ -104,12 +104,7 @@ const ScriptSupport: React.FC = () => {
                 flexItem
                 sx={{ marginTop: '1rem', marginBottom: '1rem' }}
               />
-              {providingSupport && (
-                <ProgramSupport
-                  program={script.program}
-                  currentUrl={tab.url ?? ''}
-                />
-              )}
+              {providingSupport && <ProgramSupport program={script.program} />}
             </>
           );
         }}

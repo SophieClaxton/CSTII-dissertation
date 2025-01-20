@@ -17,13 +17,9 @@ import { useTabContext } from '../../contexts/contextHooks';
 
 interface ProgramSupportProps {
   program: ASTProgram;
-  currentUrl: string;
 }
 
-const ProgramSupport: React.FC<ProgramSupportProps> = ({
-  program,
-  currentUrl,
-}) => {
+const ProgramSupport: React.FC<ProgramSupportProps> = ({ program }) => {
   const { tab } = useTabContext();
   const [baseStepNumber] = useState(0);
   const [currentStepNumber, setCurrentStepNumber] = useState(0);
@@ -50,7 +46,6 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({
 
   return (
     <Stack direction={'column'} spacing={2} padding={'1rem'}>
-      <p>{currentUrl}</p>
       {visibleSteps.map((step, index) => {
         const stepNumber = index + baseStepNumber;
         return (

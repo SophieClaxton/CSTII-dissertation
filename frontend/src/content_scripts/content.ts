@@ -11,10 +11,12 @@ import {
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
 import { EditingState, SupportState } from './state';
+import { stringSimilarity } from 'string-similarity-js';
 
 console.log('Loaded content script');
 
 const selectableElementTags = allSelectableTags;
+const similarityThreshold = 0.975;
 
 let editingState: EditingState = {
   isClickable: false,
@@ -46,7 +48,10 @@ const setupMessageListener = () => {
       case 'set_focus': {
         console.log('received focussing message');
         document.querySelectorAll('*').forEach((element) => {
-          if (element.outerHTML === message.element) {
+          if (
+            stringSimilarity(element.outerHTML, message.element) >
+            similarityThreshold
+          ) {
             console.log('found element to focus');
             element.classList.add('focussed-on');
             element.scrollIntoView({ behavior: 'smooth' });
@@ -64,14 +69,20 @@ const setupMessageListener = () => {
       case 'system_click_element': {
         console.log('received click element message');
         document.querySelectorAll('button').forEach((element) => {
-          if (element.outerHTML === message.element) {
+          if (
+            stringSimilarity(element.outerHTML, message.element) >
+            similarityThreshold
+          ) {
             console.log('found element to click');
             element.click();
           }
         });
 
         document.querySelectorAll('a').forEach((element) => {
-          if (element.outerHTML === message.element) {
+          if (
+            stringSimilarity(element.outerHTML, message.element) >
+            similarityThreshold
+          ) {
             console.log('found element to click');
             element.click();
           }
@@ -160,6 +171,32 @@ const addClickListeners = () => {
           chrome.runtime.sendMessage(message);
           editingState.isClickable = !editingState.isClickable;
           updateClassList();
+        }
+
+        if (supportState.collectStruggleData) {
+          const steps = [...supportState.nextPossibleSteps];
+          steps.forEach((step, index) => {
+            if (
+              (step.type === ASTNodeType.Click ||
+                step.type === ASTNodeType.Follow) &&
+              step.element.tag === element.tagName &&
+              stringSimilarity(element.outerHTML, step.element.outerHTML) >
+                similarityThreshold
+            ) {
+              console.log('Step completed');
+              const message: StepCompletedMessage = {
+                type: 'step_completed',
+                step,
+                index,
+              };
+
+              chrome.runtime.sendMessage(message);
+              supportState.nextPossibleSteps =
+                supportState.nextPossibleSteps.filter(
+                  (_, stepIndex) => stepIndex != index,
+                );
+            }
+          });
         }
       });
     }
