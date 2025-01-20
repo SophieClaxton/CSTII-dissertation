@@ -1,11 +1,12 @@
-import './styles/subsection.css';
-import InnerStepContainer from './InnerStepContainer';
-import EndStepNode from './EndStepNode';
-import AddNodeButton from './AddNodeButton';
 import { CSTSubsectionNode } from '../../../models/CST/CST';
-import { addEditorStepToSection } from '../../../models/CST/setters';
 import { getNodeChoices } from '../../../models/CST/getters';
 import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import AddNodeButton from '../AddNodeButton';
+import InnerStepContainer from '../InnerStepContainer';
+import EndStepNode from './EndStepNode';
+import '../styles/subsection.css';
+import { EditorActionType } from '../../../models/EditorAction';
+import Paper from '@mui/material/Paper/Paper';
 
 interface SubsectionNodeProps {
   subsection: CSTSubsectionNode;
@@ -16,15 +17,28 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
   // console.log(`Rendering subsection node ${subsection.id}`);
   // console.log(subsection);
   return (
-    <div className="subsection">
+    <Paper
+      elevation={0}
+      variant={'outlined'}
+      sx={{
+        width: 'fit-content',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        padding: '1rem',
+      }}
+    >
       <p>{subsection.answer}</p>
-      <InnerStepContainer innerSteps={subsection.innerSteps} />
+      <InnerStepContainer
+        innerSteps={subsection.innerSteps}
+        parentId={subsection.id}
+      />
       <AddNodeButton
-        onAdd={(step) => addEditorStepToSection(dispatch, subsection, step)}
+        onAdd={(step) => dispatch({ type: EditorActionType.AddStep, step })}
         nodeChoices={getNodeChoices(subsection)}
       />
       {subsection.endStep && <EndStepNode endStep={subsection.endStep} />}
-    </div>
+    </Paper>
   );
 };
 

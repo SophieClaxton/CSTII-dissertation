@@ -1,4 +1,4 @@
-import { Script } from '../../../models/Script';
+import { Script } from '../../../models/API/Script';
 import DisplaySection from './DisplaySection';
 
 interface DisplayScript {

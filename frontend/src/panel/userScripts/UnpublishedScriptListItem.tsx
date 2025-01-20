@@ -1,13 +1,12 @@
 import ListItem from '@mui/material/ListItem/ListItem';
 import { useNavigationContext } from '../contexts/contextHooks';
-import '../support/script_selection/styles/scriptListItem.css';
 import Card from '@mui/material/Card/Card';
 import CardActionArea from '@mui/material/CardActionArea/CardActionArea';
 import CardContent from '@mui/material/CardContent/CardContent';
 import Typography from '@mui/material/Typography/Typography';
 import CardActions from '@mui/material/CardActions/CardActions';
 import { editorScreen } from '../navigation/screens';
-import { UnpublishedScriptWithWebsite } from '../models/UnpublishedScript';
+import { UnpublishedScriptWithWebsite } from '../models/API/UnpublishedScript';
 
 const UnpublishedScriptListItem: React.FC<{
   script: UnpublishedScriptWithWebsite;
@@ -17,14 +16,14 @@ const UnpublishedScriptListItem: React.FC<{
   const { goTo } = useNavigationContext();
 
   return (
-    <ListItem key={script.id}>
-      <Card className="script-card">
+    <ListItem key={script.id} sx={{ padding: '0 0 0.5rem 0' }}>
+      <Card sx={{ width: '100%' }} elevation={2}>
         <CardActionArea
           onClick={() => {
             goTo(editorScreen(script.id));
           }}
         >
-          <CardContent>
+          <CardContent sx={{ padding: '0.5rem' }}>
             <Typography variant="h5" gutterBottom>
               {script.title}
             </Typography>

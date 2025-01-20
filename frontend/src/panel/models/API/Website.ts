@@ -10,5 +10,10 @@ interface WebsiteWithScripts extends Website {
   scripts: ScriptWithAuthor[];
 }
 
+interface WebsiteRequest {
+  url: string;
+  description: string;
+}
+
 export default Website;
-export type { WebsiteWithScripts };
+export type { WebsiteWithScripts, WebsiteRequest };

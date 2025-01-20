@@ -1,38 +1,36 @@
-import { Message } from '../common/message';
+import { ClickedElementMessage, Message } from '../common/message';
+import {
+  allSelectableTags,
+  isSelectableTag,
+  SelectableTag,
+} from '../panel/models/InterfaceElement';
 import './clickable.css';
 
-alert('Loaded content script');
 console.log('Loaded content script');
+
+const selectableElementTags = allSelectableTags;
 
 // managing element clickability
 let isClickable = false;
-const selectableElementTags = [
-  'img',
-  'a',
-  'button',
-  'p',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'h5',
-  'h6',
-];
+let stepId = '';
+let validTags: SelectableTag[] = [];
+let url = '';
 
-const setupClickabilityListener = () => {
+const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: Message) => {
     switch (message.type) {
       case 'close_side_panel':
       case 'clicked_element':
         break;
-      case 'toggle_clickability': {
-        console.log('received clickability message');
-        isClickable = !isClickable;
-        console.log(`set clickability to ${isClickable}`);
+      case 'set_clickable': {
+        validTags = message.validTags;
+        stepId = message.stepId;
+        isClickable = true;
+        url = message.url;
         updateClassList();
         break;
       }
-      case 'toggle_focus': {
+      case 'set_focus': {
         console.log('received focussing message');
         const elementOuterHTML = message.element;
 
@@ -40,10 +38,14 @@ const setupClickabilityListener = () => {
           if (element.outerHTML === elementOuterHTML) {
             console.log('found element to focus');
             element.classList.add('focussed-on');
-          } else if (element.outerHTML.includes('focussed-on')) {
-            console.log('found element to unfocus');
-            element.classList.remove('focussed-on');
           }
+        });
+        break;
+      }
+      case 'unset_focus': {
+        console.log('received focussing message');
+        document.querySelectorAll('*').forEach((element) => {
+          element.classList.remove('focussed-on');
         });
         break;
       }
@@ -70,9 +72,18 @@ const setupClickabilityListener = () => {
 };
 
 const updateClassList = () => {
-  document.querySelectorAll('*').forEach((element) => {
-    if (selectableElementTags.includes(element.tagName.toLowerCase())) {
-      if (isClickable) {
+  selectableElementTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements.item(i);
+      if (!element) {
+        continue;
+      }
+      if (
+        isClickable &&
+        isSelectableTag(element.tagName) &&
+        validTags.includes(element.tagName)
+      ) {
         element.classList.add('clickable');
       } else {
         element.classList.remove('clickable');
@@ -83,23 +94,40 @@ const updateClassList = () => {
 
 const addClickListeners = () => {
   console.log('adding click listeners');
-  document.querySelectorAll('*').forEach((element) => {
-    if (selectableElementTags.includes(element.tagName.toLowerCase())) {
+  selectableElementTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements.item(i);
+      if (!element) {
+        continue;
+      }
       element.addEventListener('click', () => {
-        if (isClickable) {
-          const message = {
+        if (
+          isClickable &&
+          isSelectableTag(element.tagName) &&
+          validTags.includes(element.tagName)
+        ) {
+          element.classList.remove('clickable');
+          const message: ClickedElementMessage = {
             type: 'clicked_element',
-            element: element.outerHTML,
-            tag: element.tagName,
+            elementOuterHtml: element.outerHTML,
+            elementTag: element.tagName,
+            elementTextContent: element.textContent,
+            stepId,
+            url,
+            newUrl: element.hasAttribute('href')
+              ? (element as HTMLLinkElement).href
+              : '',
           };
-          console.log('sending message');
           chrome.runtime.sendMessage(message);
+          isClickable = !isClickable;
+          updateClassList();
         }
       });
     }
   });
 };
 
-setupClickabilityListener();
+setupMessageListener();
 updateClassList();
 addClickListeners();

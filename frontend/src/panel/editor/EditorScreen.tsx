@@ -1,17 +1,18 @@
-import ProgramFlow from './components/CST/ProgramFlow';
 import { UnpublishedScriptContextProvider } from '../contexts/UnpublishedScriptContext';
 import '../panel.css';
 import './styles/editor.css';
 import { useNavigationContext } from '../contexts/contextHooks';
 import { useEffect, useState } from 'react';
-import APIResponse from '../models/APIResponse';
+import APIResponse from '../models/API/APIResponse';
 import { getUnpublishedScript } from '../api/unpublishedScripts';
-import { UnpublishedScript } from '../models/UnpublishedScript';
+import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import { assertIsEditorScreen } from '../navigation/screenChecks';
 import Loadable from '../components/Loadable';
+import ScriptEditor from './components/ScriptEditor';
+import Page from '../components/Page';
 
 const Editor: React.FC = () => {
-  const { goBack, currentScreen } = useNavigationContext();
+  const { currentScreen } = useNavigationContext();
   assertIsEditorScreen(currentScreen);
 
   const [unpublishedScriptData, setUnpublishedScriptData] = useState<
@@ -29,22 +30,16 @@ const Editor: React.FC = () => {
   }, [currentScreen]);
 
   return (
-    <div className="editor page">
-      <div className="page-title">
-        <h1>Program Editor</h1>
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
-      </div>
+    <Page title={'Script Editor'}>
       <Loadable
         response={unpublishedScriptData}
         onLoad={(script) => (
           <UnpublishedScriptContextProvider script={script}>
-            <ProgramFlow />
+            <ScriptEditor />
           </UnpublishedScriptContextProvider>
         )}
       />
-    </div>
+    </Page>
   );
 };
 

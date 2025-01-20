@@ -157,6 +157,9 @@ class UnpublishedScript(SQLModel, table=True):
     website_id: int | None = Field(
         foreign_key="website.id", default=None, nullable=True, ondelete="RESTRICT"
     )
+    published_script_id: int | None = Field(
+        foreign_key="script.id", default=None, nullable=True, ondelete="RESTRICT"
+    )
 
     author: User | None = Relationship(back_populates="unpublished_scripts")
     website: Website | None = Relationship(back_populates="unpublished_scripts")
@@ -192,6 +195,7 @@ class UnpublishedScript(SQLModel, table=True):
             description=self.description,
             author=None if not self.author else self.author.toBaseUserResponse(),
             website=None if not self.website else self.website.toBaseWesbiteResponse(),
+            published_script_id=self.published_script_id,
             program=program,
         )
 

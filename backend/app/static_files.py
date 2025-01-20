@@ -33,6 +33,14 @@ def get_script_program(filename: str) -> ASTProgram:
         return program
 
 
+def update_script_program(filename: str, program: ASTProgram) -> None:
+    file_path = path.join(scripts_path, filename)
+
+    with open(file_path, "wb") as file:
+        pickle.dump(program, file)
+        return
+
+
 def delete_script_file(filename: str) -> None:
     file_path = path.join(scripts_path, filename)
 

@@ -1,24 +1,34 @@
-import ClickedElementsDisplay from './ClickedElementsDisplay';
+import Stack from '@mui/material/Stack/Stack';
 import { useNavigationContext } from '../contexts/contextHooks';
 import {
   helperScriptsScreen,
   scriptSelectorScreen,
 } from '../navigation/screens';
+import Button from '@mui/material/Button/Button';
+import Page from './Page';
 
 const HomeScreen: React.FC = () => {
   const { goTo } = useNavigationContext();
 
   return (
-    <>
-      <h1>SC2370 Project Hi</h1>
-      <button onClick={() => goTo(helperScriptsScreen)}>
-        Start Writing Scripts
-      </button>
-      <button onClick={() => goTo(scriptSelectorScreen)}>
-        Go to Script Selector
-      </button>
-      <ClickedElementsDisplay />
-    </>
+    <Page title={'Home Screen'} noBackButton>
+      <Stack spacing={2} margin={'4rem'}>
+        <Button
+          variant="contained"
+          sx={{ width: '100%', height: '8rem' }}
+          onClick={() => goTo(scriptSelectorScreen)}
+        >
+          Go to Script Selector
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ width: '100%', height: '8rem' }}
+          onClick={() => goTo(helperScriptsScreen)}
+        >
+          Start Writing Scripts
+        </Button>
+      </Stack>
+    </Page>
   );
 };
 

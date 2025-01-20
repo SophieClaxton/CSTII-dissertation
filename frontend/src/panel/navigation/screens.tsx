@@ -1,5 +1,5 @@
 import HelperScriptSelector from '../userScripts/HelperScriptSelector';
-import Editor from '../editor/Editor';
+import Editor from '../editor/EditorScreen';
 import ScriptSelectionPage from '../support/script_selection/ScriptSelectionPage';
 import UserScriptSelectionPage from '../support/script_selection/UserScriptSelectionPage';
 import WebsiteScriptSelectionPage from '../support/script_selection/WebsiteScriptSelectionPage';

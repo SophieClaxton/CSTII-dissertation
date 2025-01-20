@@ -4,17 +4,35 @@ import {
   CSTSubsectionNode,
   CSTStepNodeType,
   CSTUserDecisionEndType,
+  CSTInnerStepId,
+  CSTNodeId,
+  CSTEndStepId,
+  CSTSubsectionId,
+  CSTSectionId,
+  CSTEndStepNode,
+  CSTInnerStepNode,
 } from './CST';
 
 const isSection = (node: CSTNode): node is CSTSectionNode => {
-  return 'id' in node;
+  return (
+    'id' in node &&
+    'sectionId' in node.id &&
+    'innerSteps' in node &&
+    'url' in node
+  );
 };
 
 const isSubsection = (node: CSTNode): node is CSTSubsectionNode => {
-  return 'id' in node;
+  return (
+    'id' in node &&
+    'parentId' in node.id &&
+    'subsectionId' in node.id &&
+    'innerSteps' in node &&
+    'answer' in node
+  );
 };
 
-const isInnerStep = (node: CSTNode): boolean => {
+const isInnerStep = (node: CSTNode): node is CSTInnerStepNode => {
   if (!('type' in node)) {
     return false;
   }
@@ -35,7 +53,7 @@ const isInnerStep = (node: CSTNode): boolean => {
   );
 };
 
-const isEndStep = (node: CSTNode): boolean => {
+const isEndStep = (node: CSTNode): node is CSTEndStepNode => {
   if (!('type' in node)) {
     return false;
   }
@@ -46,4 +64,29 @@ const isEndStep = (node: CSTNode): boolean => {
   );
 };
 
-export { isSection, isSubsection, isInnerStep, isEndStep };
+const isSectionId = (id: CSTNodeId): id is CSTSectionId => {
+  return 'sectionId' in id;
+};
+
+const isSubsectionId = (id: CSTNodeId): id is CSTSubsectionId => {
+  return 'subsectionId' in id;
+};
+
+const isInnerStepId = (id: CSTNodeId): id is CSTInnerStepId => {
+  return 'stepId' in id && typeof id.stepId === 'number';
+};
+
+const isEndStepId = (id: CSTNodeId): id is CSTEndStepId => {
+  return 'stepId' in id && typeof id.stepId === 'string';
+};
+
+export {
+  isSection,
+  isSubsection,
+  isInnerStep,
+  isEndStep,
+  isSectionId,
+  isSubsectionId,
+  isInnerStepId,
+  isEndStepId,
+};

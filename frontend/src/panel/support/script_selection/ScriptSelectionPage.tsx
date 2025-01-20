@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useNavigationContext } from '../../contexts/contextHooks';
-import '../../panel.css';
-import APIResponse from '../../models/APIResponse';
-import { ScriptWithAuthorAndWebsite } from '../../models/Script';
+import APIResponse from '../../models/API/APIResponse';
+import { ScriptWithAuthorAndWebsite } from '../../models/API/Script';
 import { getScripts } from '../../api/scripts';
 import ScriptListItem from './ScriptListItem';
-import './styles/scriptSelectionPage.css';
 import List from '@mui/material/List/List';
-import Website from '../../models/Website';
-import User from '../../models/User';
+import Website from '../../models/API/Website';
+import User from '../../models/API/User';
 import { getWebsites } from '../../api/websites';
 import { getUsers } from '../../api/users';
 import ScriptFilterDialog from './ScriptFilterDialog';
 import FilterBar from './FilterBar';
 import Loadable from '../../components/Loadable';
+import Page from '../../components/Page';
+import Stack from '@mui/material/Stack/Stack';
 
 const ScriptSelectionPage: React.FC = () => {
-  const { goBack } = useNavigationContext();
   const [scriptsData, setScriptsData] = useState<
     APIResponse<ScriptWithAuthorAndWebsite[]>
   >({ status: 'Loading' });
@@ -69,34 +67,26 @@ const ScriptSelectionPage: React.FC = () => {
   }, [scriptsData, websiteFilters, authorFilters]);
 
   return (
-    <div className="script-selection-page page">
-      <div className="page-title">
-        <h1>Select a Script</h1>
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
-      </div>
-      <div className="all-scripts-container">
-        <Loadable
-          response={scriptsData}
-          onLoad={() => (
-            <>
-              <FilterBar
-                setOpenFilterDialog={setOpenFilterDialog}
-                websiteFilters={websiteFilters}
-                setWebsiteFilters={setWebsiteFilters}
-                authorFilters={authorFilters}
-                setAuthorFilters={setAuthorFilters}
-              />
-              <List className="script-list">
-                {scripts.map((script) => (
-                  <ScriptListItem script={script} />
-                ))}
-              </List>
-            </>
-          )}
-        ></Loadable>
-      </div>
+    <Page title={'Script Selection'}>
+      <Loadable
+        response={scriptsData}
+        onLoad={() => (
+          <Stack direction={'column'} spacing={1} padding={'0.5rem'}>
+            <FilterBar
+              setOpenFilterDialog={setOpenFilterDialog}
+              websiteFilters={websiteFilters}
+              setWebsiteFilters={setWebsiteFilters}
+              authorFilters={authorFilters}
+              setAuthorFilters={setAuthorFilters}
+            />
+            <List disablePadding>
+              {scripts.map((script) => (
+                <ScriptListItem script={script} />
+              ))}
+            </List>
+          </Stack>
+        )}
+      />
       <ScriptFilterDialog
         open={openFilterDialog}
         setOpen={setOpenFilterDialog}
@@ -107,7 +97,7 @@ const ScriptSelectionPage: React.FC = () => {
         authorFilters={authorFilters}
         setAuthorFilters={setAuthorFilters}
       />
-    </div>
+    </Page>
   );
 };
 

@@ -14,13 +14,16 @@ class UpdateUserRequest(BaseModel):
     name: str | None = None
 
 
-class PublishScriptRequest(BaseModel):
+class UpdateScriptRequest(BaseModel):
     title: str
-    author_id: int
-    created_at: datetime
     description: str
     program: ASTProgram
     website_id: int
+
+
+class PublishScriptRequest(UpdateScriptRequest):
+    author_id: int
+    created_at: datetime
 
 
 class CreateWebsiteRequest(BaseModel):
@@ -33,6 +36,7 @@ class UpdateUnpublishedScriptRequest(BaseModel):
     description: str | None = None
     website_id: int | None = None
     program: CSTProgram | None = None
+    published_script_id: int | None = None
 
 
 class CreateAnnotationRequest(BaseModel):

@@ -56,9 +56,9 @@ class CSTStepNodeType(str, Enum):
     Follow = "Follow"
     Click = "Click"
     Read = "Read"
-    ScrollTo = "ScrollTo"
+    ScrollTo = "Scroll To"
     Drag = "Drag"
-    UserDecision = "UserDecision"
+    UserDecision = "User Decision"
     Write = "Write"
     Select = "Select"
     Check = "Check"
@@ -78,6 +78,7 @@ class CSTFollowNode(CSTStepBase):
 
     id: CSTEndStepId
     type: Literal[CSTStepNodeType.Follow]
+    nextSectionId: CSTSectionId | None = None
 
 
 class CSTClickNode(CSTInnerStepBase):

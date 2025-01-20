@@ -2,7 +2,12 @@ from fastapi import APIRouter
 from typing import List
 from sqlmodel import select
 
-from ..static_files import create_script_file, delete_script_file, get_script_program
+from ..static_files import (
+    create_script_file,
+    delete_script_file,
+    get_script_program,
+    update_script_program,
+)
 from ..exceptions.not_found import (
     script_not_found_exception,
     user_not_found_exception,
@@ -17,7 +22,11 @@ from ..models.responses import (
     ScriptWithProgramResponse,
     SuccessResponse,
 )
-from ..models.requests import PublishScriptRequest, CreateAnnotationRequest
+from ..models.requests import (
+    PublishScriptRequest,
+    CreateAnnotationRequest,
+    UpdateScriptRequest,
+)
 
 router = APIRouter(prefix="/scripts", tags=["scripts"])
 
@@ -59,6 +68,23 @@ def create_script(
     session.refresh(new_script)
 
     return new_script.toBaseScriptResponse()
+
+
+@router.patch("/{script_id}", response_model=SuccessResponse)
+def update_script(
+    script_id: int, script: UpdateScriptRequest, session: DatabaseDep
+) -> SuccessResponse:
+    existing_script = session.get(Script, script_id)
+    if not existing_script:
+        raise script_not_found_exception(script_id)
+
+    existing_script.title = script.title
+    existing_script.description = script.description
+    update_script_program(existing_script.script_url, script.program)
+
+    session.commit()
+    session.refresh(existing_script)
+    return SuccessResponse(ok=True)
 
 
 @router.get("/{script_id}", response_model=ScriptWithProgramResponse)

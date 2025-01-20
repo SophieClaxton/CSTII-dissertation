@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { CSTStepNode } from '../../../models/CST/CST';
 import { useXarrow } from 'react-xarrows';
+import { CSTStepNode } from '../../models/CST/CST';
+import Stack from '@mui/material/Stack/Stack';
 
 interface AddNodeButtonProps<T extends CSTStepNode> {
   onAdd: (node: T) => void;
@@ -13,10 +14,24 @@ const AddNodeButton = <T extends CSTStepNode>(props: AddNodeButtonProps<T>) => {
   const updateArrows = useXarrow();
   if (showNodeChoices) {
     return (
-      <div>
+      <Stack
+        sx={{
+          width: '25.625rem',
+          gap: '0.365rem',
+          flexFlow: 'row wrap',
+        }}
+      >
         {nodeChoices.map((choice) => (
           <button
-            className="step add-node-button"
+            style={{
+              minWidth: '6rem',
+              flex: '1 1 0',
+              borderRadius: '0.5rem',
+              outlineColor: 'rgba(60, 60, 60, 0.25)',
+              outlineStyle: 'dashed',
+              outlineWidth: '2px',
+              padding: '0.5rem',
+            }}
             onClick={() => {
               onAdd(choice);
               setShowNodeChoices(false);
@@ -26,16 +41,23 @@ const AddNodeButton = <T extends CSTStepNode>(props: AddNodeButtonProps<T>) => {
             {choice.type}
           </button>
         ))}
-      </div>
+      </Stack>
     );
   }
 
   return (
     <button
-      className="step add-node-button"
       onClick={() => {
         setShowNodeChoices(true);
         updateArrows();
+      }}
+      style={{
+        width: '25.625rem',
+        borderRadius: '0.5rem',
+        outlineColor: 'rgba(60, 60, 60, 0.25)',
+        outlineStyle: 'dashed',
+        outlineWidth: '2px',
+        padding: '0.5rem',
       }}
     >
       + Instruction

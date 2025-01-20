@@ -1,3 +1,4 @@
+import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import {
   ASTCheckNode,
   ASTClickNode,
@@ -14,7 +15,6 @@ import {
   ASTSubsectionNode,
   ASTWriteNode,
 } from '../AST/AST';
-import { getMissingProperties } from '../AST/getters';
 import {
   astCheckNodeSchema,
   astDragNodeSchema,
@@ -28,6 +28,7 @@ import {
   isASTStepNode,
   isASTSubsectionNode,
 } from '../AST/testers';
+import { getMissingProperties, Schema } from '../Schema';
 import {
   CSTCheckNode,
   CSTClickNode,
@@ -47,7 +48,7 @@ import {
   CSTUserDecisionEndStepNode,
   CSTWriteNode,
 } from './CST';
-import { mapNodeIdToString } from './mappers';
+import { isSection } from './testers';
 
 type TypeCheckResult =
   | { success: true; program: ASTProgram }
@@ -71,11 +72,11 @@ const typeCheck = (program: CSTProgram): TypeCheckResult => {
       ASTNodeType.Section,
       mappedSections,
     );
-    mappedSections.set(mapNodeIdToString(section.id), mappedSection);
+    mappedSections.set(mapIdToString(section.id), mappedSection);
   }
 
   const firstSection = mappedSections.get(
-    mapNodeIdToString(program.sections[0].id),
+    mapIdToString(program.sections[0].id),
   );
   return firstSection
     ? isASTSectionNode(firstSection)
@@ -102,7 +103,7 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
     case CSTStepNodeType.Follow: {
       const nextSectionId = section.endStep.nextSectionId;
       const nextSection = nextSectionId
-        ? mappedSections.get(mapNodeIdToString(nextSectionId))
+        ? mappedSections.get(mapIdToString(nextSectionId))
         : undefined;
       nextStep = mapFollowStep(section.endStep, nextSection);
       break;
@@ -127,17 +128,17 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
   }
 
   for (const innerStep of innerSteps) {
-    if (!nextStep) {
+    if (!isASTStepNode(nextStep)) {
       break;
     }
     nextStep = mapInnerStep(innerStep, nextStep);
   }
 
-  if (!nextStep) {
-    console.log(`Type check failed for ${mapNodeIdToString(section.id)}`);
+  if (!isASTStepNode(nextStep)) {
+    console.log(`Type check failed for ${mapIdToString(section.id)}`);
   }
   return isASTStepNode(nextStep)
-    ? 'url' in section
+    ? isSection(section)
       ? ({ type: sectionType, start: nextStep, url: section.url } as O)
       : ({ type: sectionType, start: nextStep } as O)
     : nextStep;
@@ -146,14 +147,16 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
 const mapStepNode = <I extends CSTInnerStepNode, R extends ASTStepNode>(
   node: I,
   next: ASTStepNode | TypeCheckError[],
-  schema: Record<keyof R, boolean>,
+  schema: Schema<R>,
 ): R | TypeCheckError[] => {
   const missingProperties = getMissingProperties(node, schema);
 
   if (missingProperties.length > 0) {
     const nodeError = {
       location: node.id,
-      reason: missingProperties.join(', '),
+      reason: missingProperties
+        .map((property) => `Missing ${property}`)
+        .join(', '),
     };
     if (isASTStepNode(next)) {
       return [nodeError];
@@ -166,8 +169,9 @@ const mapStepNode = <I extends CSTInnerStepNode, R extends ASTStepNode>(
       key,
       node[key as keyof I],
     ]);
-    return Object.fromEntries(objectEntries) as R;
+    return { ...Object.fromEntries(objectEntries), next } as R;
   }
+  console.log(next);
   return next;
 };
 
@@ -243,15 +247,18 @@ const mapFollowStep = (
   endStep: CSTFollowNode,
   nextSection: ASTSectionNode | TypeCheckError[] | undefined,
 ): ASTStepNode | TypeCheckError[] => {
-  if (endStep.element && nextSection) {
-    if (isASTSectionNode(nextSection)) {
-      return {
-        type: ASTNodeType.Follow,
-        element: endStep.element,
-        nextSection: nextSection,
-      };
+  if (endStep.element) {
+    if (nextSection) {
+      if (isASTSectionNode(nextSection)) {
+        return {
+          type: ASTNodeType.Follow,
+          element: endStep.element,
+          nextSection: nextSection,
+        };
+      }
+      return nextSection;
     }
-    return nextSection;
+    return [{ location: endStep.id, reason: 'Missing next section' }];
   }
 
   const endStepError = { location: endStep.id, reason: 'Missing element' };
@@ -296,4 +303,4 @@ const mapUserDecisionStep = (
 };
 
 export default typeCheck;
-export type { TypeCheckError };
+export type { TypeCheckError, TypeCheckResult };

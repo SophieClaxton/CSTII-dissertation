@@ -1,4 +1,4 @@
-import { CSTProgram } from './CST/CST';
+import { CSTProgram } from '../CST/CST';
 import User from './User';
 import Website from './Website';
 
@@ -15,6 +15,7 @@ type UnpublishedScriptWithWebsite = UnpublishedScriptBase & {
 type UnpublishedScript = UnpublishedScriptWithWebsite & {
   author: User;
   program: CSTProgram;
+  published_script_id?: number;
 };
 
 interface UpdateUnpublishedScriptRequest {
@@ -22,6 +23,7 @@ interface UpdateUnpublishedScriptRequest {
   description?: string;
   website_id?: number;
   program?: CSTProgram;
+  published_script_id?: number;
 }
 
 export type {

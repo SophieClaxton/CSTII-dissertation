@@ -2,8 +2,9 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import UserDecisionNode from './UserDecisionNode';
 import { CSTInnerStepNode, CSTStepNodeType } from '../../../models/CST/CST';
-import { mapNodeIdToString } from '../../../models/CST/mappers';
 import Step from '../Step';
+import ElementSelector from '../ElementSelector';
+import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
 
 interface InnerStepNodeProps {
   step: CSTInnerStepNode;
@@ -11,7 +12,7 @@ interface InnerStepNodeProps {
 
 const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: mapNodeIdToString(step.id) });
+    useSortable({ id: mapIdToString(step.id) });
 
   const style = { transform: CSS.Transform.toString(transform), transition };
 
@@ -32,6 +33,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
       return (
         <Step
           stepId={step.id}
+          stepType={step.type}
           sortableProps={{
             setNodeRef: setNodeRef,
             style: style,
@@ -39,8 +41,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
             listeners: listeners,
           }}
         >
-          <p>{step.type.toUpperCase()}</p>
-          {step.element && <p>{step.element.tag}</p>}
+          <ElementSelector step={step} />
         </Step>
       );
   }

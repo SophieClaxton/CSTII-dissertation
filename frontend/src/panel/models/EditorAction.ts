@@ -1,23 +1,23 @@
 import InterfaceElement from './InterfaceElement';
 import {
   CSTEndStepId,
-  CSTEndStepNode,
-  CSTInnerStepId,
   CSTInnerStepNode,
+  CSTSection,
   CSTSectionId,
-  CSTSubsectionId,
+  CSTStepNode,
   CSTUserDecisionNode,
 } from './CST/CST';
 
 enum EditorActionType {
-  EditProgramName = 'editProgramName',
-  EditProgramAuthor = 'editProgramAuthor',
-  EditInnerStep = 'editInnerStep',
-  AddInnerStep = 'addInnerStep',
-  DeleteInnerStep = 'deleteInnerStep',
-  EditEndStep = 'editEndStep',
-  AddEndStep = 'addEndStep',
-  DeleteEndStep = 'deleteEndStep',
+  EditScriptTitle = 'editScriptTitle',
+  EditScriptDescription = 'editScriptDescription',
+  SetPublishedScriptId = 'setPublishedScriptId',
+  AddSection = 'addSection',
+  DeleteSection = 'deleteSection',
+  AddStep = 'addStep',
+  EditStepElement = 'editStepElement',
+  DeleteStep = 'deleteStep',
+  RearrangeInnerSteps = 'rearrangeInnerSteps',
   ChangeUserDecisionStepToInnerStep = 'changeUserDecisionStepToInnerStep',
   ChangeUserDecisionStepToEndStep = 'changeUserDecisionStepToEndStep',
 }
@@ -27,88 +27,91 @@ interface BaseEditorAction {
 }
 
 type EditorAction =
-  | EditProgramNameAction
-  | EditProgramAuthorAction
-  | EditInnerStepAction
-  | AddInnerStepAction
-  | DeleteInnerStepAction
-  | EditEndStepAction
-  | AddEndStepAction
-  | DeleteEndStepAction
+  | EditScriptTitleAction
+  | EditScriptDescriptionAction
+  | SetPublishedScriptIdAction
+  | AddSectionAction
+  | DeleteSectionAction
+  | EditStepElementAction
+  | AddStepAction
+  | DeleteStepAction
+  | RearrangeInnerStepsAction
   | ChangeUserDecisionStepToInnerStepAction
   | ChangeUserDecisionStepToEndStepAction;
 
-interface EditProgramNameAction extends BaseEditorAction {
-  type: EditorActionType.EditProgramName;
-  newName: string;
+interface EditScriptTitleAction extends BaseEditorAction {
+  type: EditorActionType.EditScriptTitle;
+  title: string;
 }
 
-interface EditProgramAuthorAction extends BaseEditorAction {
-  type: EditorActionType.EditProgramAuthor;
-  newAuthor: string;
+interface EditScriptDescriptionAction extends BaseEditorAction {
+  type: EditorActionType.EditScriptDescription;
+  description: string;
 }
 
-interface EditInnerStepAction extends BaseEditorAction {
-  type: EditorActionType.EditInnerStep;
-  stepId: CSTInnerStepId;
-  comment?: string;
-  element?: InterfaceElement;
+interface SetPublishedScriptIdAction extends BaseEditorAction {
+  type: EditorActionType.SetPublishedScriptId;
+  id: number | undefined;
 }
 
-interface AddInnerStepAction extends BaseEditorAction {
-  type: EditorActionType.AddInnerStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
-  innerStep: CSTInnerStepNode;
+interface AddSectionAction extends BaseEditorAction {
+  type: EditorActionType.AddSection;
+  sectionUrl: string;
+  followStepId: CSTEndStepId;
 }
 
-interface DeleteInnerStepAction extends BaseEditorAction {
-  type: EditorActionType.DeleteInnerStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
-  innerStepId: CSTInnerStepId;
+interface DeleteSectionAction extends BaseEditorAction {
+  type: EditorActionType.DeleteSection;
+  sectionId: CSTSectionId;
 }
 
-interface EditEndStepAction extends BaseEditorAction {
-  type: EditorActionType.EditEndStep;
-  stepId: CSTEndStepId;
-  comment?: string;
-  element?: InterfaceElement;
+interface EditStepElementAction extends BaseEditorAction {
+  type: EditorActionType.EditStepElement;
+  stepId: CSTStepNode['id'];
+  element: InterfaceElement | undefined;
+  oldUrl: string;
 }
 
-interface AddEndStepAction extends BaseEditorAction {
-  type: EditorActionType.AddEndStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
-  endStep: CSTEndStepNode;
+interface AddStepAction extends BaseEditorAction {
+  type: EditorActionType.AddStep;
+  step: CSTStepNode;
 }
 
-interface DeleteEndStepAction extends BaseEditorAction {
-  type: EditorActionType.DeleteEndStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
-  endStepId: CSTEndStepId;
+interface DeleteStepAction extends BaseEditorAction {
+  type: EditorActionType.DeleteStep;
+  stepId: CSTStepNode['id'];
+}
+
+interface RearrangeInnerStepsAction extends BaseEditorAction {
+  type: EditorActionType.RearrangeInnerSteps;
+  sectionId: CSTSection['id'];
+  innerSteps: CSTInnerStepNode[];
 }
 
 interface ChangeUserDecisionStepToInnerStepAction extends BaseEditorAction {
   type: EditorActionType.ChangeUserDecisionStepToInnerStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
+  sectionId: CSTSection['id'];
   userDecisionStep: CSTUserDecisionNode;
 }
 
 interface ChangeUserDecisionStepToEndStepAction extends BaseEditorAction {
   type: EditorActionType.ChangeUserDecisionStepToEndStep;
-  sectionId: CSTSectionId | CSTSubsectionId;
+  sectionId: CSTSection['id'];
   userDecisionStep: CSTUserDecisionNode;
 }
 
 export { EditorActionType };
 export type {
   EditorAction,
-  EditProgramNameAction,
-  EditProgramAuthorAction,
-  EditInnerStepAction,
-  AddInnerStepAction,
-  DeleteInnerStepAction,
-  EditEndStepAction,
-  AddEndStepAction,
-  DeleteEndStepAction,
+  EditScriptTitleAction,
+  EditScriptDescriptionAction,
+  SetPublishedScriptIdAction,
+  AddSectionAction,
+  DeleteSectionAction,
+  AddStepAction,
+  EditStepElementAction,
+  DeleteStepAction,
+  RearrangeInnerStepsAction,
   ChangeUserDecisionStepToInnerStepAction,
   ChangeUserDecisionStepToEndStepAction,
 };

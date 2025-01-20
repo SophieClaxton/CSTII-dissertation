@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigationContext } from '../../contexts/contextHooks';
-import APIResponse from '../../models/APIResponse';
+import APIResponse from '../../models/API/APIResponse';
 import Loadable from '../../components/Loadable';
 import List from '@mui/material/List/List';
 import ScriptListItem from './ScriptListItem';
-import { WebsiteWithScripts } from '../../models/Website';
+import { WebsiteWithScripts } from '../../models/API/Website';
 import { getWebsite } from '../../api/websites';
-import './styles/scriptSelectionPage.css';
 import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChecks';
+import Page from '../../components/Page';
+import Stack from '@mui/material/Stack/Stack';
 
 const UserScriptSelectionPage = () => {
-  const { currentScreen, goBack } = useNavigationContext();
+  const { currentScreen } = useNavigationContext();
   assertIsWebsiteScriptSelectorScreen(currentScreen);
 
   const [websiteData, setWebsiteData] = useState<
@@ -29,21 +30,15 @@ const UserScriptSelectionPage = () => {
     <Loadable
       response={websiteData}
       onLoad={(website) => (
-        <div className="script-selection-page page">
-          <div className="page-title">
-            <h1>Select a Script from {website.url}</h1>
-            <button className="back-button" onClick={goBack}>
-              Back
-            </button>
-          </div>
-          <div className="all-scripts-container">
-            <List className="script-list">
+        <Page title={`Scripts for ${website.url}`}>
+          <Stack sx={{ padding: '0.5rem' }}>
+            <List>
               {website.scripts.map((script) => (
                 <ScriptListItem script={script} />
               ))}
             </List>
-          </div>
-        </div>
+          </Stack>
+        </Page>
       )}
     />
   );

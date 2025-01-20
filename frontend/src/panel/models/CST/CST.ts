@@ -1,5 +1,7 @@
 import InterfaceElement from '../InterfaceElement';
 
+type ExcludeFromUnion<U, E> = U extends E ? never : U;
+
 interface CSTProgram {
   sections: CSTSectionNode[];
 }
@@ -15,7 +17,7 @@ interface CSTSectionId {
 }
 
 interface CSTSubsectionId {
-  parentId: CSTSectionId | CSTEndStepId | CSTInnerStepId;
+  parentId: CSTEndStepId | CSTInnerStepId;
   subsectionId: number;
 }
 
@@ -57,9 +59,9 @@ enum CSTStepNodeType {
   Follow = 'Follow',
   Click = 'Click',
   Read = 'Read',
-  ScrollTo = 'ScrollTo',
+  ScrollTo = 'Scroll To',
   Drag = 'Drag',
-  UserDecision = 'UserDecision',
+  UserDecision = 'User Decision',
   Write = 'Write',
   Select = 'Select',
   Check = 'Check',
@@ -86,6 +88,11 @@ type CSTInnerStepNode =
   | CSTInputNode;
 
 type CSTEndStepNode = CSTFollowNode | CSTUserDecisionEndStepNode;
+
+type CSTElementNode = ExcludeFromUnion<
+  ExcludeFromUnion<CSTStepNode, CSTUserDecisionEndStepNode>,
+  CSTUserDecisionInnerStepNode
+>;
 
 interface CSTFollowNode extends CSTStepBase {
   id: CSTEndStepId;
@@ -179,6 +186,7 @@ export type {
   CSTStepNode,
   CSTInnerStepNode,
   CSTEndStepNode,
+  CSTElementNode,
   CSTStepBase,
   CSTFollowNode,
   CSTClickNode,

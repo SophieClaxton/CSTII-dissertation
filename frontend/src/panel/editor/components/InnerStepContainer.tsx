@@ -4,6 +4,7 @@ import {
   DndContext,
   DragEndEvent,
   KeyboardSensor,
+  MouseSensor,
   UniqueIdentifier,
   useSensor,
   useSensors,
@@ -14,32 +15,46 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import InnerStepNode from './InnerStepNode';
 import { useXarrow } from 'react-xarrows';
-import { CSTInnerStepNode } from '../../../models/CST/CST';
-import { MouseSensor } from '../../flowUtils/sensors';
-import { mapNodeIdToString } from '../../../models/CST/mappers';
+import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
+import {
+  CSTInnerStepNode,
+  CSTSectionId,
+  CSTSubsectionId,
+} from '../../models/CST/CST';
+import { EditorActionType } from '../../models/EditorAction';
+import InnerStepNode from './CST/InnerStepNode';
+import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 
 interface InnerStepContainerProps {
   innerSteps: CSTInnerStepNode[];
+  parentId: CSTSectionId | CSTSubsectionId;
 }
 
 const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
   innerSteps,
+  parentId,
 }) => {
-  const [items, setItems] = useState<UniqueIdentifier[]>(
-    innerSteps.map((step) => mapNodeIdToString(step.id)),
-  );
+  const { dispatch } = useUnpublishedScriptContext();
+
+  const [innerStepMap, setInnerStepMap] =
+    useState<Map<UniqueIdentifier, CSTInnerStepNode>>();
+  const [items, setItems] = useState<UniqueIdentifier[]>([]);
 
   // Need the useEffect to update the items when innerSteps changes,
   // because useState creates a separate variable
   useEffect(() => {
-    setItems(innerSteps.map((step) => mapNodeIdToString(step.id)));
+    const innerStepMap = new Map<UniqueIdentifier, CSTInnerStepNode>();
+    innerSteps.forEach((innerStep) =>
+      innerStepMap.set(mapIdToString(innerStep.id), innerStep),
+    );
+    setItems([...innerStepMap.keys()]);
+    setInnerStepMap(innerStepMap);
   }, [innerSteps]);
 
   if (innerSteps.length !== items.length) {
     console.log('InnerSteps and items are not the same length');
-    setItems(innerSteps.map((step) => mapNodeIdToString(step.id)));
+    setItems(innerSteps.map((step) => mapIdToString(step.id)));
   }
 
   const sensors = useSensors(
@@ -53,11 +68,18 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
   const handleDragEvent = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+      const oldIndex = items.indexOf(active.id);
+      const newIndex = items.indexOf(over.id);
+      const newItems = arrayMove(items, oldIndex, newIndex);
+      setItems(newItems);
 
-        return arrayMove(items, oldIndex, newIndex);
+      const newInnerSteps = newItems
+        .map((item) => innerStepMap!.get(item))
+        .filter((step) => step != undefined);
+      dispatch({
+        type: EditorActionType.RearrangeInnerSteps,
+        sectionId: parentId,
+        innerSteps: newInnerSteps,
       });
     }
   };
@@ -74,7 +96,7 @@ const InnerStepContainer: React.FC<InnerStepContainerProps> = ({
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {items.map((id) => (
           <InnerStepNode
-            step={innerSteps.find((step) => mapNodeIdToString(step.id) === id)!}
+            step={innerSteps.find((step) => mapIdToString(step.id) === id)!}
           />
         ))}
       </SortableContext>

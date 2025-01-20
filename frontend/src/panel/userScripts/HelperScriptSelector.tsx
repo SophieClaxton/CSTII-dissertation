@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigationContext } from '../contexts/contextHooks';
-import { UserWithScripts } from '../models/User';
+import { UserWithScripts } from '../models/API/User';
 import { getUser } from '../api/users';
-import APIResponse from '../models/APIResponse';
+import APIResponse from '../models/API/APIResponse';
 import Loadable from '../components/Loadable';
 import List from '@mui/material/List/List';
 import ScriptListItem from '../support/script_selection/ScriptListItem';
@@ -12,9 +12,10 @@ import Typography from '@mui/material/Typography/Typography';
 import { Button, Container, ListSubheader } from '@mui/material';
 import { createUnpublishedScript } from '../api/unpublishedScripts';
 import { editorScreen } from '../navigation/screens';
+import Page from '../components/Page';
 
 const HelperScriptSelector = () => {
-  const { goTo, goBack } = useNavigationContext();
+  const { goTo } = useNavigationContext();
 
   const [userId, setUserId] = useState<number | undefined>(undefined);
   const [userData, setUserData] = useState<APIResponse<UserWithScripts>>({
@@ -26,7 +27,7 @@ const HelperScriptSelector = () => {
   useEffect(() => {
     const getUserId = async () => {
       const storedData = await chrome.storage.local.get('userId');
-      const storedUserId = storedData['userId'] as number;
+      const storedUserId = Number(storedData['userId']);
       console.log(`Found userId: ${storedUserId}`);
       if (storedUserId) {
         setUserId(storedUserId);
@@ -46,19 +47,13 @@ const HelperScriptSelector = () => {
       }
       const response = await getUser(userId);
       setUserData(response);
-      console.log(response);
+      // console.log(response);
     };
     getUserData();
   }, [userId]);
 
   return (
-    <div className="script-selection-page page">
-      <div className="page-title">
-        <h1>Your Scripts</h1>
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
-      </div>
+    <Page title={'Your Scripts'}>
       <Loadable
         response={userData}
         onLoad={(user) => (
@@ -102,7 +97,7 @@ const HelperScriptSelector = () => {
         setOpen={setOpenCreateUserDialog}
         setUserId={setUserId}
       />
-    </div>
+    </Page>
   );
 };
 

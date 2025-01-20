@@ -1,5 +1,5 @@
 import Annotation from './Annotation';
-import { ASTProgram } from './AST/AST';
+import { ASTProgram } from '../AST/AST';
 import User from './User';
 import Website from './Website';
 
@@ -18,10 +18,24 @@ type Script = ScriptWithAuthorAndWebsite & {
   annotations: Annotation[];
 };
 
+interface UpdateScriptRequest {
+  title: string;
+  description: string;
+  program: ASTProgram;
+  website_id: number;
+}
+
+interface PublishScriptRequest extends UpdateScriptRequest {
+  author_id: number;
+  created_at: string;
+}
+
 export type {
   BaseScript,
   ScriptWithAuthor,
   ScriptWithWebsite,
   ScriptWithAuthorAndWebsite,
   Script,
+  PublishScriptRequest,
+  UpdateScriptRequest,
 };

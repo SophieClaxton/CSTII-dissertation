@@ -1,8 +1,14 @@
 import axios from 'axios';
-import { handleError } from '../models/APIError';
-import { Script, ScriptWithAuthorAndWebsite } from '../models/Script';
-import APISuccess from '../models/APISuccess';
-import APIResponse from '../models/APIResponse';
+import { handleError } from '../models/API/APIError';
+import {
+  BaseScript,
+  PublishScriptRequest,
+  Script,
+  ScriptWithAuthorAndWebsite,
+  UpdateScriptRequest,
+} from '../models/API/Script';
+import APISuccess from '../models/API/APISuccess';
+import APIResponse from '../models/API/APIResponse';
 
 const scriptsEndpoint = axios.create({
   baseURL: 'http://localhost:8000/scripts/',
@@ -36,6 +42,41 @@ const getScript = async (id: number): Promise<APIResponse<Script>> => {
     return {
       status: 'Loaded',
       data: response.data as Script,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
+const publishScript = async (
+  script: PublishScriptRequest,
+): Promise<APIResponse<BaseScript>> => {
+  try {
+    const response = await scriptsEndpoint.post('', script);
+    return {
+      status: 'Loaded',
+      data: response.data as BaseScript,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
+const updateScript = async (
+  script_id: number,
+  script: UpdateScriptRequest,
+): Promise<APIResponse<APISuccess>> => {
+  try {
+    const response = await scriptsEndpoint.patch(`${script_id}`, script);
+    return {
+      status: 'Loaded',
+      data: response.data as APISuccess,
     };
   } catch (err: unknown) {
     return {
@@ -97,6 +138,8 @@ const getWebsiteScripts = async (
 export {
   getScripts,
   getScript,
+  publishScript,
+  updateScript,
   deleteScript,
   getUserScripts,
   getWebsiteScripts,

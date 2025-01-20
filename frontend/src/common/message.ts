@@ -1,19 +1,24 @@
+import { SelectableTag } from '../panel/models/InterfaceElement';
+
 enum Port {
   SidePanel = 'sidePanel',
 }
 
 type MessageType =
   | 'close_side_panel'
+  | 'set_clickable'
   | 'clicked_element'
-  | 'toggle_clickability'
-  | 'toggle_focus'
-  | 'click_element';
+  | 'set_focus'
+  | 'unset_focus'
+  | 'click_element'
+  | 'element';
 
 type Message =
   | CloseSidePanelMessage
+  | SetClickableMessage
+  | SetFocusMessage
+  | UnsetFocusMessage
   | ClickedElementMessage
-  | ToggleClickabilityMessage
-  | ToggleFocusMessage
   | ClickElementMessage;
 
 interface MessageBase {
@@ -24,19 +29,30 @@ interface CloseSidePanelMessage extends MessageBase {
   type: 'close_side_panel';
 }
 
+interface SetClickableMessage extends MessageBase {
+  type: 'set_clickable';
+  stepId: string;
+  validTags: SelectableTag[];
+  url: string;
+}
+
 interface ClickedElementMessage extends MessageBase {
   type: 'clicked_element';
-  element: string;
-  tag: string;
+  elementOuterHtml: string;
+  elementTag: string;
+  elementTextContent: string | null;
+  stepId: string;
+  url: string;
+  newUrl: string;
 }
 
-interface ToggleClickabilityMessage extends MessageBase {
-  type: 'toggle_clickability';
+interface SetFocusMessage extends MessageBase {
+  type: 'set_focus';
+  element: string;
 }
 
-interface ToggleFocusMessage extends MessageBase {
-  type: 'toggle_focus';
-  element: string;
+interface UnsetFocusMessage extends MessageBase {
+  type: 'unset_focus';
 }
 
 interface ClickElementMessage extends MessageBase {
@@ -49,8 +65,9 @@ export type {
   MessageType,
   Message,
   CloseSidePanelMessage,
+  SetClickableMessage,
   ClickedElementMessage,
-  ToggleClickabilityMessage,
-  ToggleFocusMessage,
+  SetFocusMessage,
+  UnsetFocusMessage,
   ClickElementMessage,
 };

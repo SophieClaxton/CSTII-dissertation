@@ -1,5 +1,5 @@
 import { CSTFollowNode, CSTSectionNode } from '../../models/CST/CST';
-import { mapNodeIdToString } from '../../models/CST/mappers';
+import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import { getFollowSteps } from './getNodes';
 
 interface Edge {
@@ -12,7 +12,7 @@ const getEdges = (sections: CSTSectionNode[]): Edge[] => {
   const initialEdge = {
     id: 'start-1',
     source: 'start',
-    target: mapNodeIdToString(sections[0].id),
+    target: mapIdToString(sections[0].id),
   };
 
   const followSteps: CSTFollowNode[] = sections.map(getFollowSteps).flat();
@@ -29,9 +29,9 @@ const getFollowEdge = (followStep: CSTFollowNode): Edge | undefined => {
     return undefined;
   }
   return {
-    id: `${mapNodeIdToString(followStep.id)}-${mapNodeIdToString(followStep.nextSectionId)}`,
-    source: mapNodeIdToString(followStep.id),
-    target: mapNodeIdToString(followStep.nextSectionId),
+    id: `${mapIdToString(followStep.id)}-${mapIdToString(followStep.nextSectionId)}`,
+    source: mapIdToString(followStep.id),
+    target: mapIdToString(followStep.nextSectionId),
   };
 };
 

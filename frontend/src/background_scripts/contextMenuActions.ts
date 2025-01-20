@@ -4,13 +4,13 @@ export enum ContextMenuActions {
 }
 
 export const openSidePanelAction: chrome.contextMenus.CreateProperties = {
-  id: ContextMenuActions.OpenSidePanel as string,
+  id: ContextMenuActions.OpenSidePanel.toString(),
   title: 'Open sc2370 side panel',
   contexts: ['all'],
 };
 
 export const closeSidePanelAction: chrome.contextMenus.CreateProperties = {
-  id: ContextMenuActions.CloseSidePanel as string,
+  id: ContextMenuActions.CloseSidePanel.toString(),
   title: 'Close sc2370 side panel',
   contexts: ['all'],
 };
