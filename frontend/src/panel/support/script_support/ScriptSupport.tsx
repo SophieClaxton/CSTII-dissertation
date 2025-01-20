@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react';
 import {
   useNavigationContext,
   useTabContext,
 } from '../../contexts/contextHooks';
-import APIResponse from '../../models/API/APIResponse';
-import { Script } from '../../models/API/Script';
 import { getScript } from '../../api/scripts';
 import { assertIsScriptSupportScreen } from '../../navigation/screenChecks';
 import Page from '../../components/Page';
@@ -16,23 +13,20 @@ import Link from '@mui/material/Link/Link';
 import Divider from '@mui/material/Divider/Divider';
 import Button from '@mui/material/Button/Button';
 import ProgramSupport from './ProgramSupport';
+import { useAPICall } from '../../api/apiHooks';
+import { useMemo } from 'react';
 
 const ScriptSupport: React.FC = () => {
   const { currentScreen } = useNavigationContext();
   assertIsScriptSupportScreen(currentScreen);
   const { tab } = useTabContext();
 
-  const [scriptData, setScriptData] = useState<APIResponse<Script>>({
-    status: 'Loading',
-  });
-
-  useEffect(() => {
-    const getData = async () => {
-      const response = await getScript(currentScreen.params.scriptId);
-      setScriptData(response);
-    };
-    getData();
-  }, [currentScreen]);
+  const scriptData = useAPICall(
+    useMemo(
+      () => () => getScript(currentScreen.params.scriptId),
+      [currentScreen],
+    ),
+  );
 
   return (
     <Page title={'Get Support'}>
