@@ -3,12 +3,15 @@ import {
   mapStepNodeToValidTags,
   mapTagToElementName,
 } from '../../models/InterfaceElement';
-import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
+import {
+  useTabContext,
+  useUnpublishedScriptContext,
+} from '../../contexts/contextHooks';
 import { EditorActionType } from '../../models/EditorAction';
 import Typography from '@mui/material/Typography/Typography';
 import { CSTElementNode } from '../../models/CST/CST';
 import Dialog from '@mui/material/Dialog/Dialog';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import Button from '@mui/material/Button/Button';
@@ -31,8 +34,9 @@ interface ElementSelectorProps {
 
 const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
   const { dispatch, unpublishedScript } = useUnpublishedScriptContext();
+  const { tab } = useTabContext();
+
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const currentUrl = useRef('');
   const section = getSection(step.id.parentId, unpublishedScript.program);
   const sectionUrl = section && isSection(section) ? section.url : '';
 
@@ -90,11 +94,6 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
         }}
         onClick={() => {
           const editElement = async () => {
-            const [tab] = await chrome.tabs.query({
-              active: true,
-              lastFocusedWindow: true,
-            });
-            currentUrl.current = tab.url ?? '';
             if (step.element || (sectionUrl != '' && tab.url != sectionUrl)) {
               setOpenEditDialog(true);
             } else {
@@ -123,7 +122,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
       </Button>
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
         <DialogTitle>Edit Element</DialogTitle>
-        {sectionUrl != '' && sectionUrl != currentUrl.current && (
+        {sectionUrl != '' && sectionUrl != tab.url && (
           <DialogContent>
             <DialogContentText>
               You are not on the correct website to select elements for this
@@ -137,12 +136,12 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
           {step.element && (
             <>
               <Button
-                disabled={sectionUrl != currentUrl.current}
+                disabled={sectionUrl != tab.url}
                 onClick={() => {
                   sendClickabilityMessage(
                     step.id,
                     mapStepNodeToValidTags[step.type],
-                    currentUrl.current,
+                    tab.url ?? '',
                   );
                   setOpenEditDialog(false);
                 }}
