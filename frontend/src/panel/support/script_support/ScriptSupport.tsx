@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useNavigationContext } from '../../contexts/contextHooks';
+import {
+  useNavigationContext,
+  useTabContext,
+} from '../../contexts/contextHooks';
 import APIResponse from '../../models/API/APIResponse';
 import { Script } from '../../models/API/Script';
 import { getScript } from '../../api/scripts';
@@ -17,34 +20,18 @@ import ProgramSupport from './ProgramSupport';
 const ScriptSupport: React.FC = () => {
   const { currentScreen } = useNavigationContext();
   assertIsScriptSupportScreen(currentScreen);
+  const { tab } = useTabContext();
 
   const [scriptData, setScriptData] = useState<APIResponse<Script>>({
     status: 'Loading',
   });
-  const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
     const getData = async () => {
       const response = await getScript(currentScreen.params.scriptId);
       setScriptData(response);
     };
-    const getCurrentUrl = async () => {
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true,
-      });
-      setCurrentUrl(tab.url ?? '');
-    };
-    chrome.tabs.onUpdated.addListener(
-      (_: number, changeInfo: chrome.tabs.TabChangeInfo) => {
-        console.log('tab changed with info');
-        if (changeInfo.status === 'complete') {
-          getCurrentUrl();
-        }
-      },
-    );
     getData();
-    getCurrentUrl();
   }, [currentScreen]);
 
   return (
@@ -92,12 +79,12 @@ const ScriptSupport: React.FC = () => {
               <Button
                 variant={'contained'}
                 size={'large'}
-                disabled={currentUrl != script.website.url}
+                disabled={tab.url != script.website.url}
                 sx={{ width: '50%', minWidth: '8rem' }}
               >
                 Start
               </Button>
-              {currentUrl != script.website.url && (
+              {tab.url != script.website.url && (
                 <Alert severity={'info'} sx={{ marginTop: '0.5rem' }}>
                   You need to be on{' '}
                   <Link href={script.website.url}>{script.website.url}</Link> to
@@ -110,7 +97,7 @@ const ScriptSupport: React.FC = () => {
               />
               <ProgramSupport
                 program={script.program}
-                currentUrl={currentUrl}
+                currentUrl={tab.url ?? ''}
               />
             </>
           );
