@@ -37,6 +37,7 @@ const getScripts = async (): Promise<
 };
 
 const getScript = async (id: number): Promise<APIResponse<Script>> => {
+  console.log('Making request for script');
   try {
     const response = await scriptsEndpoint.get(`${id}`);
     return {
@@ -104,6 +105,7 @@ const deleteScript = async (id: number): Promise<APIResponse<APISuccess>> => {
 const getUserScripts = async (
   userId: number,
 ): Promise<APIResponse<ScriptWithAuthorAndWebsite[]>> => {
+  console.log('Making request for scripts');
   try {
     const response = await scriptsEndpoint.get(`user/${userId}`);
     return {
@@ -121,6 +123,7 @@ const getUserScripts = async (
 const getWebsiteScripts = async (
   websiteId: number,
 ): Promise<APIResponse<ScriptWithAuthorAndWebsite[]>> => {
+  console.log('Making request for scripts');
   try {
     const response = await scriptsEndpoint.get(`website/${websiteId}`);
     return {

@@ -2,32 +2,24 @@ import { UnpublishedScriptContextProvider } from '../contexts/UnpublishedScriptC
 import '../panel.css';
 import './styles/editor.css';
 import { useNavigationContext } from '../contexts/contextHooks';
-import { useEffect, useState } from 'react';
-import APIResponse from '../models/API/APIResponse';
 import { getUnpublishedScript } from '../api/unpublishedScripts';
-import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import { assertIsEditorScreen } from '../navigation/screenChecks';
 import Loadable from '../components/Loadable';
 import ScriptEditor from './components/ScriptEditor';
 import Page from '../components/Page';
+import { useAPICall } from '../api/apiHooks';
+import { useMemo } from 'react';
 
 const Editor: React.FC = () => {
   const { currentScreen } = useNavigationContext();
   assertIsEditorScreen(currentScreen);
 
-  const [unpublishedScriptData, setUnpublishedScriptData] = useState<
-    APIResponse<UnpublishedScript>
-  >({ status: 'Loading' });
-
-  useEffect(() => {
-    const getUnpublishedScriptData = async () => {
-      const response = await getUnpublishedScript(
-        currentScreen.params.scriptId,
-      );
-      setUnpublishedScriptData(response);
-    };
-    getUnpublishedScriptData();
-  }, [currentScreen]);
+  const unpublishedScriptData = useAPICall(
+    useMemo(
+      () => () => getUnpublishedScript(currentScreen.params.scriptId),
+      [currentScreen],
+    ),
+  );
 
   return (
     <Page title={'Script Editor'}>

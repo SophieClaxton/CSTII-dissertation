@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigationContext } from '../contexts/contextHooks';
 import { UserWithScripts } from '../models/API/User';
 import { getUser } from '../api/users';
@@ -13,15 +13,23 @@ import { Button, Container, ListSubheader } from '@mui/material';
 import { createUnpublishedScript } from '../api/unpublishedScripts';
 import { editorScreen } from '../navigation/screens';
 import Page from '../components/Page';
+import { useAPICall } from '../api/apiHooks';
 
 const HelperScriptSelector = () => {
   const { goTo } = useNavigationContext();
-
   const [userId, setUserId] = useState<number | undefined>(undefined);
-  const [userData, setUserData] = useState<APIResponse<UserWithScripts>>({
-    status: 'Loading',
-  });
-
+  const userData = useAPICall(
+    useMemo(
+      () => (): Promise<APIResponse<UserWithScripts>> => {
+        if (!userId) {
+          return Promise.resolve({ status: 'Loading' });
+        } else {
+          return getUser(userId);
+        }
+      },
+      [userId],
+    ),
+  );
   const [openCreateUserDialog, setOpenCreateUserDialog] = useState(false);
 
   useEffect(() => {
@@ -38,18 +46,6 @@ const HelperScriptSelector = () => {
     if (!userId) {
       getUserId();
     }
-  }, [userId]);
-
-  useEffect(() => {
-    const getUserData = async () => {
-      if (!userId) {
-        return;
-      }
-      const response = await getUser(userId);
-      setUserData(response);
-      // console.log(response);
-    };
-    getUserData();
   }, [userId]);
 
   return (
