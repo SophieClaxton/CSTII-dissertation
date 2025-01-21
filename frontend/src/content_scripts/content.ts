@@ -1,24 +1,29 @@
-import {
-  UserClickedElementMessage,
-  PanelMessage,
-  UserStruggleDataMessage,
-  StepCompletedMessage,
-  LoadedMessage,
-} from '../common/message';
-import { ASTNodeType } from '../panel/models/AST/AST';
+import { PanelMessage, LoadedMessage } from '../common/message';
 import {
   allSelectableTags,
   isSelectableTag,
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
-import { EditingState, SupportState } from './state';
-import { stringSimilarity } from 'string-similarity-js';
+import {
+  EditingState,
+  onEndSupport,
+  onStartSupport,
+  SupportState,
+} from './state';
+import {
+  collectStruggleDataOnScroll,
+  collectUserStruggleDataOnMouseDown,
+  collectUserStruggleDataOnMouseMove,
+} from './collectUserStruggleEvidence';
+import { detectStepOnClick, detectStepOnScroll } from './detectStep';
+import { defaultLevelOfSupport } from './consts';
+import { onSetFocus, onUnsetFocus } from './focusElement';
+import {
+  onSystemClickElement,
+  onUserClickElement,
+} from './interactWithElement';
 
 console.log('Loaded content script');
-
-const selectableElementTags = allSelectableTags;
-const similarityThreshold = 0.975;
-const defaultLevelOfSupport = 'text';
 
 let editingState: EditingState = {
   isClickable: false,
@@ -50,77 +55,29 @@ const setupMessageListener = () => {
       }
       case 'set_focus': {
         console.log('received focussing message');
-        document.querySelectorAll('*').forEach((element) => {
-          if (
-            stringSimilarity(element.outerHTML, message.element) >
-            similarityThreshold
-          ) {
-            console.log('found element to focus');
-            element.classList.add('focussed-on');
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
+        onSetFocus(message);
         break;
       }
       case 'unset_focus': {
         console.log('received focussing message');
-        document.querySelectorAll('*').forEach((element) => {
-          element.classList.remove('focussed-on');
-        });
+        onUnsetFocus();
         break;
       }
       case 'system_click_element': {
         console.log('received click element message');
-        document.querySelectorAll('button').forEach((element) => {
-          if (
-            stringSimilarity(element.outerHTML, message.element) >
-            similarityThreshold
-          ) {
-            console.log('found element to click');
-            element.click();
-          }
-        });
-
-        document.querySelectorAll('a').forEach((element) => {
-          if (
-            stringSimilarity(element.outerHTML, message.element) >
-            similarityThreshold
-          ) {
-            console.log('found element to click');
-            element.click();
-          }
-        });
+        onSystemClickElement(message);
         break;
       }
       case 'start_support': {
         console.log(
-          `Received start support message with support: ${message.levelOfSupport}`,
+          `Received start support with support: ${message.levelOfSupport}`,
         );
-        supportState.collectStruggleData = true;
-        supportState.levelOfSupport = message.levelOfSupport;
-        supportState.intervalId = setInterval(() => {
-          const message: UserStruggleDataMessage = {
-            type: 'user_struggle_data',
-            userStruggleData: supportState.userStruggleData,
-          };
-
-          chrome.runtime.sendMessage(message).catch(() => {
-            supportState.collectStruggleData = false;
-            clearInterval(supportState.intervalId);
-          });
-          supportState.userStruggleData = {
-            totalDistance: 0,
-            numMouseClicks: 0,
-            totalScrollDistance: 0,
-          };
-        }, 5000);
+        onStartSupport(supportState, message);
         break;
       }
       case 'end_support': {
         console.log('Received end support message');
-        supportState.collectStruggleData = false;
-        supportState.levelOfSupport = defaultLevelOfSupport;
-        clearInterval(supportState.intervalId);
+        onEndSupport(supportState);
         break;
       }
       case 'next_possible_steps': {
@@ -138,7 +95,7 @@ const setupMessageListener = () => {
 };
 
 const updateClassList = () => {
-  selectableElementTags.forEach((tag) => {
+  allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
     for (const element of elements) {
       if (
@@ -156,125 +113,26 @@ const updateClassList = () => {
 
 const addClickListeners = () => {
   console.log('adding click listeners');
-  selectableElementTags.forEach((tag) => {
+  allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
     for (const element of elements) {
       element.addEventListener('click', () => {
-        if (
-          editingState.isClickable &&
-          isSelectableTag(element.tagName) &&
-          editingState.validTags.includes(element.tagName)
-        ) {
-          element.classList.remove('clickable');
-          const message: UserClickedElementMessage = {
-            type: 'user_clicked_element',
-            elementOuterHtml: element.outerHTML,
-            elementTag: element.tagName,
-            elementTextContent: element.textContent,
-            stepId: editingState.stepId,
-            url: editingState.url,
-            newUrl: element.hasAttribute('href')
-              ? (element as HTMLLinkElement).href
-              : '',
-          };
-          chrome.runtime.sendMessage(message);
-          editingState.isClickable = !editingState.isClickable;
-          updateClassList();
-        }
-
-        if (supportState.collectStruggleData) {
-          const steps = [...supportState.nextPossibleSteps];
-          steps.forEach((step, index) => {
-            if (
-              (step.type === ASTNodeType.Click ||
-                step.type === ASTNodeType.Follow) &&
-              step.element.tag === element.tagName &&
-              stringSimilarity(element.outerHTML, step.element.outerHTML) >
-                similarityThreshold
-            ) {
-              console.log('Step completed');
-              const message: StepCompletedMessage = {
-                type: 'step_completed',
-                step,
-                index,
-              };
-
-              chrome.runtime.sendMessage(message);
-              supportState.nextPossibleSteps =
-                supportState.nextPossibleSteps.filter(
-                  (_, stepIndex) => stepIndex != index,
-                );
-            }
-          });
-        }
+        onUserClickElement(editingState, element, updateClassList);
+        detectStepOnClick(element, supportState);
       });
     }
   });
 };
 
-document.onmousemove = (ev: MouseEvent) => {
-  if (supportState.collectStruggleData) {
-    supportState.userStruggleData.totalDistance += Math.sqrt(
-      Math.pow(ev.movementX, 2) + Math.pow(ev.movementY, 2),
-    );
-  }
-};
-
-document.onmousedown = () => {
-  if (supportState.collectStruggleData) {
-    supportState.userStruggleData.numMouseClicks += 1;
-  }
-};
-
-const isVisible = (element: Element): boolean => {
-  const elementRect = element.getBoundingClientRect();
-  return (
-    elementRect.top > 0 &&
-    elementRect.bottom < window.innerHeight &&
-    elementRect.left > 0 &&
-    elementRect.right < window.innerWidth
-  );
-};
+document.onmousemove = collectUserStruggleDataOnMouseMove(supportState);
+document.onmousedown = collectUserStruggleDataOnMouseDown(supportState);
 
 let ticking = false;
-
 document.onscroll = () => {
-  if (supportState.collectStruggleData && !ticking) {
+  if (!ticking) {
     window.requestAnimationFrame(() => {
-      supportState.userStruggleData.totalScrollDistance +=
-        Math.abs(window.scrollX - supportState.lastScrollPosition.x) +
-        Math.abs(window.scrollY - supportState.lastScrollPosition.y);
-      supportState.lastScrollPosition = {
-        x: window.scrollX,
-        y: window.scrollY,
-      };
-
-      const steps = [...supportState.nextPossibleSteps];
-      steps.forEach((step, index) => {
-        if (step.type === ASTNodeType.ScrollTo) {
-          for (const element of document.getElementsByTagName(
-            step.element.tag,
-          )) {
-            if (
-              element.outerHTML === step.element.outerHTML &&
-              isVisible(element)
-            ) {
-              console.log('Step completed');
-              const message: StepCompletedMessage = {
-                type: 'step_completed',
-                step,
-                index,
-              };
-
-              chrome.runtime.sendMessage(message);
-              supportState.nextPossibleSteps =
-                supportState.nextPossibleSteps.filter(
-                  (_, stepIndex) => stepIndex != index,
-                );
-            }
-          }
-        }
-      });
+      collectStruggleDataOnScroll(supportState);
+      detectStepOnScroll(supportState);
       ticking = false;
     });
     ticking = true;
