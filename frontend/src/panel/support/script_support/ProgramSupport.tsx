@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ASTProgram } from '../../models/AST/AST';
+import { ASTNodeType, ASTProgram } from '../../models/AST/AST';
 import {
   getNextPossibleSteps,
   getVisibleSteps,
@@ -12,21 +12,27 @@ import {
   addStepCompletedListener,
   addUserStruggleDataListener,
 } from '../../../common/receiveMessage';
-import { sendNextPossibleStepsMessage } from '../../../common/sendMessage';
-import { useTabContext } from '../../contexts/contextHooks';
+import {
+  sendEndSupportMessage,
+  sendNextPossibleStepsMessage,
+} from '../../../common/sendMessage';
+import {
+  useNavigationContext,
+  useTabContext,
+} from '../../contexts/contextHooks';
+import Button from '@mui/material/Button/Button';
 
 interface ProgramSupportProps {
   program: ASTProgram;
 }
 
 const ProgramSupport: React.FC<ProgramSupportProps> = ({ program }) => {
+  const { goBack } = useNavigationContext();
   const { tab } = useTabContext();
   const [baseStepNumber] = useState(0);
   const [currentStepNumber, setCurrentStepNumber] = useState(0);
   const [visibleSteps] = useState(getVisibleSteps(program.start.start));
-  const [nextSteps, setNextSteps] = useState(
-    getNextPossibleSteps(visibleSteps.slice(currentStepNumber)),
-  );
+  const [showFinish, setShowFinish] = useState(false);
 
   useEffect(() => {
     addUserStruggleDataListener();
@@ -36,13 +42,27 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({ program }) => {
   }, []);
 
   useEffect(() => {
-    setNextSteps(getNextPossibleSteps(visibleSteps.slice(currentStepNumber)));
-  }, [currentStepNumber, visibleSteps]);
+    const nextSteps = getNextPossibleSteps(
+      visibleSteps.slice(currentStepNumber),
+    );
 
-  useEffect(() => {
-    console.log('Sending next possible steps');
-    sendNextPossibleStepsMessage(tab.id!, nextSteps);
-  }, [tab, nextSteps]);
+    const [userDecisionNode] = nextSteps.filter(
+      (step) => step.type === ASTNodeType.UserDecision,
+    );
+
+    console.log(
+      `User decision ${userDecisionNode?.question}is a valid next step`,
+    );
+    if (tab.scriptStatus === 'loaded') {
+      if (nextSteps.length > 0) {
+        console.log('Sending next possible steps');
+        sendNextPossibleStepsMessage(tab.id!, nextSteps);
+      } else {
+        sendEndSupportMessage(tab.id!);
+        setShowFinish(true);
+      }
+    }
+  }, [tab, currentStepNumber, visibleSteps]);
 
   return (
     <Stack direction={'column'} spacing={2} padding={'1rem'}>
@@ -91,6 +111,11 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({ program }) => {
           </Box>
         );
       })}
+      {showFinish && (
+        <Button variant={'contained'} onClick={goBack}>
+          Finish
+        </Button>
+      )}
     </Stack>
   );
 };

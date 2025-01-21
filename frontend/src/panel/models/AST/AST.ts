@@ -1,4 +1,5 @@
 import InterfaceElement from '../InterfaceElement';
+import { MappedOmit } from '../utilTypes';
 
 interface ASTProgram {
   start: ASTSectionNode;
@@ -44,8 +45,6 @@ type ASTStepNode =
   | ASTDragNode
   | ASTInputNode
   | ASTUserDecisionNode;
-
-type MappedOmit<T, K extends string> = T extends object ? Omit<T, K> : never;
 
 type ASTStepNodeInfo = MappedOmit<
   ASTStepNode,

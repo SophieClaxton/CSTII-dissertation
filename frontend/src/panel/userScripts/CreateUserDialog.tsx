@@ -8,11 +8,12 @@ import { createUser, getUsers } from '../api/users';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import Button from '@mui/material/Button/Button';
 import { useAPICall } from '../api/apiHooks';
+import { StateSetter } from '../models/utilTypes';
 
 interface CreateUserDialogProps {
   open: boolean;
-  setOpen: (value: boolean) => void;
-  setUserId: (value: number) => void;
+  setOpen: StateSetter<boolean>;
+  setUserId: StateSetter<number | undefined>;
 }
 
 const CreateUserDialog: React.FC<CreateUserDialogProps> = ({

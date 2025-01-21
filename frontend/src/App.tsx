@@ -4,17 +4,17 @@ import { useEffect, useState } from 'react';
 import HomeScreen from './panel/components/HomeScreen';
 import { PanelScreen } from './panel/navigation/ScreenType';
 import { ScreenContext } from './panel/contexts/ScreenContext';
-import TabContext from './panel/contexts/TabContext';
+import TabContext, { TabInfo } from './panel/contexts/TabContext';
 import { setCurrentTab, setTabListeners } from './common/tabs';
 
 function App() {
   useEffect(setUpMessageHandler, []);
 
   const [screenStack, setScreenStack] = useState<PanelScreen[]>([]);
-  const [tab, setTab] = useState<chrome.tabs.Tab>();
+  const [tab, setTab] = useState<TabInfo | undefined>();
 
   useEffect(() => {
-    setCurrentTab(setTab);
+    setCurrentTab(setTab, true);
     setTabListeners(setTab);
   }, []);
 

@@ -1,6 +1,11 @@
 import { ASTNodeType, ASTStepNode, ASTStepNodeInfo } from './AST';
 import { isSkippable } from './mappers';
 
+/**
+ *
+ * @param startStep
+ * @returns the list of step nodes before a user decision or the end of the program
+ */
 const getVisibleSteps = (startStep: ASTStepNode): ASTStepNode[] => {
   if (startStep.type === ASTNodeType.End) {
     return [];
@@ -44,7 +49,7 @@ const getNextPossibleSteps = (
       case ASTNodeType.Select:
       case ASTNodeType.Check:
       case ASTNodeType.Draw: {
-        const { next: _, ...rest } = visibleStep;
+        const { next, ...rest } = visibleStep;
         possibleSteps.push(rest);
         break;
       }

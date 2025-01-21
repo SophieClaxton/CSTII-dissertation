@@ -32,12 +32,15 @@ const ScriptSupport: React.FC = () => {
     ),
   );
   const [providingSupport, setProvidingSupport] = useState(false);
+
   useEffect(() => {
     console.log('Tab updated, resending support message');
-    if (providingSupport) {
-      sendStartSupportMessage(tab.id!);
-    } else {
-      sendEndSupportMessage(tab.id!);
+    if (tab.scriptStatus === 'loaded') {
+      if (providingSupport) {
+        sendStartSupportMessage(tab.id!);
+      } else {
+        sendEndSupportMessage(tab.id!);
+      }
     }
   }, [providingSupport, tab]);
 
@@ -91,7 +94,7 @@ const ScriptSupport: React.FC = () => {
                 sx={{ width: '50%', minWidth: '8rem' }}
                 onClick={() => setProvidingSupport(!providingSupport)}
               >
-                {providingSupport ? 'End' : 'Start'}
+                {providingSupport ? 'Stop Support' : 'Start'}
               </Button>
               {tab.url != script.website.url && (
                 <Alert severity={'info'} sx={{ marginTop: '0.5rem' }}>

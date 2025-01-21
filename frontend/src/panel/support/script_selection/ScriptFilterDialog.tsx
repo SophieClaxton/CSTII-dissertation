@@ -9,16 +9,17 @@ import TextField from '@mui/material/TextField/TextField';
 import Website from '../../models/API/Website';
 import User from '../../models/API/User';
 import { useState } from 'react';
+import { StateSetter } from '../../models/utilTypes';
 
 interface ScriptFilterDialogProps {
   open: boolean;
-  setOpen: (value: boolean) => void;
+  setOpen: StateSetter<boolean>;
   websites: Website[];
   authors: User[];
   websiteFilters: Website[];
-  setWebsiteFilters: (value: Website[]) => void;
+  setWebsiteFilters: StateSetter<Website[]>;
   authorFilters: User[];
-  setAuthorFilters: (value: User[]) => void;
+  setAuthorFilters: StateSetter<User[]>;
 }
 
 const ScriptFilterDialog: React.FC<ScriptFilterDialogProps> = ({

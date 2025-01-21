@@ -3,6 +3,7 @@ import {
   PanelMessage,
   UserStruggleDataMessage,
   StepCompletedMessage,
+  LoadedMessage,
 } from '../common/message';
 import { ASTNodeType } from '../panel/models/AST/AST';
 import {
@@ -90,6 +91,7 @@ const setupMessageListener = () => {
         break;
       }
       case 'start_support': {
+        console.log('Received start support message');
         supportState.collectStruggleData = true;
         supportState.intervalId = setInterval(() => {
           const message: UserStruggleDataMessage = {
@@ -110,6 +112,7 @@ const setupMessageListener = () => {
         break;
       }
       case 'end_support': {
+        console.log('Received end support message');
         supportState.collectStruggleData = false;
         clearInterval(supportState.intervalId);
         break;
@@ -273,5 +276,8 @@ document.onscroll = () => {
 };
 
 setupMessageListener();
+const loadedMessage: LoadedMessage = { type: 'loaded' };
+chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
+
 updateClassList();
 addClickListeners();

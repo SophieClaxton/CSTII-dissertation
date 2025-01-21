@@ -15,6 +15,7 @@ type PanelMessageType =
   | 'next_possible_steps';
 
 type ContentScriptMessageType =
+  | 'loaded'
   | 'close_side_panel'
   | 'user_clicked_element'
   | 'user_struggle_data'
@@ -30,6 +31,7 @@ type PanelMessage =
   | NextPossibleStepsMessage;
 
 type ContentScriptMessage =
+  | LoadedMessage
   | CloseSidePanelMessage
   | UserClickedElementMessage
   | UserStruggleDataMessage
@@ -77,6 +79,10 @@ interface NextPossibleStepsMessage extends MessageBase {
 
 // Content Script messages
 
+interface LoadedMessage extends MessageBase {
+  type: 'loaded';
+}
+
 interface CloseSidePanelMessage extends MessageBase {
   type: 'close_side_panel';
 }
@@ -110,7 +116,6 @@ interface StepCompletedMessage extends MessageBase {
 export { Port };
 export type {
   PanelMessage,
-  ContentScriptMessage,
   SetClickableMessage,
   SetFocusMessage,
   UnsetFocusMessage,
@@ -118,6 +123,8 @@ export type {
   StartSupportMessage,
   EndSupportMessage,
   NextPossibleStepsMessage,
+  ContentScriptMessage,
+  LoadedMessage,
   CloseSidePanelMessage,
   UserClickedElementMessage,
   UserStruggleData,

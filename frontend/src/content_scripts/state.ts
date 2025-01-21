@@ -1,5 +1,5 @@
-import { ASTStepNodeInfo } from "../panel/models/AST/AST";
-import { SelectableTag } from "../panel/models/InterfaceElement";
+import { ASTStepNodeInfo } from '../panel/models/AST/AST';
+import { SelectableTag } from '../panel/models/InterfaceElement';
 
 interface EditingState {
   isClickable: boolean;
@@ -9,15 +9,15 @@ interface EditingState {
 }
 
 interface SupportState {
-  collectStruggleData: boolean,
+  collectStruggleData: boolean;
   userStruggleData: {
-    totalDistance: number,
-    numMouseClicks: number,
-    totalScrollDistance: number,
-  },
-  intervalId: NodeJS.Timeout | undefined,
-  nextPossibleSteps: ASTStepNodeInfo[],
-  lastScrollPosition: {x: number, y: number};
+    totalDistance: number;
+    numMouseClicks: number;
+    totalScrollDistance: number;
+  };
+  intervalId: NodeJS.Timeout | undefined;
+  nextPossibleSteps: ASTStepNodeInfo[];
+  lastScrollPosition: { x: number; y: number };
 }
 
 export type { EditingState, SupportState };

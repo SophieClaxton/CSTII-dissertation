@@ -1,9 +1,10 @@
 import { createContext } from 'react';
 import { PanelScreen } from '../navigation/ScreenType';
+import { StateSetter } from '../models/utilTypes';
 
 interface ScreenContextState {
   screenStack: PanelScreen[];
-  setScreenStack: (value: PanelScreen[]) => void;
+  setScreenStack: StateSetter<PanelScreen[]>;
 }
 
 interface NavigationContext {
