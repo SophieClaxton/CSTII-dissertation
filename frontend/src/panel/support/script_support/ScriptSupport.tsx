@@ -22,7 +22,12 @@ import {
 import LevelOfSupportDialog, {
   LevelOfSupportDialogDetails,
 } from './LevelOfSupportDialog';
-import { LevelOfSupport } from './userSupportMII';
+import {
+  LevelOfSupport,
+  levelsOfSupport,
+  LoSDescription,
+} from './userSupportMII';
+import Slider from '@mui/material/Slider/Slider';
 
 const ScriptSupport: React.FC = () => {
   const { currentScreen } = useNavigationContext();
@@ -35,7 +40,9 @@ const ScriptSupport: React.FC = () => {
       [currentScreen],
     ),
   );
-  const [providingSupport, setProvidingSupport] = useState(false);
+  const [providingSupport, setProvidingSupport] = useState<boolean | undefined>(
+    undefined,
+  );
   const [levelOfSupport, setLevelOfSupport] = useState<LevelOfSupport>('text');
   const [openLoSDialog, setOpenLoSDialog] = useState(false);
   const [dialogDetails, setDialogDetails] =
@@ -46,11 +53,13 @@ const ScriptSupport: React.FC = () => {
 
   useEffect(() => {
     console.log('Tab updated, resending support message');
-    if (tab.scriptStatus === 'loaded') {
+    console.log(tab.scriptStatus, providingSupport);
+    if (tab.scriptStatus === 'loaded' && providingSupport != undefined) {
       if (providingSupport) {
         sendStartSupportMessage(tab.id!, levelOfSupport);
       } else {
         sendEndSupportMessage(tab.id!);
+        setProvidingSupport(undefined);
       }
     }
   }, [providingSupport, tab, levelOfSupport]);
@@ -107,21 +116,63 @@ const ScriptSupport: React.FC = () => {
               >
                 {providingSupport ? 'Stop Support' : 'Start'}
               </Button>
-              {tab.url != script.website.url && (
+              {tab.url != script.website.url && !providingSupport && (
                 <Alert severity={'info'} sx={{ marginTop: '0.5rem' }}>
                   You need to be on{' '}
                   <Link href={script.website.url}>{script.website.url}</Link> to
                   use this script
                 </Alert>
               )}
-              <Divider
-                flexItem
-                sx={{ marginTop: '1rem', marginBottom: '1rem' }}
-              />
+              <Divider flexItem sx={{ marginTop: '1rem' }} />
+              <Stack
+                direction={'row'}
+                sx={{
+                  gap: '1rem',
+                  width: '100%',
+                  padding: '1rem',
+                }}
+              >
+                <Stack sx={{ alignItems: 'center' }}>
+                  <Typography variant={'body2'} sx={{ textWrap: 'nowrap' }}>
+                    Level of Support
+                  </Typography>
+                  <Slider
+                    aria-label={'Level of Support'}
+                    getAriaValueText={(value: number) => `Level ${value}`}
+                    onChangeCommitted={(_, value) =>
+                      setLevelOfSupport(
+                        levelsOfSupport[value as number] as LevelOfSupport,
+                      )
+                    }
+                    step={1}
+                    min={0}
+                    max={2}
+                    marks={[
+                      { value: 0, label: 'Text' },
+                      { value: 1, label: 'Hints' },
+                      { value: 2, label: 'Auto' },
+                    ]}
+                    size={'small'}
+                    sx={{
+                      width: '6rem',
+                      marginLeft: '1rem',
+                      marginRight: '1rem',
+                    }}
+                  />
+                </Stack>
+                <Typography variant={'subtitle2'} textAlign={'left'}>
+                  {LoSDescription[levelOfSupport]}
+                </Typography>
+              </Stack>
+              <Divider flexItem sx={{ marginBottom: '1rem' }} />
               {providingSupport && (
                 <ProgramSupport
                   program={script.program}
-                  {...{ levelOfSupport, setLevelOfSupport, setDialogDetails }}
+                  {...{
+                    setProvidingSupport,
+                    setLevelOfSupport,
+                    setDialogDetails,
+                  }}
                 />
               )}
               <LevelOfSupportDialog

@@ -49,7 +49,15 @@ const getNextSystemSupportAction = (
   );
 };
 
-type LevelOfSupport = 'text' | 'overlay' | 'click';
+const levelsOfSupport = ['text', 'overlay', 'click'] as const;
+type LevelOfSupport = (typeof levelsOfSupport)[number];
+
+const LoSDescription: Record<LevelOfSupport, string> = {
+  text: 'The system will only provide instructions, but will indicate which steps have been completed.',
+  overlay:
+    'The system will provide instructions and show you what you need to interact with by scrolling to it and putting a pink rectangle around it.',
+  click: 'The system will perform the next action for you automatically.',
+};
 
 const increaseLevelOfSupport = (level: LevelOfSupport): LevelOfSupport => {
   switch (level) {
@@ -77,5 +85,7 @@ export {
   getNextSystemSupportAction,
   increaseLevelOfSupport,
   decreaseLevelOfSupport,
+  levelsOfSupport,
+  LoSDescription,
 };
 export type { SupportChange, SystemSupportAction, LevelOfSupport };

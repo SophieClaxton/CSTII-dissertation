@@ -32,13 +32,14 @@ import { LevelOfSupportDialogDetails } from './LevelOfSupportDialog';
 
 interface ProgramSupportProps {
   program: ASTProgram;
-  levelOfSupport: LevelOfSupport;
+  setProvidingSupport: StateSetter<boolean | undefined>;
   setLevelOfSupport: StateSetter<LevelOfSupport>;
   setDialogDetails: StateSetter<LevelOfSupportDialogDetails>;
 }
 
 const ProgramSupport: React.FC<ProgramSupportProps> = ({
   program,
+  setProvidingSupport,
   setLevelOfSupport,
   setDialogDetails,
 }) => {
@@ -165,7 +166,13 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({
           );
         })}
         {showFinish && (
-          <Button variant={'contained'} onClick={goBack}>
+          <Button
+            variant={'contained'}
+            onClick={() => {
+              setProvidingSupport(false);
+              goBack();
+            }}
+          >
             Finish
           </Button>
         )}
