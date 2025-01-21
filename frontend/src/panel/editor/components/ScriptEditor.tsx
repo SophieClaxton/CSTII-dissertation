@@ -184,6 +184,20 @@ const ScriptEditor: React.FC = () => {
             ))}
           </Xwrapper>
         </div>
+        {typeErrors.length > 0 && (
+          <Button
+            variant={'contained'}
+            color={'warning'}
+            onClick={() => setTypeErrors([])}
+            sx={{
+              width: 'fit-content',
+              margin: '1rem',
+              alignSelf: 'flex-end',
+            }}
+          >
+            Hide Errors
+          </Button>
+        )}
         <AlertSnackBar snackBar={snackBar} setSnackBar={setSnackBar} />
       </Box>
     </>
