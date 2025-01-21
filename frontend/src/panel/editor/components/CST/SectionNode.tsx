@@ -56,6 +56,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
       <AddNodeButton<CSTStepNode>
         onAdd={(step) => dispatch({ type: EditorActionType.AddStep, step })}
         nodeChoices={getNodeChoices(section)}
+        stepWidth={true}
       />
       {section.endStep && <EndStepNode endStep={section.endStep} />}
     </Paper>

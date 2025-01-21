@@ -24,7 +24,7 @@
 .step-error {
   position: absolute;
   left: 95%;
-  top: 50%;
+  top: 10%;
   width: 4rem;
   text-align: left;
   text-wrap: nowrap;
