@@ -3,6 +3,7 @@ import { CSTNodeId } from '../panel/models/CST/CST';
 import InterfaceElement, {
   SelectableTag,
 } from '../panel/models/InterfaceElement';
+import { LevelOfSupport } from '../panel/support/script_support/userSupportMII';
 import { mapIdToString } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import {
   EndSupportMessage,
@@ -48,9 +49,13 @@ const sendUnsetFocusMessage = async (tabId: number) => {
   chrome.tabs.sendMessage(tabId, message).catch((error) => console.log(error));
 };
 
-const sendStartSupportMessage = async (tabId: number) => {
+const sendStartSupportMessage = async (
+  tabId: number,
+  levelOfSupport: LevelOfSupport,
+) => {
   const message: StartSupportMessage = {
     type: 'start_support',
+    levelOfSupport,
   };
 
   chrome.tabs.sendMessage(tabId, message).catch((error) => console.log(error));

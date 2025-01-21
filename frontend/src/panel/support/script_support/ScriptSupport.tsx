@@ -19,6 +19,10 @@ import {
   sendEndSupportMessage,
   sendStartSupportMessage,
 } from '../../../common/sendMessage';
+import LevelOfSupportDialog, {
+  LevelOfSupportDialogDetails,
+} from './LevelOfSupportDialog';
+import { LevelOfSupport } from './userSupportMII';
 
 const ScriptSupport: React.FC = () => {
   const { currentScreen } = useNavigationContext();
@@ -32,17 +36,24 @@ const ScriptSupport: React.FC = () => {
     ),
   );
   const [providingSupport, setProvidingSupport] = useState(false);
+  const [levelOfSupport, setLevelOfSupport] = useState<LevelOfSupport>('text');
+  const [openLoSDialog, setOpenLoSDialog] = useState(false);
+  const [dialogDetails, setDialogDetails] =
+    useState<LevelOfSupportDialogDetails>({
+      aboutChange: 'inc',
+      onAction: () => undefined,
+    });
 
   useEffect(() => {
     console.log('Tab updated, resending support message');
     if (tab.scriptStatus === 'loaded') {
       if (providingSupport) {
-        sendStartSupportMessage(tab.id!);
+        sendStartSupportMessage(tab.id!, levelOfSupport);
       } else {
         sendEndSupportMessage(tab.id!);
       }
     }
-  }, [providingSupport, tab]);
+  }, [providingSupport, tab, levelOfSupport]);
 
   return (
     <Page title={'Get Support'} onBack={() => sendEndSupportMessage(tab.id!)}>
@@ -107,7 +118,17 @@ const ScriptSupport: React.FC = () => {
                 flexItem
                 sx={{ marginTop: '1rem', marginBottom: '1rem' }}
               />
-              {providingSupport && <ProgramSupport program={script.program} />}
+              {providingSupport && (
+                <ProgramSupport
+                  program={script.program}
+                  {...{ levelOfSupport, setLevelOfSupport, setDialogDetails }}
+                />
+              )}
+              <LevelOfSupportDialog
+                open={openLoSDialog}
+                onClose={() => setOpenLoSDialog(false)}
+                {...dialogDetails}
+              />
             </>
           );
         }}

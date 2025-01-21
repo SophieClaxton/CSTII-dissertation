@@ -1,5 +1,6 @@
 import { ASTStepNodeInfo } from '../panel/models/AST/AST';
 import { SelectableTag } from '../panel/models/InterfaceElement';
+import { LevelOfSupport } from '../panel/support/script_support/userSupportMII';
 
 enum Port {
   SidePanel = 'sidePanel',
@@ -66,6 +67,7 @@ interface SystemClickElementMessage extends MessageBase {
 
 interface StartSupportMessage extends MessageBase {
   type: 'start_support';
+  levelOfSupport: LevelOfSupport;
 }
 
 interface EndSupportMessage extends MessageBase {

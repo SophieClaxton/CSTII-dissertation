@@ -18,6 +18,7 @@ console.log('Loaded content script');
 
 const selectableElementTags = allSelectableTags;
 const similarityThreshold = 0.975;
+const defaultLevelOfSupport = 'text';
 
 let editingState: EditingState = {
   isClickable: false,
@@ -34,6 +35,7 @@ const supportState: SupportState = {
     totalScrollDistance: 0,
   },
   intervalId: undefined,
+  levelOfSupport: defaultLevelOfSupport,
   nextPossibleSteps: [],
   lastScrollPosition: { x: 0, y: 0 },
 };
@@ -91,8 +93,11 @@ const setupMessageListener = () => {
         break;
       }
       case 'start_support': {
-        console.log('Received start support message');
+        console.log(
+          `Received start support message with support: ${message.levelOfSupport}`,
+        );
         supportState.collectStruggleData = true;
+        supportState.levelOfSupport = message.levelOfSupport;
         supportState.intervalId = setInterval(() => {
           const message: UserStruggleDataMessage = {
             type: 'user_struggle_data',
@@ -114,6 +119,7 @@ const setupMessageListener = () => {
       case 'end_support': {
         console.log('Received end support message');
         supportState.collectStruggleData = false;
+        supportState.levelOfSupport = defaultLevelOfSupport;
         clearInterval(supportState.intervalId);
         break;
       }

@@ -1,6 +1,10 @@
 import { isEndStepId, isInnerStepId } from '../panel/models/CST/testers';
 import { EditorAction, EditorActionType } from '../panel/models/EditorAction';
 import { isSelectableTag } from '../panel/models/InterfaceElement';
+import {
+  getNextSystemSupportAction,
+  SystemSupportAction,
+} from '../panel/support/script_support/userSupportMII';
 import { mapStringToId } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import { ContentScriptMessage } from './message';
 
@@ -41,11 +45,22 @@ const addClickedElementListener = (dispatch: React.Dispatch<EditorAction>) => {
   );
 };
 
-const addUserStruggleDataListener = () => {
+/** Every time the user struggle data is received, run the Mixed-Initiative Model
+ */
+const addUserStruggleDataListener = (
+  getDeltaStepsCompleted: () => number,
+  onNewSystemSupportAction: (action: SystemSupportAction) => void,
+) => {
   chrome.runtime.onMessage.addListener((message: ContentScriptMessage) => {
     if (message.type === 'user_struggle_data') {
       console.log('received user struggle data');
       console.log(message.userStruggleData);
+
+      const nextAction = getNextSystemSupportAction(
+        message.userStruggleData,
+        getDeltaStepsCompleted(),
+      );
+      onNewSystemSupportAction(nextAction);
     }
   });
 };
