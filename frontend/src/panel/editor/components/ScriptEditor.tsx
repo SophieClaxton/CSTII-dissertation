@@ -153,11 +153,16 @@ const ScriptEditor: React.FC = () => {
         </Button>
       </Stack>
       <Box
-        sx={{ backgroundColor: 'grey.100' }}
+        sx={{
+          backgroundColor: 'grey.100',
+        }}
         className="program-code-env"
         onScroll={updateArrows}
       >
-        <div className="program-code">
+        <div
+          className="program-code"
+          style={{ paddingRight: typeErrors.length > 0 ? '10rem' : '0' }}
+        >
           <Xwrapper>
             <div className="start-block" id="start">
               START
