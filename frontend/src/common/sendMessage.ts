@@ -35,6 +35,7 @@ const sendSetFocusMessage = async (
 ) => {
   const message: SetFocusMessage = {
     type: 'set_focus',
+    tag: element.tag,
     element: element.outerHTML,
   };
 

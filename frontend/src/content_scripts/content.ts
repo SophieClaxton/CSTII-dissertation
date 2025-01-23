@@ -7,6 +7,7 @@ import './clickable.css';
 import {
   EditingState,
   onEndSupport,
+  onReceiveNextPossibleSteps,
   onStartSupport,
   SupportState,
 } from './state';
@@ -14,7 +15,7 @@ import {
   collectStruggleDataOnScroll,
   collectUserStruggleDataOnMouseDown,
   collectUserStruggleDataOnMouseMove,
-} from './collectUserStruggleEvidence';
+} from './collectStruggleEvidence';
 import { detectStepOnClick, detectStepOnScroll } from './detectStep';
 import { defaultLevelOfSupport } from './consts';
 import { onSetFocus, onUnsetFocus } from './focusElement';
@@ -39,6 +40,7 @@ const supportState: SupportState = {
     numMouseClicks: 0,
     totalScrollDistance: 0,
   },
+  timeoutId: undefined,
   intervalId: undefined,
   levelOfSupport: defaultLevelOfSupport,
   nextPossibleSteps: [],
@@ -55,36 +57,29 @@ const setupMessageListener = () => {
       }
       case 'set_focus': {
         console.log('received focussing message');
-        onSetFocus(message);
-        break;
+        return onSetFocus(message.tag, message.element);
       }
       case 'unset_focus': {
         console.log('received focussing message');
-        onUnsetFocus();
-        break;
+        return onUnsetFocus();
       }
       case 'system_click_element': {
         console.log('received click element message');
-        onSystemClickElement(message);
-        break;
+        return onSystemClickElement(message.element);
       }
       case 'start_support': {
         console.log(
           `Received start support with support: ${message.levelOfSupport}`,
         );
-        onStartSupport(supportState, message);
-        break;
+        return onStartSupport(supportState, message.levelOfSupport);
       }
       case 'end_support': {
         console.log('Received end support message');
-        onEndSupport(supportState);
-        break;
+        return onEndSupport(supportState);
       }
       case 'next_possible_steps': {
         console.log('Received next possible steps:');
-        console.log(message.steps);
-        supportState.nextPossibleSteps = message.steps;
-        break;
+        return onReceiveNextPossibleSteps(supportState, message.steps);
       }
       default: {
         const e: never = message;

@@ -29,8 +29,10 @@ const getVisibleSteps = (startStep: ASTStepNode): ASTStepNode[] => {
 
 const getNextPossibleSteps = (
   visibleSteps: ASTStepNode[],
+  baseStepNumber: number,
 ): ASTStepNodeInfo[] => {
   const possibleSteps: ASTStepNodeInfo[] = [];
+  let stepNumber = baseStepNumber;
   for (const visibleStep of visibleSteps) {
     switch (visibleStep.type) {
       case ASTNodeType.End: {
@@ -38,7 +40,12 @@ const getNextPossibleSteps = (
       }
       case ASTNodeType.Follow: {
         const { type, element, comment } = visibleStep;
-        possibleSteps.push({ type, element, comment });
+        possibleSteps.push({
+          type,
+          element,
+          comment,
+          stepNumber,
+        });
         break;
       }
       case ASTNodeType.Click:
@@ -50,15 +57,16 @@ const getNextPossibleSteps = (
       case ASTNodeType.Check:
       case ASTNodeType.Draw: {
         const { next, ...rest } = visibleStep;
-        possibleSteps.push(rest);
+        possibleSteps.push({ ...rest, stepNumber });
         break;
       }
       case ASTNodeType.UserDecision: {
         const { type, question } = visibleStep;
-        possibleSteps.push({ type, question });
+        possibleSteps.push({ type, question, stepNumber });
         break;
       }
     }
+    stepNumber += 1;
     if (!isSkippable[visibleStep.type]) {
       break;
     }

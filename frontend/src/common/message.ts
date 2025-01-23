@@ -53,6 +53,7 @@ interface SetClickableMessage extends MessageBase {
 
 interface SetFocusMessage extends MessageBase {
   type: 'set_focus';
+  tag: SelectableTag;
   element: string;
 }
 

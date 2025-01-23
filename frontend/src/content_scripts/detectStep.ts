@@ -1,8 +1,7 @@
-import stringSimilarity from 'string-similarity-js';
 import { StepCompletedMessage } from '../common/message';
-import { ASTNodeType } from '../panel/models/AST/AST';
+import { ASTNodeType, ASTStepNodeInfo } from '../panel/models/AST/AST';
 import { SupportState } from './state';
-import { similarityThreshold } from './consts';
+import { elementsMatch } from './elementUtils';
 
 const isVisible = (element: Element): boolean => {
   const elementRect = element.getBoundingClientRect();
@@ -14,6 +13,26 @@ const isVisible = (element: Element): boolean => {
   );
 };
 
+const sendDetectionMessage = (
+  supportState: SupportState,
+  step: ASTStepNodeInfo,
+  index: number,
+) => {
+  console.log('Sending Detection Message for step');
+  console.log(step);
+  const message: StepCompletedMessage = {
+    type: 'step_completed',
+    step,
+    index,
+  };
+  chrome.runtime.sendMessage(message);
+  supportState.nextPossibleSteps = supportState.nextPossibleSteps.filter(
+    (_, stepIndex) => stepIndex != index,
+  );
+};
+
+// TODO: detect with focussed-on class
+
 const detectStepOnScroll = (supportState: SupportState) => {
   if (supportState.collectStruggleData) {
     const steps = [...supportState.nextPossibleSteps];
@@ -21,22 +40,12 @@ const detectStepOnScroll = (supportState: SupportState) => {
       if (step.type === ASTNodeType.ScrollTo) {
         for (const element of document.getElementsByTagName(step.element.tag)) {
           if (
-            stringSimilarity(element.outerHTML, step.element.outerHTML) >
-              similarityThreshold &&
+            elementsMatch(element, step.element.outerHTML) &&
             isVisible(element)
           ) {
-            console.log('Step completed');
-            const message: StepCompletedMessage = {
-              type: 'step_completed',
-              step,
-              index,
-            };
-
-            chrome.runtime.sendMessage(message);
-            supportState.nextPossibleSteps =
-              supportState.nextPossibleSteps.filter(
-                (_, stepIndex) => stepIndex != index,
-              );
+            console.log('Detected on scroll');
+            console.log(step);
+            sendDetectionMessage(supportState, step, index);
           }
         }
       }
@@ -46,28 +55,20 @@ const detectStepOnScroll = (supportState: SupportState) => {
 
 const detectStepOnClick = (element: Element, supportState: SupportState) => {
   if (supportState.collectStruggleData) {
+    console.log(element.outerHTML);
     const steps = [...supportState.nextPossibleSteps];
     steps.forEach((step, index) => {
       if (
         (step.type === ASTNodeType.Click || step.type === ASTNodeType.Follow) &&
         step.element.tag === element.tagName &&
-        stringSimilarity(element.outerHTML, step.element.outerHTML) >
-          similarityThreshold
+        elementsMatch(element, step.element.outerHTML)
       ) {
-        console.log('Step completed');
-        const message: StepCompletedMessage = {
-          type: 'step_completed',
-          step,
-          index,
-        };
-
-        chrome.runtime.sendMessage(message);
-        supportState.nextPossibleSteps = supportState.nextPossibleSteps.filter(
-          (_, stepIndex) => stepIndex != index,
-        );
+        console.log('Detected on click');
+        console.log(step);
+        sendDetectionMessage(supportState, step, index);
       }
     });
   }
 };
 
-export { detectStepOnScroll, detectStepOnClick };
+export { detectStepOnScroll, detectStepOnClick, sendDetectionMessage };

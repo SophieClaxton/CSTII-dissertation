@@ -139,6 +139,7 @@ const ScriptSupport: React.FC = () => {
                   <Slider
                     aria-label={'Level of Support'}
                     getAriaValueText={(value: number) => `Level ${value}`}
+                    value={levelsOfSupport.indexOf(levelOfSupport)}
                     onChangeCommitted={(_, value) =>
                       setLevelOfSupport(
                         levelsOfSupport[value as number] as LevelOfSupport,

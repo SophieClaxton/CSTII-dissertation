@@ -6,7 +6,7 @@ import {
 } from './mixedInitiativeInteraction';
 
 const supportChanges = ['inc', 'dec'] as const;
-const userSupportActions = [...supportChanges] as const;
+const userSupportActions = [...supportChanges, 'none'] as const;
 const systemSupportActions = [
   ...userSupportActions,
   'inc_dialog',
@@ -30,7 +30,8 @@ const userStruggleUserModel: UserModel<
 const userStruggleUtilityModel: UtilityModel<
   SystemSupportAction,
   UserSupportAction
-> = (_action: SystemSupportAction, _goal: UserSupportAction) => 1;
+> = (action: SystemSupportAction, _goal: UserSupportAction) =>
+  action === 'none' ? 1 : 0;
 
 const getNextSystemSupportAction = (
   userStruggleData: UserStruggleData,

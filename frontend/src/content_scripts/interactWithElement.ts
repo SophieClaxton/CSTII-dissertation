@@ -1,26 +1,20 @@
-import stringSimilarity from 'string-similarity-js';
-import { similarityThreshold } from './consts';
-import {
-  SystemClickElementMessage,
-  UserClickedElementMessage,
-} from '../common/message';
+import { UserClickedElementMessage } from '../common/message';
 import { EditingState } from './state';
 import { isSelectableTag } from '../panel/models/InterfaceElement';
+import { elementsMatch } from './elementUtils';
 
 const onClickElement =
-  (message: SystemClickElementMessage) =>
+  (elementOuterHTML: string) =>
   (element: HTMLAnchorElement | HTMLButtonElement) => {
-    if (
-      stringSimilarity(element.outerHTML, message.element) > similarityThreshold
-    ) {
-      console.log('found element to click');
+    if (elementsMatch(element, elementOuterHTML)) {
+      // console.log('found element to click');
       element.click();
     }
   };
 
-const onSystemClickElement = (message: SystemClickElementMessage) => {
-  document.querySelectorAll('button').forEach(onClickElement(message));
-  document.querySelectorAll('a').forEach(onClickElement(message));
+const onSystemClickElement = (elementOuterHTML: string) => {
+  document.querySelectorAll('button').forEach(onClickElement(elementOuterHTML));
+  document.querySelectorAll('a').forEach(onClickElement(elementOuterHTML));
 };
 
 const onUserClickElement = (
@@ -33,6 +27,7 @@ const onUserClickElement = (
     isSelectableTag(element.tagName) &&
     editingState.validTags.includes(element.tagName)
   ) {
+    // BUG: issue with escaped characters in outerHTML string
     element.classList.remove('clickable');
     const message: UserClickedElementMessage = {
       type: 'user_clicked_element',

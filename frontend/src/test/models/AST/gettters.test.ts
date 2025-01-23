@@ -21,7 +21,7 @@ describe('getNextPossibleSteps returns', () => {
       },
     ];
 
-    const possibleSteps = getNextPossibleSteps(visibleSteps);
+    const possibleSteps = getNextPossibleSteps(visibleSteps, 0);
     expect(possibleSteps.length).toBe(3);
   });
 
@@ -43,7 +43,7 @@ describe('getNextPossibleSteps returns', () => {
       },
     ];
 
-    const possibleSteps = getNextPossibleSteps(visibleSteps);
+    const possibleSteps = getNextPossibleSteps(visibleSteps, 0);
     expect(possibleSteps.length).toBe(1);
   });
 });

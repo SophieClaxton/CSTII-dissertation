@@ -77,6 +77,7 @@ const onPublishUnpublishedScript = async (
     unpublishedScript.website.url === program.start.url
       ? unpublishedScript.website
       : await findScriptWebsite(program);
+  console.log(website);
 
   if (website) {
     if (unpublishedScript.published_script_id) {

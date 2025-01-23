@@ -1,34 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ASTNodeType, ASTProgram } from '../../models/AST/AST';
-import {
-  getNextPossibleSteps,
-  getVisibleSteps,
-} from '../../models/AST/getters';
+import { ASTProgram } from '../../models/AST/AST';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import Box from '@mui/material/Box/Box';
 import { mapASTStepToDescription } from '../../models/AST/mappers';
-import {
-  addStepCompletedListener,
-  addUserStruggleDataListener,
-} from '../../../common/receiveMessage';
-import {
-  sendEndSupportMessage,
-  sendNextPossibleStepsMessage,
-} from '../../../common/sendMessage';
-import {
-  useNavigationContext,
-  useTabContext,
-} from '../../contexts/contextHooks';
+import { useNavigationContext } from '../../contexts/contextHooks';
 import Button from '@mui/material/Button/Button';
-import {
-  decreaseLevelOfSupport,
-  increaseLevelOfSupport,
-  LevelOfSupport,
-  SystemSupportAction,
-} from './userSupportMII';
+import { LevelOfSupport } from './userSupportMII';
 import { StateSetter } from '../../models/utilTypes';
 import { LevelOfSupportDialogDetails } from './LevelOfSupportDialog';
+import { useAddStepCompletedListener } from './listenerHook';
 
 interface ProgramSupportProps {
   program: ASTProgram;
@@ -39,81 +19,13 @@ interface ProgramSupportProps {
 
 const ProgramSupport: React.FC<ProgramSupportProps> = ({
   program,
-  setProvidingSupport,
   setLevelOfSupport,
   setDialogDetails,
 }) => {
   const { goBack } = useNavigationContext();
-  const { tab } = useTabContext();
-  const [baseStepNumber] = useState(0);
-  const [currentStepNumber, setCurrentStepNumber] = useState(0);
-  const [visibleSteps] = useState(getVisibleSteps(program.start.start));
-  const [showFinish, setShowFinish] = useState(false);
-  const prevNumberOfStepsCompleted = useRef(0);
-
-  const getDeltaStepsCompleted = useRef(
-    () =>
-      currentStepNumber + baseStepNumber - prevNumberOfStepsCompleted.current,
-  );
-
-  const respondToAction = useCallback(
-    (action: SystemSupportAction) => {
-      switch (action) {
-        case 'inc':
-          setLevelOfSupport(increaseLevelOfSupport);
-          break;
-        case 'dec':
-          setLevelOfSupport(decreaseLevelOfSupport);
-          break;
-        case 'inc_dialog':
-          setDialogDetails({
-            aboutChange: 'inc',
-            onAction: () => setLevelOfSupport(increaseLevelOfSupport),
-          });
-          break;
-        case 'dec_dialog':
-          setDialogDetails({
-            aboutChange: 'dec',
-            onAction: () => setLevelOfSupport(decreaseLevelOfSupport),
-          });
-      }
-    },
-    [setDialogDetails, setLevelOfSupport],
-  );
-
-  useEffect(() => {
-    console.log('Add listeners');
-    addUserStruggleDataListener(
-      getDeltaStepsCompleted.current,
-      respondToAction,
-    );
-    addStepCompletedListener((nextStepIndex) =>
-      setCurrentStepNumber((prevState) => prevState + nextStepIndex + 1),
-    );
-  }, [respondToAction]);
-
-  useEffect(() => {
-    const nextSteps = getNextPossibleSteps(
-      visibleSteps.slice(currentStepNumber),
-    );
-
-    const [userDecisionNode] = nextSteps.filter(
-      (step) => step.type === ASTNodeType.UserDecision,
-    );
-
-    console.log(
-      `User decision ${userDecisionNode?.question}is a valid next step`,
-    );
-    if (tab.scriptStatus === 'loaded') {
-      if (nextSteps.length > 0) {
-        console.log('Sending next possible steps');
-        sendNextPossibleStepsMessage(tab.id!, nextSteps);
-      } else {
-        sendEndSupportMessage(tab.id!);
-        setShowFinish(true);
-      }
-    }
-  }, [tab, currentStepNumber, visibleSteps]);
+  const { visibleSteps, currentStepNumber, baseStepNumber, showFinish } =
+    useAddStepCompletedListener(program, setLevelOfSupport, setDialogDetails);
+  console.log('Loading Program Support');
 
   return (
     <>
@@ -166,13 +78,7 @@ const ProgramSupport: React.FC<ProgramSupportProps> = ({
           );
         })}
         {showFinish && (
-          <Button
-            variant={'contained'}
-            onClick={() => {
-              setProvidingSupport(false);
-              goBack();
-            }}
-          >
+          <Button variant={'contained'} onClick={goBack}>
             Finish
           </Button>
         )}

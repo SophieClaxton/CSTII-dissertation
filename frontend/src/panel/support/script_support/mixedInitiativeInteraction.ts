@@ -40,6 +40,7 @@ const getActionMaximisingExpectedUtility = <A, G, E>(
       utilityModel,
     ),
   }));
+  console.log(results);
 
   const [baseAction] = possibleActions;
   const { action }: EUResult<A> = results.reduce(

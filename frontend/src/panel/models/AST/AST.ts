@@ -49,7 +49,7 @@ type ASTStepNode =
 type ASTStepNodeInfo = MappedOmit<
   ASTStepNode,
   'next' | 'nextSection' | 'choice1' | 'choice2'
->;
+> & { stepNumber: number };
 
 interface ASTStepBase {
   element: InterfaceElement;

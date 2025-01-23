@@ -66,13 +66,19 @@ const addUserStruggleDataListener = (
 };
 
 const addStepCompletedListener = (
+  getCurrentStep: () => number,
   updateCurrentStep: (nextStepIndex: number) => void,
 ) => {
   chrome.runtime.onMessage.addListener(
     async (message: ContentScriptMessage) => {
       if (message.type === 'step_completed') {
-        console.log('Received step completed message');
-        updateCurrentStep(message.index);
+        const received = message.step.stepNumber;
+        const expected = getCurrentStep();
+        console.log(`Received step completed message ${received} ${expected}`);
+        if (received >= expected) {
+          console.log('Step was expected');
+          updateCurrentStep(message.index);
+        }
       }
     },
   );

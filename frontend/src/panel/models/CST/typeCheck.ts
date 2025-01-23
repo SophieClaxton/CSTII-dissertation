@@ -59,6 +59,8 @@ interface TypeCheckError {
   reason: string;
 }
 
+// FIX: innerSteps order getting reversed
+
 const typeCheck = (program: CSTProgram): TypeCheckResult => {
   // Require sections to be sorted topologically
   const sections = [...program.sections].reverse();

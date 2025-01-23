@@ -137,7 +137,6 @@ const ScriptEditor: React.FC = () => {
           variant={'contained'}
           onClick={() => {
             const typeCheckResult = typeCheck(unpublishedScript.program);
-            console.log(typeCheckResult);
             if (typeCheckResult.success === false) {
               setTypeErrors(typeCheckResult.errors);
             } else {
