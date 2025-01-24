@@ -57,7 +57,7 @@ const UserDecisionInstruction: React.FC<UserDecisionInstructionProps> = ({
         variant={'body1'}
         sx={{
           gridColumnStart: 2,
-          gridColumnEnd: 3,
+          gridColumnEnd: 4,
           textAlign: 'left',
           justifySelf: 'left',
         }}

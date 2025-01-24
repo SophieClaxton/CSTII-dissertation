@@ -6,8 +6,9 @@ const elementsMatch = (element: Element, msgElement: string): boolean => {
   if (focussed) {
     element.classList.remove(focusClass);
   }
+  const removeEmptyClass = msgElement.replace(/\sclass=""/g, '');
   const match =
-    stringSimilarity(element.outerHTML, msgElement) > similarityThreshold;
+    stringSimilarity(element.outerHTML, removeEmptyClass) > similarityThreshold;
   if (focussed) {
     element.classList.add(focusClass);
   }

@@ -116,7 +116,7 @@ interface CSTDragNode extends CSTInnerStepBase {
 }
 
 enum CSTUserDecisionEndType {
-  Follow = 'Folow',
+  Follow = 'Follow',
   InnerStep = 'InnerStep',
 }
 
