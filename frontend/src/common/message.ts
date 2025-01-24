@@ -1,6 +1,6 @@
-import { ASTStepNodeInfo } from '../panel/models/AST/AST';
+import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { SelectableTag } from '../panel/models/InterfaceElement';
-import { LevelOfSupport } from '../panel/support/script_support/userSupportMII';
+import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 enum Port {
   SidePanel = 'sidePanel',
@@ -77,7 +77,7 @@ interface EndSupportMessage extends MessageBase {
 
 interface NextPossibleStepsMessage extends MessageBase {
   type: 'next_possible_steps';
-  steps: ASTStepNodeInfo[];
+  steps: ASTInstruction[];
 }
 
 // Content Script messages
@@ -112,8 +112,7 @@ interface UserStruggleDataMessage extends MessageBase {
 
 interface StepCompletedMessage extends MessageBase {
   type: 'step_completed';
-  step: ASTStepNodeInfo;
-  index: number;
+  step: ASTInstruction;
 }
 
 export { Port };

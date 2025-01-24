@@ -1,4 +1,5 @@
-import { ASTNodeType, ASTStepNode, ASTStepNodeInfo } from './AST';
+import { ASTNodeType, ASTStepNode } from './AST';
+import { ASTInstruction } from './Instruction';
 import { isSkippable } from './mappers';
 
 /**
@@ -6,72 +7,53 @@ import { isSkippable } from './mappers';
  * @param startStep
  * @returns the list of step nodes before a user decision or the end of the program
  */
-const getVisibleSteps = (startStep: ASTStepNode): ASTStepNode[] => {
+const getVisibleInstructions = (
+  startStep: ASTStepNode,
+  baseStepNumber: number,
+): ASTInstruction[] => {
   if (startStep.type === ASTNodeType.End) {
     return [];
   }
-  const visibleSteps = [];
+  const visibleInstructions: ASTInstruction[] = [];
   let nextStep: ASTStepNode = startStep;
+  let stepNumber = baseStepNumber;
   while (nextStep.type != ASTNodeType.End) {
+    const stage = stepNumber === baseStepNumber ? 'next' : 'incomplete';
     if (nextStep.type === ASTNodeType.Follow) {
-      visibleSteps.push(nextStep);
+      const { nextSection, ...rest } = nextStep;
+      visibleInstructions.push({ ...rest, stepNumber, stage });
       nextStep = nextStep.nextSection.start;
     } else if (nextStep.type === ASTNodeType.UserDecision) {
-      visibleSteps.push(nextStep);
+      visibleInstructions.push({ ...nextStep, stepNumber, stage });
       nextStep = { type: ASTNodeType.End };
     } else {
-      visibleSteps.push(nextStep);
+      const { next, ...rest } = nextStep;
+      visibleInstructions.push({ ...rest, stepNumber, stage });
       nextStep = nextStep.next;
     }
+    stepNumber++;
   }
-  return visibleSteps;
+  return visibleInstructions;
 };
 
 const getNextPossibleSteps = (
-  visibleSteps: ASTStepNode[],
-  baseStepNumber: number,
-): ASTStepNodeInfo[] => {
-  const possibleSteps: ASTStepNodeInfo[] = [];
-  let stepNumber = baseStepNumber;
-  for (const visibleStep of visibleSteps) {
-    switch (visibleStep.type) {
-      case ASTNodeType.End: {
+  visibleInstructions: ASTInstruction[],
+): ASTInstruction[] => {
+  const possibleSteps: ASTInstruction[] = [];
+  for (const instruction of visibleInstructions) {
+    if (instruction.stage === 'complete') {
+      continue;
+    } else {
+      if (instruction.type === ASTNodeType.UserDecision) {
         break;
       }
-      case ASTNodeType.Follow: {
-        const { type, element, comment } = visibleStep;
-        possibleSteps.push({
-          type,
-          element,
-          comment,
-          stepNumber,
-        });
+      possibleSteps.push(instruction);
+      if (!isSkippable[instruction.type]) {
         break;
       }
-      case ASTNodeType.Click:
-      case ASTNodeType.Read:
-      case ASTNodeType.ScrollTo:
-      case ASTNodeType.Drag:
-      case ASTNodeType.Write:
-      case ASTNodeType.Select:
-      case ASTNodeType.Check:
-      case ASTNodeType.Draw: {
-        const { next, ...rest } = visibleStep;
-        possibleSteps.push({ ...rest, stepNumber });
-        break;
-      }
-      case ASTNodeType.UserDecision: {
-        const { type, question } = visibleStep;
-        possibleSteps.push({ type, question, stepNumber });
-        break;
-      }
-    }
-    stepNumber += 1;
-    if (!isSkippable[visibleStep.type]) {
-      break;
     }
   }
   return possibleSteps;
 };
 
-export { getVisibleSteps, getNextPossibleSteps };
+export { getVisibleInstructions, getNextPossibleSteps };

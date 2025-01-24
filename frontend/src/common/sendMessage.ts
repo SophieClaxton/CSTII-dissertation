@@ -1,9 +1,9 @@
-import { ASTStepNodeInfo } from '../panel/models/AST/AST';
+import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { CSTNodeId } from '../panel/models/CST/CST';
 import InterfaceElement, {
   SelectableTag,
 } from '../panel/models/InterfaceElement';
-import { LevelOfSupport } from '../panel/support/script_support/userSupportMII';
+import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 import { mapIdToString } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import {
   EndSupportMessage,
@@ -72,7 +72,7 @@ const sendEndSupportMessage = async (tabId: number) => {
 
 const sendNextPossibleStepsMessage = async (
   tabId: number,
-  nextSteps: ASTStepNodeInfo[],
+  nextSteps: ASTInstruction[],
 ) => {
   const message: NextPossibleStepsMessage = {
     type: 'next_possible_steps',

@@ -1,22 +1,22 @@
-import { elementsMatch } from './elementUtils';
+import { elementsMatch, getElementFromId } from './elementUtils';
 
 const onSetFocus = (
   tag: string,
   outerHTML: string,
   highlight: boolean = true,
 ): boolean => {
-  const idPattern = /id="([\w|\d|^"|-]*)"/g;
-  const id = idPattern.exec(outerHTML);
-  if (id) {
-    const element = document.getElementById(id[1]);
-    if (element) {
-      // console.log('found element to focus by id');
-      if (highlight) {
-        element.classList.add('focussed-on');
-      }
-      element.scrollIntoView({ behavior: 'smooth' });
-      return true;
+  const elementFromId = getElementFromId(outerHTML);
+  if (elementFromId) {
+    // console.log('found element to focus by id');
+    if (highlight) {
+      elementFromId.classList.add('focussed-on');
     }
+    elementFromId.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'center',
+    });
+    return true;
   }
 
   let found = false;

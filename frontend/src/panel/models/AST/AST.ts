@@ -1,5 +1,4 @@
 import InterfaceElement from '../InterfaceElement';
-import { MappedOmit } from '../utilTypes';
 
 interface ASTProgram {
   start: ASTSectionNode;
@@ -45,11 +44,6 @@ type ASTStepNode =
   | ASTDragNode
   | ASTInputNode
   | ASTUserDecisionNode;
-
-type ASTStepNodeInfo = MappedOmit<
-  ASTStepNode,
-  'next' | 'nextSection' | 'choice1' | 'choice2'
-> & { stepNumber: number };
 
 interface ASTStepBase {
   element: InterfaceElement;
@@ -125,7 +119,6 @@ export type {
   ASTSectionNode,
   ASTSubsectionNode,
   ASTStepNode,
-  ASTStepNodeInfo,
   ASTStepBase,
   ASTEndNode,
   ASTClickNode,

@@ -1,12 +1,9 @@
+import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { isEndStepId, isInnerStepId } from '../panel/models/CST/testers';
 import { EditorAction, EditorActionType } from '../panel/models/EditorAction';
 import { isSelectableTag } from '../panel/models/InterfaceElement';
-import {
-  getNextSystemSupportAction,
-  SystemSupportAction,
-} from '../panel/support/script_support/userSupportMII';
 import { mapStringToId } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
-import { ContentScriptMessage } from './message';
+import { ContentScriptMessage, UserStruggleData } from './message';
 
 const addClickedElementListener = (dispatch: React.Dispatch<EditorAction>) => {
   chrome.runtime.onMessage.addListener(
@@ -48,37 +45,24 @@ const addClickedElementListener = (dispatch: React.Dispatch<EditorAction>) => {
 /** Every time the user struggle data is received, run the Mixed-Initiative Model
  */
 const addUserStruggleDataListener = (
-  getDeltaStepsCompleted: () => number,
-  onNewSystemSupportAction: (action: SystemSupportAction) => void,
+  setUserStruggleData: (data: UserStruggleData) => void,
 ) => {
   chrome.runtime.onMessage.addListener((message: ContentScriptMessage) => {
     if (message.type === 'user_struggle_data') {
       console.log('received user struggle data');
-      console.log(message.userStruggleData);
-
-      const nextAction = getNextSystemSupportAction(
-        message.userStruggleData,
-        getDeltaStepsCompleted(),
-      );
-      onNewSystemSupportAction(nextAction);
+      setUserStruggleData(message.userStruggleData);
     }
   });
 };
 
 const addStepCompletedListener = (
-  getCurrentStep: () => number,
-  updateCurrentStep: (nextStepIndex: number) => void,
+  setStepCompleted: (step: ASTInstruction) => void,
 ) => {
   chrome.runtime.onMessage.addListener(
     async (message: ContentScriptMessage) => {
       if (message.type === 'step_completed') {
-        const received = message.step.stepNumber;
-        const expected = getCurrentStep();
-        console.log(`Received step completed message ${received} ${expected}`);
-        if (received >= expected) {
-          console.log('Step was expected');
-          updateCurrentStep(message.index);
-        }
+        console.log('received step completed message');
+        setStepCompleted(message.step);
       }
     },
   );

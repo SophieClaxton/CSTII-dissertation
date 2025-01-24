@@ -1,7 +1,8 @@
 import { UserStruggleDataMessage } from '../common/message';
-import { ASTNodeType, ASTStepNodeInfo } from '../panel/models/AST/AST';
+import { ASTNodeType } from '../panel/models/AST/AST';
+import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { SelectableTag } from '../panel/models/InterfaceElement';
-import { LevelOfSupport } from '../panel/support/script_support/userSupportMII';
+import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 import { defaultLevelOfSupport } from './consts';
 import { sendDetectionMessage } from './detectStep';
 import { onSetFocus, onUnsetFocus } from './focusElement';
@@ -24,7 +25,7 @@ interface SupportState {
   intervalId: NodeJS.Timeout | undefined;
   timeoutId: NodeJS.Timeout | undefined;
   levelOfSupport: LevelOfSupport;
-  nextPossibleSteps: ASTStepNodeInfo[];
+  nextPossibleSteps: ASTInstruction[];
   lastScrollPosition: { x: number; y: number };
 }
 
@@ -69,17 +70,13 @@ const onEndSupport = (supportState: SupportState) => {
 
 const onReceiveNextPossibleSteps = (
   supportState: SupportState,
-  nextPossibleSteps: ASTStepNodeInfo[],
+  nextPossibleSteps: ASTInstruction[],
 ) => {
   supportState.nextPossibleSteps = nextPossibleSteps;
 
   const [stepToHelpWith] = supportState.nextPossibleSteps;
   console.log(stepToHelpWith);
-  if (
-    stepToHelpWith &&
-    stepToHelpWith.type != ASTNodeType.End &&
-    stepToHelpWith.type != ASTNodeType.UserDecision
-  ) {
+  if (stepToHelpWith && stepToHelpWith.type != ASTNodeType.UserDecision) {
     if (supportState.levelOfSupport === 'overlay') {
       // console.log('Trying to focus on that element');
       const focussedOnElement = onSetFocus(
@@ -90,7 +87,7 @@ const onReceiveNextPossibleSteps = (
       if (focussedOnElement && stepToHelpWith.type === ASTNodeType.ScrollTo) {
         // TODO: make timeout proportional to reading time
         supportState.timeoutId = setTimeout(() => {
-          sendDetectionMessage(supportState, stepToHelpWith, 0);
+          sendDetectionMessage(supportState, stepToHelpWith);
           onUnsetFocus();
         }, 6000);
       }
