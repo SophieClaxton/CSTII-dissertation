@@ -4,25 +4,27 @@ import {
   isSelectableTag,
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
-import {
-  EditingState,
-  onEndSupport,
-  onReceiveNextPossibleSteps,
-  onStartSupport,
-  SupportState,
-} from './state';
-import {
-  collectStruggleDataOnScroll,
-  collectUserStruggleDataOnMouseDown,
-  collectUserStruggleDataOnMouseMove,
-} from './collectStruggleEvidence';
-import { detectStepOnClick, detectStepOnScroll } from './detectStep';
 import { defaultLevelOfSupport } from './consts';
 import { onSetFocus, onUnsetFocus } from './focusElement';
 import {
   onSystemClickElement,
   onUserClickElement,
 } from './interactWithElement';
+import {
+  collectUserStruggleDataOnMouseMove,
+  collectUserStruggleDataOnMouseDown,
+  collectStruggleDataOnScroll,
+} from './userSupport/collectStruggleEvidence';
+import {
+  detectStepOnClick,
+  detectStepOnScroll,
+} from './userSupport/detectStep';
+import { EditingState, SupportState } from './userSupport/state';
+import {
+  onStartSupport,
+  onEndSupport,
+  onReceiveNextPossibleSteps,
+} from './userSupport/support';
 
 console.log('Loaded content script');
 
@@ -45,6 +47,7 @@ const supportState: SupportState = {
   levelOfSupport: defaultLevelOfSupport,
   nextPossibleSteps: [],
   lastScrollPosition: { x: 0, y: 0 },
+  systemScrolling: false,
 };
 
 const setupMessageListener = () => {
@@ -57,7 +60,7 @@ const setupMessageListener = () => {
       }
       case 'set_focus': {
         console.log('received focussing message');
-        return onSetFocus(message.tag, message.element);
+        return onSetFocus(message.tag, message.element, supportState);
       }
       case 'unset_focus': {
         console.log('received focussing message');

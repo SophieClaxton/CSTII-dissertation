@@ -1,15 +1,15 @@
 import stringSimilarity from 'string-similarity-js';
-import { similarityThreshold } from './consts';
+import { focusClass, similarityThreshold } from './consts';
 
 const elementsMatch = (element: Element, msgElement: string): boolean => {
-  const focussed = element.classList.contains('focussed-on');
+  const focussed = element.classList.contains(focusClass);
   if (focussed) {
-    element.classList.remove('focussed-on');
+    element.classList.remove(focusClass);
   }
   const match =
     stringSimilarity(element.outerHTML, msgElement) > similarityThreshold;
   if (focussed) {
-    element.classList.add('focussed-on');
+    element.classList.add(focusClass);
   }
   return match;
 };

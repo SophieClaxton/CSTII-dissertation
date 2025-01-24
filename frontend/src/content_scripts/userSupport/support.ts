@@ -1,43 +1,17 @@
-import { UserStruggleDataMessage } from '../common/message';
-import { ASTNodeType } from '../panel/models/AST/AST';
-import { ASTInstruction } from '../panel/models/AST/Instruction';
-import { SelectableTag } from '../panel/models/InterfaceElement';
-import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
-import { defaultLevelOfSupport } from './consts';
-import { sendDetectionMessage } from './detectStep';
-import { onSetFocus, onUnsetFocus } from './focusElement';
-import { onSystemClickElement } from './interactWithElement';
-
-interface EditingState {
-  isClickable: boolean;
-  stepId: string;
-  validTags: SelectableTag[];
-  url: string;
-}
-
-interface SupportState {
-  collectStruggleData: boolean;
-  userStruggleData: {
-    totalDistance: number;
-    numMouseClicks: number;
-    totalScrollDistance: number;
-  };
-  intervalId: NodeJS.Timeout | undefined;
-  timeoutId: NodeJS.Timeout | undefined;
-  levelOfSupport: LevelOfSupport;
-  nextPossibleSteps: ASTInstruction[];
-  lastScrollPosition: { x: number; y: number };
-}
+import { UserStruggleDataMessage } from '../../common/message';
+import { ASTNodeType } from '../../panel/models/AST/AST';
+import { ASTInstruction } from '../../panel/models/AST/Instruction';
+import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
+import { defaultLevelOfSupport } from '../consts';
+import { onSetFocus } from '../focusElement';
+import { onSystemClickElement } from '../interactWithElement';
+import { SupportState } from './state';
 
 const onStartSupport = (
   supportState: SupportState,
   levelOfSupport: LevelOfSupport,
 ) => {
   supportState.collectStruggleData = true;
-  // const LoSChanged = supportState.levelOfSupport != levelOfSupport;
-  // if (LoSChanged) {
-  //   onReceiveNextPossibleSteps(supportState, supportState.nextPossibleSteps);
-  // }
   supportState.levelOfSupport = levelOfSupport;
   onReceiveNextPossibleSteps(supportState, supportState.nextPossibleSteps);
   if (!supportState.intervalId) {
@@ -65,7 +39,6 @@ const onEndSupport = (supportState: SupportState) => {
   supportState.levelOfSupport = defaultLevelOfSupport;
   clearInterval(supportState.intervalId);
   clearTimeout(supportState.timeoutId);
-  // FIX: interval carrying on
 };
 
 const onReceiveNextPossibleSteps = (
@@ -82,21 +55,26 @@ const onReceiveNextPossibleSteps = (
       const focussedOnElement = onSetFocus(
         stepToHelpWith.element.tag,
         stepToHelpWith.element.outerHTML,
+        supportState,
+        true,
+        stepToHelpWith,
       );
       // console.log(`Element was focussed: ${focussedOnElement}`);
       if (focussedOnElement && stepToHelpWith.type === ASTNodeType.ScrollTo) {
         // TODO: make timeout proportional to reading time
-        supportState.timeoutId = setTimeout(() => {
-          sendDetectionMessage(supportState, stepToHelpWith);
-          onUnsetFocus();
-        }, 6000);
+        // supportState.timeoutId = setTimeout(() => {
+        //   sendDetectionMessage(supportState, stepToHelpWith);
+        //   onUnsetFocus();
+        // }, 6000);
       }
     } else if (supportState.levelOfSupport === 'click') {
       // console.log('Trying to complete action for user');
       const focussedOnElement = onSetFocus(
         stepToHelpWith.element.tag,
         stepToHelpWith.element.outerHTML,
+        supportState,
         false,
+        stepToHelpWith,
       );
       if (focussedOnElement && stepToHelpWith.type === ASTNodeType.ScrollTo) {
         // supportState.timeoutId = setTimeout(
@@ -116,5 +94,4 @@ const onReceiveNextPossibleSteps = (
   }
 };
 
-export type { EditingState, SupportState };
 export { onStartSupport, onEndSupport, onReceiveNextPossibleSteps };

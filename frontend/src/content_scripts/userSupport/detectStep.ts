@@ -1,16 +1,19 @@
-import { StepCompletedMessage } from '../common/message';
-import { ASTNodeType } from '../panel/models/AST/AST';
+import { StepCompletedMessage } from '../../common/message';
+import { ASTNodeType } from '../../panel/models/AST/AST';
+import { ASTInstruction } from '../../panel/models/AST/Instruction';
+import { getElementFromId, elementsMatch } from '../elementUtils';
+import { onUnsetFocus } from '../focusElement';
 import { SupportState } from './state';
-import { elementsMatch, getElementFromId } from './elementUtils';
-import { ASTInstruction } from '../panel/models/AST/Instruction';
 
 const isVisible = (element: Element): boolean => {
   const elementRect = element.getBoundingClientRect();
+  const yOffset = 50;
+  const xOffset = 25;
   return (
-    elementRect.top > 0 &&
-    elementRect.bottom < window.innerHeight &&
-    elementRect.left > 0 &&
-    elementRect.right < window.innerWidth
+    elementRect.top > yOffset &&
+    elementRect.bottom < window.innerHeight - yOffset &&
+    elementRect.left > xOffset &&
+    elementRect.right < window.innerWidth - xOffset
   );
 };
 
@@ -18,8 +21,7 @@ const sendDetectionMessage = (
   supportState: SupportState,
   step: ASTInstruction,
 ) => {
-  console.log('Sending Detection Message for step');
-  console.log(step);
+  console.log(`Sending Detection Message for stepNumber ${step.stepNumber}`);
   const message: StepCompletedMessage = {
     type: 'step_completed',
     step,
@@ -28,12 +30,13 @@ const sendDetectionMessage = (
   supportState.nextPossibleSteps = supportState.nextPossibleSteps.filter(
     (otherStep) => otherStep.stepNumber != step.stepNumber,
   );
+  onUnsetFocus();
 };
 
 // TODO: detect with focussed-on class
 
 const detectStepOnScroll = (supportState: SupportState) => {
-  if (supportState.collectStruggleData) {
+  if (supportState.collectStruggleData && !supportState.systemScrolling) {
     const steps = [...supportState.nextPossibleSteps];
     steps.forEach((step) => {
       if (step.type === ASTNodeType.ScrollTo) {

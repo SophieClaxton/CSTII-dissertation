@@ -1,5 +1,5 @@
 import { UserClickedElementMessage } from '../common/message';
-import { EditingState } from './state';
+import { EditingState } from './userSupport/state';
 import { isSelectableTag } from '../panel/models/InterfaceElement';
 import { elementsMatch } from './elementUtils';
 
