@@ -18,6 +18,7 @@ enum EditorActionType {
   EditStepElement = 'editStepElement',
   DeleteStep = 'deleteStep',
   RearrangeInnerSteps = 'rearrangeInnerSteps',
+  EditUserDecisionQuestion = 'editUserDecisionQuestion',
   ChangeUserDecisionStepToInnerStep = 'changeUserDecisionStepToInnerStep',
   ChangeUserDecisionStepToEndStep = 'changeUserDecisionStepToEndStep',
 }
@@ -36,6 +37,7 @@ type EditorAction =
   | AddStepAction
   | DeleteStepAction
   | RearrangeInnerStepsAction
+  | EditUserDecisionQuestion
   | ChangeUserDecisionStepToInnerStepAction
   | ChangeUserDecisionStepToEndStepAction;
 
@@ -88,6 +90,12 @@ interface RearrangeInnerStepsAction extends BaseEditorAction {
   innerSteps: CSTInnerStepNode[];
 }
 
+interface EditUserDecisionQuestion extends BaseEditorAction {
+  type: EditorActionType.EditUserDecisionQuestion;
+  stepId: CSTUserDecisionNode['id'];
+  question: string;
+}
+
 interface ChangeUserDecisionStepToInnerStepAction extends BaseEditorAction {
   type: EditorActionType.ChangeUserDecisionStepToInnerStep;
   sectionId: CSTSection['id'];
@@ -112,6 +120,7 @@ export type {
   EditStepElementAction,
   DeleteStepAction,
   RearrangeInnerStepsAction,
+  EditUserDecisionQuestion,
   ChangeUserDecisionStepToInnerStepAction,
   ChangeUserDecisionStepToEndStepAction,
 };

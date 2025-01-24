@@ -16,7 +16,7 @@ import {
 } from '../scriptUtils/updateUnpublishedScript';
 import AlertSnackBar from './AlertSnackBar';
 import SectionNode from './CST/SectionNode';
-import { clickedElementListener } from '../../../common/receiveMessage';
+import { addClickedElementListener } from '../../../common/receiveMessage';
 import Typography from '@mui/material/Typography/Typography';
 import Input from '@mui/material/Input/Input';
 import { EditorActionType } from '../../models/EditorAction';
@@ -42,7 +42,7 @@ const ScriptEditor: React.FC = () => {
 
   const updateArrows = useXarrow();
 
-  useEffect(() => clickedElementListener(dispatch), [dispatch]);
+  useEffect(() => addClickedElementListener(dispatch), [dispatch]);
 
   return (
     <>
@@ -137,7 +137,6 @@ const ScriptEditor: React.FC = () => {
           variant={'contained'}
           onClick={() => {
             const typeCheckResult = typeCheck(unpublishedScript.program);
-            console.log(typeCheckResult);
             if (typeCheckResult.success === false) {
               setTypeErrors(typeCheckResult.errors);
             } else {
@@ -153,11 +152,16 @@ const ScriptEditor: React.FC = () => {
         </Button>
       </Stack>
       <Box
-        sx={{ backgroundColor: 'grey.100' }}
+        sx={{
+          backgroundColor: 'grey.100',
+        }}
         className="program-code-env"
         onScroll={updateArrows}
       >
-        <div className="program-code">
+        <div
+          className="program-code"
+          style={{ paddingRight: typeErrors.length > 0 ? '10rem' : '0' }}
+        >
           <Xwrapper>
             <div className="start-block" id="start">
               START
@@ -179,6 +183,20 @@ const ScriptEditor: React.FC = () => {
             ))}
           </Xwrapper>
         </div>
+        {typeErrors.length > 0 && (
+          <Button
+            variant={'contained'}
+            color={'warning'}
+            onClick={() => setTypeErrors([])}
+            sx={{
+              width: 'fit-content',
+              margin: '1rem',
+              alignSelf: 'flex-end',
+            }}
+          >
+            Hide Errors
+          </Button>
+        )}
         <AlertSnackBar snackBar={snackBar} setSnackBar={setSnackBar} />
       </Box>
     </>

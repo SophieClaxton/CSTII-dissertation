@@ -3,17 +3,17 @@ import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import TextField from '@mui/material/TextField/TextField';
 import Typography from '@mui/material/Typography/Typography';
-import { useEffect, useState } from 'react';
-import APIResponse from '../models/API/APIResponse';
-import User from '../models/API/User';
+import { useState } from 'react';
 import { createUser, getUsers } from '../api/users';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import Button from '@mui/material/Button/Button';
+import { useAPICall } from '../api/apiHooks';
+import { StateSetter } from '../models/utilTypes';
 
 interface CreateUserDialogProps {
   open: boolean;
-  setOpen: (value: boolean) => void;
-  setUserId: (value: number) => void;
+  setOpen: StateSetter<boolean>;
+  setUserId: StateSetter<number | undefined>;
 }
 
 const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
@@ -22,18 +22,8 @@ const CreateUserDialog: React.FC<CreateUserDialogProps> = ({
   setUserId,
 }) => {
   const [username, setUsername] = useState('');
-  const [currentUsersData, setCurrentUsersData] = useState<APIResponse<User[]>>(
-    { status: 'Loading' },
-  );
+  const currentUsersData = useAPICall(getUsers);
   const [helperText, setHelperText] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const getCurrentUserData = async () => {
-      const response = await getUsers();
-      setCurrentUsersData(response);
-    };
-    getCurrentUserData();
-  }, []);
 
   const errorWithChosenUsername = (
     username: string,

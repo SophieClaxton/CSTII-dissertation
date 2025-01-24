@@ -37,6 +37,7 @@ const getScripts = async (): Promise<
 };
 
 const getScript = async (id: number): Promise<APIResponse<Script>> => {
+  console.log('Making request for script');
   try {
     const response = await scriptsEndpoint.get(`${id}`);
     return {
@@ -68,10 +69,13 @@ const publishScript = async (
   }
 };
 
+// TODO: this is causing an error - script is not being published correctly
+// Network trace does not include request method PATCH
 const updateScript = async (
   script_id: number,
   script: UpdateScriptRequest,
 ): Promise<APIResponse<APISuccess>> => {
+  console.log('Making request for script update');
   try {
     const response = await scriptsEndpoint.patch(`${script_id}`, script);
     return {
@@ -104,6 +108,7 @@ const deleteScript = async (id: number): Promise<APIResponse<APISuccess>> => {
 const getUserScripts = async (
   userId: number,
 ): Promise<APIResponse<ScriptWithAuthorAndWebsite[]>> => {
+  console.log('Making request for scripts');
   try {
     const response = await scriptsEndpoint.get(`user/${userId}`);
     return {
@@ -121,6 +126,7 @@ const getUserScripts = async (
 const getWebsiteScripts = async (
   websiteId: number,
 ): Promise<APIResponse<ScriptWithAuthorAndWebsite[]>> => {
+  console.log('Making request for scripts');
   try {
     const response = await scriptsEndpoint.get(`website/${websiteId}`);
     return {

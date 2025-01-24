@@ -7,6 +7,7 @@ import EndStepNode from './EndStepNode';
 import '../styles/subsection.css';
 import { EditorActionType } from '../../../models/EditorAction';
 import Paper from '@mui/material/Paper/Paper';
+import Typography from '@mui/material/Typography/Typography';
 
 interface SubsectionNodeProps {
   subsection: CSTSubsectionNode;
@@ -25,10 +26,11 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
-        padding: '1rem',
+        padding: '0.5rem',
+        backgroundColor: 'white',
       }}
     >
-      <p>{subsection.answer}</p>
+      <Typography variant={'subtitle2'}>{subsection.answer}</Typography>
       <InnerStepContainer
         innerSteps={subsection.innerSteps}
         parentId={subsection.id}
@@ -36,6 +38,7 @@ const SubsectionNode: React.FC<SubsectionNodeProps> = ({ subsection }) => {
       <AddNodeButton
         onAdd={(step) => dispatch({ type: EditorActionType.AddStep, step })}
         nodeChoices={getNodeChoices(subsection)}
+        stepWidth={subsection.innerSteps.length > 0 || !!subsection.endStep}
       />
       {subsection.endStep && <EndStepNode endStep={subsection.endStep} />}
     </Paper>

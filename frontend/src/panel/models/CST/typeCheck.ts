@@ -59,6 +59,8 @@ interface TypeCheckError {
   reason: string;
 }
 
+// FIX: innerSteps order getting reversed
+
 const typeCheck = (program: CSTProgram): TypeCheckResult => {
   // Require sections to be sorted topologically
   const sections = [...program.sections].reverse();
@@ -137,11 +139,19 @@ const mapSection = <I extends CSTSection, O extends ASTSection>(
   if (!isASTStepNode(nextStep)) {
     console.log(`Type check failed for ${mapIdToString(section.id)}`);
   }
-  return isASTStepNode(nextStep)
-    ? isSection(section)
+  if (isSection(section)) {
+    const hasUrl = section.url.length > 0;
+    return isASTStepNode(nextStep) && hasUrl
       ? ({ type: sectionType, start: nextStep, url: section.url } as O)
-      : ({ type: sectionType, start: nextStep } as O)
-    : nextStep;
+      : [
+          ...(isASTStepNode(nextStep) ? [] : nextStep),
+          ...(hasUrl ? [] : [{ location: section.id, reason: 'Missing url' }]),
+        ];
+  } else {
+    return isASTStepNode(nextStep)
+      ? ({ type: sectionType, start: nextStep } as O)
+      : nextStep;
+  }
 };
 
 const mapStepNode = <I extends CSTInnerStepNode, R extends ASTStepNode>(

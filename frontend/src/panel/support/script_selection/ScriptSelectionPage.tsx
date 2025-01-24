@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import APIResponse from '../../models/API/APIResponse';
 import { ScriptWithAuthorAndWebsite } from '../../models/API/Script';
 import { getScripts } from '../../api/scripts';
 import ScriptListItem from './ScriptListItem';
@@ -13,35 +12,14 @@ import FilterBar from './FilterBar';
 import Loadable from '../../components/Loadable';
 import Page from '../../components/Page';
 import Stack from '@mui/material/Stack/Stack';
+import { useAPICall } from '../../api/apiHooks';
 
 const ScriptSelectionPage: React.FC = () => {
-  const [scriptsData, setScriptsData] = useState<
-    APIResponse<ScriptWithAuthorAndWebsite[]>
-  >({ status: 'Loading' });
+  const scriptsData = useAPICall(getScripts);
+  const websitesData = useAPICall(getWebsites);
+  const authorsData = useAPICall(getUsers);
+
   const [scripts, setScripts] = useState<ScriptWithAuthorAndWebsite[]>([]);
-  const [websites, setWebsites] = useState<Website[]>([]);
-  const [authors, setAuthors] = useState<User[]>([]);
-
-  useEffect(() => {
-    const getData = async () => {
-      const scriptResponse = await getScripts();
-      setScriptsData(scriptResponse);
-      if (scriptResponse.status === 'Loaded') {
-        setScripts(scriptResponse.data);
-      }
-
-      const websitesResponse = await getWebsites();
-      if (websitesResponse.status == 'Loaded') {
-        setWebsites(websitesResponse.data);
-      }
-
-      const usersRespose = await getUsers();
-      if (usersRespose.status == 'Loaded') {
-        setAuthors(usersRespose.data);
-      }
-    };
-    getData();
-  }, []);
 
   const [websiteFilters, setWebsiteFilters] = useState<Website[]>([]);
   const [authorFilters, setAuthorFilters] = useState<User[]>([]);
@@ -90,8 +68,8 @@ const ScriptSelectionPage: React.FC = () => {
       <ScriptFilterDialog
         open={openFilterDialog}
         setOpen={setOpenFilterDialog}
-        websites={websites}
-        authors={authors}
+        websites={websitesData.status === 'Loaded' ? websitesData.data : []}
+        authors={authorsData.status === 'Loaded' ? authorsData.data : []}
         websiteFilters={websiteFilters}
         setWebsiteFilters={setWebsiteFilters}
         authorFilters={authorFilters}

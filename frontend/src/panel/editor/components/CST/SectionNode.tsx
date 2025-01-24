@@ -1,7 +1,10 @@
 import { CSTSectionNode, CSTStepNode } from '../../../models/CST/CST';
 import EndStepNode from './EndStepNode';
 import { getNodeChoices } from '../../../models/CST/getters';
-import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import {
+  useTypeErrorsContext,
+  useUnpublishedScriptContext,
+} from '../../../contexts/contextHooks';
 import InnerStepContainer from '../InnerStepContainer';
 import AddNodeButton from '../AddNodeButton';
 import '../styles/section.css';
@@ -12,6 +15,7 @@ import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../../models/EditorAction';
 import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
 import Paper from '@mui/material/Paper/Paper';
+import TypeErrorMessage from '../TypeErrorMessage';
 
 interface SectionProps {
   section: CSTSectionNode;
@@ -19,6 +23,8 @@ interface SectionProps {
 
 const SectionNode: React.FC<SectionProps> = ({ section }) => {
   const { dispatch } = useUnpublishedScriptContext();
+  const typeErrors = useTypeErrorsContext();
+  const sectionError = typeErrors.get(mapIdToString(section.id));
 
   return (
     <Paper
@@ -31,6 +37,8 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         gap: '1rem',
         padding: '1rem',
         borderRadius: '1rem',
+        position: 'relative',
+        outline: sectionError ? '2px dashed rgb(230, 40, 40)' : 'none',
       }}
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
@@ -56,8 +64,15 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
       <AddNodeButton<CSTStepNode>
         onAdd={(step) => dispatch({ type: EditorActionType.AddStep, step })}
         nodeChoices={getNodeChoices(section)}
+        stepWidth={true}
       />
       {section.endStep && <EndStepNode endStep={section.endStep} />}
+      {sectionError && (
+        <TypeErrorMessage
+          id={`${mapIdToString(section.id)}-Error`}
+          errorMsg={sectionError}
+        />
+      )}
     </Paper>
   );
 };

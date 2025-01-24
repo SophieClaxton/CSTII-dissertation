@@ -4,13 +4,14 @@ import Stack from '@mui/material/Stack/Stack';
 import Website from '../../models/API/Website';
 import User from '../../models/API/User';
 import React from 'react';
+import { StateSetter } from '../../models/utilTypes';
 
 interface FilterBarProps {
-  setOpenFilterDialog: (value: boolean) => void;
+  setOpenFilterDialog: StateSetter<boolean>;
   websiteFilters: Website[];
-  setWebsiteFilters: (value: Website[]) => void;
+  setWebsiteFilters: StateSetter<Website[]>;
   authorFilters: User[];
-  setAuthorFilters: (value: User[]) => void;
+  setAuthorFilters: StateSetter<User[]>;
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({

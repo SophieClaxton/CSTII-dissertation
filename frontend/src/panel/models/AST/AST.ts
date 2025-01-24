@@ -5,7 +5,6 @@ interface ASTProgram {
 }
 
 enum ASTNodeType {
-  Placeholder = 'Placeholder',
   Section = 'Section',
   Subsection = 'Subsection',
   End = 'End',

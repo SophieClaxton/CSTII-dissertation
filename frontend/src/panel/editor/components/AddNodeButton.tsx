@@ -6,10 +6,11 @@ import Stack from '@mui/material/Stack/Stack';
 interface AddNodeButtonProps<T extends CSTStepNode> {
   onAdd: (node: T) => void;
   nodeChoices: T[];
+  stepWidth?: boolean;
 }
 
 const AddNodeButton = <T extends CSTStepNode>(props: AddNodeButtonProps<T>) => {
-  const { onAdd, nodeChoices } = props;
+  const { onAdd, nodeChoices, stepWidth } = props;
   const [showNodeChoices, setShowNodeChoices] = useState(false);
   const updateArrows = useXarrow();
   if (showNodeChoices) {
@@ -52,7 +53,7 @@ const AddNodeButton = <T extends CSTStepNode>(props: AddNodeButtonProps<T>) => {
         updateArrows();
       }}
       style={{
-        width: '25.625rem',
+        width: stepWidth ? '25.625rem' : 'fit-content',
         borderRadius: '0.5rem',
         outlineColor: 'rgba(60, 60, 60, 0.25)',
         outlineStyle: 'dashed',

@@ -19,6 +19,7 @@ import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import Typography from '@mui/material/Typography/Typography';
 import Stack from '@mui/material/Stack/Stack';
 import Box from '@mui/material/Box/Box';
+import TypeErrorMessage from './TypeErrorMessage';
 
 const stepColourMap: Record<CSTStepNodeType, string> = {
   Follow: '#ff999c',
@@ -87,6 +88,7 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
         gridTemplateColumns: '1.625rem 5rem 20rem 1.625rem',
         gap: '0.5rem',
         transition: 'margin ease-in-out 0.5s',
+        outline: stepError ? '2px dashed rgb(230, 40, 40)' : 'none',
       }}
     >
       {sortableProps ? (
@@ -111,9 +113,7 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
         <Delete />
       </IconButton>
       {stepError && (
-        <div id={`${stepId}-Error`} className="step-error">
-          {stepError}
-        </div>
+        <TypeErrorMessage id={`${idString}-Error`} errorMsg={stepError} />
       )}
     </div>
   );
