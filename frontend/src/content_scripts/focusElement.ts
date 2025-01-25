@@ -1,30 +1,27 @@
-import { focusClass } from './consts';
-import { elementsMatch, getElementFromId } from './elementUtils';
+import { focusClass, scrollDuration } from './consts';
+import { findFirstElement } from './elementUtils';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { SupportState } from './userSupport/state';
-import { sendDetectionMessage } from './userSupport/detectStep';
-import { ASTInstruction } from '../panel/models/AST/Instruction';
-import { ASTNodeType } from '../panel/models/AST/AST';
-
-gsap.registerPlugin(ScrollToPlugin);
-
+import InterfaceElement from '../panel/models/InterfaceElement';
 // elementFromId.scrollIntoView({
 //   behavior: 'smooth',
 //   block: 'center',
 //   inline: 'center',
 // });
+
 const scrollToElement = (
   element: Element,
   supportState: SupportState,
-  step: ASTInstruction | undefined = undefined,
+  onFocusComplete: (element: Element, supportState: SupportState) => void,
 ) => {
+  gsap.registerPlugin(ScrollToPlugin);
   if (supportState.systemScrolling) {
     return;
   }
+
   console.log(`Scrolling to ${element.textContent}`);
   supportState.systemScrolling = true;
-  const scrollDuration = 2;
   gsap.to(window, {
     duration: scrollDuration,
     scrollTo: {
@@ -40,48 +37,30 @@ const scrollToElement = (
   });
   setTimeout(() => {
     supportState.systemScrolling = false;
-    if (
-      step &&
-      step.type === ASTNodeType.ScrollTo &&
-      supportState.collectStruggleData
-    ) {
-      supportState.timeoutId = setTimeout(
-        () => sendDetectionMessage(supportState, step),
-        3000,
-      );
-    }
-  }, 2000);
+    onFocusComplete(element, supportState);
+  }, scrollDuration * 1250);
 };
 
 const onSetFocus = (
-  tag: string,
-  outerHTML: string,
+  msgElement: InterfaceElement,
   supportState: SupportState,
   highlight: boolean = true,
-  step: ASTInstruction | undefined = undefined,
+  onFocusComplete: (
+    element: Element,
+    supportState: SupportState,
+  ) => void = () => undefined,
 ): boolean => {
-  const elementFromId = getElementFromId(outerHTML);
-  if (elementFromId) {
-    // console.log('found element to focus by id');
+  const element = findFirstElement(msgElement);
+  console.log(element);
+  if (element) {
     if (highlight) {
-      elementFromId.classList.add(focusClass);
+      element.classList.add(focusClass);
+      console.log(element);
     }
-    scrollToElement(elementFromId, supportState, step);
+    scrollToElement(element, supportState, onFocusComplete);
     return true;
   }
-
-  let found = false;
-  document.querySelectorAll(tag).forEach((element) => {
-    if (elementsMatch(element, outerHTML)) {
-      // console.log('found element to focus');
-      if (highlight) {
-        element.classList.add(focusClass);
-      }
-      scrollToElement(element, supportState, step);
-      found = true;
-    }
-  });
-  return found;
+  return false;
 };
 
 const onUnsetFocus = () => {

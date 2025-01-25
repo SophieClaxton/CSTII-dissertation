@@ -30,9 +30,7 @@ const useScriptSupport = (program: ASTProgram) => {
   const [visibleInstructions, setVisibleInstructions] = useState(
     getVisibleInstructions(program.start.start, 0),
   );
-  const currentInstruction = useRef<ASTInstruction | undefined>(
-    getCurrentInstruction(visibleInstructions),
-  );
+  const nextPossibleSteps = useRef<ASTInstruction[]>([]);
 
   useEffect(
     () => onSupportChange(supportActive, levelOfSupport, tab),
@@ -41,7 +39,7 @@ const useScriptSupport = (program: ASTProgram) => {
 
   useEffect(
     () =>
-      onVisibleInstructionsChange(visibleInstructions, tab, currentInstruction),
+      onVisibleInstructionsChange(visibleInstructions, tab, nextPossibleSteps),
     [visibleInstructions, tab],
   );
 
@@ -83,7 +81,7 @@ const useScriptSupport = (program: ASTProgram) => {
     () =>
       onStepCompletedChange(
         stepCompleted,
-        currentInstruction,
+        nextPossibleSteps,
         setStepCompleted,
         setVisibleInstructions,
       ),
@@ -105,9 +103,12 @@ const useScriptSupport = (program: ASTProgram) => {
 const onVisibleInstructionsChange = (
   visibleInstructions: ASTInstruction[],
   tab: TabInfo,
-  currentInstruction: StateRef<ASTInstruction | undefined>,
+  nextPossibleSteps: StateRef<ASTInstruction[]>,
 ) => {
+  console.log(visibleInstructions);
   const nextSteps = getNextPossibleSteps(visibleInstructions);
+  nextPossibleSteps.current = nextSteps;
+  console.log(nextSteps);
 
   if (tab.scriptStatus === 'loaded') {
     if (nextSteps.length > 0) {
@@ -119,8 +120,6 @@ const onVisibleInstructionsChange = (
       }
     }
   }
-
-  currentInstruction.current = getCurrentInstruction(visibleInstructions);
 };
 
 const onSupportChange = (
@@ -138,23 +137,22 @@ const onSupportChange = (
   }
 };
 
-const getCurrentInstruction = (visibleInstructions: ASTInstruction[]) => {
-  return visibleInstructions.filter((instr) => instr.stage === 'next').at(0);
-};
-
 const onStepCompletedChange = (
   stepCompleted: ASTInstruction | undefined,
-  currentInstruction: StateRef<ASTInstruction | undefined>,
+  nextPossibleSteps: StateRef<ASTInstruction[]>,
   setStepCompleted: StateSetter<ASTInstruction | undefined>,
   setVisibleInstructions: StateSetter<ASTInstruction[]>,
 ) => {
-  if (stepCompleted && currentInstruction.current) {
-    if (stepCompleted.stepNumber >= currentInstruction.current.stepNumber) {
+  const nextSteps = nextPossibleSteps.current;
+  if (stepCompleted && nextSteps.length > 0) {
+    const validStepNumbers = nextSteps.map((step) => step.stepNumber);
+    if (validStepNumbers.includes(stepCompleted.stepNumber)) {
       setVisibleInstructions((prev) =>
         prev.map((instr) => {
           if (instr.stepNumber <= stepCompleted.stepNumber) {
             return { ...instr, stage: 'complete' };
           } else if (instr.stepNumber === stepCompleted.stepNumber + 1) {
+            console.log(instr.stepNumber, stepCompleted.stepNumber);
             return { ...instr, stage: 'next' };
           } else {
             return instr;

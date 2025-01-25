@@ -1,5 +1,7 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
-import { SelectableTag } from '../panel/models/InterfaceElement';
+import InterfaceElement, {
+  SelectableTag,
+} from '../panel/models/InterfaceElement';
 import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 enum Port {
@@ -10,7 +12,6 @@ type PanelMessageType =
   | 'set_clickable'
   | 'set_focus'
   | 'unset_focus'
-  | 'system_click_element'
   | 'start_support'
   | 'end_support'
   | 'next_possible_steps';
@@ -26,7 +27,6 @@ type PanelMessage =
   | SetClickableMessage
   | SetFocusMessage
   | UnsetFocusMessage
-  | SystemClickElementMessage
   | StartSupportMessage
   | EndSupportMessage
   | NextPossibleStepsMessage;
@@ -53,17 +53,11 @@ interface SetClickableMessage extends MessageBase {
 
 interface SetFocusMessage extends MessageBase {
   type: 'set_focus';
-  tag: SelectableTag;
-  element: string;
+  element: InterfaceElement;
 }
 
 interface UnsetFocusMessage extends MessageBase {
   type: 'unset_focus';
-}
-
-interface SystemClickElementMessage extends MessageBase {
-  type: 'system_click_element';
-  element: string;
 }
 
 interface StartSupportMessage extends MessageBase {
@@ -121,7 +115,6 @@ export type {
   SetClickableMessage,
   SetFocusMessage,
   UnsetFocusMessage,
-  SystemClickElementMessage,
   StartSupportMessage,
   EndSupportMessage,
   NextPossibleStepsMessage,

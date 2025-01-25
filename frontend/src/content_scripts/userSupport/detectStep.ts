@@ -48,10 +48,7 @@ const detectStepOnScroll = (supportState: SupportState) => {
           return;
         }
         for (const element of document.getElementsByTagName(step.element.tag)) {
-          if (
-            elementsMatch(element, step.element.outerHTML) &&
-            isVisible(element)
-          ) {
+          if (elementsMatch(element, step.element) && isVisible(element)) {
             console.log('Detected on scroll');
             console.log(step);
             sendDetectionMessage(supportState, step);
@@ -63,14 +60,14 @@ const detectStepOnScroll = (supportState: SupportState) => {
 };
 
 const detectStepOnClick = (element: Element, supportState: SupportState) => {
+  console.log(`Clicked element: ${element.textContent}`);
   if (supportState.collectStruggleData) {
-    console.log(element.outerHTML);
     const steps = [...supportState.nextPossibleSteps];
     steps.forEach((step) => {
       if (
         (step.type === ASTNodeType.Click || step.type === ASTNodeType.Follow) &&
         step.element.tag === element.tagName &&
-        elementsMatch(element, step.element.outerHTML)
+        elementsMatch(element, step.element)
       ) {
         console.log('Detected on click');
         console.log(step);

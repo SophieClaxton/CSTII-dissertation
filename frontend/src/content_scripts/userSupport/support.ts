@@ -1,11 +1,29 @@
+import { isHTMLElement } from '@dnd-kit/utilities';
 import { UserStruggleDataMessage } from '../../common/message';
 import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
-import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
 import { defaultLevelOfSupport } from '../consts';
 import { onSetFocus } from '../focusElement';
-import { onSystemClickElement } from '../interactWithElement';
+import { sendDetectionMessage } from './detectStep';
 import { SupportState } from './state';
+import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
+
+const sendUserStruggleData = (supportState: SupportState) => {
+  const message: UserStruggleDataMessage = {
+    type: 'user_struggle_data',
+    userStruggleData: supportState.userStruggleData,
+  };
+
+  chrome.runtime.sendMessage(message).catch(() => {
+    supportState.collectStruggleData = false;
+    clearInterval(supportState.intervalId);
+  });
+  supportState.userStruggleData = {
+    totalDistance: 0,
+    numMouseClicks: 0,
+    totalScrollDistance: 0,
+  };
+};
 
 const onStartSupport = (
   supportState: SupportState,
@@ -13,24 +31,14 @@ const onStartSupport = (
 ) => {
   supportState.collectStruggleData = true;
   supportState.levelOfSupport = levelOfSupport;
+  clearTimeout(supportState.timeoutId);
   onReceiveNextPossibleSteps(supportState, supportState.nextPossibleSteps);
-  if (!supportState.intervalId) {
-    supportState.intervalId = setInterval(() => {
-      const message: UserStruggleDataMessage = {
-        type: 'user_struggle_data',
-        userStruggleData: supportState.userStruggleData,
-      };
 
-      chrome.runtime.sendMessage(message).catch(() => {
-        supportState.collectStruggleData = false;
-        clearInterval(supportState.intervalId);
-      });
-      supportState.userStruggleData = {
-        totalDistance: 0,
-        numMouseClicks: 0,
-        totalScrollDistance: 0,
-      };
-    }, 5000);
+  if (!supportState.intervalId) {
+    supportState.intervalId = setInterval(
+      () => sendUserStruggleData(supportState),
+      5000,
+    );
   }
 };
 
@@ -39,6 +47,48 @@ const onEndSupport = (supportState: SupportState) => {
   supportState.levelOfSupport = defaultLevelOfSupport;
   clearInterval(supportState.intervalId);
   clearTimeout(supportState.timeoutId);
+  supportState.intervalId = undefined;
+  supportState.timeoutId = undefined;
+};
+
+const onScrollStepComplete =
+  (step: ASTInstruction) => (_element: Element, supportState: SupportState) => {
+    supportState.timeoutId = setTimeout(() => {
+      supportState.nextStep = undefined;
+      sendDetectionMessage(supportState, step);
+    }, 3000);
+  };
+
+const onClickStepComplete =
+  (_step: ASTInstruction) => (element: Element, supportState: SupportState) => {
+    supportState.timeoutId = setTimeout(() => {
+      if (isHTMLElement(element)) {
+        supportState.nextStep = undefined;
+        element.click();
+      }
+    }, 2000);
+  };
+
+const onFocusComplete = (
+  levelOfSupport: Exclude<LevelOfSupport, 'text'>,
+  step: ASTInstruction,
+): ((element: Element, supportState: SupportState) => void) => {
+  switch (levelOfSupport) {
+    case 'overlay':
+      if (step.type === ASTNodeType.ScrollTo) {
+        return onScrollStepComplete(step);
+      }
+      return (_element: Element, supportState: SupportState) =>
+        (supportState.nextStep = undefined);
+    case 'click':
+      if (step.type === ASTNodeType.Click || step.type === ASTNodeType.Follow) {
+        return onClickStepComplete(step);
+      } else if (step.type === ASTNodeType.ScrollTo) {
+        return onScrollStepComplete(step);
+      }
+      return (_element: Element, supportState: SupportState) =>
+        (supportState.nextStep = undefined);
+  }
 };
 
 const onReceiveNextPossibleSteps = (
@@ -46,52 +96,29 @@ const onReceiveNextPossibleSteps = (
   nextPossibleSteps: ASTInstruction[],
 ) => {
   supportState.nextPossibleSteps = nextPossibleSteps;
-
-  const [stepToHelpWith] = supportState.nextPossibleSteps;
-  console.log(stepToHelpWith);
-  if (stepToHelpWith && stepToHelpWith.type != ASTNodeType.UserDecision) {
-    if (supportState.levelOfSupport === 'overlay') {
-      // console.log('Trying to focus on that element');
-      const focussedOnElement = onSetFocus(
-        stepToHelpWith.element.tag,
-        stepToHelpWith.element.outerHTML,
-        supportState,
-        true,
-        stepToHelpWith,
-      );
-      // console.log(`Element was focussed: ${focussedOnElement}`);
-      if (focussedOnElement && stepToHelpWith.type === ASTNodeType.ScrollTo) {
-        // TODO: make timeout proportional to reading time
-        // supportState.timeoutId = setTimeout(() => {
-        //   sendDetectionMessage(supportState, stepToHelpWith);
-        //   onUnsetFocus();
-        // }, 6000);
-      }
-    } else if (supportState.levelOfSupport === 'click') {
-      // console.log('Trying to complete action for user');
-      const focussedOnElement = onSetFocus(
-        stepToHelpWith.element.tag,
-        stepToHelpWith.element.outerHTML,
-        supportState,
-        false,
-        stepToHelpWith,
-      );
-      if (focussedOnElement && stepToHelpWith.type === ASTNodeType.ScrollTo) {
-        // supportState.timeoutId = setTimeout(
-        //   () => sendDetectionMessage(supportState, stepToHelpWith, 0),
-        //   6000,
-        // );
-      } else if (
-        stepToHelpWith.type === ASTNodeType.Click ||
-        stepToHelpWith.type === ASTNodeType.Follow
-      ) {
-        supportState.timeoutId = setTimeout(() => {
-          onSystemClickElement(stepToHelpWith.element.outerHTML);
-          // sendDetectionMessage(supportState, stepToHelpWith, 0);
-        }, 6000);
-      }
-    }
+  if (supportState.levelOfSupport === 'text') {
+    return;
   }
+
+  if (!supportState.nextStep) {
+    const [stepToHelpWith] = supportState.nextPossibleSteps;
+    supportState.nextStep = stepToHelpWith;
+    console.log('Setting next step');
+  }
+  const levelOfSupport = supportState.levelOfSupport;
+
+  supportState.timeoutId = setTimeout(() => {
+    const nextStep = supportState.nextStep;
+    console.log(nextStep);
+    if (nextStep && nextStep.type != ASTNodeType.UserDecision) {
+      onSetFocus(
+        nextStep.element,
+        supportState,
+        supportState.levelOfSupport === 'overlay',
+        onFocusComplete(levelOfSupport, nextStep),
+      );
+    }
+  }, 1000);
 };
 
 export { onStartSupport, onEndSupport, onReceiveNextPossibleSteps };

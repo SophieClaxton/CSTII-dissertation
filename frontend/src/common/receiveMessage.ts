@@ -61,7 +61,9 @@ const addStepCompletedListener = (
   chrome.runtime.onMessage.addListener(
     async (message: ContentScriptMessage) => {
       if (message.type === 'step_completed') {
-        console.log('received step completed message');
+        console.log(
+          `received step ${message.step.stepNumber} completed message`,
+        );
         setStepCompleted(message.step);
       }
     },

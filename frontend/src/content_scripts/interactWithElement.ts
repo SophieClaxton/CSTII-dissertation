@@ -1,20 +1,19 @@
 import { UserClickedElementMessage } from '../common/message';
 import { EditingState } from './userSupport/state';
-import { isSelectableTag } from '../panel/models/InterfaceElement';
-import { elementsMatch } from './elementUtils';
+import InterfaceElement, {
+  isSelectableTag,
+} from '../panel/models/InterfaceElement';
+import { findFirstElement } from './elementUtils';
 
-const onClickElement =
-  (elementOuterHTML: string) =>
-  (element: HTMLAnchorElement | HTMLButtonElement) => {
-    if (elementsMatch(element, elementOuterHTML)) {
-      // console.log('found element to click');
-      element.click();
-    }
-  };
+const isHTMLElement = (element: Element): element is HTMLElement => {
+  return 'outerText' in element && 'innerText' in element;
+};
 
-const onSystemClickElement = (elementOuterHTML: string) => {
-  document.querySelectorAll('button').forEach(onClickElement(elementOuterHTML));
-  document.querySelectorAll('a').forEach(onClickElement(elementOuterHTML));
+const onSystemClickElement = (msgElement: InterfaceElement) => {
+  const element = findFirstElement(msgElement);
+  if (element && isHTMLElement(element)) {
+    element.click();
+  }
 };
 
 const onUserClickElement = (
@@ -27,7 +26,6 @@ const onUserClickElement = (
     isSelectableTag(element.tagName) &&
     editingState.validTags.includes(element.tagName)
   ) {
-    // BUG: issue with escaped characters in outerHTML string
     element.classList.remove('clickable');
     const message: UserClickedElementMessage = {
       type: 'user_clicked_element',

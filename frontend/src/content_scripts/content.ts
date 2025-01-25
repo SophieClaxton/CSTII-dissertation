@@ -6,10 +6,7 @@ import {
 import './clickable.css';
 import { defaultLevelOfSupport } from './consts';
 import { onSetFocus, onUnsetFocus } from './focusElement';
-import {
-  onSystemClickElement,
-  onUserClickElement,
-} from './interactWithElement';
+import { onUserClickElement } from './interactWithElement';
 import {
   collectUserStruggleDataOnMouseMove,
   collectUserStruggleDataOnMouseDown,
@@ -46,6 +43,7 @@ const supportState: SupportState = {
   intervalId: undefined,
   levelOfSupport: defaultLevelOfSupport,
   nextPossibleSteps: [],
+  nextStep: undefined,
   lastScrollPosition: { x: 0, y: 0 },
   systemScrolling: false,
 };
@@ -60,20 +58,14 @@ const setupMessageListener = () => {
       }
       case 'set_focus': {
         console.log('received focussing message');
-        return onSetFocus(message.tag, message.element, supportState);
+        return onSetFocus(message.element, supportState);
       }
       case 'unset_focus': {
         console.log('received focussing message');
         return onUnsetFocus();
       }
-      case 'system_click_element': {
-        console.log('received click element message');
-        return onSystemClickElement(message.element);
-      }
       case 'start_support': {
-        console.log(
-          `Received start support with support: ${message.levelOfSupport}`,
-        );
+        console.log(`Received start support: ${message.levelOfSupport}`);
         return onStartSupport(supportState, message.levelOfSupport);
       }
       case 'end_support': {
@@ -81,7 +73,7 @@ const setupMessageListener = () => {
         return onEndSupport(supportState);
       }
       case 'next_possible_steps': {
-        console.log('Received next possible steps:');
+        console.log('Received next possible steps');
         return onReceiveNextPossibleSteps(supportState, message.steps);
       }
       default: {

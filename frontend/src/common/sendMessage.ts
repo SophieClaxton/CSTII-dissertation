@@ -35,8 +35,7 @@ const sendSetFocusMessage = async (
 ) => {
   const message: SetFocusMessage = {
     type: 'set_focus',
-    tag: element.tag,
-    element: element.outerHTML,
+    element: element,
   };
 
   chrome.tabs.sendMessage(tabId, message).catch((error) => console.log(error));

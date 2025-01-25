@@ -58,7 +58,7 @@ const isSkippable: Record<ASTStepNode['type'], boolean> = {
   Follow: false,
   Click: false,
   Read: true,
-  'Scroll To': false,
+  'Scroll To': true,
   Drag: false,
   'User Decision': false,
   Write: false,

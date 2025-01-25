@@ -16,9 +16,9 @@ const getVisibleInstructions = (
   }
   const visibleInstructions: ASTInstruction[] = [];
   let nextStep: ASTStepNode = startStep;
-  let stepNumber = baseStepNumber;
+  let stepNumber = baseStepNumber + 1;
   while (nextStep.type != ASTNodeType.End) {
-    const stage = stepNumber === baseStepNumber ? 'next' : 'incomplete';
+    const stage = stepNumber === baseStepNumber + 1 ? 'next' : 'incomplete';
     if (nextStep.type === ASTNodeType.Follow) {
       const { nextSection, ...rest } = nextStep;
       visibleInstructions.push({ ...rest, stepNumber, stage });

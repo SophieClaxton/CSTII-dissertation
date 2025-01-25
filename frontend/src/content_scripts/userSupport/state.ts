@@ -20,6 +20,7 @@ interface SupportState {
   timeoutId: NodeJS.Timeout | undefined;
   levelOfSupport: LevelOfSupport;
   nextPossibleSteps: ASTInstruction[];
+  nextStep: ASTInstruction | undefined;
   lastScrollPosition: { x: number; y: number };
   systemScrolling: boolean;
 }
