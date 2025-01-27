@@ -7,11 +7,12 @@ import {
 } from '../../models/API/UnpublishedScript';
 import Website from '../../models/API/Website';
 import { ASTProgram } from '../../models/AST/AST';
+import { StateSetter } from '../../models/utilTypes';
 import { SnackBarDetails } from '../components/AlertSnackBar';
 
 const onSaveUnpublishedScript = async (
   unpublishedScript: UnpublishedScript,
-  setSnackBar: (value: SnackBarDetails) => void,
+  setSnackBar: StateSetter<SnackBarDetails>,
 ) => {
   const update: UpdateUnpublishedScriptRequest = {
     title: unpublishedScript.title,
@@ -58,7 +59,7 @@ const findScriptWebsite = async (
 const onPublishUnpublishedScript = async (
   unpublishedScript: UnpublishedScript,
   program: ASTProgram,
-  setSnackBar: (value: SnackBarDetails) => void,
+  setSnackBar: StateSetter<SnackBarDetails>,
 ) => {
   const errorMsg = {
     open: true,
@@ -76,6 +77,7 @@ const onPublishUnpublishedScript = async (
     unpublishedScript.website.url === program.start.url
       ? unpublishedScript.website
       : await findScriptWebsite(program);
+  console.log(website);
 
   if (website) {
     if (unpublishedScript.published_script_id) {

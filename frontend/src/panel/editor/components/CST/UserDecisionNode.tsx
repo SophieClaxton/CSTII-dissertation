@@ -5,6 +5,10 @@ import { CSTUserDecisionNode } from '../../../models/CST/CST';
 import { BaseStep } from '../Step';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
+import TextField from '@mui/material/TextField/TextField';
+import { useState } from 'react';
+import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import { EditorActionType } from '../../../models/EditorAction';
 
 interface UserDecisionNodeProps {
   step: CSTUserDecisionNode;
@@ -20,6 +24,9 @@ const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({
   step,
   sortableProps,
 }) => {
+  const { dispatch } = useUnpublishedScriptContext();
+  const [question, setQuestion] = useState('');
+
   return (
     <BaseStep
       stepId={step.id}
@@ -27,13 +34,12 @@ const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({
       sortableProps={sortableProps}
     >
       <Stack sx={{ width: 'fit-content', marginBottom: '0.25rem' }}>
-        <Stack sx={{ flexDirection: 'row', gap: '0.5rem' }}>
+        <Stack sx={{ flexDirection: 'row', gap: '1rem' }}>
           <Typography
             variant={'h6'}
             sx={{
-              width: 'fit-content',
-              gridArea: 'stepName',
-              textWrap: 'wrap',
+              width: 'max-content',
+              textWrap: 'nowrap',
               textAlign: 'left',
               marginTop: '0.5rem',
               marginBottom: '0.5rem',
@@ -41,7 +47,25 @@ const UserDecisionNode: React.FC<UserDecisionNodeProps> = ({
           >
             {step.type}
           </Typography>
-          <p>{step.question}</p>
+          <TextField
+            value={question}
+            onChange={(event) => setQuestion(event.target.value)}
+            onBlur={() =>
+              dispatch({
+                type: EditorActionType.EditUserDecisionQuestion,
+                question,
+                stepId: step.id,
+              })
+            }
+            size={'small'}
+            placeholder={'Question'}
+            fullWidth
+            slotProps={{
+              input: { sx: { backgroundColor: 'white' } },
+              htmlInput: { sx: { padding: '0.25rem 0.5rem' } },
+            }}
+            sx={{ alignSelf: 'center' }}
+          />
         </Stack>
         <Stack sx={{ flexDirection: 'row', gap: '0.5rem' }}>
           <SubsectionNode subsection={step.choice1} />

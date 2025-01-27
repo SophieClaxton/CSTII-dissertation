@@ -74,6 +74,7 @@ def create_script(
 def update_script(
     script_id: int, script: UpdateScriptRequest, session: DatabaseDep
 ) -> SuccessResponse:
+    print("Got update script request")
     existing_script = session.get(Script, script_id)
     if not existing_script:
         raise script_not_found_exception(script_id)

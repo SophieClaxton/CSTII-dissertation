@@ -1,7 +1,5 @@
 import InterfaceElement from '../InterfaceElement';
 
-type ExcludeFromUnion<U, E> = U extends E ? never : U;
-
 interface CSTProgram {
   sections: CSTSectionNode[];
 }
@@ -89,9 +87,9 @@ type CSTInnerStepNode =
 
 type CSTEndStepNode = CSTFollowNode | CSTUserDecisionEndStepNode;
 
-type CSTElementNode = ExcludeFromUnion<
-  ExcludeFromUnion<CSTStepNode, CSTUserDecisionEndStepNode>,
-  CSTUserDecisionInnerStepNode
+type CSTElementNode = Exclude<
+  CSTStepNode,
+  CSTUserDecisionEndStepNode | CSTUserDecisionInnerStepNode
 >;
 
 interface CSTFollowNode extends CSTStepBase {
@@ -118,7 +116,7 @@ interface CSTDragNode extends CSTInnerStepBase {
 }
 
 enum CSTUserDecisionEndType {
-  Follow = 'Folow',
+  Follow = 'Follow',
   InnerStep = 'InnerStep',
 }
 

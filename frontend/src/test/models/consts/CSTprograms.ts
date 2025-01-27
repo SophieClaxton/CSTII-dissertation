@@ -133,4 +133,4 @@ const allCSTPrograms: {
   },
 ];
 
-export { allCSTPrograms, emptyProgram };
+export { allCSTPrograms, emptyProgram, smallMissingElement, mediumProgram };

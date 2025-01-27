@@ -49,6 +49,7 @@ const createWebsite = async (
 const getWebsite = async (
   websiteId: number,
 ): Promise<APIResponse<WebsiteWithScripts>> => {
+  console.log('Making request for website');
   try {
     const response = await websitesEndpoint.get(`${websiteId}`);
     return {

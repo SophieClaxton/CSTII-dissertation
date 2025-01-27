@@ -4,11 +4,19 @@ import { useEffect, useState } from 'react';
 import HomeScreen from './panel/components/HomeScreen';
 import { PanelScreen } from './panel/navigation/ScreenType';
 import { ScreenContext } from './panel/contexts/ScreenContext';
+import TabContext, { TabInfo } from './panel/contexts/TabContext';
+import { setCurrentTab, setTabListeners } from './common/tabs';
 
 function App() {
   useEffect(setUpMessageHandler, []);
 
   const [screenStack, setScreenStack] = useState<PanelScreen[]>([]);
+  const [tab, setTab] = useState<TabInfo | undefined>();
+
+  useEffect(() => {
+    setCurrentTab(setTab, true);
+    setTabListeners(setTab);
+  }, []);
 
   const currentScreen = screenStack.at(0);
   const currentComponent = currentScreen ? (
@@ -24,7 +32,9 @@ function App() {
         setScreenStack: setScreenStack,
       }}
     >
-      {currentComponent}
+      <TabContext.Provider value={{ tab }}>
+        {currentComponent}
+      </TabContext.Provider>
     </ScreenContext.Provider>
   );
 }

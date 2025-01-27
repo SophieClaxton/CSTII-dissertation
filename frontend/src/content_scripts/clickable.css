@@ -9,9 +9,11 @@
   cursor: pointer !important;
 }
 
-.focussed-on {
+.MIBE-focussed-on {
   z-index: 1000 !important;
   /* box-shadow: 0 0 0px 1000000000px rgba(0, 0, 0, 0.50) !important; */
   outline: 4px solid rgb(225, 0, 255) !important;
   outline-offset: 8px !important;
+  scroll-margin-top: 8rem;
+
 }

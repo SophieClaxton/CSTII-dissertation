@@ -64,6 +64,7 @@ const getUser = async (
 const getPublicUser = async (
   userId: number,
 ): Promise<APIResponse<PublicUserWithScripts>> => {
+  console.log('Making request for public user');
   try {
     const response = await usersEndpoint.get(`public/${userId}`);
     return {

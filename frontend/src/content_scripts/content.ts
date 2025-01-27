@@ -1,88 +1,97 @@
-import { ClickedElementMessage, Message } from '../common/message';
+import { PanelMessage, LoadedMessage } from '../common/message';
 import {
   allSelectableTags,
   isSelectableTag,
-  SelectableTag,
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
+import { defaultLevelOfSupport } from './consts';
+import { onSetFocus, onUnsetFocus } from './focusElement';
+import { onUserClickElement } from './interactWithElement';
+import {
+  collectUserStruggleDataOnMouseMove,
+  collectUserStruggleDataOnMouseDown,
+  collectStruggleDataOnScroll,
+} from './userSupport/collectStruggleEvidence';
+import {
+  detectStepOnClick,
+  detectStepOnScroll,
+} from './userSupport/detectStep';
+import { EditingState, SupportState } from './userSupport/state';
+import {
+  onStartSupport,
+  onEndSupport,
+  onReceiveNextPossibleSteps,
+} from './userSupport/support';
 
 console.log('Loaded content script');
 
-const selectableElementTags = allSelectableTags;
+let editingState: EditingState = {
+  isClickable: false,
+  stepId: '',
+  validTags: [],
+  url: '',
+};
 
-// managing element clickability
-let isClickable = false;
-let stepId = '';
-let validTags: SelectableTag[] = [];
-let url = '';
+const supportState: SupportState = {
+  collectStruggleData: false,
+  userStruggleData: {
+    totalDistance: 0,
+    numMouseClicks: 0,
+    totalScrollDistance: 0,
+  },
+  timeoutId: undefined,
+  intervalId: undefined,
+  levelOfSupport: defaultLevelOfSupport,
+  nextPossibleSteps: [],
+  nextStep: undefined,
+  lastScrollPosition: { x: 0, y: 0 },
+  systemScrolling: false,
+};
 
 const setupMessageListener = () => {
-  chrome.runtime.onMessage.addListener((message: Message) => {
+  chrome.runtime.onMessage.addListener((message: PanelMessage) => {
     switch (message.type) {
-      case 'close_side_panel':
-      case 'clicked_element':
-        break;
       case 'set_clickable': {
-        validTags = message.validTags;
-        stepId = message.stepId;
-        isClickable = true;
-        url = message.url;
+        editingState = { isClickable: true, ...message };
         updateClassList();
         break;
       }
       case 'set_focus': {
         console.log('received focussing message');
-        const elementOuterHTML = message.element;
-
-        document.querySelectorAll('*').forEach((element) => {
-          if (element.outerHTML === elementOuterHTML) {
-            console.log('found element to focus');
-            element.classList.add('focussed-on');
-          }
-        });
-        break;
+        return onSetFocus(message.element, supportState);
       }
       case 'unset_focus': {
         console.log('received focussing message');
-        document.querySelectorAll('*').forEach((element) => {
-          element.classList.remove('focussed-on');
-        });
-        break;
+        return onUnsetFocus();
       }
-      case 'click_element': {
-        console.log('received click element message');
-        const elementOuterHTML = message.element;
-
-        document.querySelectorAll('button').forEach((element) => {
-          if (element.outerHTML === elementOuterHTML) {
-            console.log('found element to click');
-            element.click();
-          }
-        });
-
-        document.querySelectorAll('a').forEach((element) => {
-          if (element.outerHTML === elementOuterHTML) {
-            console.log('found element to click');
-            element.click();
-          }
-        });
+      case 'start_support': {
+        console.log(`Received start support: ${message.levelOfSupport}`);
+        return onStartSupport(supportState, message.levelOfSupport);
+      }
+      case 'end_support': {
+        console.log('Received end support message');
+        return onEndSupport(supportState);
+      }
+      case 'next_possible_steps': {
+        console.log('Received next possible steps');
+        return onReceiveNextPossibleSteps(supportState, message.steps);
+      }
+      default: {
+        const e: never = message;
+        return e;
       }
     }
   });
 };
 
 const updateClassList = () => {
-  selectableElementTags.forEach((tag) => {
+  allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements.item(i);
-      if (!element) {
-        continue;
-      }
+    for (const element of elements) {
       if (
-        isClickable &&
+        editingState.isClickable &&
         isSelectableTag(element.tagName) &&
-        validTags.includes(element.tagName)
+        editingState.validTags.includes(element.tagName)
       ) {
         element.classList.add('clickable');
       } else {
@@ -94,40 +103,35 @@ const updateClassList = () => {
 
 const addClickListeners = () => {
   console.log('adding click listeners');
-  selectableElementTags.forEach((tag) => {
+  allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements.item(i);
-      if (!element) {
-        continue;
-      }
+    for (const element of elements) {
       element.addEventListener('click', () => {
-        if (
-          isClickable &&
-          isSelectableTag(element.tagName) &&
-          validTags.includes(element.tagName)
-        ) {
-          element.classList.remove('clickable');
-          const message: ClickedElementMessage = {
-            type: 'clicked_element',
-            elementOuterHtml: element.outerHTML,
-            elementTag: element.tagName,
-            elementTextContent: element.textContent,
-            stepId,
-            url,
-            newUrl: element.hasAttribute('href')
-              ? (element as HTMLLinkElement).href
-              : '',
-          };
-          chrome.runtime.sendMessage(message);
-          isClickable = !isClickable;
-          updateClassList();
-        }
+        onUserClickElement(editingState, element, updateClassList);
+        detectStepOnClick(element, supportState);
       });
     }
   });
 };
 
+document.onmousemove = collectUserStruggleDataOnMouseMove(supportState);
+document.onmousedown = collectUserStruggleDataOnMouseDown(supportState);
+
+let ticking = false;
+document.onscroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      collectStruggleDataOnScroll(supportState);
+      detectStepOnScroll(supportState);
+      ticking = false;
+    });
+    ticking = true;
+  }
+};
+
 setupMessageListener();
+const loadedMessage: LoadedMessage = { type: 'loaded' };
+chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
+
 updateClassList();
 addClickListeners();

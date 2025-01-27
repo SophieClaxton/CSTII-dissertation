@@ -1,6 +1,7 @@
 import { CSTStepNodeType } from '../CST/CST';
 import { mapTagToElementName } from '../InterfaceElement';
 import { ASTNodeType, ASTStepNode } from './AST';
+import { ASTInstruction } from './Instruction';
 
 const mapCSTtoASTNodeType: Record<CSTStepNodeType, ASTStepNode['type']> = {
   Follow: ASTNodeType.Follow,
@@ -25,10 +26,8 @@ const getTruncatedText = (
   return `${text.slice(0, limit)}...`;
 };
 
-const mapASTStepToDescription = (step: ASTStepNode): string => {
+const mapASTInstructionToDescription = (step: ASTInstruction): string => {
   switch (step.type) {
-    case ASTNodeType.End:
-      return 'Finished';
     case ASTNodeType.Follow:
       return `Click the link with text "${getTruncatedText(step.element.textContent)}"`;
     case ASTNodeType.Click:
@@ -54,4 +53,18 @@ const mapASTStepToDescription = (step: ASTStepNode): string => {
   }
 };
 
-export { mapCSTtoASTNodeType, mapASTStepToDescription };
+const isSkippable: Record<ASTStepNode['type'], boolean> = {
+  End: false,
+  Follow: false,
+  Click: false,
+  Read: true,
+  'Scroll To': true,
+  Drag: false,
+  'User Decision': false,
+  Write: false,
+  Select: false,
+  Check: false,
+  Draw: false,
+};
+
+export { mapCSTtoASTNodeType, mapASTInstructionToDescription, isSkippable };

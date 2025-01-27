@@ -9,6 +9,7 @@ import { PanelScreen } from '../navigation/ScreenType';
 import { TypeErrorsContext } from './TypeErrorsContext';
 import { TypeCheckError } from '../models/CST/typeCheck';
 import { mapIdToString } from '../unpublishedScriptReducer/mappers/nodeIds';
+import TabContext from './TabContext';
 
 const useUnpublishedScriptContext = () => {
   const editorProgramContext = useContext(UnpublishedScriptContext);
@@ -59,9 +60,19 @@ const useTypeErrorsContext = () => {
   return typeErrorContext;
 };
 
+const useTabContext = () => {
+  const tabContext = useContext(TabContext);
+  if (!tabContext || tabContext.tab === undefined) {
+    console.log(tabContext);
+    throw new Error('No tab errors context found');
+  }
+  return { tab: tabContext.tab };
+};
+
 export {
   useUnpublishedScriptContext,
   useNavigationContext,
   createTypeErrorsContext,
   useTypeErrorsContext,
+  useTabContext,
 };

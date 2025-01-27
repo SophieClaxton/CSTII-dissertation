@@ -3,7 +3,12 @@ import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import { addSection, deleteSection } from './sectionActions';
 import { rearrangeInnerSteps } from './innerStepActions';
 import { CSTProgram } from '../models/CST/CST';
-import { addStep, deleteStep, editStepElement } from './stepActions';
+import {
+  addStep,
+  deleteStep,
+  editStepElement,
+  editUserDecisionQuestion,
+} from './stepActions';
 
 const editScriptProgram =
   (script: UnpublishedScript) =>
@@ -48,6 +53,8 @@ const unpublishedScriptReducer = (
       return editProgram(action, deleteStep);
     case EditorActionType.RearrangeInnerSteps:
       return editProgram(action, rearrangeInnerSteps);
+    case EditorActionType.EditUserDecisionQuestion:
+      return editProgram(action, editUserDecisionQuestion);
     case EditorActionType.ChangeUserDecisionStepToInnerStep:
       return unpublishedScript;
     case EditorActionType.ChangeUserDecisionStepToEndStep:

@@ -3,7 +3,6 @@ import Editor from '../editor/EditorScreen';
 import ScriptSelectionPage from '../support/script_selection/ScriptSelectionPage';
 import UserScriptSelectionPage from '../support/script_selection/UserScriptSelectionPage';
 import WebsiteScriptSelectionPage from '../support/script_selection/WebsiteScriptSelectionPage';
-import ScriptSupport from '../support/script_support/ScriptSupport';
 import {
   EditorScreen,
   HelperScriptsScreen,
@@ -12,6 +11,7 @@ import {
   UserScriptSelectorScreen,
   WebsiteScriptSelectorScreen,
 } from './ScreenType';
+import ScriptSupportPage from '../support/script_support/ScriptSupportPage';
 
 const helperScriptsScreen: HelperScriptsScreen = {
   type: 'HelperScripts',
@@ -48,7 +48,7 @@ const websiteScriptSelectorScreen = (
 const scriptSupportScreen = (scriptId: number): ScriptSupportScreen => ({
   type: 'ScriptSupport',
   params: { scriptId: scriptId },
-  component: <ScriptSupport />,
+  component: <ScriptSupportPage />,
 });
 
 export {
