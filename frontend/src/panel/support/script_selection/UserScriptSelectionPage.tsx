@@ -7,15 +7,15 @@ import { assertIsUserScriptSelectorScreen } from '../../navigation/screenChecks'
 import Page from '../../components/Page';
 import Stack from '@mui/material/Stack/Stack';
 import { useAPICall } from '../../api/apiHooks';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 const UserScriptSelectionPage = () => {
   const { currentScreen } = useNavigationContext();
   assertIsUserScriptSelectorScreen(currentScreen);
 
   const publicUserData = useAPICall(
-    useMemo(
-      () => () => getPublicUser(currentScreen.params.userId),
+    useCallback(
+      () => getPublicUser(currentScreen.params.userId),
       [currentScreen],
     ),
   );

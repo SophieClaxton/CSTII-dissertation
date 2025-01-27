@@ -8,15 +8,15 @@ import Loadable from '../components/Loadable';
 import ScriptEditor from './components/ScriptEditor';
 import Page from '../components/Page';
 import { useAPICall } from '../api/apiHooks';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 
 const Editor: React.FC = () => {
   const { currentScreen } = useNavigationContext();
   assertIsEditorScreen(currentScreen);
 
   const unpublishedScriptData = useAPICall(
-    useMemo(
-      () => () => getUnpublishedScript(currentScreen.params.scriptId),
+    useCallback(
+      () => getUnpublishedScript(currentScreen.params.scriptId),
       [currentScreen],
     ),
   );
