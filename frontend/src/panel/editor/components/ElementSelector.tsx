@@ -98,10 +98,10 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
               setOpenEditDialog(true);
             } else {
               sendClickabilityMessage(
-                tab.id!,
+                tab.id,
                 step.id,
                 mapStepNodeToValidTags[step.type],
-                tab.url ?? '',
+                tab.url,
               );
             }
           };
@@ -109,12 +109,12 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
         }}
         onMouseEnter={() => {
           if (step.element) {
-            sendSetFocusMessage(tab.id!, step.element);
+            sendSetFocusMessage(tab.id, step.element);
           }
         }}
         onMouseLeave={() => {
           if (step.element) {
-            sendUnsetFocusMessage(tab.id!);
+            sendUnsetFocusMessage(tab.id);
           }
         }}
       >
@@ -140,10 +140,10 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
                 disabled={sectionUrl != tab.url}
                 onClick={() => {
                   sendClickabilityMessage(
-                    tab.id!,
+                    tab.id,
                     step.id,
                     mapStepNodeToValidTags[step.type],
-                    tab.url ?? '',
+                    tab.url,
                   );
                   setOpenEditDialog(false);
                 }}

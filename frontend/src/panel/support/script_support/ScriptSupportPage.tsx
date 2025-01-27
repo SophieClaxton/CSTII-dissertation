@@ -25,7 +25,7 @@ const ScriptSupportPage = () => {
   );
 
   return (
-    <Page title={'Get Support'} onBack={() => sendEndSupportMessage(tab.id!)}>
+    <Page title={'Get Support'} onBack={() => sendEndSupportMessage(tab.id)}>
       <Loadable
         response={scriptData}
         onLoad={(script) => <ScriptSupport script={script} />}
