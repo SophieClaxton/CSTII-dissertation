@@ -33,8 +33,6 @@ const sendDetectionMessage = (
   onUnsetFocus();
 };
 
-// TODO: detect with focussed-on class
-
 const detectStepOnScroll = (supportState: SupportState) => {
   if (supportState.collectStruggleData && !supportState.systemScrolling) {
     const steps = [...supportState.nextPossibleSteps];

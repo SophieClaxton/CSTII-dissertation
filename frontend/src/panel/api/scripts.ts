@@ -69,8 +69,6 @@ const publishScript = async (
   }
 };
 
-// TODO: this is causing an error - script is not being published correctly
-// Network trace does not include request method PATCH
 const updateScript = async (
   script_id: number,
   script: UpdateScriptRequest,
