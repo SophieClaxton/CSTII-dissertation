@@ -18,6 +18,8 @@ const Instruction: React.FC<InstructionProps> = ({
       sx={{
         display: 'grid',
         gridTemplateColumns: '1.5rem 1fr',
+        width: 'calc(100% - 2rem)',
+        maxWidth: '28rem',
         columnGap: '1rem',
         padding: '0.5rem',
         borderRadius: '0.5rem',

@@ -114,7 +114,7 @@ const onReceiveNextPossibleSteps = (
       onSetFocus(
         nextStep.element,
         supportState,
-        supportState.levelOfSupport === 'overlay',
+        true,
         onFocusComplete(levelOfSupport, nextStep),
       );
     }

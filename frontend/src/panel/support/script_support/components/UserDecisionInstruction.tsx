@@ -4,7 +4,7 @@ import {
   InstructionDetail,
 } from '../../../models/AST/Instruction';
 import Typography from '@mui/material/Typography/Typography';
-import { ASTUserDecisionNode } from '../../../models/AST/AST';
+import { ASTStepNode, ASTUserDecisionNode } from '../../../models/AST/AST';
 import Button from '@mui/material/Button/Button';
 import { StateSetter } from '../../../models/utilTypes';
 import { getVisibleInstructions } from '../../../models/AST/getters';
@@ -26,6 +26,8 @@ const UserDecisionInstruction: React.FC<UserDecisionInstructionProps> = ({
       sx={{
         display: 'grid',
         gridTemplateColumns: '1.5rem 1fr 1fr',
+        width: 'calc(100% - 2rem)',
+        maxWidth: '28rem',
         columnGap: '1rem',
         padding: '0.5rem',
         borderRadius: '0.5rem',
@@ -65,37 +67,55 @@ const UserDecisionInstruction: React.FC<UserDecisionInstructionProps> = ({
         {instruction.question}
       </Typography>
       <Button
+        variant={'outlined'}
         sx={{
           gridColumnStart: 2,
         }}
         onClick={() =>
-          setVisibleInstructions(
-            getVisibleInstructions(
-              instruction.choice1.start,
-              instruction.stepNumber,
-            ),
+          onUpdateVisibleInstruction(
+            setVisibleInstructions,
+            instruction,
+            instruction.choice1.start,
           )
         }
+        disabled={stage != 'next'}
       >
         Yes
       </Button>
       <Button
+        variant={'outlined'}
         sx={{
           gridColumnStart: 3,
         }}
         onClick={() =>
-          setVisibleInstructions(
-            getVisibleInstructions(
-              instruction.choice2.start,
-              instruction.stepNumber,
-            ),
+          onUpdateVisibleInstruction(
+            setVisibleInstructions,
+            instruction,
+            instruction.choice2.start,
           )
         }
+        disabled={stage != 'next'}
       >
         No
       </Button>
     </Box>
   );
+};
+
+const onUpdateVisibleInstruction = (
+  setVisibleInstructions: StateSetter<ASTInstruction[]>,
+  instruction: ASTUserDecisionNode & InstructionDetail,
+  startStep: ASTStepNode,
+) => {
+  const updateInstructionStage = (instr: ASTInstruction): ASTInstruction =>
+    instr.stepNumber === instruction.stepNumber
+      ? { ...instr, stage: 'complete' }
+      : instr;
+
+  setVisibleInstructions((prev) => [
+    ...prev.map(updateInstructionStage),
+    ...getVisibleInstructions(startStep, instruction.stepNumber),
+  ]);
 };
 
 export default UserDecisionInstruction;

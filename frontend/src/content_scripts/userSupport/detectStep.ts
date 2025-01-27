@@ -7,13 +7,11 @@ import { SupportState } from './state';
 
 const isVisible = (element: Element): boolean => {
   const elementRect = element.getBoundingClientRect();
-  const yOffset = 50;
-  const xOffset = 25;
   return (
-    elementRect.top > yOffset &&
-    elementRect.bottom < window.innerHeight - yOffset &&
-    elementRect.left > xOffset &&
-    elementRect.right < window.innerWidth - xOffset
+    elementRect.top > 0 &&
+    elementRect.bottom < window.innerHeight - 0 &&
+    elementRect.left > 0 &&
+    elementRect.right < window.innerWidth - 0
   );
 };
 

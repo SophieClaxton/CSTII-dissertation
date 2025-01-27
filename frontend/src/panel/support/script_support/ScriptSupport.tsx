@@ -38,7 +38,7 @@ const ScriptSupport: React.FC<ScriptSupportProps> = ({ script }) => {
 
       <LevelOfSupportDetails {...{ levelOfSupport, setLevelOfSupport }} />
 
-      <Divider flexItem sx={{ marginBottom: '1rem' }} />
+      <Divider flexItem />
 
       <InstructionsDisplay
         {...{ supportActive, visibleInstructions, setVisibleInstructions }}

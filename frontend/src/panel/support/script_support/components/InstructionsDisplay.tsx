@@ -23,7 +23,18 @@ const InstructionsDisplay: React.FC<InstructionsDisplayProps> = ({
   const showFinish = lastStep && lastStep.stage === 'complete';
 
   return (
-    <Stack direction={'column'} spacing={2} padding={'1rem'}>
+    <Stack
+      sx={{
+        flexDirection: 'column',
+        gap: '1rem',
+        paddingTop: '1rem',
+        paddingBottom: '4rem',
+        overflowY: 'scroll',
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+      }}
+    >
       {visibleInstructions.map((instruction) =>
         instruction.type === ASTNodeType.UserDecision ? (
           <UserDecisionInstruction
