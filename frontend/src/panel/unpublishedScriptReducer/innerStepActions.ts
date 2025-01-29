@@ -2,9 +2,13 @@ import {
   CSTInnerStepId,
   CSTInnerStepNode,
   CSTProgram,
+  CSTStepNodeType,
 } from '../models/CST/CST';
 import { isSection } from '../models/CST/testers';
-import { RearrangeInnerStepsAction } from '../models/EditorAction';
+import {
+  EditInputStepDescription,
+  RearrangeInnerStepsAction,
+} from '../models/EditorAction';
 import InterfaceElement from '../models/InterfaceElement';
 import { getSection } from './getters/nodes';
 import { mapIdToString } from './mappers/nodeIds';
@@ -75,6 +79,46 @@ const editInnerStepElement = (
   return newEditorProgram;
 };
 
+const addInputDescriptionToInput = (
+  step: CSTInnerStepNode,
+  description: string,
+  isExact: boolean,
+): CSTInnerStepNode => {
+  const maybeDescription = description.length > 0 ? description : undefined;
+  switch (step.type) {
+    case CSTStepNodeType.Write:
+      return { ...step, text: maybeDescription, isExact };
+    case CSTStepNodeType.Select:
+      return { ...step, option: maybeDescription };
+    case CSTStepNodeType.Draw:
+      return { ...step, description: maybeDescription };
+    default:
+      return step;
+  }
+};
+
+const editInputStepInputDescription = (
+  program: CSTProgram,
+  action: EditInputStepDescription,
+) => {
+  const { stepId, description, isExact } = action;
+  const section = getSection(stepId.parentId, program);
+  if (!section) {
+    return program;
+  }
+  return updateProgramSections(
+    program,
+    section.id,
+    updateSectionInnerSteps(
+      section.innerSteps.map((step) =>
+        mapIdToString(step.id) === mapIdToString(stepId)
+          ? addInputDescriptionToInput(step, description, isExact)
+          : step,
+      ),
+    ),
+  );
+};
+
 const deleteInnerStep = (
   program: CSTProgram,
   stepId: CSTInnerStepId,
@@ -97,6 +141,7 @@ const deleteInnerStep = (
 export {
   addInnerStep,
   editInnerStepElement,
+  editInputStepInputDescription,
   rearrangeInnerSteps,
   deleteInnerStep,
 };

@@ -16,6 +16,7 @@ enum EditorActionType {
   DeleteSection = 'deleteSection',
   AddStep = 'addStep',
   EditStepElement = 'editStepElement',
+  EditInputStepDescription = 'editInputStepDescription',
   DeleteStep = 'deleteStep',
   RearrangeInnerSteps = 'rearrangeInnerSteps',
   EditUserDecisionQuestion = 'editUserDecisionQuestion',
@@ -34,6 +35,7 @@ type EditorAction =
   | AddSectionAction
   | DeleteSectionAction
   | EditStepElementAction
+  | EditInputStepDescription
   | AddStepAction
   | DeleteStepAction
   | RearrangeInnerStepsAction
@@ -72,6 +74,13 @@ interface EditStepElementAction extends BaseEditorAction {
   stepId: CSTStepNode['id'];
   element: InterfaceElement | undefined;
   oldUrl: string;
+}
+
+interface EditInputStepDescription extends BaseEditorAction {
+  type: EditorActionType.EditInputStepDescription;
+  stepId: CSTStepNode['id'];
+  description: string;
+  isExact: boolean;
 }
 
 interface AddStepAction extends BaseEditorAction {
@@ -118,6 +127,7 @@ export type {
   DeleteSectionAction,
   AddStepAction,
   EditStepElementAction,
+  EditInputStepDescription,
   DeleteStepAction,
   RearrangeInnerStepsAction,
   EditUserDecisionQuestion,

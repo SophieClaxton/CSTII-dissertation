@@ -28,6 +28,7 @@ const astWriteNodeSchema: Schema<ASTWriteNode> = {
   element: true,
   description: false,
   text: true,
+  isExact: true,
   next: false,
   comment: false,
   type: true,

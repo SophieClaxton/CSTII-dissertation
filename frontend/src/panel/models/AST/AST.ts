@@ -84,6 +84,7 @@ type ASTInputNode = ASTWriteNode | ASTSelectNode | ASTCheckNode | ASTDrawNode;
 interface ASTWriteNode extends ASTStepBase {
   type: ASTNodeType.Write;
   text: string;
+  isExact: boolean;
   description?: string;
 }
 

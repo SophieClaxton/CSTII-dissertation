@@ -151,6 +151,7 @@ interface CSTInputBase extends CSTInnerStepBase {
 interface CSTWriteNode extends CSTInputBase {
   type: CSTStepNodeType.Write;
   text?: string;
+  isExact?: boolean;
 }
 
 interface CSTSelectNode extends CSTInputBase {
@@ -165,6 +166,7 @@ interface CSTCheckNode extends CSTInputBase {
 
 interface CSTDrawNode extends CSTInputBase {
   type: CSTStepNodeType.Draw;
+  description?: string;
 }
 
 export { CSTStepNodeType, CSTUserDecisionEndType };
@@ -194,6 +196,7 @@ export type {
   CSTUserDecisionNode,
   CSTUserDecisionInnerStepNode,
   CSTUserDecisionEndStepNode,
+  CSTInputNode,
   CSTWriteNode,
   CSTSelectNode,
   CSTCheckNode,

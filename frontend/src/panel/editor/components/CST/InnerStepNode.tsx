@@ -5,6 +5,8 @@ import { CSTInnerStepNode, CSTStepNodeType } from '../../../models/CST/CST';
 import Step from '../Step';
 import ElementSelector from '../ElementSelector';
 import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
+import InputDescription from '../InputDescription';
+import { EditorActionType } from '../../../models/EditorAction';
 
 interface InnerStepNodeProps {
   step: CSTInnerStepNode;
@@ -28,6 +30,34 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
             listeners: listeners,
           }}
         />
+      );
+    case CSTStepNodeType.Write:
+      return (
+        <Step
+          stepId={step.id}
+          stepType={step.type}
+          sortableProps={{
+            setNodeRef: setNodeRef,
+            style: style,
+            attributes: attributes,
+            listeners: listeners,
+          }}
+        >
+          <ElementSelector step={step} />
+          <InputDescription
+            getCurrentDescription={() => step.description}
+            getIsExact={() => step.isExact ?? false}
+            onDescriptionChangeEvent={(
+              description: string,
+              isExact: boolean,
+            ) => ({
+              type: EditorActionType.EditInputStepDescription,
+              stepId: step.id,
+              description: description,
+              isExact: isExact,
+            })}
+          />
+        </Step>
       );
     default:
       return (
