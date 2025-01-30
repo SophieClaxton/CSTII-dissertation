@@ -25,8 +25,6 @@ const InputDescription: React.FC<InputDescriptionProps> = ({
 
   const description = useMemo(getCurrentDescription, [getCurrentDescription]);
   const showIsExactSwitch = getIsExact != undefined;
-  console.log(showIsExactSwitch);
-  console.log(getIsExact);
 
   const [text, setText] = useState(description ?? '');
   const [isExact, setIsExact] = useState(
@@ -37,8 +35,9 @@ const InputDescription: React.FC<InputDescriptionProps> = ({
     <Stack
       sx={{
         flexDirection: 'row',
-        gap: '1rem',
-        width: 'calc(16rem - 9% - 1.625rem)',
+        gap: '0.25rem',
+        width: '100%',
+        padding: '0 5% 0 5%',
       }}
     >
       <TextField
@@ -49,7 +48,7 @@ const InputDescription: React.FC<InputDescriptionProps> = ({
         placeholder={'Description'}
         fullWidth
         slotProps={{
-          input: { sx: { backgroundColor: 'white' } },
+          input: { sx: { backgroundColor: 'white', padding: 0 } },
           htmlInput: { sx: { padding: '0.25rem 0.5rem' } },
         }}
         sx={{ alignSelf: 'center' }}
@@ -67,10 +66,13 @@ const InputDescription: React.FC<InputDescriptionProps> = ({
                     onDescriptionChangeEvent(text, event.target.checked),
                   );
                 }}
+                size={'small'}
               />
             }
-            label={'Match exactly'}
+            label={'Exact'}
             labelPlacement={'bottom'}
+            sx={{ padding: 0, margin: 0 }}
+            slotProps={{ typography: { variant: 'caption' } }}
           />
         </FormGroup>
       )}

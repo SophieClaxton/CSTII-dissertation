@@ -84,6 +84,7 @@ const addInputDescriptionToInput = (
   description: string,
   isExact: boolean,
 ): CSTInnerStepNode => {
+  console.log('Adding input description to step');
   const maybeDescription = description.length > 0 ? description : undefined;
   switch (step.type) {
     case CSTStepNodeType.Write:
@@ -106,6 +107,8 @@ const editInputStepInputDescription = (
   if (!section) {
     return program;
   }
+  console.log(section);
+  console.log(stepId);
   return updateProgramSections(
     program,
     section.id,
@@ -142,6 +145,7 @@ export {
   addInnerStep,
   editInnerStepElement,
   editInputStepInputDescription,
+  addInputDescriptionToInput,
   rearrangeInnerSteps,
   deleteInnerStep,
 };
