@@ -141,6 +141,8 @@ class CSTWriteNode(CSTInputBase):
     model_config = ConfigDict(use_enum_values=True)
 
     type: Literal[CSTStepNodeType.Write]
+    text: str | None = None
+    isExact: bool | None = None
 
 
 class CSTSelectNode(CSTInputBase):

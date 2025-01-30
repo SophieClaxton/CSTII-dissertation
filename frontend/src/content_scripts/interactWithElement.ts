@@ -21,6 +21,7 @@ const onUserClickElement = (
   element: Element,
   updateClassList: () => void,
 ) => {
+  console.log(`Clicked ${element.tagName} element: ${element.textContent}`);
   if (
     editingState.isClickable &&
     isSelectableTag(element.tagName) &&

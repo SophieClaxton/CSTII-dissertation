@@ -45,7 +45,7 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
         >
           <ElementSelector step={step} />
           <InputDescription
-            getCurrentDescription={() => step.description}
+            getCurrentDescription={() => step.text}
             getIsExact={() => step.isExact ?? false}
             onDescriptionChangeEvent={(
               description: string,
