@@ -1,11 +1,20 @@
+import { TabInfo } from '../panel/contexts/TabContext';
 import { ASTInstruction } from '../panel/models/AST/Instruction';
+import { CSTStepNodeType } from '../panel/models/CST/CST';
 import { isEndStepId, isInnerStepId } from '../panel/models/CST/testers';
 import { EditorAction, EditorActionType } from '../panel/models/EditorAction';
-import { isSelectableTag } from '../panel/models/InterfaceElement';
+import {
+  isSelectableTag,
+  mapStepNodeToValidTags,
+} from '../panel/models/InterfaceElement';
+import { StateRef } from '../panel/models/utilTypes';
 import { mapStringToId } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import { ContentScriptMessage, UserStruggleData } from './message';
 
-const addClickedElementListener = (dispatch: React.Dispatch<EditorAction>) => {
+const addClickedElementListener = (
+  dispatch: React.Dispatch<EditorAction>,
+  onTabUpdateRef: StateRef<undefined | ((tab: TabInfo) => void)>,
+) => {
   chrome.runtime.onMessage.addListener(
     async (message: ContentScriptMessage) => {
       if (message.type === 'user_clicked_element') {
@@ -30,12 +39,19 @@ const addClickedElementListener = (dispatch: React.Dispatch<EditorAction>) => {
           oldUrl: message.url,
         });
 
-        if (isEndStepId(stepId) && message.elementTag === 'A') {
-          dispatch({
-            type: EditorActionType.AddSection,
-            sectionUrl: message.newUrl,
-            followStepId: stepId,
-          });
+        if (
+          isEndStepId(stepId) &&
+          mapStepNodeToValidTags[CSTStepNodeType.Follow]
+            .map(({ tag }) => tag)
+            .includes(message.elementTag)
+        ) {
+          console.log(message);
+          onTabUpdateRef.current = (tab: TabInfo) =>
+            dispatch({
+              type: EditorActionType.AddSection,
+              sectionUrl: tab.url,
+              followStepId: stepId,
+            });
         }
       }
     },
