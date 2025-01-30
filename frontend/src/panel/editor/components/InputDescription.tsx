@@ -14,12 +14,14 @@ interface InputDescriptionProps {
     description: string,
     isExact: boolean,
   ) => EditorAction;
+  placeholder: string;
 }
 
 const InputDescription: React.FC<InputDescriptionProps> = ({
   getCurrentDescription,
   getIsExact,
   onDescriptionChangeEvent,
+  placeholder,
 }) => {
   const { dispatch } = useUnpublishedScriptContext();
 
@@ -45,7 +47,7 @@ const InputDescription: React.FC<InputDescriptionProps> = ({
         onChange={(event) => setText(event.target.value)}
         onBlur={() => dispatch(onDescriptionChangeEvent(text, isExact))}
         size={'small'}
-        placeholder={'Description'}
+        placeholder={placeholder}
         fullWidth
         slotProps={{
           input: { sx: { backgroundColor: 'white', padding: 0 } },

@@ -1,12 +1,17 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import UserDecisionNode from './UserDecisionNode';
-import { CSTInnerStepNode, CSTStepNodeType } from '../../../models/CST/CST';
+import {
+  CSTElementNode,
+  CSTInnerStepNode,
+  CSTStepNodeType,
+} from '../../../models/CST/CST';
 import Step from '../Step';
 import ElementSelector from '../ElementSelector';
 import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
 import InputDescription from '../InputDescription';
 import { EditorActionType } from '../../../models/EditorAction';
+import CheckedSelector from '../CheckedSelector';
 
 interface InnerStepNodeProps {
   step: CSTInnerStepNode;
@@ -31,34 +36,6 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
           }}
         />
       );
-    case CSTStepNodeType.Write:
-      return (
-        <Step
-          stepId={step.id}
-          stepType={step.type}
-          sortableProps={{
-            setNodeRef: setNodeRef,
-            style: style,
-            attributes: attributes,
-            listeners: listeners,
-          }}
-        >
-          <ElementSelector step={step} />
-          <InputDescription
-            getCurrentDescription={() => step.text}
-            getIsExact={() => step.isExact ?? false}
-            onDescriptionChangeEvent={(
-              description: string,
-              isExact: boolean,
-            ) => ({
-              type: EditorActionType.EditInputStepDescription,
-              stepId: step.id,
-              description: description,
-              isExact: isExact,
-            })}
-          />
-        </Step>
-      );
     default:
       return (
         <Step
@@ -72,8 +49,43 @@ const InnerStepNode: React.FC<InnerStepNodeProps> = ({ step }) => {
           }}
         >
           <ElementSelector step={step} />
+          {mapStepToExtraInputs(step)}
         </Step>
       );
+  }
+};
+
+const mapStepToExtraInputs = (
+  step: CSTElementNode,
+): React.ReactNode | undefined => {
+  switch (step.type) {
+    case CSTStepNodeType.Write:
+      return (
+        <InputDescription
+          getCurrentDescription={() => step.text}
+          getIsExact={() => step.isExact ?? false}
+          onDescriptionChangeEvent={(
+            description: string,
+            isExact: boolean,
+          ) => ({
+            type: EditorActionType.EditInputStepDescription,
+            stepId: step.id,
+            description: description,
+            isExact: isExact,
+          })}
+          placeholder={'Text'}
+        />
+      );
+    case CSTStepNodeType.Check:
+      return <CheckedSelector stepId={step.id} isChecked={step.isChecked} />;
+    case CSTStepNodeType.Select:
+    case CSTStepNodeType.Drag:
+    case CSTStepNodeType.Draw:
+    case CSTStepNodeType.Follow:
+    case CSTStepNodeType.Click:
+    case CSTStepNodeType.Read:
+    case CSTStepNodeType.ScrollTo:
+      return undefined;
   }
 };
 
