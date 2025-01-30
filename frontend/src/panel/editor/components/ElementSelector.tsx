@@ -27,6 +27,7 @@ import {
 } from '../../../common/sendMessage';
 import Add from '@mui/icons-material/Add';
 import { isSection } from '../../models/CST/testers';
+import { urlsMatch } from '../scriptUtils/elementUtils';
 
 interface ElementSelectorProps {
   step: CSTElementNode;
@@ -94,7 +95,10 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
         }}
         onClick={() => {
           const editElement = async () => {
-            if (step.element || (sectionUrl != '' && tab.url != sectionUrl)) {
+            if (
+              step.element ||
+              (sectionUrl != '' && !urlsMatch(sectionUrl, tab.url))
+            ) {
               setOpenEditDialog(true);
             } else {
               sendClickabilityMessage(
@@ -123,7 +127,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
       </Button>
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
         <DialogTitle>Edit Element</DialogTitle>
-        {sectionUrl != '' && sectionUrl != tab.url && (
+        {sectionUrl != '' && !urlsMatch(sectionUrl, tab.url) && (
           <DialogContent>
             <DialogContentText>
               You are not on the correct website to select elements for this
@@ -137,7 +141,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
           {step.element && (
             <>
               <Button
-                disabled={sectionUrl != tab.url}
+                disabled={!urlsMatch(sectionUrl, tab.url)}
                 onClick={() => {
                   sendClickabilityMessage(
                     tab.id,
