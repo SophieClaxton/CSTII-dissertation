@@ -104,12 +104,12 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
           editElement();
         }}
         onMouseEnter={() => {
-          if (step.element) {
+          if (step.element && urlsMatch(tab.url, step.element.url)) {
             sendSetFocusMessage(tab.id, step.element);
           }
         }}
         onMouseLeave={() => {
-          if (step.element) {
+          if (step.element && urlsMatch(tab.url, step.element.url)) {
             sendUnsetFocusMessage(tab.id);
           }
         }}

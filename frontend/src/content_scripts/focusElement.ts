@@ -51,7 +51,6 @@ const onSetFocus = (
   ) => void = () => undefined,
 ): boolean => {
   const element = findFirstElement(msgElement);
-  console.log(element);
   if (element) {
     if (highlight) {
       element.classList.add(focusClass);

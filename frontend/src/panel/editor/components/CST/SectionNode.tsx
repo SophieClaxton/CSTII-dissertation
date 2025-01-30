@@ -16,6 +16,7 @@ import { EditorActionType } from '../../../models/EditorAction';
 import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
 import Paper from '@mui/material/Paper/Paper';
 import TypeErrorMessage from '../TypeErrorMessage';
+import { removeQueryDetails } from '../../scriptUtils/elementUtils';
 
 interface SectionProps {
   section: CSTSectionNode;
@@ -42,8 +43,12 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
       }}
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
-        <Link variant={'caption'} href={section.url}>
-          {section.url}
+        <Link
+          variant={'caption'}
+          href={section.url}
+          sx={{ textAlign: 'left', width: '25.625rem' }}
+        >
+          {removeQueryDetails(section.url)}
         </Link>
         <IconButton
           sx={{ padding: 0, borderRadius: '0.5rem' }}
