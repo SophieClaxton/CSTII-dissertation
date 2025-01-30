@@ -84,6 +84,23 @@ const setupMessageListener = () => {
   });
 };
 
+document.onmousemove = collectUserStruggleDataOnMouseMove(supportState);
+document.onmousedown = collectUserStruggleDataOnMouseDown(supportState);
+
+let ticking = false;
+document.onscroll = () => {
+  if (!ticking) {
+    window.requestAnimationFrame(() => {
+      collectStruggleDataOnScroll(supportState);
+      detectStepOnScroll(supportState);
+      ticking = false;
+    });
+    ticking = true;
+  }
+};
+
+const elementsWithClickListeners = new WeakSet();
+
 const updateClassList = () => {
   allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
@@ -106,27 +123,15 @@ const addClickListeners = () => {
   allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
     for (const element of elements) {
-      element.addEventListener('click', () => {
-        onUserClickElement(editingState, element, updateClassList);
-        detectStepOnClick(element, supportState);
-      });
+      if (!elementsWithClickListeners.has(element)) {
+        element.addEventListener('click', () => {
+          onUserClickElement(editingState, element, updateClassList);
+          detectStepOnClick(element, supportState);
+        });
+        elementsWithClickListeners.add(element);
+      }
     }
   });
-};
-
-document.onmousemove = collectUserStruggleDataOnMouseMove(supportState);
-document.onmousedown = collectUserStruggleDataOnMouseDown(supportState);
-
-let ticking = false;
-document.onscroll = () => {
-  if (!ticking) {
-    window.requestAnimationFrame(() => {
-      collectStruggleDataOnScroll(supportState);
-      detectStepOnScroll(supportState);
-      ticking = false;
-    });
-    ticking = true;
-  }
 };
 
 setupMessageListener();
@@ -135,3 +140,9 @@ chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
 
 updateClassList();
 addClickListeners();
+
+const domObserver = new MutationObserver(() => {
+  console.log('DOM Changed');
+  addClickListeners();
+});
+domObserver.observe(document, { childList: true, subtree: true });

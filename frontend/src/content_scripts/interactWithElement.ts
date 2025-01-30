@@ -21,12 +21,14 @@ const onUserClickElement = (
   element: Element,
   updateClassList: () => void,
 ) => {
-  console.log(`Clicked ${element.tagName} element: ${element.textContent}`);
+  console.log(`Clicked ${element.tagName}`);
+  console.log(editingState);
   if (
     editingState.isClickable &&
     isSelectableTag(element.tagName) &&
     editingState.validTags.includes(element.tagName)
   ) {
+    console.log(`Clicked ${element.tagName} element: ${element.textContent}`);
     element.classList.remove('clickable');
     const message: UserClickedElementMessage = {
       type: 'user_clicked_element',
@@ -40,6 +42,7 @@ const onUserClickElement = (
         : '',
     };
     chrome.runtime.sendMessage(message);
+    console.log('sent message');
     editingState.isClickable = !editingState.isClickable;
     updateClassList();
   }
