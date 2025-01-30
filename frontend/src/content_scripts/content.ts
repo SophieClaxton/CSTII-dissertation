@@ -2,9 +2,11 @@ import { PanelMessage, LoadedMessage } from '../common/message';
 import {
   allSelectableTags,
   isSelectableTag,
+  mapStepNodeToValidTags,
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
 import { defaultLevelOfSupport } from './consts';
+import { elementSatisfiesValidTags } from './elementUtils';
 import { onSetFocus, onUnsetFocus } from './focusElement';
 import { onUserClickElement } from './interactWithElement';
 import {
@@ -52,7 +54,13 @@ const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: PanelMessage) => {
     switch (message.type) {
       case 'set_clickable': {
-        editingState = { isClickable: true, ...message };
+        const { stepId, stepType, url } = message;
+        editingState = {
+          isClickable: true,
+          stepId,
+          url,
+          validTags: mapStepNodeToValidTags[stepType],
+        };
         updateClassList();
         break;
       }
@@ -108,7 +116,7 @@ const updateClassList = () => {
       if (
         editingState.isClickable &&
         isSelectableTag(element.tagName) &&
-        editingState.validTags.includes(element.tagName)
+        elementSatisfiesValidTags(element, editingState.validTags)
       ) {
         element.classList.add('clickable');
       } else {

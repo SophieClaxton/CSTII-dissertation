@@ -1,8 +1,5 @@
 import Stack from '@mui/material/Stack/Stack';
-import {
-  mapStepNodeToValidTags,
-  mapTagToElementName,
-} from '../../models/InterfaceElement';
+import { mapTagToElementName } from '../../models/InterfaceElement';
 import {
   useTabContext,
   useUnpublishedScriptContext,
@@ -101,12 +98,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
             ) {
               setOpenEditDialog(true);
             } else {
-              sendClickabilityMessage(
-                tab.id,
-                step.id,
-                mapStepNodeToValidTags[step.type],
-                tab.url,
-              );
+              sendClickabilityMessage(tab.id, step.id, step.type, tab.url);
             }
           };
           editElement();
@@ -143,12 +135,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
               <Button
                 disabled={!urlsMatch(sectionUrl, tab.url)}
                 onClick={() => {
-                  sendClickabilityMessage(
-                    tab.id,
-                    step.id,
-                    mapStepNodeToValidTags[step.type],
-                    tab.url,
-                  );
+                  sendClickabilityMessage(tab.id, step.id, step.type, tab.url);
                   setOpenEditDialog(false);
                 }}
               >

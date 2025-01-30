@@ -1,6 +1,6 @@
 import stringSimilarity from 'string-similarity-js';
 import { focusClass, similarityThreshold } from './consts';
-import InterfaceElement from '../panel/models/InterfaceElement';
+import InterfaceElement, { ValidTag } from '../panel/models/InterfaceElement';
 
 const elementsMatch = (
   element: Element,
@@ -64,4 +64,19 @@ const getElementFromId = (
   return undefined;
 };
 
-export { elementsMatch, findFirstElement, getElementFromId };
+const elementSatisfiesValidTags = (
+  element: Element,
+  validTags: ValidTag[],
+): boolean => {
+  return validTags.some(
+    ({ tag, condition }) =>
+      element.tagName === tag && (condition ? condition(element) : true),
+  );
+};
+
+export {
+  elementsMatch,
+  findFirstElement,
+  getElementFromId,
+  elementSatisfiesValidTags,
+};

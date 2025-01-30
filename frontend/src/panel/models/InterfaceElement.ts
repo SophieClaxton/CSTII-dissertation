@@ -66,21 +66,78 @@ const mapTagToElementName: Record<SelectableTag, string> = {
   SELECT: 'Selection',
 };
 
-const mapStepNodeToValidTags: Record<CSTElementNode['type'], SelectableTag[]> =
-  {
-    Follow: ['A'],
-    Click: ['BUTTON'],
-    Read: [...defaultSelectableTags],
-    'Scroll To': [...defaultSelectableTags, 'FORM'],
-    Drag: [],
-    Write: ['INPUT', 'TEXTAREA'],
-    Select: ['SELECT'],
-    Check: ['INPUT'],
-    Draw: ['CANVAS'],
+const defaultValidTags: ValidTag[] = [...defaultSelectableTags].map((tag) => ({
+  tag,
+}));
+
+const elementTypeIs =
+  (type: string | string[], equal: boolean = true) =>
+  (element: Element) => {
+    if (equal) {
+      if (Array.isArray(type)) {
+        return type.includes(element.getAttribute('type') ?? '');
+      }
+      return element.getAttribute('type') === type;
+    }
+    if (Array.isArray(type)) {
+      return !type.includes(element.getAttribute('type') ?? '');
+    }
+    return element.getAttribute('type') != type;
   };
 
+interface ValidTag {
+  tag: SelectableTag;
+  condition?: (element: Element) => boolean;
+}
+
+const mapStepNodeToValidTags: Record<CSTElementNode['type'], ValidTag[]> = {
+  Follow: [
+    { tag: 'A' },
+    {
+      tag: 'BUTTON',
+      condition: elementTypeIs('submit'),
+    },
+  ],
+  Click: [
+    {
+      tag: 'BUTTON',
+      condition: elementTypeIs('submit', false),
+    },
+    {
+      tag: 'INPUT',
+      condition: elementTypeIs('button'),
+    },
+  ],
+  Read: defaultValidTags,
+  'Scroll To': [...defaultValidTags, { tag: 'FORM' }],
+  Drag: [],
+  Write: [
+    {
+      tag: 'INPUT',
+      condition: elementTypeIs([
+        'text',
+        'email',
+        'number',
+        'password',
+        'search',
+        'tel',
+        'url',
+        'date',
+        'datetime-local',
+        'month',
+        'time',
+        'week',
+      ]),
+    },
+    { tag: 'TEXTAREA' },
+  ],
+  Select: [{ tag: 'SELECT' }],
+  Check: [{ tag: 'INPUT', condition: elementTypeIs('checkbox') }],
+  Draw: [{ tag: 'CANVAS' }],
+};
+
 export default InterfaceElement;
-export type { SelectableTag };
+export type { SelectableTag, ValidTag };
 export {
   isSelectableTag,
   defaultSelectableTags,

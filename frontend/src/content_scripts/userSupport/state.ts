@@ -1,11 +1,11 @@
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
-import { SelectableTag } from '../../panel/models/InterfaceElement';
+import { ValidTag } from '../../panel/models/InterfaceElement';
 import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 interface EditingState {
   isClickable: boolean;
   stepId: string;
-  validTags: SelectableTag[];
+  validTags: ValidTag[];
   url: string;
 }
 

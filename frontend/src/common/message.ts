@@ -1,7 +1,6 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
-import InterfaceElement, {
-  SelectableTag,
-} from '../panel/models/InterfaceElement';
+import { CSTElementNode } from '../panel/models/CST/CST';
+import InterfaceElement from '../panel/models/InterfaceElement';
 import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 enum Port {
@@ -47,7 +46,7 @@ interface MessageBase {
 interface SetClickableMessage extends MessageBase {
   type: 'set_clickable';
   stepId: string;
-  validTags: SelectableTag[];
+  stepType: CSTElementNode['type'];
   url: string;
 }
 

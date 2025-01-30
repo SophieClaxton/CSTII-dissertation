@@ -3,7 +3,7 @@ import { EditingState } from './userSupport/state';
 import InterfaceElement, {
   isSelectableTag,
 } from '../panel/models/InterfaceElement';
-import { findFirstElement } from './elementUtils';
+import { elementSatisfiesValidTags, findFirstElement } from './elementUtils';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;
@@ -26,7 +26,7 @@ const onUserClickElement = (
   if (
     editingState.isClickable &&
     isSelectableTag(element.tagName) &&
-    editingState.validTags.includes(element.tagName)
+    elementSatisfiesValidTags(element, editingState.validTags)
   ) {
     console.log(`Clicked ${element.tagName} element: ${element.textContent}`);
     element.classList.remove('clickable');
