@@ -155,6 +155,7 @@ class CSTCheckNode(CSTInputBase):
     model_config = ConfigDict(use_enum_values=True)
 
     type: Literal[CSTStepNodeType.Check]
+    isChecked: bool
 
 
 class CSTDrawNode(CSTInputBase):
