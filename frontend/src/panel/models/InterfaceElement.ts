@@ -5,6 +5,7 @@ interface InterfaceElement {
   textContent?: string;
   url: string;
   tag: SelectableTag;
+  label?: string;
 }
 
 const defaultSelectableTags = [

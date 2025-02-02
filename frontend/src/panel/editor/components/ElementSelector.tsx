@@ -38,6 +38,8 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
   const section = getSection(step.id.parentId, unpublishedScript.program);
   const sectionUrl = section && isSection(section) ? section.url : '';
 
+  const elementDescription = step.element?.label ?? step.element?.textContent;
+
   const text = step.element ? (
     <Stack
       sx={{ alignItems: 'flex-start', width: 'calc(16rem - 9% - 1.625rem)' }}
@@ -49,7 +51,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
       >
         {mapTagToElementName[step.element.tag]}
       </Typography>
-      {step.element.textContent && (
+      {elementDescription && (
         <Typography
           variant="body2"
           color="text.primary"
@@ -61,7 +63,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
             textAlign: 'left',
           }}
         >
-          {`"${step.element.textContent}"`}
+          {`"${elementDescription}"`}
         </Typography>
       )}
     </Stack>
@@ -147,7 +149,6 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
                     type: EditorActionType.EditStepElement,
                     stepId: step.id,
                     element: undefined,
-                    oldUrl: '',
                   });
                   setOpenEditDialog(false);
                 }}

@@ -53,7 +53,6 @@ const editInnerStepElement = (
   program: CSTProgram,
   innerStepId: CSTInnerStepId,
   element: InterfaceElement | undefined,
-  url: string,
 ): CSTProgram => {
   const section = getSection(innerStepId.parentId, program);
   if (!section) {
@@ -70,10 +69,12 @@ const editInnerStepElement = (
       ),
     ),
   );
-  if (isSection(section) && section.url === '') {
+  if (isSection(section) && section.url === '' && element) {
     return {
       sections: newEditorProgram.sections.map((s) =>
-        mapIdToString(s.id) === mapIdToString(section.id) ? { ...s, url } : s,
+        mapIdToString(s.id) === mapIdToString(section.id)
+          ? { ...s, url: element.url }
+          : s,
       ),
     };
   }

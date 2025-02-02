@@ -74,9 +74,20 @@ const elementSatisfiesValidTags = (
   );
 };
 
+const getCorrespondingLabel = (element: Element): string | undefined => {
+  const labels = document.getElementsByTagName('label');
+  for (const label of labels) {
+    if (label.htmlFor === element.id) {
+      return label.textContent ?? undefined;
+    }
+  }
+  return undefined;
+};
+
 export {
   elementsMatch,
   findFirstElement,
   getElementFromId,
   elementSatisfiesValidTags,
+  getCorrespondingLabel,
 };

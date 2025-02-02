@@ -85,12 +85,8 @@ interface CloseSidePanelMessage extends MessageBase {
 
 interface UserClickedElementMessage extends MessageBase {
   type: 'user_clicked_element';
-  elementOuterHtml: string;
-  elementTag: string;
-  elementTextContent: string | null;
+  element: InterfaceElement;
   stepId: string;
-  url: string;
-  newUrl: string;
 }
 
 interface UserStruggleData {

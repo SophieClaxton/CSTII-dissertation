@@ -3,7 +3,11 @@ import { EditingState } from './userSupport/state';
 import InterfaceElement, {
   isSelectableTag,
 } from '../panel/models/InterfaceElement';
-import { elementSatisfiesValidTags, findFirstElement } from './elementUtils';
+import {
+  elementSatisfiesValidTags,
+  findFirstElement,
+  getCorrespondingLabel,
+} from './elementUtils';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;
@@ -32,14 +36,14 @@ const onUserClickElement = (
     element.classList.remove('clickable');
     const message: UserClickedElementMessage = {
       type: 'user_clicked_element',
-      elementOuterHtml: element.outerHTML,
-      elementTag: element.tagName,
-      elementTextContent: element.textContent,
+      element: {
+        outerHTML: element.outerHTML,
+        tag: element.tagName,
+        textContent: element.textContent ?? undefined,
+        url: editingState.url,
+        label: getCorrespondingLabel(element),
+      },
       stepId: editingState.stepId,
-      url: editingState.url,
-      newUrl: element.hasAttribute('href')
-        ? (element as HTMLLinkElement).href
-        : '',
     };
     chrome.runtime.sendMessage(message);
     console.log('sent message');

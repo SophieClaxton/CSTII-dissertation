@@ -20,30 +20,24 @@ const addClickedElementListener = (
       if (message.type === 'user_clicked_element') {
         const stepId = mapStringToId(message.stepId);
         if (
-          !isSelectableTag(message.elementTag) ||
+          !isSelectableTag(message.element.tag) ||
           !(isEndStepId(stepId) || isInnerStepId(stepId))
         ) {
           throw Error('Received an invalid element tag or invalid stepId');
         }
-        const receivedElement = {
-          outerHTML: message.elementOuterHtml,
-          tag: message.elementTag,
-          textContent: message.elementTextContent ?? undefined,
-          url: message.url,
-        };
+        const receivedElement = message.element;
         // console.log(receivedElement);
         dispatch({
           type: EditorActionType.EditStepElement,
           stepId: stepId,
           element: receivedElement,
-          oldUrl: message.url,
         });
 
         if (
           isEndStepId(stepId) &&
           mapStepNodeToValidTags[CSTStepNodeType.Follow]
             .map(({ tag }) => tag)
-            .includes(message.elementTag)
+            .includes(message.element.tag)
         ) {
           console.log(message);
           onTabUpdateRef.current = (tab: TabInfo) =>

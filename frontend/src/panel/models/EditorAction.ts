@@ -76,7 +76,6 @@ interface EditStepElementAction extends BaseEditorAction {
   type: EditorActionType.EditStepElement;
   stepId: CSTStepNode['id'];
   element: InterfaceElement | undefined;
-  oldUrl: string;
 }
 
 interface EditInputStepDescriptionAction extends BaseEditorAction {

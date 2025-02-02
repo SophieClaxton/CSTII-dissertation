@@ -37,19 +37,9 @@ const editStepElement = (
   action: EditStepElementAction,
 ) => {
   if (isInnerStepId(action.stepId)) {
-    return editInnerStepElement(
-      program,
-      action.stepId,
-      action.element,
-      action.oldUrl,
-    );
+    return editInnerStepElement(program, action.stepId, action.element);
   } else {
-    return editEndStepElement(
-      program,
-      action.stepId,
-      action.element,
-      action.oldUrl,
-    );
+    return editEndStepElement(program, action.stepId, action.element);
   }
 };
 
