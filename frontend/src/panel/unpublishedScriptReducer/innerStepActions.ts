@@ -6,7 +6,8 @@ import {
 } from '../models/CST/CST';
 import { isSection } from '../models/CST/testers';
 import {
-  EditInputStepDescription,
+  EditInputStepDescriptionAction,
+  EditIsCheckedAction,
   RearrangeInnerStepsAction,
 } from '../models/EditorAction';
 import InterfaceElement from '../models/InterfaceElement';
@@ -100,7 +101,7 @@ const addInputDescriptionToInput = (
 
 const editInputStepInputDescription = (
   program: CSTProgram,
-  action: EditInputStepDescription,
+  action: EditInputStepDescriptionAction,
 ) => {
   const { stepId, description, isExact } = action;
   const section = getSection(stepId.parentId, program);
@@ -116,6 +117,25 @@ const editInputStepInputDescription = (
       section.innerSteps.map((step) =>
         mapIdToString(step.id) === mapIdToString(stepId)
           ? addInputDescriptionToInput(step, description, isExact)
+          : step,
+      ),
+    ),
+  );
+};
+
+const editIsChecked = (program: CSTProgram, action: EditIsCheckedAction) => {
+  const { stepId, isChecked } = action;
+  const section = getSection(stepId.parentId, program);
+  if (!section) {
+    return program;
+  }
+  return updateProgramSections(
+    program,
+    section.id,
+    updateSectionInnerSteps(
+      section.innerSteps.map((step) =>
+        mapIdToString(step.id) === mapIdToString(stepId)
+          ? { ...step, isChecked }
           : step,
       ),
     ),
@@ -145,6 +165,7 @@ export {
   addInnerStep,
   editInnerStepElement,
   editInputStepInputDescription,
+  editIsChecked,
   addInputDescriptionToInput,
   rearrangeInnerSteps,
   deleteInnerStep,

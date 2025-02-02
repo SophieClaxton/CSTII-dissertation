@@ -3,6 +3,7 @@ import { UnpublishedScript } from '../models/API/UnpublishedScript';
 import { addSection, deleteSection } from './sectionActions';
 import {
   editInputStepInputDescription,
+  editIsChecked,
   rearrangeInnerSteps,
 } from './innerStepActions';
 import { CSTProgram } from '../models/CST/CST';
@@ -54,6 +55,8 @@ const unpublishedScriptReducer = (
       return editProgram(action, editStepElement);
     case EditorActionType.EditInputStepDescription:
       return editProgram(action, editInputStepInputDescription);
+    case EditorActionType.EditIsChecked:
+      return editProgram(action, editIsChecked);
     case EditorActionType.DeleteStep:
       return editProgram(action, deleteStep);
     case EditorActionType.RearrangeInnerSteps:

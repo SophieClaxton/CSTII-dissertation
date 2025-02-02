@@ -3,14 +3,19 @@ import { CSTInnerStepId } from '../../models/CST/CST';
 import FormGroup from '@mui/material/FormGroup/FormGroup';
 import Switch from '@mui/material/Switch/Switch';
 import { useState } from 'react';
+import { EditorActionType } from '../../models/EditorAction';
+import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
 
 interface CheckedSelectorProps {
   stepId: CSTInnerStepId;
   isChecked: boolean;
 }
 
-const CheckedSelector: React.FC<CheckedSelectorProps> = ({ isChecked }) => {
-  // const { dispatch } = useUnpublishedScriptContext();
+const CheckedSelector: React.FC<CheckedSelectorProps> = ({
+  stepId,
+  isChecked,
+}) => {
+  const { dispatch } = useUnpublishedScriptContext();
   const [checked, setChecked] = useState(isChecked ?? false);
 
   return (
@@ -22,6 +27,11 @@ const CheckedSelector: React.FC<CheckedSelectorProps> = ({ isChecked }) => {
             checked={checked}
             onChange={(event) => {
               setChecked(event.target.checked);
+              dispatch({
+                type: EditorActionType.EditIsChecked,
+                stepId,
+                isChecked: event.target.checked,
+              });
             }}
             size={'small'}
           />

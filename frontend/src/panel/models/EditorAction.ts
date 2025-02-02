@@ -1,6 +1,7 @@
 import InterfaceElement from './InterfaceElement';
 import {
   CSTEndStepId,
+  CSTInnerStepId,
   CSTInnerStepNode,
   CSTSection,
   CSTSectionId,
@@ -17,6 +18,7 @@ enum EditorActionType {
   AddStep = 'addStep',
   EditStepElement = 'editStepElement',
   EditInputStepDescription = 'editInputStepDescription',
+  EditIsChecked = 'editIsChecked',
   DeleteStep = 'deleteStep',
   RearrangeInnerSteps = 'rearrangeInnerSteps',
   EditUserDecisionQuestion = 'editUserDecisionQuestion',
@@ -35,7 +37,8 @@ type EditorAction =
   | AddSectionAction
   | DeleteSectionAction
   | EditStepElementAction
-  | EditInputStepDescription
+  | EditInputStepDescriptionAction
+  | EditIsCheckedAction
   | AddStepAction
   | DeleteStepAction
   | RearrangeInnerStepsAction
@@ -76,11 +79,17 @@ interface EditStepElementAction extends BaseEditorAction {
   oldUrl: string;
 }
 
-interface EditInputStepDescription extends BaseEditorAction {
+interface EditInputStepDescriptionAction extends BaseEditorAction {
   type: EditorActionType.EditInputStepDescription;
-  stepId: CSTStepNode['id'];
+  stepId: CSTInnerStepId;
   description: string;
   isExact: boolean;
+}
+
+interface EditIsCheckedAction extends BaseEditorAction {
+  type: EditorActionType.EditIsChecked;
+  stepId: CSTInnerStepId;
+  isChecked: boolean;
 }
 
 interface AddStepAction extends BaseEditorAction {
@@ -127,7 +136,8 @@ export type {
   DeleteSectionAction,
   AddStepAction,
   EditStepElementAction,
-  EditInputStepDescription,
+  EditInputStepDescriptionAction,
+  EditIsCheckedAction,
   DeleteStepAction,
   RearrangeInnerStepsAction,
   EditUserDecisionQuestion,
