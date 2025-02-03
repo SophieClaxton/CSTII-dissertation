@@ -8,6 +8,11 @@ interface InterfaceElement {
   label?: string;
 }
 
+interface Option {
+  value: string;
+  text: string;
+}
+
 const defaultSelectableTags = [
   'IMG',
   'P',
@@ -138,7 +143,7 @@ const mapStepNodeToValidTags: Record<CSTElementNode['type'], ValidTag[]> = {
 };
 
 export default InterfaceElement;
-export type { SelectableTag, ValidTag };
+export type { Option, SelectableTag, ValidTag };
 export {
   isSelectableTag,
   defaultSelectableTags,

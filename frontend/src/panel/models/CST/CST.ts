@@ -1,4 +1,4 @@
-import InterfaceElement from '../InterfaceElement';
+import InterfaceElement, { Option } from '../InterfaceElement';
 
 interface CSTProgram {
   sections: CSTSectionNode[];
@@ -156,7 +156,7 @@ interface CSTWriteNode extends CSTInputBase {
 
 interface CSTSelectNode extends CSTInputBase {
   type: CSTStepNodeType.Select;
-  option?: string;
+  option?: Option;
 }
 
 interface CSTCheckNode extends CSTInputBase {

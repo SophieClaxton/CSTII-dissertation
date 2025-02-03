@@ -12,6 +12,7 @@ import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds
 import InputDescription from '../InputDescription';
 import { EditorActionType } from '../../../models/EditorAction';
 import CheckedSelector from '../CheckedSelector';
+import OptionSelector from '../OptionSelector';
 
 interface InnerStepNodeProps {
   step: CSTInnerStepNode;
@@ -79,6 +80,17 @@ const mapStepToExtraInputs = (
     case CSTStepNodeType.Check:
       return <CheckedSelector stepId={step.id} isChecked={step.isChecked} />;
     case CSTStepNodeType.Select:
+      return (
+        <>
+          {step.element && (
+            <OptionSelector
+              stepId={step.id}
+              element={step.element}
+              option={step.option}
+            />
+          )}
+        </>
+      );
     case CSTStepNodeType.Drag:
     case CSTStepNodeType.Draw:
     case CSTStepNodeType.Follow:

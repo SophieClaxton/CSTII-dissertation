@@ -91,8 +91,6 @@ const addInputDescriptionToInput = (
   switch (step.type) {
     case CSTStepNodeType.Write:
       return { ...step, text: maybeDescription, isExact };
-    case CSTStepNodeType.Select:
-      return { ...step, option: maybeDescription };
     case CSTStepNodeType.Draw:
       return { ...step, description: maybeDescription };
     default:

@@ -26,7 +26,7 @@ const addClickedElementListener = (
           throw Error('Received an invalid element tag or invalid stepId');
         }
         const receivedElement = message.element;
-        // console.log(receivedElement);
+        console.log(receivedElement);
         dispatch({
           type: EditorActionType.EditStepElement,
           stepId: stepId,

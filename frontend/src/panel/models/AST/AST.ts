@@ -1,4 +1,4 @@
-import InterfaceElement from '../InterfaceElement';
+import InterfaceElement, { Option } from '../InterfaceElement';
 
 interface ASTProgram {
   start: ASTSectionNode;
@@ -90,7 +90,7 @@ interface ASTWriteNode extends ASTStepBase {
 
 interface ASTSelectNode extends ASTStepBase {
   type: ASTNodeType.Select;
-  option: string;
+  option: Option;
   description?: string;
 }
 
