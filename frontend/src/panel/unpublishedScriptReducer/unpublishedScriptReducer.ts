@@ -4,6 +4,7 @@ import { addSection, deleteSection } from './sectionActions';
 import {
   editInputStepInputDescription,
   editIsChecked,
+  editSelectedOption,
   rearrangeInnerSteps,
 } from './innerStepActions';
 import { CSTProgram } from '../models/CST/CST';
@@ -57,6 +58,8 @@ const unpublishedScriptReducer = (
       return editProgram(action, editInputStepInputDescription);
     case EditorActionType.EditIsChecked:
       return editProgram(action, editIsChecked);
+    case EditorActionType.EditSelectedOption:
+      return editProgram(action, editSelectedOption);
     case EditorActionType.DeleteStep:
       return editProgram(action, deleteStep);
     case EditorActionType.RearrangeInnerSteps:

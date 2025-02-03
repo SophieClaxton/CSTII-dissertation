@@ -7,17 +7,13 @@ import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChec
 import Page from '../../components/Page';
 import Stack from '@mui/material/Stack/Stack';
 import { useAPICall } from '../../api/apiHooks';
-import { useCallback } from 'react';
 
 const UserScriptSelectionPage = () => {
   const { currentScreen } = useNavigationContext();
   assertIsWebsiteScriptSelectorScreen(currentScreen);
 
-  const websiteData = useAPICall(
-    useCallback(
-      () => getWebsite(currentScreen.params.websiteId),
-      [currentScreen],
-    ),
+  const websiteData = useAPICall(() =>
+    getWebsite(currentScreen.params.websiteId),
   );
 
   return (

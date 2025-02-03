@@ -8,6 +8,7 @@ import { isSection } from '../models/CST/testers';
 import {
   EditInputStepDescriptionAction,
   EditIsCheckedAction,
+  EditSelectedOptionAction,
   RearrangeInnerStepsAction,
 } from '../models/EditorAction';
 import InterfaceElement from '../models/InterfaceElement';
@@ -141,6 +142,28 @@ const editIsChecked = (program: CSTProgram, action: EditIsCheckedAction) => {
   );
 };
 
+const editSelectedOption = (
+  program: CSTProgram,
+  action: EditSelectedOptionAction,
+) => {
+  const { stepId, option } = action;
+  const section = getSection(stepId.parentId, program);
+  if (!section) {
+    return program;
+  }
+  return updateProgramSections(
+    program,
+    section.id,
+    updateSectionInnerSteps(
+      section.innerSteps.map((step) =>
+        mapIdToString(step.id) === mapIdToString(stepId)
+          ? { ...step, option }
+          : step,
+      ),
+    ),
+  );
+};
+
 const deleteInnerStep = (
   program: CSTProgram,
   stepId: CSTInnerStepId,
@@ -165,6 +188,7 @@ export {
   editInnerStepElement,
   editInputStepInputDescription,
   editIsChecked,
+  editSelectedOption,
   addInputDescriptionToInput,
   rearrangeInnerSteps,
   deleteInnerStep,

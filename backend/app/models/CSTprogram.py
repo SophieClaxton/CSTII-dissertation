@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
-from .element import Element
+from .element import Element, Option
 
 
 class CSTProgram(BaseModel):
@@ -149,6 +149,7 @@ class CSTSelectNode(CSTInputBase):
     model_config = ConfigDict(use_enum_values=True)
 
     type: Literal[CSTStepNodeType.Select]
+    option: Option | None = None
 
 
 class CSTCheckNode(CSTInputBase):

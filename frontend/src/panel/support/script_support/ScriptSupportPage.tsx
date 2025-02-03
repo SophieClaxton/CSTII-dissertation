@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { sendEndSupportMessage } from '../../../common/sendMessage';
 import { useAPICall } from '../../api/apiHooks';
 import { getScript } from '../../api/scripts';
@@ -17,12 +16,7 @@ const ScriptSupportPage = () => {
 
   const { tab } = useTabContext();
 
-  const scriptData = useAPICall(
-    useCallback(
-      () => getScript(currentScreen.params.scriptId),
-      [currentScreen],
-    ),
-  );
+  const scriptData = useAPICall(() => getScript(currentScreen.params.scriptId));
 
   return (
     <Page title={'Get Support'} onBack={() => sendEndSupportMessage(tab.id)}>

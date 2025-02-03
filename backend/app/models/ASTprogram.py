@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Literal
 from pydantic import BaseModel, ConfigDict
 
-from .element import Element
+from .element import Element, Option
 
 
 class ASTProgram(BaseModel):
@@ -93,6 +93,7 @@ class ASTWriteNode(ASTStepBase):
 
     type: Literal[ASTNodeType.Write]
     text: str
+    isExact: bool
     description: str | None = None
 
 
@@ -100,7 +101,7 @@ class ASTSelectNode(ASTStepBase):
     model_config = ConfigDict(use_enum_values=True)
 
     type: Literal[ASTNodeType.Select]
-    option: str
+    option: Option
     description: str | None = None
 
 

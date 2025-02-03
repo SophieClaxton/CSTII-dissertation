@@ -3,13 +3,21 @@ import InterfaceElement, { Option } from '../../models/InterfaceElement';
 import { useState } from 'react';
 import MenuItem from '@mui/material/MenuItem/MenuItem';
 import { CSTSelectNode } from '../../models/CST/CST';
+import { useUnpublishedScriptContext } from '../../contexts/contextHooks';
+import { EditorActionType } from '../../models/EditorAction';
 
 interface OptionSelectorProps {
   stepId: CSTSelectNode['id'];
   element: InterfaceElement;
   option: Option | undefined;
 }
-const OptionSelector: React.FC<OptionSelectorProps> = ({ element, option }) => {
+const OptionSelector: React.FC<OptionSelectorProps> = ({
+  stepId,
+  element,
+  option,
+}) => {
+  const { dispatch } = useUnpublishedScriptContext();
+
   const options: Option[] = getOptionsFromOuterHTML(element.outerHTML);
   if (options.length === 0) {
     throw Error('Could not get options');
@@ -29,6 +37,11 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({ element, option }) => {
         );
         if (selected) {
           setSelectedOption(selected);
+          dispatch({
+            type: EditorActionType.EditSelectedOption,
+            stepId,
+            option: selected,
+          });
         }
       }}
       SelectDisplayProps={{

@@ -7,3 +7,8 @@ class Element(BaseModel):
     tag: str
     textContent: str | None = None
     label: str | None = None
+
+
+class Option(BaseModel):
+    value: str
+    text: str
