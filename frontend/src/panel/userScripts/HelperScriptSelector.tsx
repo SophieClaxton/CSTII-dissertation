@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigationContext } from '../contexts/contextHooks';
 import { UserWithScripts } from '../models/API/User';
 import { getUser } from '../api/users';
@@ -18,13 +18,15 @@ import { useAPICall } from '../api/apiHooks';
 const HelperScriptSelector = () => {
   const { goTo } = useNavigationContext();
   const [userId, setUserId] = useState<number | undefined>(undefined);
-  const userData = useAPICall((): Promise<APIResponse<UserWithScripts>> => {
-    if (!userId) {
-      return Promise.resolve({ status: 'Loading' });
-    } else {
-      return getUser(userId);
-    }
-  });
+  const userData = useAPICall(
+    useCallback((): Promise<APIResponse<UserWithScripts>> => {
+      if (!userId) {
+        return Promise.resolve({ status: 'Loading' });
+      } else {
+        return getUser(userId);
+      }
+    }, [userId]),
+  );
   const [openCreateUserDialog, setOpenCreateUserDialog] = useState(false);
 
   useEffect(() => {
