@@ -6,3 +6,4 @@ class Element(BaseModel):
     url: str
     tag: str
     textContent: str | None = None
+    label: str | None = None
