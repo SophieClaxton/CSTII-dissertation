@@ -2,21 +2,14 @@ import Select from '@mui/material/Select/Select';
 import InterfaceElement, { Option } from '../../models/InterfaceElement';
 import { useState } from 'react';
 import MenuItem from '@mui/material/MenuItem/MenuItem';
-import FormControl from '@mui/material/FormControl/FormControl';
-import InputLabel from '@mui/material/InputLabel/InputLabel';
 import { CSTSelectNode } from '../../models/CST/CST';
-import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 
 interface OptionSelectorProps {
   stepId: CSTSelectNode['id'];
   element: InterfaceElement;
   option: Option | undefined;
 }
-const OptionSelector: React.FC<OptionSelectorProps> = ({
-  stepId,
-  element,
-  option,
-}) => {
+const OptionSelector: React.FC<OptionSelectorProps> = ({ element, option }) => {
   const options: Option[] = getOptionsFromOuterHTML(element.outerHTML);
   if (options.length === 0) {
     throw Error('Could not get options');
@@ -26,29 +19,26 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
   );
 
   return (
-    <FormControl sx={{ margin: '0 5% 0 5%' }}>
-      <InputLabel id={`${mapIdToString(stepId)}-selet-option`}>
-        Selected Option
-      </InputLabel>
-      <Select
-        labelId={`${mapIdToString(stepId)}-selet-option`}
-        size={'small'}
-        value={selectedOption.value}
-        label={'Selected option'}
-        onChange={(event) => {
-          const [selected] = options.filter(
-            (option) => option.value === event.target.value,
-          );
-          if (selected) {
-            setSelectedOption(selected);
-          }
-        }}
-      >
-        {options.map((option) => (
-          <MenuItem value={option.value}>{option.text}</MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Select
+      sx={{ margin: '0 5% 0 5%', backgroundColor: 'white' }}
+      size={'small'}
+      value={selectedOption.value}
+      onChange={(event) => {
+        const [selected] = options.filter(
+          (option) => option.value === event.target.value,
+        );
+        if (selected) {
+          setSelectedOption(selected);
+        }
+      }}
+      SelectDisplayProps={{
+        style: { padding: '0.25rem 0.5rem', textAlign: 'left' },
+      }}
+    >
+      {options.map((option) => (
+        <MenuItem value={option.value}>{option.text}</MenuItem>
+      ))}
+    </Select>
   );
 };
 
