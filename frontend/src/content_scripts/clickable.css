@@ -1,19 +1,20 @@
-.clickable {
+.MIBE-clickable {
   /* background-color: rgba(173, 216, 230, 0.1) !important; */
   outline: 2px solid lightseagreen !important;
   box-shadow: 0 0 8px 2px !important;
+  opacity: 1 !important;
 }
 
-.clickable :hover {
+.MIBE-clickable :hover {
   outline: 4px solid lightseagreen !important;
   cursor: pointer !important;
+  opacity: 1 !important;
 }
 
 .MIBE-focussed-on {
-  z-index: 1000 !important;
-  /* box-shadow: 0 0 0px 1000000000px rgba(0, 0, 0, 0.50) !important; */
+  /* z-index: 1000 !important; */
   outline: 4px solid rgb(225, 0, 255) !important;
   outline-offset: 8px !important;
   scroll-margin-top: 8rem;
-
+  opacity: 1 !important;
 }

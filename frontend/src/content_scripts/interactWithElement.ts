@@ -8,6 +8,7 @@ import {
   findFirstElement,
   getCorrespondingLabel,
 } from './elementUtils';
+import { clickableClass } from './consts';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;
@@ -25,15 +26,13 @@ const onUserClickElement = (
   element: Element,
   updateClassList: () => void,
 ) => {
-  console.log(`Clicked ${element.tagName}`);
-  console.log(editingState);
   if (
     editingState.isClickable &&
     isSelectableTag(element.tagName) &&
     elementSatisfiesValidTags(element, editingState.validTags)
   ) {
     console.log(`Clicked ${element.tagName} element: ${element.textContent}`);
-    element.classList.remove('clickable');
+    element.classList.remove(clickableClass);
     const message: UserClickedElementMessage = {
       type: 'user_clicked_element',
       element: {

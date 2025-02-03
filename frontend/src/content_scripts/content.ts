@@ -5,7 +5,7 @@ import {
   mapStepNodeToValidTags,
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
-import { defaultLevelOfSupport } from './consts';
+import { clickableClass, defaultLevelOfSupport } from './consts';
 import { elementSatisfiesValidTags } from './elementUtils';
 import { onSetFocus, onUnsetFocus } from './focusElement';
 import { onUserClickElement } from './interactWithElement';
@@ -118,16 +118,15 @@ const updateClassList = () => {
         isSelectableTag(element.tagName) &&
         elementSatisfiesValidTags(element, editingState.validTags)
       ) {
-        element.classList.add('clickable');
+        element.classList.add(clickableClass);
       } else {
-        element.classList.remove('clickable');
+        element.classList.remove(clickableClass);
       }
     }
   });
 };
 
 const addClickListeners = () => {
-  console.log('adding click listeners');
   allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
     for (const element of elements) {
@@ -150,7 +149,6 @@ updateClassList();
 addClickListeners();
 
 const domObserver = new MutationObserver(() => {
-  console.log('DOM Changed');
   addClickListeners();
 });
 domObserver.observe(document, { childList: true, subtree: true });
