@@ -1,7 +1,7 @@
 from __future__ import annotations
 from enum import Enum
-from typing import Literal
-from pydantic import BaseModel, ConfigDict
+from typing import Annotated, Literal, Union
+from pydantic import BaseModel, ConfigDict, Field
 
 from .element import Element, Option
 
@@ -120,9 +120,6 @@ class ASTDrawNode(ASTStepBase):
     description: str
 
 
-ASTInputNode = ASTWriteNode | ASTSelectNode | ASTCheckNode | ASTDrawNode
-
-
 class ASTUserDecisionNode(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
 
@@ -132,13 +129,19 @@ class ASTUserDecisionNode(BaseModel):
     choice2: ASTSubsectionNode
 
 
-ASTStepNode = (
-    ASTEndNode
-    | ASTFollowNode
-    | ASTClickNode
-    | ASTReadNode
-    | ASTScrollToNode
-    | ASTDragNode
-    | ASTInputNode
-    | ASTUserDecisionNode
-)
+ASTStepNode = Annotated[
+    Union[
+        ASTEndNode,
+        ASTFollowNode,
+        ASTClickNode,
+        ASTReadNode,
+        ASTScrollToNode,
+        ASTDragNode,
+        ASTWriteNode,
+        ASTSelectNode,
+        ASTCheckNode,
+        ASTDrawNode,
+        ASTUserDecisionNode,
+    ],
+    Field(discriminator="type"),
+]

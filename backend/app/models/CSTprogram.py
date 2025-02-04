@@ -1,7 +1,7 @@
 from __future__ import annotations
 from enum import Enum
-from typing import Literal
-from pydantic import BaseModel, ConfigDict
+from typing import Annotated, Literal, Union
+from pydantic import BaseModel, ConfigDict, Field
 
 from .element import Element, Option
 
@@ -27,14 +27,6 @@ class CSTInnerStepId(BaseModel):
 class CSTEndStepId(BaseModel):
     parentId: CSTSectionId | CSTSubsectionId
     stepId: Literal["E"]
-
-
-CSTNodeId = CSTSectionId | CSTSubsectionId | CSTInnerStepId | CSTEndStepId
-CSTSectionNodeId = CSTSectionId | CSTSubsectionId
-
-
-# class CSTNodeBase(BaseModel):
-#     id: CSTNodeId
 
 
 class CSTSectionBase(BaseModel):
@@ -165,18 +157,21 @@ class CSTDrawNode(CSTInputBase):
     type: Literal[CSTStepNodeType.Draw]
 
 
-CSTInputNode = CSTWriteNode | CSTSelectNode | CSTCheckNode | CSTDrawNode
+CSTInnerStepNode = Annotated[
+    Union[
+        CSTClickNode,
+        CSTReadNode,
+        CSTScrollToNode,
+        CSTDragNode,
+        CSTUserDecisionInnerStepNode,
+        CSTWriteNode,
+        CSTSelectNode,
+        CSTCheckNode,
+        CSTDrawNode,
+    ],
+    Field(discriminator="type"),
+]
 
-CSTInnerStepNode = (
-    CSTClickNode
-    | CSTReadNode
-    | CSTScrollToNode
-    | CSTDragNode
-    | CSTUserDecisionInnerStepNode
-    | CSTInputNode
-)
-CSTEndStepNode = CSTFollowNode | CSTUserDecisionEndStepNode
-
-CSTStepNode = CSTInnerStepNode | CSTEndStepNode
-
-CSTNode = CSTSectionNode | CSTSubsectionNode | CSTInnerStepNode | CSTEndStepNode
+CSTEndStepNode = Annotated[
+    Union[CSTFollowNode, CSTUserDecisionEndStepNode], Field(discriminator="type")
+]
