@@ -13,16 +13,14 @@ const setCurrentTab = async (
   if (!tab) {
     throw Error('Could not get active tabs');
   }
-
-  setTab({
-    status: tab.status
-      ? 'loading'
-      : (tab.status as 'unloaded' | 'loading' | 'complete'),
+  const newTab: TabInfo = {
+    status: 'complete',
     url: tab.url ?? '',
     windowId: tab.windowId,
     id: tab.id!,
     scriptStatus: csLoaded ? 'loaded' : 'loading',
-  });
+  };
+  setTab(newTab);
 };
 
 const setTabListeners = (setTab: StateSetter<TabInfo | undefined>) => {

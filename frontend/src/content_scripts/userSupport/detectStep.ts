@@ -56,7 +56,7 @@ const detectStepOnScroll = (supportState: SupportState) => {
 };
 
 const detectStepOnClick = (element: Element, supportState: SupportState) => {
-  console.log(`Clicked element: ${element.textContent}`);
+  // console.log(`Clicked element: ${element.textContent}`);
   if (supportState.collectStruggleData) {
     const steps = [...supportState.nextPossibleSteps];
     steps.forEach((step) => {

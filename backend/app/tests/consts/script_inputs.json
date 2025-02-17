@@ -1,0 +1,111 @@
+{
+  "start": {
+    "type": "Section",
+    "start": {
+      "type": "Click",
+      "element": {
+        "outerHTML": "<button aria-label=\"Plan Your Journey\" class=\"styled__StyledToggleStationPreviewWrapper-sc-1wfsazs-7 gQXrHU\"></button>",
+        "url": "https://www.nationalrail.co.uk/",
+        "tag": "BUTTON",
+        "textContent": "",
+        "label": null
+      },
+      "next": {
+        "element": {
+          "outerHTML": "<input type=\"text\" id=\"jp-origin\" name=\"jp_origin\" placeholder=\"Station name or code\" autocomplete=\"off\" role=\"combobox\" aria-required=\"true\" aria-invalid=\"false\" aria-expanded=\"false\" aria-autocomplete=\"list\" class=\"styled__StyledInput-sc-1afmcqr-2 tyGQQ\" value=\"\" autofocus=\"\" aria-describedby=\"iconlabel-label-jp-origin-tooltip\">",
+          "url": "https://www.nationalrail.co.uk/",
+          "tag": "INPUT",
+          "textContent": "",
+          "label": "Departing from"
+        },
+        "description": null,
+        "text": "Cambridge",
+        "isExact": true,
+        "next": {
+          "element": {
+            "outerHTML": "<input type=\"text\" id=\"jp-destination\" name=\"jp_destination\" placeholder=\"Station name or code\" autocomplete=\"off\" role=\"combobox\" aria-required=\"true\" aria-invalid=\"false\" aria-expanded=\"false\" aria-autocomplete=\"list\" class=\"styled__StyledInput-sc-1afmcqr-2 tyGQQ\" value=\"\" aria-describedby=\"iconlabel-label-jp-destination-tooltip\">",
+            "url": "https://www.nationalrail.co.uk/",
+            "tag": "INPUT",
+            "textContent": "",
+            "label": "Going to"
+          },
+          "description": null,
+          "text": "London",
+          "isExact": true,
+          "next": {
+            "element": {
+              "outerHTML": "<select id=\"leaving-type\" name=\"leaving-type\" aria-invalid=\"false\" aria-required=\"true\" class=\"styled__StyledDropdownSelect-sc-3qzpuk-3 iUCXlf\"><option value=\"departing\">Departing after</option><option value=\"arriving\">Arriving by</option><option value=\"last\">Last train</option></select>",
+              "url": "https://www.nationalrail.co.uk/",
+              "tag": "SELECT",
+              "textContent": "Departing afterArriving byLast train",
+              "label": "Choose leaving departure option"
+            },
+            "description": null,
+            "option": {
+              "value": "arriving",
+              "text": "Arriving by"
+            },
+            "next": {
+              "element": {
+                "outerHTML": "<select id=\"leaving-hour\" name=\"leaving-hour\" aria-invalid=\"false\" aria-required=\"true\" class=\"styled__StyledDropdownSelect-sc-3qzpuk-3 iUCXlf\"><option value=\"00\">00</option><option value=\"01\">01</option><option value=\"02\">02</option><option value=\"03\">03</option><option value=\"04\">04</option><option value=\"05\">05</option><option value=\"06\">06</option><option value=\"07\">07</option><option value=\"08\">08</option><option value=\"09\">09</option><option value=\"10\">10</option><option value=\"11\">11</option><option value=\"12\">12</option><option value=\"13\">13</option><option value=\"14\">14</option><option value=\"15\">15</option><option value=\"16\">16</option><option value=\"17\">17</option><option value=\"18\">18</option><option value=\"19\">19</option><option value=\"20\">20</option><option value=\"21\">21</option><option value=\"22\">22</option><option value=\"23\">23</option></select>",
+                "url": "https://www.nationalrail.co.uk/",
+                "tag": "SELECT",
+                "textContent": "000102030405060708091011121314151617181920212223",
+                "label": "Choose leaving hour"
+              },
+              "description": null,
+              "option": {
+                "value": "20",
+                "text": "20"
+              },
+              "next": {
+                "type": "Click",
+                "element": {
+                  "outerHTML": "<button type=\"button\" id=\"collapsable-button-jp-options\" aria-controls=\"button-label-jp-options\" aria-expanded=\"false\" class=\"styled__CollapsableHeaderButton-sc-1vwhpcq-1 KiOBF\"><span id=\"button-label-jp-options\" class=\"styled__CollapsableHeader-sc-1vwhpcq-0 scBrx\">Journey options</span><span class=\"styled__StyledSvgWrapper-sc-1lwlbm7-0 eDrZuM\"><svg viewBox=\"0 0 32 32\" width=\"1em\" height=\"1em\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M15 5v10H5v2h10v10h2V17h10v-2H17V5z\"></path></svg></span></button>",
+                  "url": "https://www.nationalrail.co.uk/",
+                  "tag": "BUTTON",
+                  "textContent": "Journey options",
+                  "label": null
+                },
+                "next": {
+                  "element": {
+                    "outerHTML": "<input type=\"checkbox\" class=\"styled__StyledCheckboxInput-sc-11h6zls-2 cZPoGM\" value=\"direct_trains\">",
+                    "url": "https://www.nationalrail.co.uk/",
+                    "tag": "INPUT",
+                    "textContent": "",
+                    "label": "Fastest trains only"
+                  },
+                  "description": null,
+                  "isChecked": true,
+                  "next": {
+                    "type": "Follow",
+                    "element": {
+                      "outerHTML": "<button type=\"submit\" id=\"button-jp\" aria-label=\"Get times and prices\" class=\"styled__StyledButton-sc-1wd14xo-0 jYGlVG\"><span class=\"styled__StyledLabelsWrapper-sc-1wd14xo-3 lCqqF\"><span class=\"styled__StyledButtonLabel-sc-1wd14xo-1 bYgrNm\">Get times and prices</span></span><span class=\"styled__StyledSvgWrapper-sc-1lwlbm7-0 jJXqZQ\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 12 12\" aria-hidden=\"true\" fill=\"#1D1D1F\" preserveAspectRatio=\"xMidYMid meet\" width=\"100%\" height=\"100%\" x=\"0\" y=\"0\"><title id=\"jp-form-arrow-right\">ArrowRight Icon</title><path d=\"M7.1,0.8L7.1,0.8l4.7,4.7c0,0,0,0,0.1,0.1l-0.1-0.1c0,0,0.1,0.1,0.1,0.1c0,0,0,0,0,0 c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0.1c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0l0,0c0,0,0,0,0,0L12,6 c0,0,0,0.1,0,0.1c0,0,0,0,0,0c0,0,0,0,0,0.1c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0-0.1,0.1-0.1,0.1l0,0l-4.7,4.7 c-0.3,0.3-0.7,0.3-0.9,0c-0.2-0.2-0.3-0.6-0.1-0.9l0.1-0.1l3.5-3.5l-9.1,0C0.3,6.7,0,6.4,0,6c0-0.3,0.3-0.6,0.6-0.7l0.1,0l9.1,0 L6.2,1.8C6,1.6,5.9,1.2,6.1,0.9l0.1-0.1C6.4,0.6,6.8,0.6,7.1,0.8z\"></path></svg></span></button>",
+                      "url": "https://www.nationalrail.co.uk/",
+                      "tag": "BUTTON",
+                      "textContent": "Get times and pricesArrowRight Icon",
+                      "label": null
+                    },
+                    "nextSection": {
+                      "type": "Section",
+                      "start": {
+                        "type": "End"
+                      },
+                      "url": "https://www.nationalrail.co.uk/journey-planner/?type=single&origin=CBG&destination=182&leavingType=arriving&leavingDate=030225&leavingHour=20&leavingMin=00&adults=1&directTrains=&extraTime=0#O"
+                    }
+                  },
+                  "type": "Check"
+                }
+              },
+              "type": "Select"
+            },
+            "type": "Select"
+          },
+          "type": "Write"
+        },
+        "type": "Write"
+      }
+    },
+    "url": "https://www.nationalrail.co.uk/"
+  }
+}

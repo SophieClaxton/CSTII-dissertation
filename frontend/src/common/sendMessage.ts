@@ -1,8 +1,6 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
-import { CSTNodeId } from '../panel/models/CST/CST';
-import InterfaceElement, {
-  SelectableTag,
-} from '../panel/models/InterfaceElement';
+import { CSTElementNode, CSTNodeId } from '../panel/models/CST/CST';
+import InterfaceElement from '../panel/models/InterfaceElement';
 import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 import { mapIdToString } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import {
@@ -17,13 +15,13 @@ import {
 const sendClickabilityMessage = async (
   tabId: number,
   stepId: CSTNodeId,
-  validTags: SelectableTag[],
+  stepType: CSTElementNode['type'],
   url: string,
 ) => {
   const message: SetClickableMessage = {
     type: 'set_clickable',
     stepId: mapIdToString(stepId),
-    validTags,
+    stepType,
     url,
   };
   chrome.tabs.sendMessage(tabId, message).catch((error) => console.log(error));

@@ -1,6 +1,7 @@
-import InterfaceElement from './InterfaceElement';
+import InterfaceElement, { Option } from './InterfaceElement';
 import {
   CSTEndStepId,
+  CSTInnerStepId,
   CSTInnerStepNode,
   CSTSection,
   CSTSectionId,
@@ -16,6 +17,9 @@ enum EditorActionType {
   DeleteSection = 'deleteSection',
   AddStep = 'addStep',
   EditStepElement = 'editStepElement',
+  EditInputStepDescription = 'editInputStepDescription',
+  EditIsChecked = 'editIsChecked',
+  EditSelectedOption = 'editSelectedOption',
   DeleteStep = 'deleteStep',
   RearrangeInnerSteps = 'rearrangeInnerSteps',
   EditUserDecisionQuestion = 'editUserDecisionQuestion',
@@ -34,6 +38,9 @@ type EditorAction =
   | AddSectionAction
   | DeleteSectionAction
   | EditStepElementAction
+  | EditInputStepDescriptionAction
+  | EditIsCheckedAction
+  | EditSelectedOptionAction
   | AddStepAction
   | DeleteStepAction
   | RearrangeInnerStepsAction
@@ -71,7 +78,25 @@ interface EditStepElementAction extends BaseEditorAction {
   type: EditorActionType.EditStepElement;
   stepId: CSTStepNode['id'];
   element: InterfaceElement | undefined;
-  oldUrl: string;
+}
+
+interface EditInputStepDescriptionAction extends BaseEditorAction {
+  type: EditorActionType.EditInputStepDescription;
+  stepId: CSTInnerStepId;
+  description: string;
+  isExact: boolean;
+}
+
+interface EditIsCheckedAction extends BaseEditorAction {
+  type: EditorActionType.EditIsChecked;
+  stepId: CSTInnerStepId;
+  isChecked: boolean;
+}
+
+interface EditSelectedOptionAction extends BaseEditorAction {
+  type: EditorActionType.EditSelectedOption;
+  stepId: CSTInnerStepId;
+  option: Option;
 }
 
 interface AddStepAction extends BaseEditorAction {
@@ -118,6 +143,9 @@ export type {
   DeleteSectionAction,
   AddStepAction,
   EditStepElementAction,
+  EditInputStepDescriptionAction,
+  EditIsCheckedAction,
+  EditSelectedOptionAction,
   DeleteStepAction,
   RearrangeInnerStepsAction,
   EditUserDecisionQuestion,

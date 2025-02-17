@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
 import './styles/program.css';
 import Button from '@mui/material/Button/Button';
@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack/Stack';
 import {
   useUnpublishedScriptContext,
   createTypeErrorsContext,
+  useTabContext,
 } from '../../contexts/contextHooks';
 import { TypeErrorsContext } from '../../contexts/TypeErrorsContext';
 import typeCheck, { TypeCheckError } from '../../models/CST/typeCheck';
@@ -21,9 +22,12 @@ import Typography from '@mui/material/Typography/Typography';
 import Input from '@mui/material/Input/Input';
 import { EditorActionType } from '../../models/EditorAction';
 import Box from '@mui/material/Box/Box';
+import { TabInfo } from '../../contexts/TabContext';
 
 const ScriptEditor: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
+  const { tab } = useTabContext();
+  const onTabUpdate = useRef<undefined | ((tab: TabInfo) => void)>(undefined);
   const createdAtDate = new Date(unpublishedScript.created_at);
   const dateString = createdAtDate.toLocaleDateString();
 
@@ -42,7 +46,13 @@ const ScriptEditor: React.FC = () => {
 
   const updateArrows = useXarrow();
 
-  useEffect(() => addClickedElementListener(dispatch), [dispatch]);
+  useEffect(() => addClickedElementListener(dispatch, onTabUpdate), [dispatch]);
+  useEffect(() => {
+    if (onTabUpdate.current && tab.status == 'complete') {
+      onTabUpdate.current(tab);
+      onTabUpdate.current = undefined;
+    }
+  }, [tab]);
 
   return (
     <>

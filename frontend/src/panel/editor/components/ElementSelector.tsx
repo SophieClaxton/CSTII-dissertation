@@ -1,8 +1,5 @@
 import Stack from '@mui/material/Stack/Stack';
-import {
-  mapStepNodeToValidTags,
-  mapTagToElementName,
-} from '../../models/InterfaceElement';
+import { mapTagToElementName } from '../../models/InterfaceElement';
 import {
   useTabContext,
   useUnpublishedScriptContext,
@@ -27,6 +24,7 @@ import {
 } from '../../../common/sendMessage';
 import Add from '@mui/icons-material/Add';
 import { isSection } from '../../models/CST/testers';
+import { urlsMatch } from '../scriptUtils/elementUtils';
 
 interface ElementSelectorProps {
   step: CSTElementNode;
@@ -40,6 +38,8 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
   const section = getSection(step.id.parentId, unpublishedScript.program);
   const sectionUrl = section && isSection(section) ? section.url : '';
 
+  const elementDescription = step.element?.label ?? step.element?.textContent;
+
   const text = step.element ? (
     <Stack
       sx={{ alignItems: 'flex-start', width: 'calc(16rem - 9% - 1.625rem)' }}
@@ -51,7 +51,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
       >
         {mapTagToElementName[step.element.tag]}
       </Typography>
-      {step.element.textContent && (
+      {elementDescription && (
         <Typography
           variant="body2"
           color="text.primary"
@@ -63,7 +63,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
             textAlign: 'left',
           }}
         >
-          {`"${step.element.textContent}"`}
+          {`"${elementDescription}"`}
         </Typography>
       )}
     </Stack>
@@ -94,26 +94,24 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
         }}
         onClick={() => {
           const editElement = async () => {
-            if (step.element || (sectionUrl != '' && tab.url != sectionUrl)) {
+            if (
+              step.element ||
+              (sectionUrl != '' && !urlsMatch(sectionUrl, tab.url))
+            ) {
               setOpenEditDialog(true);
             } else {
-              sendClickabilityMessage(
-                tab.id,
-                step.id,
-                mapStepNodeToValidTags[step.type],
-                tab.url,
-              );
+              sendClickabilityMessage(tab.id, step.id, step.type, tab.url);
             }
           };
           editElement();
         }}
         onMouseEnter={() => {
-          if (step.element) {
+          if (step.element && urlsMatch(tab.url, step.element.url)) {
             sendSetFocusMessage(tab.id, step.element);
           }
         }}
         onMouseLeave={() => {
-          if (step.element) {
+          if (step.element && urlsMatch(tab.url, step.element.url)) {
             sendUnsetFocusMessage(tab.id);
           }
         }}
@@ -123,7 +121,7 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
       </Button>
       <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
         <DialogTitle>Edit Element</DialogTitle>
-        {sectionUrl != '' && sectionUrl != tab.url && (
+        {sectionUrl != '' && !urlsMatch(sectionUrl, tab.url) && (
           <DialogContent>
             <DialogContentText>
               You are not on the correct website to select elements for this
@@ -137,14 +135,9 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
           {step.element && (
             <>
               <Button
-                disabled={sectionUrl != tab.url}
+                disabled={!urlsMatch(sectionUrl, tab.url)}
                 onClick={() => {
-                  sendClickabilityMessage(
-                    tab.id,
-                    step.id,
-                    mapStepNodeToValidTags[step.type],
-                    tab.url,
-                  );
+                  sendClickabilityMessage(tab.id, step.id, step.type, tab.url);
                   setOpenEditDialog(false);
                 }}
               >
@@ -156,7 +149,6 @@ const ElementSelector: React.FC<ElementSelectorProps> = ({ step }) => {
                     type: EditorActionType.EditStepElement,
                     stepId: step.id,
                     element: undefined,
-                    oldUrl: '',
                   });
                   setOpenEditDialog(false);
                 }}

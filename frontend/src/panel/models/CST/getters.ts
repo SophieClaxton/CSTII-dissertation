@@ -36,8 +36,21 @@ const getInnerStepNodeChoices = (
   },
   {
     id: getNextInnerStepId(section),
-    type: CSTStepNodeType.Drag,
+    type: CSTStepNodeType.Write,
   },
+  {
+    id: getNextInnerStepId(section),
+    type: CSTStepNodeType.Check,
+    isChecked: false,
+  },
+  {
+    id: getNextInnerStepId(section),
+    type: CSTStepNodeType.Select,
+  },
+  // {
+  //   id: getNextInnerStepId(section),
+  //   type: CSTStepNodeType.Drag,
+  // },
 ];
 
 const getEndStepNodeChoices = (

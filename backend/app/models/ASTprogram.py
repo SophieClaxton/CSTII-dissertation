@@ -1,9 +1,9 @@
 from __future__ import annotations
 from enum import Enum
-from typing import Literal
-from pydantic import BaseModel, ConfigDict
+from typing import Annotated, Literal, Union
+from pydantic import BaseModel, ConfigDict, Field
 
-from .element import Element
+from .element import Element, Option
 
 
 class ASTProgram(BaseModel):
@@ -93,6 +93,7 @@ class ASTWriteNode(ASTStepBase):
 
     type: Literal[ASTNodeType.Write]
     text: str
+    isExact: bool
     description: str | None = None
 
 
@@ -100,7 +101,7 @@ class ASTSelectNode(ASTStepBase):
     model_config = ConfigDict(use_enum_values=True)
 
     type: Literal[ASTNodeType.Select]
-    option: str
+    option: Option
     description: str | None = None
 
 
@@ -119,9 +120,6 @@ class ASTDrawNode(ASTStepBase):
     description: str
 
 
-ASTInputNode = ASTWriteNode | ASTSelectNode | ASTCheckNode | ASTDrawNode
-
-
 class ASTUserDecisionNode(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
 
@@ -131,13 +129,19 @@ class ASTUserDecisionNode(BaseModel):
     choice2: ASTSubsectionNode
 
 
-ASTStepNode = (
-    ASTEndNode
-    | ASTFollowNode
-    | ASTClickNode
-    | ASTReadNode
-    | ASTScrollToNode
-    | ASTDragNode
-    | ASTInputNode
-    | ASTUserDecisionNode
-)
+ASTStepNode = Annotated[
+    Union[
+        ASTEndNode,
+        ASTFollowNode,
+        ASTClickNode,
+        ASTReadNode,
+        ASTScrollToNode,
+        ASTDragNode,
+        ASTWriteNode,
+        ASTSelectNode,
+        ASTCheckNode,
+        ASTDrawNode,
+        ASTUserDecisionNode,
+    ],
+    Field(discriminator="type"),
+]

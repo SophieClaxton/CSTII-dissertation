@@ -3,7 +3,12 @@ import { EditingState } from './userSupport/state';
 import InterfaceElement, {
   isSelectableTag,
 } from '../panel/models/InterfaceElement';
-import { findFirstElement } from './elementUtils';
+import {
+  elementSatisfiesValidTags,
+  findFirstElement,
+  getCorrespondingLabel,
+} from './elementUtils';
+import { clickableClass } from './consts';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;
@@ -24,21 +29,23 @@ const onUserClickElement = (
   if (
     editingState.isClickable &&
     isSelectableTag(element.tagName) &&
-    editingState.validTags.includes(element.tagName)
+    elementSatisfiesValidTags(element, editingState.validTags)
   ) {
-    element.classList.remove('clickable');
+    console.log(`Clicked ${element.tagName} element: ${element.textContent}`);
+    element.classList.remove(clickableClass);
     const message: UserClickedElementMessage = {
       type: 'user_clicked_element',
-      elementOuterHtml: element.outerHTML,
-      elementTag: element.tagName,
-      elementTextContent: element.textContent,
+      element: {
+        outerHTML: element.outerHTML,
+        tag: element.tagName,
+        textContent: element.textContent ?? undefined,
+        url: editingState.url,
+        label: getCorrespondingLabel(element),
+      },
       stepId: editingState.stepId,
-      url: editingState.url,
-      newUrl: element.hasAttribute('href')
-        ? (element as HTMLLinkElement).href
-        : '',
     };
     chrome.runtime.sendMessage(message);
+    console.log('sent message');
     editingState.isClickable = !editingState.isClickable;
     updateClassList();
   }

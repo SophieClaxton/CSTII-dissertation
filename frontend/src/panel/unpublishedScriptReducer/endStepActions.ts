@@ -30,7 +30,6 @@ const editEndStepElement = (
   program: CSTProgram,
   endStepId: CSTEndStepId,
   element: InterfaceElement | undefined,
-  url: string,
 ): CSTProgram => {
   const section = getSection(endStepId.parentId, program);
   if (!section || !section.endStep) {
@@ -55,10 +54,12 @@ const editEndStepElement = (
     updateSectionEndStep(newEndStep),
   );
 
-  if (isSection(section) && section.url === '') {
+  if (isSection(section) && section.url === '' && element) {
     return {
       sections: newEditorProgram.sections.map((s) =>
-        mapIdToString(s.id) === mapIdToString(section.id) ? { ...s, url } : s,
+        mapIdToString(s.id) === mapIdToString(section.id)
+          ? { ...s, url: element.url }
+          : s,
       ),
     };
   }

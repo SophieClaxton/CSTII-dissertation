@@ -1,7 +1,6 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
-import InterfaceElement, {
-  SelectableTag,
-} from '../panel/models/InterfaceElement';
+import { CSTElementNode } from '../panel/models/CST/CST';
+import InterfaceElement from '../panel/models/InterfaceElement';
 import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 enum Port {
@@ -47,7 +46,7 @@ interface MessageBase {
 interface SetClickableMessage extends MessageBase {
   type: 'set_clickable';
   stepId: string;
-  validTags: SelectableTag[];
+  stepType: CSTElementNode['type'];
   url: string;
 }
 
@@ -86,12 +85,8 @@ interface CloseSidePanelMessage extends MessageBase {
 
 interface UserClickedElementMessage extends MessageBase {
   type: 'user_clicked_element';
-  elementOuterHtml: string;
-  elementTag: string;
-  elementTextContent: string | null;
+  element: InterfaceElement;
   stepId: string;
-  url: string;
-  newUrl: string;
 }
 
 interface UserStruggleData {

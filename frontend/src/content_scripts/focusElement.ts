@@ -4,12 +4,8 @@ import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { SupportState } from './userSupport/state';
 import InterfaceElement from '../panel/models/InterfaceElement';
-// elementFromId.scrollIntoView({
-//   behavior: 'smooth',
-//   block: 'center',
-//   inline: 'center',
-// });
 
+// IDEA: scroll any scrollable parent elements into view, and then scroll parents as necessary
 const scrollToElement = (
   element: Element,
   supportState: SupportState,
@@ -51,7 +47,6 @@ const onSetFocus = (
   ) => void = () => undefined,
 ): boolean => {
   const element = findFirstElement(msgElement);
-  console.log(element);
   if (element) {
     if (highlight) {
       element.classList.add(focusClass);

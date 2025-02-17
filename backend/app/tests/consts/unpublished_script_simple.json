@@ -1,0 +1,178 @@
+{
+  "title": "UK Worker Holiday Rights",
+  "description": "Find out what holiday rights workers in the UK have. Information is found on the UK Government's website.",
+  "program": {
+    "sections": [
+      {
+        "innerSteps": [
+          {
+            "element": {
+              "outerHTML": "<h1 class=\"homepage-header__title\">\n        <span class=\"govuk-!-margin-bottom-2 govuk-!-display-block\">GOV.UK</span>\n        <span class=\"govuk-visually-hidden\">-</span>\n        <span class=\"homepage-header__intro homepage-inverse-header__intro--bold\">The best place to find government services and information</span>\n      </h1>",
+              "url": "https://www.gov.uk/",
+              "tag": "H1",
+              "textContent": "\n        GOV.UK\n        -\n        The best place to find government services and information\n      ",
+              "label": null
+            },
+            "id": {
+              "parentId": {
+                "sectionId": 1
+              },
+              "stepId": 1
+            },
+            "type": "Scroll To"
+          },
+          {
+            "element": {
+              "outerHTML": "<h2 class=\"gem-c-heading__text govuk-heading-l\">\n    Government activity\n</h2>",
+              "url": "https://www.gov.uk/",
+              "tag": "H2",
+              "textContent": "\n    Government activity\n",
+              "label": null
+            },
+            "id": {
+              "parentId": {
+                "sectionId": 1
+              },
+              "stepId": 2
+            },
+            "type": "Scroll To"
+          }
+        ],
+        "endStep": {
+          "element": {
+            "outerHTML": "<a class=\"govuk-link gem-c-cards__link gem-c-force-print-link-styles\" data-ga4-link=\"{&quot;event_name&quot;:&quot;navigation&quot;,&quot;type&quot;:&quot;homepage&quot;,&quot;index_link&quot;:3,&quot;index_section&quot;:5,&quot;index_section_count&quot;:6,&quot;index_total&quot;:6,&quot;section&quot;:&quot;Government activity&quot;}\" href=\"/search/guidance-and-regulation\">Guidance and regulation</a>",
+            "url": "https://www.gov.uk/",
+            "tag": "A",
+            "textContent": "Guidance and regulation",
+            "label": null
+          },
+          "id": {
+            "parentId": {
+              "sectionId": 1
+            },
+            "stepId": "E"
+          },
+          "type": "Follow",
+          "nextSectionId": {
+            "sectionId": 2
+          }
+        },
+        "id": {
+          "sectionId": 1
+        },
+        "url": "https://www.gov.uk/"
+      },
+      {
+        "innerSteps": [],
+        "endStep": {
+          "element": {
+            "outerHTML": "<a data-ga4-ecommerce-path=\"/bank-holidays\" data-ga4-ecommerce-content-id=\"58f79dbd-e57f-4ab2-ae96-96df5767d1b2\" data-ga4-ecommerce-row=\"1\" data-ga4-ecommerce-index=\"3\" class=\"govuk-link gem-c-force-print-link-styles govuk-link--no-underline\" href=\"/bank-holidays\">UK bank holidays</a>",
+            "url": "https://www.gov.uk/search/guidance-and-regulation",
+            "tag": "A",
+            "textContent": "UK bank holidays",
+            "label": null
+          },
+          "id": {
+            "parentId": {
+              "sectionId": 2
+            },
+            "stepId": "E"
+          },
+          "type": "Follow",
+          "nextSectionId": {
+            "sectionId": 3
+          }
+        },
+        "id": {
+          "sectionId": 2
+        },
+        "url": "https://www.gov.uk/search/guidance-and-regulation"
+      },
+      {
+        "innerSteps": [
+          {
+            "element": {
+              "outerHTML": "<p class=\"govuk-body\">Your employer does not have to give you <a href=\"/holiday-entitlement-rights\" title=\"Holiday entitlement rights\" class=\"govuk-link\">paid leave on bank or public holidays</a>.</p>",
+              "url": "https://www.gov.uk/bank-holidays",
+              "tag": "P",
+              "textContent": "Your employer does not have to give you paid leave on bank or public holidays.",
+              "label": null
+            },
+            "id": {
+              "parentId": {
+                "sectionId": 3
+              },
+              "stepId": 1
+            },
+            "type": "Scroll To"
+          }
+        ],
+        "endStep": {
+          "element": {
+            "outerHTML": "<a href=\"/holiday-entitlement-rights\" title=\"Holiday entitlement rights\" class=\"govuk-link\">paid leave on bank or public holidays</a>",
+            "url": "https://www.gov.uk/bank-holidays",
+            "tag": "A",
+            "textContent": "paid leave on bank or public holidays",
+            "label": null
+          },
+          "id": {
+            "parentId": {
+              "sectionId": 3
+            },
+            "stepId": "E"
+          },
+          "type": "Follow",
+          "nextSectionId": {
+            "sectionId": 4
+          }
+        },
+        "id": {
+          "sectionId": 3
+        },
+        "url": "https://www.gov.uk/bank-holidays"
+      },
+      {
+        "innerSteps": [
+          {
+            "element": {
+              "outerHTML": "<h1 class=\"gem-c-heading__text govuk-heading-l\">\n    Entitlement\n</h1>",
+              "url": "https://www.gov.uk/holiday-entitlement-rights",
+              "tag": "H1",
+              "textContent": "\n    Entitlement\n",
+              "label": null
+            },
+            "id": {
+              "parentId": {
+                "sectionId": 4
+              },
+              "stepId": 1
+            },
+            "type": "Scroll To"
+          },
+          {
+            "element": {
+              "outerHTML": "<h2 id=\"statutory-annual-leave-entitlement\" class=\"\">Statutory annual leave entitlement</h2>",
+              "url": "https://www.gov.uk/holiday-entitlement-rights",
+              "tag": "H2",
+              "textContent": "Statutory annual leave entitlement",
+              "label": null
+            },
+            "id": {
+              "parentId": {
+                "sectionId": 4
+              },
+              "stepId": 2
+            },
+            "type": "Scroll To"
+          }
+        ],
+        "endStep": null,
+        "id": {
+          "sectionId": 4
+        },
+        "url": "https://www.gov.uk/holiday-entitlement-rights"
+      }
+    ]
+  },
+  "published_script_id": 1
+}

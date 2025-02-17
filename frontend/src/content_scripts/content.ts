@@ -2,9 +2,11 @@ import { PanelMessage, LoadedMessage } from '../common/message';
 import {
   allSelectableTags,
   isSelectableTag,
+  mapStepNodeToValidTags,
 } from '../panel/models/InterfaceElement';
 import './clickable.css';
-import { defaultLevelOfSupport } from './consts';
+import { clickableClass, defaultLevelOfSupport } from './consts';
+import { elementSatisfiesValidTags } from './elementUtils';
 import { onSetFocus, onUnsetFocus } from './focusElement';
 import { onUserClickElement } from './interactWithElement';
 import {
@@ -52,7 +54,13 @@ const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: PanelMessage) => {
     switch (message.type) {
       case 'set_clickable': {
-        editingState = { isClickable: true, ...message };
+        const { stepId, stepType, url } = message;
+        editingState = {
+          isClickable: true,
+          stepId,
+          url,
+          validTags: mapStepNodeToValidTags[stepType],
+        };
         updateClassList();
         break;
       }
@@ -84,36 +92,6 @@ const setupMessageListener = () => {
   });
 };
 
-const updateClassList = () => {
-  allSelectableTags.forEach((tag) => {
-    const elements = document.getElementsByTagName(tag);
-    for (const element of elements) {
-      if (
-        editingState.isClickable &&
-        isSelectableTag(element.tagName) &&
-        editingState.validTags.includes(element.tagName)
-      ) {
-        element.classList.add('clickable');
-      } else {
-        element.classList.remove('clickable');
-      }
-    }
-  });
-};
-
-const addClickListeners = () => {
-  console.log('adding click listeners');
-  allSelectableTags.forEach((tag) => {
-    const elements = document.getElementsByTagName(tag);
-    for (const element of elements) {
-      element.addEventListener('click', () => {
-        onUserClickElement(editingState, element, updateClassList);
-        detectStepOnClick(element, supportState);
-      });
-    }
-  });
-};
-
 document.onmousemove = collectUserStruggleDataOnMouseMove(supportState);
 document.onmousedown = collectUserStruggleDataOnMouseDown(supportState);
 
@@ -129,9 +107,48 @@ document.onscroll = () => {
   }
 };
 
+const elementsWithClickListeners = new WeakSet();
+
+const updateClassList = () => {
+  allSelectableTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (const element of elements) {
+      if (
+        editingState.isClickable &&
+        isSelectableTag(element.tagName) &&
+        elementSatisfiesValidTags(element, editingState.validTags)
+      ) {
+        element.classList.add(clickableClass);
+      } else {
+        element.classList.remove(clickableClass);
+      }
+    }
+  });
+};
+
+const addClickListeners = () => {
+  allSelectableTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (const element of elements) {
+      if (!elementsWithClickListeners.has(element)) {
+        element.addEventListener('click', () => {
+          onUserClickElement(editingState, element, updateClassList);
+          detectStepOnClick(element, supportState);
+        });
+        elementsWithClickListeners.add(element);
+      }
+    }
+  });
+};
+
 setupMessageListener();
 const loadedMessage: LoadedMessage = { type: 'loaded' };
 chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
 
 updateClassList();
 addClickListeners();
+
+const domObserver = new MutationObserver(() => {
+  addClickListeners();
+});
+domObserver.observe(document, { childList: true, subtree: true });
