@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { SupportDialogProps } from './components/SupportDialog';
-import { LevelOfSupport } from './userStruggleSupport/userSupportMII';
 import {
   addStepCompletedListener,
   addUserStruggleDataListener,
@@ -21,6 +20,7 @@ import { ASTProgram } from '../../models/AST/AST';
 import { performBestSystemAction } from './userStruggleSupport/supportAction';
 import { TabInfo } from '../../contexts/TabContext';
 import { StateRef, StateSetter } from '../../models/utilTypes';
+import { LevelOfSupport } from '../../models/UserSupport';
 
 const useScriptSupport = (program: ASTProgram) => {
   const { tab } = useTabContext();

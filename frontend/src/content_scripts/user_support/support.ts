@@ -5,7 +5,7 @@ import { defaultLevelOfSupport } from '../consts';
 import { setFocus } from '../elements/focusOnElement';
 import { listenForInputChange, preDetectInputStep } from './detectStep';
 import { SupportState } from './state';
-import { LevelOfSupport } from '../../panel/support_interface/script_support/userStruggleSupport/userSupportMII';
+import { LevelOfSupport } from '../../panel/models/UserSupport';
 import { mapStepToSystemAction, onScrollStepComplete } from './doStep';
 
 const sendUserStruggleData = (supportState: SupportState) => {

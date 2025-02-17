@@ -1,7 +1,7 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { CSTElementNode } from '../panel/models/CST/CST';
 import InterfaceElement from '../panel/models/interface_element/InterfaceElement';
-import { LevelOfSupport } from '../panel/support_interface/script_support/userStruggleSupport/userSupportMII';
+import { LevelOfSupport } from '../panel/models/UserSupport';
 
 enum Port {
   SidePanel = 'sidePanel',

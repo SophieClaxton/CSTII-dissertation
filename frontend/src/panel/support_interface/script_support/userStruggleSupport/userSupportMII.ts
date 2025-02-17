@@ -1,29 +1,27 @@
 import { UserStruggleData } from '../../../../messaging/message';
-import { getActionMaximisingExpectedUtility } from '../mixedInitiativeInteraction';
 import {
-  userStruggleUserModel,
-  userStruggleUtilityModel,
-} from './userStruggleModels';
+  UserSupportAction,
+  UserStruggleEvidence,
+  SystemSupportAction,
+  systemSupportActions,
+  userSupportActions,
+} from '../../../models/UserSupport';
+import {
+  getActionMaximisingExpectedUtility,
+  UserModel,
+  UtilityModel,
+} from '../mixedInitiativeInteraction';
 
-const supportChanges = ['inc', 'dec'] as const;
-const userSupportActions = [...supportChanges, 'none'] as const;
-const systemSupportActions = [
-  ...userSupportActions,
-  'inc_dialog',
-  'dec_dialog',
-] as const;
+const userStruggleUserModel: UserModel<
+  UserSupportAction,
+  UserStruggleEvidence
+> = (_goal: UserSupportAction, _evidence: UserStruggleEvidence) => 1;
 
-type SupportChange = (typeof supportChanges)[number];
-type UserSupportAction = (typeof userSupportActions)[number];
-type SystemSupportAction = (typeof systemSupportActions)[number];
-
-interface UserStruggleEvidence {
-  userStruggleData: UserStruggleData;
-  deltaStepsCompleted: number;
-}
-
-const levelsOfSupport = ['text', 'overlay', 'click'] as const;
-type LevelOfSupport = (typeof levelsOfSupport)[number];
+const userStruggleUtilityModel: UtilityModel<
+  SystemSupportAction,
+  UserSupportAction
+> = (action: SystemSupportAction, _goal: UserSupportAction) =>
+  action === 'none' ? 1 : 0;
 
 const getNextSystemSupportAction = (
   userStruggleData: UserStruggleData,
@@ -42,11 +40,4 @@ const getNextSystemSupportAction = (
   );
 };
 
-export { getNextSystemSupportAction, levelsOfSupport };
-export type {
-  SupportChange,
-  SystemSupportAction,
-  UserSupportAction,
-  UserStruggleEvidence,
-  LevelOfSupport,
-};
+export { getNextSystemSupportAction };

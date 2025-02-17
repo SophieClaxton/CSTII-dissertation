@@ -1,11 +1,12 @@
 import { UserStruggleData } from '../../../../messaging/message';
+import { LevelOfSupport } from '../../../models/UserSupport';
 import { StateSetter } from '../../../models/utilTypes';
 import { SupportDialogProps } from '../components/SupportDialog';
 import {
   increaseLevelOfSupport,
   decreaseLevelOfSupport,
 } from './levelOfSupportUtils';
-import { getNextSystemSupportAction, LevelOfSupport } from './userSupportMII';
+import { getNextSystemSupportAction } from './userSupportMII';
 
 const performBestSystemAction = (
   userStruggleData: UserStruggleData,

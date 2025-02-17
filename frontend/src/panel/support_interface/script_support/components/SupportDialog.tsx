@@ -1,7 +1,7 @@
-import { SupportChange } from '../userStruggleSupport/userSupportMII';
 import Button from '@mui/material/Button/Button';
 import Snackbar from '@mui/material/Snackbar/Snackbar';
 import Alert from '@mui/material/Alert/Alert';
+import { SupportChange } from '../../../models/UserSupport';
 
 interface SupportDialogProps {
   open: boolean;
