@@ -6,7 +6,7 @@ import { defaultLevelOfSupport } from '../consts';
 import { onSetFocus } from '../focusElement';
 import { sendDetectionMessage } from './detectStep';
 import { SupportState } from './state';
-import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
+import { LevelOfSupport } from '../../panel/models/UserSupport';
 
 const sendUserStruggleData = (supportState: SupportState) => {
   const message: UserStruggleDataMessage = {

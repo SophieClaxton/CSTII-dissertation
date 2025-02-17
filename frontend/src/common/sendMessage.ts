@@ -1,7 +1,7 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { CSTElementNode, CSTNodeId } from '../panel/models/CST/CST';
 import InterfaceElement from '../panel/models/InterfaceElement';
-import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
+import { LevelOfSupport } from '../panel/models/UserSupport';
 import { mapIdToString } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import {
   EndSupportMessage,

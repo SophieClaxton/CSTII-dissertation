@@ -1,6 +1,6 @@
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
 import { ValidTag } from '../../panel/models/InterfaceElement';
-import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
+import { LevelOfSupport } from '../../panel/models/UserSupport';
 
 interface EditingState {
   isClickable: boolean;
