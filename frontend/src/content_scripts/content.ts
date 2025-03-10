@@ -1,5 +1,6 @@
 import { PanelMessage, LoadedMessage } from '../common/message';
 import {
+  allInputTags,
   allSelectableTags,
   isSelectableTag,
   mapStepNodeToValidTags,
@@ -16,6 +17,7 @@ import {
 } from './userSupport/collectStruggleEvidence';
 import {
   detectStepOnClick,
+  detectStepOnInput,
   detectStepOnScroll,
 } from './userSupport/detectStep';
 import { EditingState, SupportState } from './userSupport/state';
@@ -107,8 +109,6 @@ document.onscroll = () => {
   }
 };
 
-const elementsWithClickListeners = new WeakSet();
-
 const updateClassList = () => {
   allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
@@ -126,6 +126,7 @@ const updateClassList = () => {
   });
 };
 
+const elementsWithClickListeners = new WeakSet();
 const addClickListeners = () => {
   allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
@@ -141,14 +142,31 @@ const addClickListeners = () => {
   });
 };
 
+const elementsWithInputListeners = new WeakSet();
+const addInputListeners = () => {
+  allInputTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (const element of elements) {
+      if (!elementsWithInputListeners.has(element)) {
+        element.addEventListener('input', () => {
+          detectStepOnInput(element, supportState);
+        });
+        elementsWithInputListeners.add(element);
+      }
+    }
+  });
+};
+
 setupMessageListener();
 const loadedMessage: LoadedMessage = { type: 'loaded' };
 chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
 
 updateClassList();
 addClickListeners();
+addInputListeners();
 
 const domObserver = new MutationObserver(() => {
   addClickListeners();
+  addInputListeners();
 });
 domObserver.observe(document, { childList: true, subtree: true });

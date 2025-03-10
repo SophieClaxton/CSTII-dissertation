@@ -41,6 +41,8 @@ const allSelectableTags = [
   ...defaultSelectableTags,
 ] as const;
 
+const allInputTags = ['INPUT', 'TEXTAREA', 'SELECT'] as const;
+
 type SelectableTag = (typeof allSelectableTags)[number];
 
 function isSelectableTag(tagName: string): tagName is SelectableTag {
@@ -148,6 +150,7 @@ export {
   isSelectableTag,
   defaultSelectableTags,
   allSelectableTags,
+  allInputTags,
   mapTagToElementName,
   mapStepNodeToValidTags,
 };

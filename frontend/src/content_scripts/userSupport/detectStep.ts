@@ -1,3 +1,4 @@
+import stringSimilarity from 'string-similarity-js';
 import { StepCompletedMessage } from '../../common/message';
 import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
@@ -73,4 +74,39 @@ const detectStepOnClick = (element: Element, supportState: SupportState) => {
   }
 };
 
-export { detectStepOnScroll, detectStepOnClick, sendDetectionMessage };
+const detectStepOnInput = (element: Element, supportState: SupportState) => {
+  if (!supportState.collectStruggleData) {
+    return;
+  }
+  const steps = [...supportState.nextPossibleSteps];
+  steps.forEach((step) => {
+    if (
+      (step.type === ASTNodeType.Write &&
+        elementsMatch(element, step.element)) ||
+      step.type === ASTNodeType.Select
+    ) {
+      console.log('Detected on input');
+      if (step.type === ASTNodeType.Write) {
+        const writeElement = element as HTMLInputElement | HTMLTextAreaElement;
+        if (step.isExact) {
+          if (stringSimilarity(writeElement.value, step.text) > 0.95) {
+            console.log(step);
+            sendDetectionMessage(supportState, step);
+          }
+        } else {
+          if (writeElement.value !== '') {
+            console.log(step);
+            sendDetectionMessage(supportState, step);
+          }
+        }
+      }
+    }
+  });
+};
+
+export {
+  detectStepOnScroll,
+  detectStepOnClick,
+  detectStepOnInput,
+  sendDetectionMessage,
+};
