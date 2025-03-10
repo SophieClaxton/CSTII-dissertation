@@ -10,10 +10,15 @@ import { getNextSystemSupportAction } from './userSupportMII';
 
 const performBestSystemAction = (
   userStruggleData: UserStruggleData,
+  getLevelOfSupport: () => LevelOfSupport,
   setLevelOfSupport: StateSetter<LevelOfSupport>,
   setSupportDialogDetails: StateSetter<SupportDialogProps>,
 ) => {
-  const nextAction = getNextSystemSupportAction(userStruggleData, 0);
+  const nextAction = getNextSystemSupportAction(
+    userStruggleData,
+    0,
+    getLevelOfSupport,
+  );
   switch (nextAction) {
     case 'inc':
       return setLevelOfSupport(increaseLevelOfSupport);

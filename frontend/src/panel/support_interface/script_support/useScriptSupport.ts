@@ -77,6 +77,7 @@ const useScriptSupport = (program: ASTProgram) => {
     if (userStruggleData) {
       performBestSystemAction(
         userStruggleData,
+        () => levelOfSupport,
         setLevelOfSupport,
         setSupportDialogDetails,
       );

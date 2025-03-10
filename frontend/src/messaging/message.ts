@@ -1,7 +1,7 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { CSTElementNode } from '../panel/models/CST/CST';
 import InterfaceElement from '../panel/models/interface_element/InterfaceElement';
-import { LevelOfSupport } from '../panel/models/UserSupport';
+import { LevelOfSupport, UserStruggleData } from '../panel/models/UserSupport';
 
 enum Port {
   SidePanel = 'sidePanel',
@@ -87,11 +87,6 @@ interface UserClickedElementMessage extends MessageBase {
   type: 'user_clicked_element';
   element: InterfaceElement;
   stepId: string;
-}
-
-interface UserStruggleData {
-  totalDistance: number;
-  numMouseClicks: number;
 }
 
 interface UserStruggleDataMessage extends MessageBase {

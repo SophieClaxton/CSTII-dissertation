@@ -9,6 +9,12 @@ import { LevelOfSupport } from '../../panel/models/UserSupport';
 import { mapStepToSystemAction, onScrollStepComplete } from './doStep';
 
 const sendUserStruggleData = (supportState: SupportState) => {
+  supportState.userStruggleData.totalDistance = Math.log(
+    supportState.userStruggleData.totalDistance,
+  );
+  supportState.userStruggleData.totalScrollDistance = Math.log(
+    supportState.userStruggleData.totalScrollDistance,
+  );
   const message: UserStruggleDataMessage = {
     type: 'user_struggle_data',
     userStruggleData: supportState.userStruggleData,

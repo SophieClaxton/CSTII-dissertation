@@ -1,6 +1,9 @@
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
 import { ValidTag } from '../../panel/models/interface_element/validTags';
-import { LevelOfSupport } from '../../panel/models/UserSupport';
+import {
+  LevelOfSupport,
+  UserStruggleData,
+} from '../../panel/models/UserSupport';
 
 interface EditingState {
   isClickable: boolean;
@@ -11,11 +14,7 @@ interface EditingState {
 
 interface SupportState {
   collectStruggleData: boolean;
-  userStruggleData: {
-    totalDistance: number;
-    numMouseClicks: number;
-    totalScrollDistance: number;
-  };
+  userStruggleData: UserStruggleData;
   intervalId: NodeJS.Timeout | undefined;
   timeoutId: NodeJS.Timeout | undefined;
   levelOfSupport: LevelOfSupport;
