@@ -127,6 +127,29 @@ const detectSelectStep = (
   }
 };
 
+const detectCheckStep = (
+  step: ASTInstruction,
+  element: Element,
+  supportState: SupportState,
+) => {
+  if (step.type !== ASTNodeType.Check) {
+    return;
+  }
+  console.log('Actual element:', element.outerHTML);
+  console.log('Step element', step.element.outerHTML);
+  if (
+    elementsMatch(element, step.element) &&
+    step.element.tag === element.tagName
+  ) {
+    console.log('Detected check');
+    const checkElement = element as HTMLInputElement;
+    if (checkElement.checked === step.isChecked) {
+      console.log(step);
+      sendDetectionMessage(supportState, step);
+    }
+  }
+};
+
 const detectStepOnInput = (element: Element, supportState: SupportState) => {
   if (!supportState.collectStruggleData) {
     return;
@@ -140,6 +163,8 @@ const detectStepOnInput = (element: Element, supportState: SupportState) => {
         return detectWriteStep(step, element, supportState);
       case ASTNodeType.Select:
         return detectSelectStep(step, element, supportState);
+      case ASTNodeType.Check:
+        return detectCheckStep(step, element, supportState);
     }
   });
 };
