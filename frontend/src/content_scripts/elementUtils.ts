@@ -1,6 +1,7 @@
 import stringSimilarity from 'string-similarity-js';
 import { focusClass, similarityThreshold } from './consts';
-import InterfaceElement, { ValidTag } from '../panel/models/InterfaceElement';
+import InterfaceElement from '../panel/models/interfaceElement/InterfaceElement';
+import { ValidTag } from '../panel/models/interfaceElement/validTags';
 
 const elementsMatch = (
   element: Element,

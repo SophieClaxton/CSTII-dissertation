@@ -1,5 +1,5 @@
 import { CSTStepNodeType } from '../CST/CST';
-import { mapTagToElementName } from '../InterfaceElement';
+import { mapTagToElementName } from '../interfaceElement/elementInfo';
 import { ASTNodeType, ASTStepNode } from './AST';
 import { ASTInstruction } from './Instruction';
 

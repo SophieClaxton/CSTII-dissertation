@@ -1,5 +1,5 @@
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
-import { ValidTag } from '../../panel/models/InterfaceElement';
+import { ValidTag } from '../../panel/models/interfaceElement/validTags';
 import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 interface EditingState {

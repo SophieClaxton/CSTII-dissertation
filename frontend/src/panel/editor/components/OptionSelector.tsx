@@ -1,5 +1,5 @@
 import Select from '@mui/material/Select/Select';
-import InterfaceElement, { Option } from '../../models/InterfaceElement';
+import InterfaceElement, { Option } from '../../models/interfaceElement/InterfaceElement';
 import { useState } from 'react';
 import MenuItem from '@mui/material/MenuItem/MenuItem';
 import { CSTSelectNode } from '../../models/CST/CST';

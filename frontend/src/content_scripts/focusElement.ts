@@ -3,7 +3,7 @@ import { findFirstElement } from './elementUtils';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { SupportState } from './userSupport/state';
-import InterfaceElement from '../panel/models/InterfaceElement';
+import InterfaceElement from '../panel/models/interfaceElement/InterfaceElement';
 
 // IDEA: scroll any scrollable parent elements into view, and then scroll parents as necessary
 const scrollToElement = (

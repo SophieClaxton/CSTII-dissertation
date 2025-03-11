@@ -11,7 +11,7 @@ import {
   EditSelectedOptionAction,
   RearrangeInnerStepsAction,
 } from '../models/EditorAction';
-import InterfaceElement from '../models/InterfaceElement';
+import InterfaceElement from '../models/interfaceElement/InterfaceElement';
 import { getSection } from './getters/nodes';
 import { mapIdToString } from './mappers/nodeIds';
 import {

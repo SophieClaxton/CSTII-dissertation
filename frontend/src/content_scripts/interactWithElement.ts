@@ -1,14 +1,13 @@
 import { UserClickedElementMessage } from '../common/message';
 import { EditingState } from './userSupport/state';
-import InterfaceElement, {
-  isSelectableTag,
-} from '../panel/models/InterfaceElement';
 import {
   elementSatisfiesValidTags,
   findFirstElement,
   getCorrespondingLabel,
 } from './elementUtils';
 import { clickableClass } from './consts';
+import InterfaceElement from '../panel/models/interfaceElement/InterfaceElement';
+import { isSelectableTag } from '../panel/models/interfaceElement/selectableTag';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;

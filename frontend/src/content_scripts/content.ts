@@ -1,10 +1,10 @@
 import { PanelMessage, LoadedMessage } from '../common/message';
 import {
-  allInputTags,
   allSelectableTags,
   isSelectableTag,
-  mapStepNodeToValidTags,
-} from '../panel/models/InterfaceElement';
+  allInputTags,
+} from '../panel/models/interfaceElement/selectableTag';
+import { mapStepNodeToValidTags } from '../panel/models/interfaceElement/validTags';
 import './clickable.css';
 import { clickableClass, defaultLevelOfSupport } from './consts';
 import { elementSatisfiesValidTags } from './elementUtils';
