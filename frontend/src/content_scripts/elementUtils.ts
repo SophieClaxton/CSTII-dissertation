@@ -8,6 +8,11 @@ const elementsMatch = (
 ): boolean => {
   // IDEA: Try more strict comparisons and then reduce if nothing is found
   // Or reduce the similarityThreshold
+  const id = extractElementId(msgElement.outerHTML);
+  if (id && element.id === id) {
+    return true;
+  }
+
   const focussed = element.classList.contains(focusClass);
   if (focussed) {
     console.log('element is focussed');
@@ -52,13 +57,18 @@ const findFirstElement = (
   ).element;
 };
 
+const extractElementId = (elementOuterHTML: string): string | undefined => {
+  const idPattern = /id="([\w|\d|^"|-]*)"/g;
+  const id = idPattern.exec(elementOuterHTML);
+  return id ? id[1] : undefined;
+};
+
 const getElementFromId = (
   elementOuterHTML: string,
 ): HTMLElement | undefined => {
-  const idPattern = /id="([\w|\d|^"|-]*)"/g;
-  const id = idPattern.exec(elementOuterHTML);
+  const id = extractElementId(elementOuterHTML);
   if (id) {
-    const element = document.getElementById(id[1]);
+    const element = document.getElementById(id);
     return element ?? undefined;
   }
   return undefined;

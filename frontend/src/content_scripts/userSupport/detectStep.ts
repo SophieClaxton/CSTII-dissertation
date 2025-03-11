@@ -74,32 +74,72 @@ const detectStepOnClick = (element: Element, supportState: SupportState) => {
   }
 };
 
+const detectWriteStep = (
+  step: ASTInstruction,
+  element: Element,
+  supportState: SupportState,
+) => {
+  if (
+    step.type === ASTNodeType.Write &&
+    elementsMatch(element, step.element) &&
+    step.element.tag === element.tagName
+  ) {
+    console.log('Detected write');
+    const writeElement = element as HTMLInputElement | HTMLTextAreaElement;
+    if (step.isExact) {
+      if (stringSimilarity(writeElement.value, step.text) > 0.95) {
+        console.log(step);
+        sendDetectionMessage(supportState, step);
+      }
+    } else {
+      if (writeElement.value !== '') {
+        console.log(step);
+        sendDetectionMessage(supportState, step);
+      }
+    }
+  }
+};
+
+const detectSelectStep = (
+  step: ASTInstruction,
+  element: Element,
+  supportState: SupportState,
+) => {
+  if (step.type !== ASTNodeType.Select) {
+    return;
+  }
+  console.log('Actual element:', element.outerHTML);
+  console.log('Step element', step.element.outerHTML);
+  if (
+    elementsMatch(element, step.element) &&
+    step.element.tag === element.tagName
+  ) {
+    console.log('Detected select');
+    const selectElement = element as HTMLSelectElement;
+    console.log(selectElement.value);
+    if (
+      selectElement.options[selectElement.selectedIndex].value ===
+      step.option.value
+    ) {
+      console.log(step);
+      sendDetectionMessage(supportState, step);
+    }
+  }
+};
+
 const detectStepOnInput = (element: Element, supportState: SupportState) => {
   if (!supportState.collectStruggleData) {
     return;
   }
   const steps = [...supportState.nextPossibleSteps];
   steps.forEach((step) => {
-    if (
-      (step.type === ASTNodeType.Write &&
-        elementsMatch(element, step.element)) ||
-      step.type === ASTNodeType.Select
-    ) {
-      console.log('Detected on input');
-      if (step.type === ASTNodeType.Write) {
-        const writeElement = element as HTMLInputElement | HTMLTextAreaElement;
-        if (step.isExact) {
-          if (stringSimilarity(writeElement.value, step.text) > 0.95) {
-            console.log(step);
-            sendDetectionMessage(supportState, step);
-          }
-        } else {
-          if (writeElement.value !== '') {
-            console.log(step);
-            sendDetectionMessage(supportState, step);
-          }
-        }
-      }
+    console.log('detecting step on input');
+    console.log(step);
+    switch (step.type) {
+      case ASTNodeType.Write:
+        return detectWriteStep(step, element, supportState);
+      case ASTNodeType.Select:
+        return detectSelectStep(step, element, supportState);
     }
   });
 };

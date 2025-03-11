@@ -144,6 +144,7 @@ const addClickListeners = () => {
 
 const elementsWithInputListeners = new WeakSet();
 const addInputListeners = () => {
+  console.log('add input listeners');
   allInputTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
     for (const element of elements) {
