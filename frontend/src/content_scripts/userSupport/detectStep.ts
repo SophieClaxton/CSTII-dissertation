@@ -151,9 +151,27 @@ const detectStepOnInput = (element: Element, supportState: SupportState) => {
   });
 };
 
+const preDetectInputStep = (
+  step: ASTInstruction | undefined,
+  supportState: SupportState,
+) => {
+  if (
+    step &&
+    (step.type === ASTNodeType.Write ||
+      step.type === ASTNodeType.Select ||
+      step.type === ASTNodeType.Check)
+  ) {
+    const element = findElement(step.element);
+    if (element) {
+      detectStepOnInput(element, supportState);
+    }
+  }
+};
+
 export {
   detectStepOnScroll,
   detectStepOnClick,
   detectStepOnInput,
+  preDetectInputStep,
   sendDetectionMessage,
 };

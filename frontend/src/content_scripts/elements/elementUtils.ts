@@ -54,7 +54,13 @@ const elementSatisfiesValidTags = (
 const getCorrespondingLabel = (element: Element): string | undefined => {
   const labels = document.getElementsByTagName('label');
   for (const label of labels) {
-    if (label.htmlFor === element.id) {
+    if (
+      (label.htmlFor != '' &&
+        element.id != '' &&
+        label.htmlFor === element.id) ||
+      label.innerHTML.includes(element.outerHTML)
+    ) {
+      console.log(label);
       return label.textContent ?? undefined;
     }
   }
