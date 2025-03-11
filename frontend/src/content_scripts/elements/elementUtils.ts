@@ -1,43 +1,15 @@
 import stringSimilarity from 'string-similarity-js';
-import { focusClass, similarityThreshold } from './consts';
-import InterfaceElement from '../panel/models/interfaceElement/InterfaceElement';
-import { ValidTag } from '../panel/models/interfaceElement/validTags';
+import InterfaceElement from '../../panel/models/interfaceElement/InterfaceElement';
+import { ValidTag } from '../../panel/models/interfaceElement/validTags';
+import { elementsMatch, extractElementAttribute } from './matchElements';
 
-const elementsMatch = (
-  element: Element,
-  msgElement: InterfaceElement,
-): boolean => {
-  // IDEA: Try more strict comparisons and then reduce if nothing is found
-  // Or reduce the similarityThreshold
-  const id = extractElementId(msgElement.outerHTML);
-  if (id && element.id === id) {
-    return true;
-  }
-
-  const focussed = element.classList.contains(focusClass);
-  if (focussed) {
-    console.log('element is focussed');
-    element.classList.remove(focusClass);
-  }
-  const removeEmptyClass = msgElement.outerHTML.replace(/\sclass=""/g, '');
-  const match =
-    stringSimilarity(element.outerHTML, removeEmptyClass) > similarityThreshold;
-  if (focussed) {
-    element.classList.add(focusClass);
-  }
-  return match;
-};
-
-const findFirstElement = (
-  msgElement: InterfaceElement,
-): Element | undefined => {
-  const element = getElementFromId(msgElement.outerHTML);
-  if (element) {
-    return element;
+const findElement = (msgElement: InterfaceElement): Element | undefined => {
+  const elementFromId = getElementFromId(msgElement.outerHTML);
+  if (elementFromId) {
+    return elementFromId;
   }
 
   const matchingElements = [];
-
   const elements = document.querySelectorAll(msgElement.tag);
   for (const element of elements) {
     if (elementsMatch(element, msgElement)) {
@@ -58,16 +30,10 @@ const findFirstElement = (
   ).element;
 };
 
-const extractElementId = (elementOuterHTML: string): string | undefined => {
-  const idPattern = /id="([\w|\d|^"|-]*)"/g;
-  const id = idPattern.exec(elementOuterHTML);
-  return id ? id[1] : undefined;
-};
-
 const getElementFromId = (
   elementOuterHTML: string,
 ): HTMLElement | undefined => {
-  const id = extractElementId(elementOuterHTML);
+  const id = extractElementAttribute(elementOuterHTML, 'id');
   if (id) {
     const element = document.getElementById(id);
     return element ?? undefined;
@@ -96,8 +62,7 @@ const getCorrespondingLabel = (element: Element): string | undefined => {
 };
 
 export {
-  elementsMatch,
-  findFirstElement,
+  findElement,
   getElementFromId,
   elementSatisfiesValidTags,
   getCorrespondingLabel,

@@ -3,7 +3,7 @@ import { UserStruggleDataMessage } from '../../common/message';
 import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
 import { defaultLevelOfSupport } from '../consts';
-import { onSetFocus } from '../focusElement';
+import { onSetFocus } from '../elements/focusOnElement';
 import { sendDetectionMessage } from './detectStep';
 import { SupportState } from './state';
 import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';

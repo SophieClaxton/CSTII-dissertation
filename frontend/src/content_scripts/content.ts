@@ -7,9 +7,9 @@ import {
 import { mapStepNodeToValidTags } from '../panel/models/interfaceElement/validTags';
 import './clickable.css';
 import { clickableClass, defaultLevelOfSupport } from './consts';
-import { elementSatisfiesValidTags } from './elementUtils';
-import { onSetFocus, onUnsetFocus } from './focusElement';
-import { onUserClickElement } from './interactWithElement';
+import { elementSatisfiesValidTags } from './elements/elementUtils';
+import { onSetFocus, onUnsetFocus } from './elements/focusOnElement';
+import { onUserClickElement } from './elements/interactWithElement';
 import {
   collectUserStruggleDataOnMouseMove,
   collectUserStruggleDataOnMouseDown,

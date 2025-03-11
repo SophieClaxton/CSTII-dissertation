@@ -6,7 +6,7 @@ interface ValidAttribute {
   condition?: (element: Element) => boolean;
 }
 
-const commonAttr = [
+const commonAttr: ValidAttribute[] = [
   { attr: 'draggable' },
   { attr: 'hidden' },
   { attr: 'inert' },
