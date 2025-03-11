@@ -56,7 +56,7 @@ const onScrollStepComplete =
     supportState.timeoutId = setTimeout(() => {
       supportState.nextStep = undefined;
       sendDetectionMessage(supportState, step);
-    }, 3000);
+    }, 2000);
   };
 
 const onClickStepComplete =
@@ -66,7 +66,60 @@ const onClickStepComplete =
         supportState.nextStep = undefined;
         element.click();
       }
-    }, 2000);
+    }, 1000);
+  };
+
+const onWriteStepComplete =
+  (step: ASTInstruction) => (element: Element, supportState: SupportState) => {
+    if (step.type != ASTNodeType.Write) {
+      return;
+    }
+    supportState.timeoutId = setTimeout(() => {
+      if (isHTMLElement(element) && element.tagName === 'INPUT') {
+        const inputElement = element as HTMLInputElement;
+        inputElement.value = step.text;
+        supportState.nextStep = undefined;
+        sendDetectionMessage(supportState, step);
+      }
+    }, 1000);
+  };
+
+const onSelectStepComplete =
+  (step: ASTInstruction) => (element: Element, supportState: SupportState) => {
+    if (step.type != ASTNodeType.Select) {
+      return;
+    }
+    supportState.timeoutId = setTimeout(() => {
+      if (isHTMLElement(element) && element.tagName === 'SELECT') {
+        const selectElement = element as HTMLSelectElement;
+        let updated = false;
+        for (const option of selectElement.options) {
+          if (option.value === step.option.value) {
+            option.selected = true;
+            updated = true;
+          }
+        }
+        if (updated) {
+          supportState.nextStep = undefined;
+          sendDetectionMessage(supportState, step);
+        }
+      }
+    }, 1000);
+  };
+
+const onCheckStepComplete =
+  (step: ASTInstruction) => (element: Element, supportState: SupportState) => {
+    if (step.type != ASTNodeType.Check) {
+      return;
+    }
+    supportState.timeoutId = setTimeout(() => {
+      if (isHTMLElement(element) && element.tagName === 'INPUT') {
+        const inputElement = element as HTMLInputElement;
+        inputElement.checked = step.isChecked;
+        supportState.nextStep = undefined;
+        sendDetectionMessage(supportState, step);
+      }
+    }, 1000);
   };
 
 const onFocusComplete = (
@@ -85,6 +138,12 @@ const onFocusComplete = (
         return onClickStepComplete(step);
       } else if (step.type === ASTNodeType.ScrollTo) {
         return onScrollStepComplete(step);
+      } else if (step.type === ASTNodeType.Write && step.isExact) {
+        return onWriteStepComplete(step);
+      } else if (step.type === ASTNodeType.Select) {
+        return onSelectStepComplete(step);
+      } else if (step.type === ASTNodeType.Check) {
+        return onCheckStepComplete(step);
       }
       return (_element: Element, supportState: SupportState) =>
         (supportState.nextStep = undefined);
