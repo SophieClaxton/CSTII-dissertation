@@ -78,4 +78,18 @@ describe('elementsMatch', () => {
     };
     expect(elementsMatch(element, msgElement)).toBe(true);
   });
+
+  it('button with only aria-label matches', () => {
+    const element = document.createElement('button');
+    element.setAttribute('aria-label', 'Plan Your Journey');
+    element.setAttribute('class', 'sc-db83366f-7 ccFsfx');
+    const msgElement = {
+      outerHTML:
+        '<button data-testid="jp-preview-btn" aria-label="Plan Your Journey" class="sc-db83366f-7 ccFsfx"></button>',
+      tag: 'BUTTON' as SelectableTag,
+      textContent: '',
+      url: 'nationalRail.co.uk',
+    };
+    expect(elementsMatch(element, msgElement)).toBe(true);
+  });
 });

@@ -157,7 +157,7 @@ const preDetectInputStep = (
 ) => {
   if (
     step &&
-    (step.type === ASTNodeType.Write ||
+    ((step.type === ASTNodeType.Write && step.isExact) ||
       step.type === ASTNodeType.Select ||
       step.type === ASTNodeType.Check)
   ) {

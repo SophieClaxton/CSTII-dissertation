@@ -7,6 +7,9 @@ interface ValidAttribute {
 }
 
 const commonAttr: ValidAttribute[] = [
+  { attr: 'aria-label' },
+  { attr: 'aria-description' },
+  { attr: 'aria-roledescription' },
   { attr: 'draggable' },
   { attr: 'hidden' },
   { attr: 'inert' },

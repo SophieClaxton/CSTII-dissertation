@@ -21,6 +21,8 @@ const findElement = (msgElement: InterfaceElement): Element | undefined => {
     return matchingElements.at(0);
   }
 
+  console.log('found multiple matching elements');
+  console.log(matchingElements);
   const similarityScores = matchingElements.map((element) => ({
     element: element,
     score: stringSimilarity(element.outerHTML, msgElement.outerHTML),
