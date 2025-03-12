@@ -2,7 +2,7 @@ import stringSimilarity from 'string-similarity-js';
 import { StepCompletedMessage } from '../../common/message';
 import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
-import { onUnsetFocus } from '../elements/focusOnElement';
+import { unsetFocus } from '../elements/focusOnElement';
 import { SupportState } from './state';
 import { findElement } from '../elements/elementUtils';
 import { elementsMatch } from '../elements/matchElements';
@@ -30,7 +30,7 @@ const sendDetectionMessage = (
   supportState.nextPossibleSteps = supportState.nextPossibleSteps.filter(
     (otherStep) => otherStep.stepNumber != step.stepNumber,
   );
-  onUnsetFocus();
+  unsetFocus();
 };
 
 const detectStepOnScroll = (supportState: SupportState) => {

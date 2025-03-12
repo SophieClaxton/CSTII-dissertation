@@ -8,7 +8,7 @@ import { mapStepNodeToValidTags } from '../panel/models/interfaceElement/validTa
 import './clickable.css';
 import { clickableClass, defaultLevelOfSupport } from './consts';
 import { elementSatisfiesValidTags } from './elements/elementUtils';
-import { onSetFocus, onUnsetFocus } from './elements/focusOnElement';
+import { setFocus, unsetFocus } from './elements/focusOnElement';
 import { onUserClickElement } from './elements/interactWithElement';
 import {
   collectUserStruggleDataOnMouseMove,
@@ -47,7 +47,6 @@ const supportState: SupportState = {
   intervalId: undefined,
   levelOfSupport: defaultLevelOfSupport,
   nextPossibleSteps: [],
-  nextStep: undefined,
   lastScrollPosition: { x: 0, y: 0 },
   systemScrolling: false,
 };
@@ -68,11 +67,11 @@ const setupMessageListener = () => {
       }
       case 'set_focus': {
         console.log('received focussing message');
-        return onSetFocus(message.element, supportState);
+        return setFocus(message.element, supportState);
       }
       case 'unset_focus': {
         console.log('received focussing message');
-        return onUnsetFocus();
+        return unsetFocus();
       }
       case 'start_support': {
         console.log(`Received start support: ${message.levelOfSupport}`);
