@@ -3,10 +3,10 @@ import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
 import { defaultLevelOfSupport } from '../consts';
 import { setFocus } from '../elements/focusOnElement';
-import { preDetectInputStep, sendDetectionMessage } from './detectStep';
+import { preDetectInputStep } from './detectStep';
 import { SupportState } from './state';
 import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
-import { mapStepToSystemAction } from './doStep';
+import { mapStepToSystemAction, onScrollStepComplete } from './doStep';
 
 const sendUserStruggleData = (supportState: SupportState) => {
   const message: UserStruggleDataMessage = {
@@ -51,13 +51,6 @@ const onEndSupport = (supportState: SupportState) => {
   supportState.timeoutId = undefined;
 };
 
-const onScrollStepComplete =
-  (step: ASTInstruction) => (_element: Element, supportState: SupportState) => {
-    supportState.timeoutId = setTimeout(() => {
-      sendDetectionMessage(supportState, step);
-    }, 2000);
-  };
-
 const onScrollEnd = (
   levelOfSupport: Exclude<LevelOfSupport, 'text'>,
   step: ASTInstruction,
@@ -78,6 +71,7 @@ const supportNextStep = (
   levelOfSupport: Exclude<LevelOfSupport, 'text'>,
 ) => {
   const [nextStep] = supportState.nextPossibleSteps;
+  console.log(nextStep);
   if (nextStep && nextStep.type != ASTNodeType.UserDecision) {
     setFocus(
       nextStep.element,

@@ -8,6 +8,13 @@ type SystemStepAction = (
   step: ASTInstruction,
 ) => (element: Element, supportState: SupportState) => void;
 
+const onScrollStepComplete: SystemStepAction =
+  (step: ASTInstruction) => (_element: Element, supportState: SupportState) => {
+    supportState.timeoutId = setTimeout(() => {
+      sendDetectionMessage(supportState, step);
+    }, 2000);
+  };
+
 const doClickStep: SystemStepAction =
   () => (element: Element, supportState: SupportState) => {
     supportState.timeoutId = setTimeout(() => {
@@ -40,6 +47,7 @@ const doSelectStep: SystemStepAction =
       if (isHTMLElement(element) && element.tagName === 'SELECT') {
         const selectElement = element as HTMLSelectElement;
         let updated = false;
+        selectElement.click();
         for (const option of selectElement.options) {
           if (option.value === step.option.value) {
             option.selected = true;
@@ -74,11 +82,11 @@ const mapStepToSystemAction: Record<ASTInstruction['type'], SystemStepAction> =
     [ASTNodeType.Write]: doWriteStep,
     [ASTNodeType.Select]: doSelectStep,
     [ASTNodeType.Check]: doCheckStep,
-    [ASTNodeType.ScrollTo]: () => () => {},
+    [ASTNodeType.ScrollTo]: onScrollStepComplete,
     [ASTNodeType.UserDecision]: () => () => {},
     [ASTNodeType.Read]: () => () => {},
     [ASTNodeType.Drag]: () => () => {},
     [ASTNodeType.Draw]: () => () => {},
   };
 
-export { mapStepToSystemAction };
+export { onScrollStepComplete, mapStepToSystemAction };

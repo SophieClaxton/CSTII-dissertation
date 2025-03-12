@@ -6,11 +6,17 @@ import {
 } from '../../panel/models/interfaceElement/validAttribute';
 import { similarityThreshold } from '../consts';
 
+const extractOpeningTag = (elementOuterHTML: string): string | null => {
+  const openingTagPattern = /<([\s \S][^>]*)>/g;
+  const openingTag = openingTagPattern.exec(elementOuterHTML);
+  return openingTag ? openingTag[1] : '';
+};
+
 const extractElementAttribute = (
   elementOuterHTML: string,
   attribute: string,
 ): string | null => {
-  const attrPatter = new RegExp(`${attribute}="([\\w|\\d|\\-|\\s]*)"`, 'g');
+  const attrPatter = new RegExp(`${attribute}="([\\s \\S][^"]*)"`, 'g');
   const attr = attrPatter.exec(elementOuterHTML);
   return attr ? attr[1] : null;
 };
@@ -32,20 +38,24 @@ const displayAttrErrorMessage = (
 const elementsMatch = (
   element: Element,
   msgElement: InterfaceElement,
+  showErrorMessages: boolean = false,
 ): boolean => {
-  const showErrorMessages = false;
-
   if (element.tagName != msgElement.tag) {
     return false;
   }
   if (element.id === extractElementAttribute(msgElement.outerHTML, 'id')) {
     return true;
   }
+  const msgElementOpeningTag = extractOpeningTag(msgElement.outerHTML);
+  if (!msgElementOpeningTag) {
+    console.error('Could not extract opening tag');
+    return false;
+  }
   for (const { attr, condition } of commonAttr) {
     if (
       (!condition || condition(element)) &&
       element.getAttribute(attr) !==
-        extractElementAttribute(msgElement.outerHTML, attr)
+        extractElementAttribute(msgElementOpeningTag, attr)
     ) {
       if (showErrorMessages) {
         displayAttrErrorMessage(element, msgElement, attr, showErrorMessages);
@@ -59,7 +69,7 @@ const elementsMatch = (
     if (
       (!condition || condition(element)) &&
       element.getAttribute(attr) !==
-        extractElementAttribute(msgElement.outerHTML, attr)
+        extractElementAttribute(msgElementOpeningTag, attr)
     ) {
       displayAttrErrorMessage(element, msgElement, attr, showErrorMessages);
       return false;
@@ -79,4 +89,4 @@ const elementsMatch = (
   return true;
 };
 
-export { extractElementAttribute, elementsMatch };
+export { extractOpeningTag, extractElementAttribute, elementsMatch };

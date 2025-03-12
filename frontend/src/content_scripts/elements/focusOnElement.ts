@@ -51,6 +51,8 @@ const setFocus = (
       console.log(element);
     }
     scrollToElement(element, supportState, onScrollEnd);
+  } else {
+    console.error('Element not found');
   }
 };
 

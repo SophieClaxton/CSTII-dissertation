@@ -126,7 +126,6 @@ const detectCheckStep = (
     console.log('Detected check');
     const checkElement = element as HTMLInputElement;
     if (checkElement.checked === step.isChecked) {
-      console.log(step);
       sendDetectionMessage(supportState, step);
     }
   }

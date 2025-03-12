@@ -1,8 +1,19 @@
 import {
   elementsMatch,
   extractElementAttribute,
+  extractOpeningTag,
 } from '../../content_scripts/elements/matchElements';
 import { SelectableTag } from '../../panel/models/interfaceElement/selectableTag';
+
+describe('extractOpeningTag', () => {
+  it('extracts the opening tag', () => {
+    const elementOuterHTML =
+      '<a class="govuk-link gem-c-layout-super-navigation-header__navigation-second-item-link" data-ga4-link="{&quot;event_name&quot;:&quot;navigation&quot;,&quot;type&quot;:&quot;header menu bar&quot;,&quot;index_section&quot;:1,&quot;index_link&quot;:9,&quot;index_section_count&quot;:3,&quot;index_total&quot;:16,&quot;section&quot;:&quot;Services and information&quot;}" href="https://www.gov.uk/browse/education">Education and learning</a>';
+    const openingTag =
+      'a class="govuk-link gem-c-layout-super-navigation-header__navigation-second-item-link" data-ga4-link="{&quot;event_name&quot;:&quot;navigation&quot;,&quot;type&quot;:&quot;header menu bar&quot;,&quot;index_section&quot;:1,&quot;index_link&quot;:9,&quot;index_section_count&quot;:3,&quot;index_total&quot;:16,&quot;section&quot;:&quot;Services and information&quot;}" href="https://www.gov.uk/browse/education"';
+    expect(extractOpeningTag(elementOuterHTML)).toBe(openingTag);
+  });
+});
 
 describe('extractElementAttribute', () => {
   it('extracts the class attribute', () => {
@@ -37,6 +48,15 @@ describe('extractElementAttribute', () => {
       '<input type="checkbox" class="styled__StyledCheckboxInput-sc-11h6zls-2 cZPoGM" value="fastest_trains">';
     const attribute = 'id';
     expect(extractElementAttribute(elementOuterHTML, attribute)).toBeNull();
+  });
+
+  it('extracts the href attribute', () => {
+    const elementOuterHTML =
+      '<a class="govuk-link gem-c-layout-super-navigation-header__navigation-second-item-link" data-ga4-link="{"event_name":"navigation","type":"header menu bar","index_section":1,"index_link":9,"index_section_count":3,"index_total":16,"section":"Services and information"}" href="https://www.gov.uk/browse/education">Education and learning</a>';
+    const attribute = 'href';
+    expect(extractElementAttribute(elementOuterHTML, attribute)).toBe(
+      'https://www.gov.uk/browse/education',
+    );
   });
 });
 
@@ -91,5 +111,47 @@ describe('elementsMatch', () => {
       url: 'nationalRail.co.uk',
     };
     expect(elementsMatch(element, msgElement)).toBe(true);
+  });
+
+  it('anchors with same href match', () => {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'https://www.gov.uk/browse/education');
+    element.setAttribute(
+      'data-ga4-link',
+      '{"event_name":"navigation","type":"header menu bar","index_section":1,"index_link":9,"index_section_count":3,"index_total":16,"section":"Services and information"}',
+    );
+    element.setAttribute(
+      'class',
+      'govuk-link gem-c-layout-super-navigation-header__navigation-second-item-link',
+    );
+    element.textContent = 'Education and learning';
+    const msgElement = {
+      outerHTML:
+        '<a class="govuk-link gem-c-layout-super-navigation-header__navigation-second-item-link" data-ga4-link="{"event_name":"navigation","type":"header menu bar","index_section":1,"index_link":9,"index_section_count":3,"index_total":16,"section":"Services and information"}" href="https://www.gov.uk/browse/education">Education and learning</a>',
+      url: 'https://www.gov.uk/',
+      tag: 'A' as SelectableTag,
+      textContent: 'Education and learning',
+      label: undefined,
+    };
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
+  });
+
+  it('anchors match', () => {
+    const element = document.createElement('a');
+    element.setAttribute(
+      'href',
+      'https://www.officeforstudents.org.uk/advice-and-guidance/the-register/the-ofs-register',
+    );
+    element.setAttribute('rel', 'external');
+    element.setAttribute('class', '');
+    element.textContent = 'the Office for Students (OfS) Register';
+    const msgElement = {
+      outerHTML:
+        '<a rel="external" href="https://www.officeforstudents.org.uk/advice-and-guidance/the-register/the-ofs-register" class="">the Office for Students (<abbr title="Office for Students">OfS</abbr>) Register</a>',
+      url: 'https://www.gov.uk/check-university-award-degree',
+      tag: 'A' as SelectableTag,
+      textContent: 'the Office for Students (OfS) Register',
+    };
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
   });
 });
