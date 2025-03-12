@@ -1,6 +1,6 @@
 import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { CSTElementNode } from '../panel/models/CST/CST';
-import InterfaceElement from '../panel/models/InterfaceElement';
+import InterfaceElement from '../panel/models/interfaceElement/InterfaceElement';
 import { LevelOfSupport } from '../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 enum Port {

@@ -3,10 +3,8 @@ import { ASTInstruction } from '../panel/models/AST/Instruction';
 import { CSTStepNodeType } from '../panel/models/CST/CST';
 import { isEndStepId, isInnerStepId } from '../panel/models/CST/testers';
 import { EditorAction, EditorActionType } from '../panel/models/EditorAction';
-import {
-  isSelectableTag,
-  mapStepNodeToValidTags,
-} from '../panel/models/InterfaceElement';
+import { isSelectableTag } from '../panel/models/interfaceElement/selectableTag';
+import { mapStepNodeToValidTags } from '../panel/models/interfaceElement/validTags';
 import { StateRef } from '../panel/models/utilTypes';
 import { mapStringToId } from '../panel/unpublishedScriptReducer/mappers/nodeIds';
 import { ContentScriptMessage, UserStruggleData } from './message';

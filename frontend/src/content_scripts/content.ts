@@ -2,13 +2,14 @@ import { PanelMessage, LoadedMessage } from '../common/message';
 import {
   allSelectableTags,
   isSelectableTag,
-  mapStepNodeToValidTags,
-} from '../panel/models/InterfaceElement';
+  allInputTags,
+} from '../panel/models/interfaceElement/selectableTag';
+import { mapStepNodeToValidTags } from '../panel/models/interfaceElement/validTags';
 import './clickable.css';
 import { clickableClass, defaultLevelOfSupport } from './consts';
-import { elementSatisfiesValidTags } from './elementUtils';
-import { onSetFocus, onUnsetFocus } from './focusElement';
-import { onUserClickElement } from './interactWithElement';
+import { elementSatisfiesValidTags } from './elements/elementUtils';
+import { setFocus, unsetFocus } from './elements/focusOnElement';
+import { onUserClickElement } from './elements/interactWithElement';
 import {
   collectUserStruggleDataOnMouseMove,
   collectUserStruggleDataOnMouseDown,
@@ -16,6 +17,7 @@ import {
 } from './userSupport/collectStruggleEvidence';
 import {
   detectStepOnClick,
+  detectStepOnInput,
   detectStepOnScroll,
 } from './userSupport/detectStep';
 import { EditingState, SupportState } from './userSupport/state';
@@ -45,7 +47,6 @@ const supportState: SupportState = {
   intervalId: undefined,
   levelOfSupport: defaultLevelOfSupport,
   nextPossibleSteps: [],
-  nextStep: undefined,
   lastScrollPosition: { x: 0, y: 0 },
   systemScrolling: false,
 };
@@ -66,11 +67,11 @@ const setupMessageListener = () => {
       }
       case 'set_focus': {
         console.log('received focussing message');
-        return onSetFocus(message.element, supportState);
+        return setFocus(message.element, supportState);
       }
       case 'unset_focus': {
         console.log('received focussing message');
-        return onUnsetFocus();
+        return unsetFocus();
       }
       case 'start_support': {
         console.log(`Received start support: ${message.levelOfSupport}`);
@@ -107,8 +108,6 @@ document.onscroll = () => {
   }
 };
 
-const elementsWithClickListeners = new WeakSet();
-
 const updateClassList = () => {
   allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
@@ -126,6 +125,7 @@ const updateClassList = () => {
   });
 };
 
+const elementsWithClickListeners = new WeakSet();
 const addClickListeners = () => {
   allSelectableTags.forEach((tag) => {
     const elements = document.getElementsByTagName(tag);
@@ -141,14 +141,32 @@ const addClickListeners = () => {
   });
 };
 
+const elementsWithInputListeners = new WeakSet();
+const addInputListeners = () => {
+  console.log('add input listeners');
+  allInputTags.forEach((tag) => {
+    const elements = document.getElementsByTagName(tag);
+    for (const element of elements) {
+      if (!elementsWithInputListeners.has(element)) {
+        element.addEventListener('input', () => {
+          detectStepOnInput(element, supportState);
+        });
+        elementsWithInputListeners.add(element);
+      }
+    }
+  });
+};
+
 setupMessageListener();
 const loadedMessage: LoadedMessage = { type: 'loaded' };
 chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
 
 updateClassList();
 addClickListeners();
+addInputListeners();
 
 const domObserver = new MutationObserver(() => {
   addClickListeners();
+  addInputListeners();
 });
 domObserver.observe(document, { childList: true, subtree: true });

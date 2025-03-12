@@ -1,5 +1,4 @@
 import Stack from '@mui/material/Stack/Stack';
-import { mapTagToElementName } from '../../models/InterfaceElement';
 import {
   useTabContext,
   useUnpublishedScriptContext,
@@ -25,6 +24,7 @@ import {
 import Add from '@mui/icons-material/Add';
 import { isSection } from '../../models/CST/testers';
 import { urlsMatch } from '../scriptUtils/elementUtils';
+import { mapTagToElementName } from '../../models/interfaceElement/elementInfo';
 
 interface ElementSelectorProps {
   step: CSTElementNode;

@@ -5,7 +5,7 @@ import {
   CSTStepNodeType,
 } from '../models/CST/CST';
 import { isSection } from '../models/CST/testers';
-import InterfaceElement from '../models/InterfaceElement';
+import InterfaceElement from '../models/interfaceElement/InterfaceElement';
 import { getSection } from './getters/nodes';
 import { mapIdToString } from './mappers/nodeIds';
 import { updateProgramSections, updateSectionEndStep } from './mappers/nodes';

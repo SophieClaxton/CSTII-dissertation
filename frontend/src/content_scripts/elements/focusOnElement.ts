@@ -1,15 +1,15 @@
-import { focusClass, scrollDuration } from './consts';
-import { findFirstElement } from './elementUtils';
+import { focusClass, scrollDuration } from '../consts';
+import { findElement } from './elementUtils';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { SupportState } from './userSupport/state';
-import InterfaceElement from '../panel/models/InterfaceElement';
+import { SupportState } from '../userSupport/state';
+import InterfaceElement from '../../panel/models/interfaceElement/InterfaceElement';
 
 // IDEA: scroll any scrollable parent elements into view, and then scroll parents as necessary
 const scrollToElement = (
   element: Element,
   supportState: SupportState,
-  onFocusComplete: (element: Element, supportState: SupportState) => void,
+  onScrollEnd: (element: Element, supportState: SupportState) => void,
 ) => {
   gsap.registerPlugin(ScrollToPlugin);
   if (supportState.systemScrolling) {
@@ -33,37 +33,33 @@ const scrollToElement = (
   });
   setTimeout(() => {
     supportState.systemScrolling = false;
-    onFocusComplete(element, supportState);
+    onScrollEnd(element, supportState);
   }, scrollDuration * 1250);
 };
 
-const onSetFocus = (
+const setFocus = (
   msgElement: InterfaceElement,
   supportState: SupportState,
   highlight: boolean = true,
-  onFocusComplete: (
-    element: Element,
-    supportState: SupportState,
-  ) => void = () => undefined,
-): boolean => {
-  const element = findFirstElement(msgElement);
+  onScrollEnd: (element: Element, supportState: SupportState) => void = () =>
+    undefined,
+) => {
+  const element = findElement(msgElement);
   if (element) {
     if (highlight) {
       element.classList.add(focusClass);
       console.log(element);
     }
-    scrollToElement(element, supportState, onFocusComplete);
-    return true;
+    scrollToElement(element, supportState, onScrollEnd);
+  } else {
+    console.error('Element not found');
   }
-  return false;
 };
 
-const onUnsetFocus = () => {
+const unsetFocus = () => {
   document.querySelectorAll('*').forEach((element) => {
-    if (element.classList.contains(focusClass)) {
-      element.classList.remove(focusClass);
-    }
+    element.classList.remove(focusClass);
   });
 };
 
-export { onSetFocus, onUnsetFocus };
+export { setFocus, unsetFocus };

@@ -1,5 +1,5 @@
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
-import { ValidTag } from '../../panel/models/InterfaceElement';
+import { ValidTag } from '../../panel/models/interfaceElement/validTags';
 import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
 
 interface EditingState {
@@ -20,7 +20,6 @@ interface SupportState {
   timeoutId: NodeJS.Timeout | undefined;
   levelOfSupport: LevelOfSupport;
   nextPossibleSteps: ASTInstruction[];
-  nextStep: ASTInstruction | undefined;
   lastScrollPosition: { x: number; y: number };
   systemScrolling: boolean;
 }

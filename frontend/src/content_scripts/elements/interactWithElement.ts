@@ -1,21 +1,20 @@
-import { UserClickedElementMessage } from '../common/message';
-import { EditingState } from './userSupport/state';
-import InterfaceElement, {
-  isSelectableTag,
-} from '../panel/models/InterfaceElement';
+import { UserClickedElementMessage } from '../../common/message';
+import { EditingState } from '../userSupport/state';
 import {
   elementSatisfiesValidTags,
-  findFirstElement,
+  findElement,
   getCorrespondingLabel,
 } from './elementUtils';
-import { clickableClass } from './consts';
+import { clickableClass } from '../consts';
+import InterfaceElement from '../../panel/models/interfaceElement/InterfaceElement';
+import { isSelectableTag } from '../../panel/models/interfaceElement/selectableTag';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;
 };
 
 const onSystemClickElement = (msgElement: InterfaceElement) => {
-  const element = findFirstElement(msgElement);
+  const element = findElement(msgElement);
   if (element && isHTMLElement(element)) {
     element.click();
   }

@@ -1,9 +1,11 @@
+import stringSimilarity from 'string-similarity-js';
 import { StepCompletedMessage } from '../../common/message';
 import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
-import { getElementFromId, elementsMatch } from '../elementUtils';
-import { onUnsetFocus } from '../focusElement';
+import { unsetFocus } from '../elements/focusOnElement';
 import { SupportState } from './state';
+import { findElement } from '../elements/elementUtils';
+import { elementsMatch } from '../elements/matchElements';
 
 const isVisible = (element: Element): boolean => {
   const elementRect = element.getBoundingClientRect();
@@ -28,7 +30,7 @@ const sendDetectionMessage = (
   supportState.nextPossibleSteps = supportState.nextPossibleSteps.filter(
     (otherStep) => otherStep.stepNumber != step.stepNumber,
   );
-  onUnsetFocus();
+  unsetFocus();
 };
 
 const detectStepOnScroll = (supportState: SupportState) => {
@@ -36,19 +38,12 @@ const detectStepOnScroll = (supportState: SupportState) => {
     const steps = [...supportState.nextPossibleSteps];
     steps.forEach((step) => {
       if (step.type === ASTNodeType.ScrollTo) {
-        const elementFromId = getElementFromId(step.element.outerHTML);
-        if (elementFromId && isVisible(elementFromId)) {
+        const element = findElement(step.element);
+        if (element && isVisible(element)) {
           console.log('Detected on scroll');
           console.log(step);
           sendDetectionMessage(supportState, step);
           return;
-        }
-        for (const element of document.getElementsByTagName(step.element.tag)) {
-          if (elementsMatch(element, step.element) && isVisible(element)) {
-            console.log('Detected on scroll');
-            console.log(step);
-            sendDetectionMessage(supportState, step);
-          }
         }
       }
     });
@@ -56,13 +51,11 @@ const detectStepOnScroll = (supportState: SupportState) => {
 };
 
 const detectStepOnClick = (element: Element, supportState: SupportState) => {
-  // console.log(`Clicked element: ${element.textContent}`);
   if (supportState.collectStruggleData) {
     const steps = [...supportState.nextPossibleSteps];
     steps.forEach((step) => {
       if (
         (step.type === ASTNodeType.Click || step.type === ASTNodeType.Follow) &&
-        step.element.tag === element.tagName &&
         elementsMatch(element, step.element)
       ) {
         console.log('Detected on click');
@@ -73,4 +66,111 @@ const detectStepOnClick = (element: Element, supportState: SupportState) => {
   }
 };
 
-export { detectStepOnScroll, detectStepOnClick, sendDetectionMessage };
+const detectWriteStep = (
+  step: ASTInstruction,
+  element: Element,
+  supportState: SupportState,
+) => {
+  if (step.type === ASTNodeType.Write && elementsMatch(element, step.element)) {
+    console.log('Detected write');
+    const writeElement = element as HTMLInputElement | HTMLTextAreaElement;
+    if (step.isExact) {
+      if (stringSimilarity(writeElement.value, step.text) > 0.95) {
+        console.log(step);
+        sendDetectionMessage(supportState, step);
+      }
+    } else {
+      if (writeElement.value !== '') {
+        console.log(step);
+        sendDetectionMessage(supportState, step);
+      }
+    }
+  }
+};
+
+const detectSelectStep = (
+  step: ASTInstruction,
+  element: Element,
+  supportState: SupportState,
+) => {
+  if (step.type !== ASTNodeType.Select) {
+    return;
+  }
+  console.log('Actual element:', element.outerHTML);
+  console.log('Step element', step.element.outerHTML);
+  if (elementsMatch(element, step.element)) {
+    console.log('Detected select');
+    const selectElement = element as HTMLSelectElement;
+    console.log(selectElement.value);
+    if (
+      selectElement.options[selectElement.selectedIndex].value ===
+      step.option.value
+    ) {
+      console.log(step);
+      sendDetectionMessage(supportState, step);
+    }
+  }
+};
+
+const detectCheckStep = (
+  step: ASTInstruction,
+  element: Element,
+  supportState: SupportState,
+) => {
+  if (step.type !== ASTNodeType.Check) {
+    return;
+  }
+  console.log('Actual element:', element.outerHTML);
+  console.log('Step element', step.element.outerHTML);
+  if (elementsMatch(element, step.element)) {
+    console.log('Detected check');
+    const checkElement = element as HTMLInputElement;
+    if (checkElement.checked === step.isChecked) {
+      sendDetectionMessage(supportState, step);
+    }
+  }
+};
+
+const detectStepOnInput = (element: Element, supportState: SupportState) => {
+  if (!supportState.collectStruggleData) {
+    return;
+  }
+  const steps = [...supportState.nextPossibleSteps];
+  steps.forEach((step) => {
+    console.log('detecting step on input');
+    console.log(step);
+    switch (step.type) {
+      case ASTNodeType.Write:
+        return detectWriteStep(step, element, supportState);
+      case ASTNodeType.Select:
+        return detectSelectStep(step, element, supportState);
+      case ASTNodeType.Check:
+        return detectCheckStep(step, element, supportState);
+    }
+  });
+};
+
+const preDetectInputStep = (
+  step: ASTInstruction | undefined,
+  supportState: SupportState,
+) => {
+  if (
+    step &&
+    ((step.type === ASTNodeType.Write && step.isExact) ||
+      step.type === ASTNodeType.Select ||
+      step.type === ASTNodeType.Check)
+  ) {
+    const element = findElement(step.element);
+    if (element) {
+      detectStepOnInput(element, supportState);
+    }
+  }
+};
+
+export {
+  detectStepOnScroll,
+  detectStepOnClick,
+  detectStepOnInput,
+  preDetectInputStep,
+  sendDetectionMessage,
+};

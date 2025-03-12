@@ -1,12 +1,12 @@
-import { isHTMLElement } from '@dnd-kit/utilities';
 import { UserStruggleDataMessage } from '../../common/message';
 import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
 import { defaultLevelOfSupport } from '../consts';
-import { onSetFocus } from '../focusElement';
-import { sendDetectionMessage } from './detectStep';
+import { setFocus } from '../elements/focusOnElement';
+import { preDetectInputStep } from './detectStep';
 import { SupportState } from './state';
 import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
+import { mapStepToSystemAction, onScrollStepComplete } from './doStep';
 
 const sendUserStruggleData = (supportState: SupportState) => {
   const message: UserStruggleDataMessage = {
@@ -51,25 +51,7 @@ const onEndSupport = (supportState: SupportState) => {
   supportState.timeoutId = undefined;
 };
 
-const onScrollStepComplete =
-  (step: ASTInstruction) => (_element: Element, supportState: SupportState) => {
-    supportState.timeoutId = setTimeout(() => {
-      supportState.nextStep = undefined;
-      sendDetectionMessage(supportState, step);
-    }, 3000);
-  };
-
-const onClickStepComplete =
-  (_step: ASTInstruction) => (element: Element, supportState: SupportState) => {
-    supportState.timeoutId = setTimeout(() => {
-      if (isHTMLElement(element)) {
-        supportState.nextStep = undefined;
-        element.click();
-      }
-    }, 2000);
-  };
-
-const onFocusComplete = (
+const onScrollEnd = (
   levelOfSupport: Exclude<LevelOfSupport, 'text'>,
   step: ASTInstruction,
 ): ((element: Element, supportState: SupportState) => void) => {
@@ -78,16 +60,25 @@ const onFocusComplete = (
       if (step.type === ASTNodeType.ScrollTo) {
         return onScrollStepComplete(step);
       }
-      return (_element: Element, supportState: SupportState) =>
-        (supportState.nextStep = undefined);
+      return (_element: Element, _supportState: SupportState) => {};
     case 'click':
-      if (step.type === ASTNodeType.Click || step.type === ASTNodeType.Follow) {
-        return onClickStepComplete(step);
-      } else if (step.type === ASTNodeType.ScrollTo) {
-        return onScrollStepComplete(step);
-      }
-      return (_element: Element, supportState: SupportState) =>
-        (supportState.nextStep = undefined);
+      return mapStepToSystemAction[step.type](step);
+  }
+};
+
+const supportNextStep = (
+  supportState: SupportState,
+  levelOfSupport: Exclude<LevelOfSupport, 'text'>,
+) => {
+  const [nextStep] = supportState.nextPossibleSteps;
+  console.log(nextStep);
+  if (nextStep && nextStep.type != ASTNodeType.UserDecision) {
+    setFocus(
+      nextStep.element,
+      supportState,
+      true,
+      onScrollEnd(levelOfSupport, nextStep),
+    );
   }
 };
 
@@ -96,28 +87,18 @@ const onReceiveNextPossibleSteps = (
   nextPossibleSteps: ASTInstruction[],
 ) => {
   supportState.nextPossibleSteps = nextPossibleSteps;
-  if (supportState.levelOfSupport === 'text') {
+  const levelOfSupport = supportState.levelOfSupport;
+
+  // Check if the next step has already been completed if its an input step
+  preDetectInputStep(nextPossibleSteps.at(0), supportState);
+
+  // Provide no further support if level of support is text
+  if (levelOfSupport === 'text') {
     return;
   }
 
-  if (!supportState.nextStep) {
-    const [stepToHelpWith] = supportState.nextPossibleSteps;
-    supportState.nextStep = stepToHelpWith;
-    console.log('Setting next step');
-  }
-  const levelOfSupport = supportState.levelOfSupport;
-
   supportState.timeoutId = setTimeout(() => {
-    const nextStep = supportState.nextStep;
-    console.log(nextStep);
-    if (nextStep && nextStep.type != ASTNodeType.UserDecision) {
-      onSetFocus(
-        nextStep.element,
-        supportState,
-        true,
-        onFocusComplete(levelOfSupport, nextStep),
-      );
-    }
+    supportNextStep(supportState, levelOfSupport);
   }, 1000);
 };
 
