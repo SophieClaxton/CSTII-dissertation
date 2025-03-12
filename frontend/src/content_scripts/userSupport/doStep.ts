@@ -32,8 +32,18 @@ const doWriteStep: SystemStepAction =
     supportState.timeoutId = setTimeout(() => {
       if (isHTMLElement(element) && element.tagName === 'INPUT') {
         const inputElement = element as HTMLInputElement;
+        inputElement.click();
+        const inputEvent = new Event('input', {
+          bubbles: true,
+          cancelable: true,
+        });
+        const changeEvent = new Event('change', {
+          bubbles: true,
+          cancelable: true,
+        });
         inputElement.value = step.text;
-        sendDetectionMessage(supportState, step);
+        inputElement.dispatchEvent(inputEvent);
+        inputElement.dispatchEvent(changeEvent);
       }
     }, 1000);
   };
