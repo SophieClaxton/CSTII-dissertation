@@ -7,11 +7,13 @@ import {
   useUnpublishedScriptContext,
   createTypeErrorsContext,
   useTabContext,
+  useNavigationContext,
 } from '../../contexts/contextHooks';
 import { TypeErrorsContext } from '../../contexts/TypeErrorsContext';
 import typeCheck, { TypeCheckError } from '../../models/CST/typeCheck';
 import { getEdges } from '../flowUtils/getEdges';
 import {
+  onDeleteUnpublishedScript,
   onPublishUnpublishedScript,
   onSaveUnpublishedScript,
 } from '../scriptUtils/updateUnpublishedScript';
@@ -23,13 +25,16 @@ import Input from '@mui/material/Input/Input';
 import { EditorActionType } from '../../models/EditorAction';
 import Box from '@mui/material/Box/Box';
 import { TabInfo } from '../../contexts/TabContext';
+import { useConfirm } from 'material-ui-confirm';
 
 const ScriptEditor: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
   const { tab } = useTabContext();
+  const { goBack } = useNavigationContext();
   const onTabUpdate = useRef<undefined | ((tab: TabInfo) => void)>(undefined);
   const createdAtDate = new Date(unpublishedScript.created_at);
   const dateString = createdAtDate.toLocaleDateString();
+  const confirm = useConfirm();
 
   const [snackBar, setSnackBar] = useState({
     open: false,
@@ -95,6 +100,26 @@ const ScriptEditor: React.FC = () => {
             Author: {unpublishedScript.author.name}
           </Typography>
           <Typography variant={'subtitle2'}>Created: {dateString}</Typography>
+          <Button
+            variant={'text'}
+            sx={{ padding: 0 }}
+            onClick={async () => {
+              const { confirmed } = await confirm({
+                description: 'Deleting the script is a permanent action',
+              });
+              if (confirmed) {
+                const response = await onDeleteUnpublishedScript(
+                  unpublishedScript,
+                  setSnackBar,
+                );
+                if (response.status === 'Loaded') {
+                  setTimeout(goBack, 3000);
+                }
+              }
+            }}
+          >
+            <Typography variant={'subtitle2'}>Delete Script</Typography>
+          </Button>
         </Stack>
         <Input
           value={description}

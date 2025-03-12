@@ -6,6 +6,7 @@ import {
   UpdateUnpublishedScriptRequest,
 } from '../models/API/UnpublishedScript';
 import { handleError } from '../models/API/APIError';
+import APISuccess from '../models/API/APISuccess';
 
 const unpublishedScriptsEndpoint = axios.create({
   baseURL: 'http://localhost:8000/unpublished_scripts/',
@@ -73,8 +74,27 @@ const updateUnpublishedScript = async (
   }
 };
 
+const deleteUnpublishedScript = async (
+  scriptId: number,
+): Promise<APIResponse<APISuccess>> => {
+  try {
+    console.log('Making request to delete script');
+    const response = await unpublishedScriptsEndpoint.delete(`${scriptId}`);
+    return {
+      status: 'Loaded',
+      data: response.data as APISuccess,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
 export {
   createUnpublishedScript,
   getUnpublishedScript,
   updateUnpublishedScript,
+  deleteUnpublishedScript,
 };
