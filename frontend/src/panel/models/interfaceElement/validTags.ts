@@ -52,8 +52,11 @@ const mapStepNodeToValidTags: Record<CSTElementNode['type'], ValidTag[]> = {
     },
     { tag: 'TEXTAREA' },
   ],
-  Select: [{ tag: 'SELECT' }],
-  Check: [{ tag: 'INPUT', condition: elementTypeIs('checkbox') }],
+  Select: [
+    { tag: 'SELECT' },
+    { tag: 'INPUT', condition: elementTypeIs('checkbox') },
+    { tag: 'INPUT', condition: elementTypeIs('radio') },
+  ],
   Draw: [{ tag: 'CANVAS' }],
 };
 

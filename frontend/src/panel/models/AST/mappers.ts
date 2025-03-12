@@ -1,20 +1,6 @@
-import { CSTStepNodeType } from '../CST/CST';
 import { mapTagToElementName } from '../interfaceElement/elementInfo';
 import { ASTNodeType, ASTStepNode } from './AST';
 import { ASTInstruction } from './Instruction';
-
-const mapCSTtoASTNodeType: Record<CSTStepNodeType, ASTStepNode['type']> = {
-  Follow: ASTNodeType.Follow,
-  Click: ASTNodeType.Click,
-  Read: ASTNodeType.Read,
-  'Scroll To': ASTNodeType.ScrollTo,
-  Drag: ASTNodeType.Drag,
-  'User Decision': ASTNodeType.UserDecision,
-  Write: ASTNodeType.Write,
-  Select: ASTNodeType.Select,
-  Check: ASTNodeType.Check,
-  Draw: ASTNodeType.Draw,
-};
 
 const getTruncatedText = (
   text: string | undefined,
@@ -48,6 +34,8 @@ const mapASTInstructionToDescription = (step: ASTInstruction): string => {
       return `Use the "${getTruncatedText(step.element.label)}" drop down menu and choose the "${step.option.text}" option`;
     case ASTNodeType.Check:
       return `Ensure the "${step.element.label}" check option is ${step.isChecked ? 'checked' : 'unchecked'}`;
+    case ASTNodeType.Radio:
+      return `Select the "${step.element.label}" radio option`;
     case ASTNodeType.Draw:
       return `On the canvas, draw ${step.description}`;
   }
@@ -64,7 +52,8 @@ const isSkippable: Record<ASTStepNode['type'], boolean> = {
   Write: false,
   Select: false,
   Check: false,
+  Radio: false,
   Draw: false,
 };
 
-export { mapCSTtoASTNodeType, mapASTInstructionToDescription, isSkippable };
+export { mapASTInstructionToDescription, isSkippable };

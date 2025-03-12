@@ -1,6 +1,5 @@
 import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
 import {
-  ASTCheckNode,
   ASTClickNode,
   ASTDragNode,
   ASTDrawNode,
@@ -10,16 +9,13 @@ import {
   ASTScrollToNode,
   ASTSection,
   ASTSectionNode,
-  ASTSelectNode,
   ASTStepNode,
   ASTSubsectionNode,
   ASTWriteNode,
 } from '../AST/AST';
 import {
-  astCheckNodeSchema,
   astDragNodeSchema,
   astDrawNodeSchema,
-  astSelectNodeSchema,
   astStepBaseSchema,
   astWriteNodeSchema,
 } from '../AST/schemas';
@@ -30,7 +26,6 @@ import {
 } from '../AST/testers';
 import { getMissingProperties, Schema } from '../Schema';
 import {
-  CSTCheckNode,
   CSTClickNode,
   CSTDragNode,
   CSTDrawNode,
@@ -231,17 +226,7 @@ const mapInnerStep = (
         astWriteNodeSchema,
       );
     case CSTStepNodeType.Select:
-      return mapStepNode<CSTSelectNode, ASTSelectNode>(
-        innerStep,
-        next,
-        astSelectNodeSchema,
-      );
-    case CSTStepNodeType.Check:
-      return mapStepNode<CSTCheckNode, ASTCheckNode>(
-        innerStep,
-        next,
-        astCheckNodeSchema,
-      );
+      return mapSelectInputStep(innerStep, next);
     case CSTStepNodeType.Draw:
       return mapStepNode<CSTDrawNode, ASTDrawNode>(
         innerStep,
@@ -249,6 +234,63 @@ const mapInnerStep = (
         astDrawNodeSchema,
       );
   }
+};
+
+const mapSelectInputStep = (
+  step: CSTSelectNode,
+  next: ASTStepNode | TypeCheckError[],
+): ASTStepNode | TypeCheckError[] => {
+  if (step.element && step.selector) {
+    switch (step.selector.selectType) {
+      case 'select':
+        if (step.selector.option) {
+          if (isASTStepNode(next)) {
+            return {
+              type: ASTNodeType.Select,
+              element: step.element,
+              next,
+              option: step.selector.option,
+            };
+          } else {
+            return next;
+          }
+        } else {
+          if (isASTStepNode(next)) {
+            return [{ location: step.id, reason: 'Missing option' }];
+          } else {
+            return [{ location: step.id, reason: 'Missing option' }, ...next];
+          }
+        }
+
+      case 'check':
+        if (isASTStepNode(next)) {
+          return {
+            type: ASTNodeType.Check,
+            element: step.element,
+            next,
+            isChecked: step.selector.isChecked,
+          };
+        } else {
+          return next;
+        }
+
+      case 'radio':
+        if (isASTStepNode(next)) {
+          return {
+            type: ASTNodeType.Radio,
+            element: step.element,
+            next,
+          };
+        } else {
+          return next;
+        }
+    }
+  }
+  const stepError = { location: step.id, reason: 'Missing element' };
+  if (isASTStepNode(next)) {
+    return [stepError];
+  }
+  return [stepError, ...next];
 };
 
 const mapFollowStep = (

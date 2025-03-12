@@ -43,7 +43,6 @@ const isInnerStep = (node: CSTNode): node is CSTInnerStepNode => {
     CSTStepNodeType.Drag,
     CSTStepNodeType.Write,
     CSTStepNodeType.Select,
-    CSTStepNodeType.Check,
     CSTStepNodeType.Draw,
   ];
   return (

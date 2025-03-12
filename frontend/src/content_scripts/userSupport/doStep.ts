@@ -33,17 +33,19 @@ const doWriteStep: SystemStepAction =
       if (isHTMLElement(element) && element.tagName === 'INPUT') {
         const inputElement = element as HTMLInputElement;
         inputElement.click();
-        const inputEvent = new Event('input', {
-          bubbles: true,
-          cancelable: true,
-        });
-        const changeEvent = new Event('change', {
-          bubbles: true,
-          cancelable: true,
-        });
-        inputElement.value = step.text;
-        inputElement.dispatchEvent(inputEvent);
-        inputElement.dispatchEvent(changeEvent);
+        if (step.isExact) {
+          const inputEvent = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+          });
+          const changeEvent = new Event('change', {
+            bubbles: true,
+            cancelable: true,
+          });
+          inputElement.value = step.text;
+          inputElement.dispatchEvent(inputEvent);
+          inputElement.dispatchEvent(changeEvent);
+        }
       }
     }, 1000);
   };
@@ -84,17 +86,38 @@ const doCheckStep: SystemStepAction =
     supportState.timeoutId = setTimeout(() => {
       if (isHTMLElement(element) && element.tagName === 'INPUT') {
         const inputElement = element as HTMLInputElement;
-        const inputEvent = new Event('input', {
+        if (inputElement.checked != step.isChecked) {
+          const mouseDownEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+          });
+          inputElement.dispatchEvent(mouseDownEvent);
+        } else {
+          const inputEvent = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+          });
+          inputElement.dispatchEvent(inputEvent);
+        }
+      }
+    }, 1000);
+  };
+
+const doRadioStep: SystemStepAction =
+  (step: ASTInstruction) => (element: Element, supportState: SupportState) => {
+    if (step.type != ASTNodeType.Radio) {
+      return;
+    }
+    supportState.timeoutId = setTimeout(() => {
+      if (isHTMLElement(element) && element.tagName === 'INPUT') {
+        const inputElement = element as HTMLInputElement;
+        const mouseDownEvent = new MouseEvent('click', {
           bubbles: true,
           cancelable: true,
+          view: window,
         });
-        const changeEvent = new Event('change', {
-          bubbles: true,
-          cancelable: true,
-        });
-        inputElement.checked = step.isChecked;
-        inputElement.dispatchEvent(inputEvent);
-        inputElement.dispatchEvent(changeEvent);
+        inputElement.dispatchEvent(mouseDownEvent);
       }
     }, 1000);
   };
@@ -106,6 +129,7 @@ const mapStepToSystemAction: Record<ASTInstruction['type'], SystemStepAction> =
     [ASTNodeType.Write]: doWriteStep,
     [ASTNodeType.Select]: doSelectStep,
     [ASTNodeType.Check]: doCheckStep,
+    [ASTNodeType.Radio]: doRadioStep,
     [ASTNodeType.ScrollTo]: onScrollStepComplete,
     [ASTNodeType.UserDecision]: () => () => {},
     [ASTNodeType.Read]: () => () => {},

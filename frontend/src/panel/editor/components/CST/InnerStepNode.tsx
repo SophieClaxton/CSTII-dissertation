@@ -77,20 +77,30 @@ const mapStepToExtraInputs = (
           placeholder={'Text'}
         />
       );
-    case CSTStepNodeType.Check:
-      return <CheckedSelector stepId={step.id} isChecked={step.isChecked} />;
-    case CSTStepNodeType.Select:
-      return (
-        <>
-          {step.element && (
-            <OptionSelector
-              stepId={step.id}
-              element={step.element}
-              option={step.option}
-            />
-          )}
-        </>
-      );
+    case CSTStepNodeType.Select: {
+      if (step.element && step.selector) {
+        switch (step.selector.selectType) {
+          case 'check':
+            return (
+              <CheckedSelector
+                stepId={step.id}
+                isChecked={step.selector.isChecked}
+              />
+            );
+          case 'radio':
+            return <></>;
+          case 'select':
+            return (
+              <OptionSelector
+                stepId={step.id}
+                element={step.element}
+                option={step.selector.option}
+              />
+            );
+        }
+      }
+      return <></>;
+    }
     case CSTStepNodeType.Drag:
     case CSTStepNodeType.Draw:
     case CSTStepNodeType.Follow:

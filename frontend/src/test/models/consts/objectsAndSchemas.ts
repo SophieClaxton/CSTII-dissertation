@@ -4,17 +4,16 @@ import {
   astStepBaseSchema,
 } from '../../../panel/models/AST/schemas';
 import {
-  CSTCheckNode,
   CSTNode,
   CSTReadNode,
+  CSTSelectNode,
   CSTStepNodeType,
 } from '../../../panel/models/CST/CST';
 import { Schema } from '../../../panel/models/Schema';
 
-const checkNodeMissingElement: CSTCheckNode = {
+const selectNodeMissingElement: CSTSelectNode = {
   id: { parentId: { sectionId: 1 }, stepId: 1 },
-  type: CSTStepNodeType.Check,
-  isChecked: false,
+  type: CSTStepNodeType.Select,
 };
 
 const validReadNode: CSTReadNode = {
@@ -31,7 +30,7 @@ const objectsAndSchemas: {
 }[] = [
   {
     name: 'Check node missing element',
-    object: checkNodeMissingElement,
+    object: selectNodeMissingElement,
     schema: astCheckNodeSchema,
     expectedOutcome: ['element'],
   },

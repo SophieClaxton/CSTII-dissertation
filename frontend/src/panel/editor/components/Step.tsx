@@ -30,7 +30,6 @@ const stepColourMap: Record<CSTStepNodeType, string> = {
   'User Decision': '#c7eae4',
   Write: '#a7e8bd',
   Select: '#fcbcb8',
-  Check: '#efa7a7',
   Draw: '#ffd972',
 };
 
