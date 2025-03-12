@@ -43,11 +43,11 @@ const mapASTInstructionToDescription = (step: ASTInstruction): string => {
     case ASTNodeType.UserDecision:
       return `Decision needed: ${step.question}`;
     case ASTNodeType.Write:
-      return `Type into the input "${step.element.label}", "${step.text}"`;
+      return `Type into the "${step.element.label}" input the text: "${step.text}"`;
     case ASTNodeType.Select:
-      return `Use the drop down menu "${getTruncatedText(step.element.label, 15)}" and choose the "${step.option.text}" option`;
+      return `Use the "${getTruncatedText(step.element.label)}" drop down menu and choose the "${step.option.text}" option`;
     case ASTNodeType.Check:
-      return `Ensure the check option "${step.element.label}" is ${step.isChecked ? 'checked' : 'unchecked'}`;
+      return `Ensure the "${step.element.label}" check option is ${step.isChecked ? 'checked' : 'unchecked'}`;
     case ASTNodeType.Draw:
       return `On the canvas, draw ${step.description}`;
   }

@@ -43,13 +43,13 @@ const elementsMatch = (
   if (element.tagName != msgElement.tag) {
     return false;
   }
-  if (element.id === extractElementAttribute(msgElement.outerHTML, 'id')) {
-    return true;
-  }
   const msgElementOpeningTag = extractOpeningTag(msgElement.outerHTML);
   if (!msgElementOpeningTag) {
     console.error('Could not extract opening tag');
     return false;
+  }
+  if (element.id === extractElementAttribute(msgElementOpeningTag, 'id')) {
+    return true;
   }
   for (const { attr, condition } of commonAttr) {
     if (
