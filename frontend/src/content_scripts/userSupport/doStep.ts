@@ -56,17 +56,22 @@ const doSelectStep: SystemStepAction =
     supportState.timeoutId = setTimeout(() => {
       if (isHTMLElement(element) && element.tagName === 'SELECT') {
         const selectElement = element as HTMLSelectElement;
-        let updated = false;
         selectElement.click();
         for (const option of selectElement.options) {
           if (option.value === step.option.value) {
             option.selected = true;
-            updated = true;
           }
         }
-        if (updated) {
-          sendDetectionMessage(supportState, step);
-        }
+        const inputEvent = new Event('input', {
+          bubbles: true,
+          cancelable: true,
+        });
+        const changeEvent = new Event('change', {
+          bubbles: true,
+          cancelable: true,
+        });
+        selectElement.dispatchEvent(inputEvent);
+        selectElement.dispatchEvent(changeEvent);
       }
     }, 1000);
   };
@@ -79,8 +84,17 @@ const doCheckStep: SystemStepAction =
     supportState.timeoutId = setTimeout(() => {
       if (isHTMLElement(element) && element.tagName === 'INPUT') {
         const inputElement = element as HTMLInputElement;
+        const inputEvent = new Event('input', {
+          bubbles: true,
+          cancelable: true,
+        });
+        const changeEvent = new Event('change', {
+          bubbles: true,
+          cancelable: true,
+        });
         inputElement.checked = step.isChecked;
-        sendDetectionMessage(supportState, step);
+        inputElement.dispatchEvent(inputEvent);
+        inputElement.dispatchEvent(changeEvent);
       }
     }, 1000);
   };
