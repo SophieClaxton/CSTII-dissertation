@@ -54,7 +54,7 @@ interface CSTSectionNode extends CSTSectionBase {
 }
 
 enum CSTStepNodeType {
-  Follow = 'Follow',
+  Follow = 'Go To',
   Click = 'Click',
   Read = 'Read',
   ScrollTo = 'Scroll To',

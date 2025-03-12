@@ -49,6 +49,9 @@ const elementsMatch = (
     return false;
   }
   if (element.id === extractElementAttribute(msgElementOpeningTag, 'id')) {
+    if (showErrorMessages) {
+      console.log('Matched ids');
+    }
     return true;
   }
   for (const { attr, condition } of commonAttr) {

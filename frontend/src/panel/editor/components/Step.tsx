@@ -22,7 +22,7 @@ import Box from '@mui/material/Box/Box';
 import TypeErrorMessage from './TypeErrorMessage';
 
 const stepColourMap: Record<CSTStepNodeType, string> = {
-  Follow: '#ff999c',
+  'Go To': '#ff999c',
   Click: '#ffde85',
   Read: '#cceb98',
   'Scroll To': '#93cdf1',

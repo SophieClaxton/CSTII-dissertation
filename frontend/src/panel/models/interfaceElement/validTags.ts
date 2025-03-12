@@ -12,7 +12,7 @@ const defaultValidTags: ValidTag[] = [...defaultSelectableTags].map((tag) => ({
 }));
 
 const mapStepNodeToValidTags: Record<CSTElementNode['type'], ValidTag[]> = {
-  Follow: [
+  'Go To': [
     { tag: 'A' },
     {
       tag: 'BUTTON',

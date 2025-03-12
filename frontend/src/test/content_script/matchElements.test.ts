@@ -154,4 +154,25 @@ describe('elementsMatch', () => {
     };
     expect(elementsMatch(element, msgElement, true)).toBe(true);
   });
+
+  it('inputs match with ids', () => {
+    const element = document.createElement('input');
+    element.setAttribute('id', 'mat-input-0');
+    element.setAttribute(
+      'class',
+      'mat-input-element mat-form-field-autofill-control mat-autocomplete-trigger ng-tns-c31-0 ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored',
+    );
+    element.setAttribute('type', 'text');
+    element.setAttribute('role', 'combobox');
+    element.setAttribute('aria-label', 'Provider name');
+    const msgElement = {
+      outerHTML:
+        '<input _ngcontent-agx-c39="" type="text" aria-label="Provider name" matinput="" class="mat-input-element mat-form-field-autofill-control mat-autocomplete-trigger ng-tns-c31-0 ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored" id="mat-input-0" data-placeholder="Search for a provider" aria-invalid="false" aria-required="false" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-haspopup="true" aria-owns="mat-autocomplete-0">',
+      url: 'https://www.officeforstudents.org.uk/for-providers/regulatory-resources/the-ofs-register/#/',
+      tag: 'INPUT' as SelectableTag,
+      textContent: '',
+      label: 'Search for a provider',
+    };
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
+  });
 });

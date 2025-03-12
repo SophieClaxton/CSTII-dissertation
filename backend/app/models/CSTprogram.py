@@ -45,7 +45,7 @@ class CSTSectionNode(CSTSectionBase):
 
 
 class CSTStepNodeType(str, Enum):
-    Follow = "Follow"
+    Follow = "Go To"
     Click = "Click"
     Read = "Read"
     ScrollTo = "Scroll To"
