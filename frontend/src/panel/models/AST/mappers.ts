@@ -29,7 +29,9 @@ const mapASTInstructionToDescription = (step: ASTInstruction): string => {
     case ASTNodeType.UserDecision:
       return `Decision needed: ${step.question}`;
     case ASTNodeType.Write:
-      return `Type into the "${step.element.label}" input the text: "${step.text}"`;
+      return step.isExact
+        ? `Type into the "${step.element.label}" input the text: "${step.text}"`
+        : `Type ${step.text} into the "${step.element.label}" input`;
     case ASTNodeType.Select:
       return `Use the "${getTruncatedText(step.element.label)}" drop down menu and choose the "${step.option.text}" option`;
     case ASTNodeType.Check:
