@@ -1,19 +1,16 @@
 import { ASTNode } from '../../../panel/models/AST/AST';
-import {
-  astCheckNodeSchema,
-  astStepBaseSchema,
-} from '../../../panel/models/AST/schemas';
+import { astStepBaseSchema } from '../../../panel/models/AST/schemas';
 import {
   CSTNode,
   CSTReadNode,
-  CSTSelectNode,
+  CSTScrollToNode,
   CSTStepNodeType,
 } from '../../../panel/models/CST/CST';
 import { Schema } from '../../../panel/models/Schema';
 
-const selectNodeMissingElement: CSTSelectNode = {
+const scrollToNodeMissingElement: CSTScrollToNode = {
   id: { parentId: { sectionId: 1 }, stepId: 1 },
-  type: CSTStepNodeType.Select,
+  type: CSTStepNodeType.ScrollTo,
 };
 
 const validReadNode: CSTReadNode = {
@@ -29,9 +26,9 @@ const objectsAndSchemas: {
   expectedOutcome: string[];
 }[] = [
   {
-    name: 'Check node missing element',
-    object: selectNodeMissingElement,
-    schema: astCheckNodeSchema,
+    name: 'Scrollt to node missing element',
+    object: scrollToNodeMissingElement,
+    schema: astStepBaseSchema,
     expectedOutcome: ['element'],
   },
   {
