@@ -86,6 +86,7 @@ const setFocus = (
     undefined,
   attempts: number = 0,
 ) => {
+  unsetFocus();
   const element = findElement(msgElement);
   if (element) {
     if (highlight) {
