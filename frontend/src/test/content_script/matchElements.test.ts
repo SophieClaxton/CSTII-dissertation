@@ -58,6 +58,15 @@ describe('extractElementAttribute', () => {
       'https://www.gov.uk/browse/education',
     );
   });
+
+  it('extracts id from select element', () => {
+    const elementOuterHTML =
+      '<select data-testid="dropdown-select-return-type" id="return-type" name="return-type" aria-invalid="false" aria-required="true" class="sc-e9939e2c-3 bVUdYC"><option data-testid="dropdown-option-0-return-type" value="departing">Departing after</option><option data-testid="dropdown-option-1-return-type" value="arriving">Arriving by</option><option data-testid="dropdown-option-2-return-type" value="last">Last train</option></select>';
+    const attribute = 'id';
+    expect(extractElementAttribute(elementOuterHTML, attribute)).toBe(
+      'return-type',
+    );
+  });
 });
 
 describe('elementsMatch', () => {

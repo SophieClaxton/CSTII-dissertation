@@ -16,7 +16,7 @@ const extractElementAttribute = (
   elementOuterHTML: string,
   attribute: string,
 ): string | null => {
-  const attrPatter = new RegExp(`${attribute}="([\\s \\S][^"]*)"`, 'g');
+  const attrPatter = new RegExp(` ${attribute}="([\\s \\S][^"]*)"`, 'g');
   const attr = attrPatter.exec(elementOuterHTML);
   return attr ? attr[1] : null;
 };
