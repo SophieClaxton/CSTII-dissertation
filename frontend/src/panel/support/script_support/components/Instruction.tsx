@@ -2,15 +2,20 @@ import Box from '@mui/material/Box/Box';
 import Typography from '@mui/material/Typography/Typography';
 import { mapASTInstructionToDescription } from '../../../models/AST/mappers';
 import { ASTInstruction } from '../../../models/AST/Instruction';
+import Button from '@mui/material/Button/Button';
+import { StateSetter } from '../../../models/utilTypes';
+import { ASTNodeType } from '../../../models/AST/AST';
 
 interface InstructionProps {
   supportActive: boolean;
   instruction: ASTInstruction;
+  setStepCompleted: StateSetter<ASTInstruction | undefined>;
 }
 
 const Instruction: React.FC<InstructionProps> = ({
   supportActive,
   instruction,
+  setStepCompleted,
 }) => {
   const { stage, stepNumber } = instruction;
   return (
@@ -57,6 +62,23 @@ const Instruction: React.FC<InstructionProps> = ({
       >
         {mapASTInstructionToDescription(instruction)}
       </Typography>
+      {(instruction.type === ASTNodeType.Read ||
+        (instruction.type === ASTNodeType.Write &&
+          instruction.isExact === false)) && (
+        <Button
+          sx={{
+            padding: '0.25rem',
+            lineHeight: 1,
+            minWidth: 'fit-content',
+            gridColumnStart: 2,
+            justifySelf: 'end',
+          }}
+          onClick={() => setStepCompleted(instruction)}
+          disabled={!supportActive}
+        >
+          Done
+        </Button>
+      )}
     </Box>
   );
 };

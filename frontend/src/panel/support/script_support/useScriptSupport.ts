@@ -103,6 +103,7 @@ const useScriptSupport = (program: ASTProgram) => {
     supportActive,
     setSupportActive,
     tab,
+    setStepCompleted,
   };
 };
 
