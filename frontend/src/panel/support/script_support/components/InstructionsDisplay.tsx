@@ -11,12 +11,14 @@ interface InstructionsDisplayProps {
   supportActive: boolean;
   visibleInstructions: ASTInstruction[];
   setVisibleInstructions: StateSetter<ASTInstruction[]>;
+  setStepCompleted: StateSetter<ASTInstruction | undefined>;
 }
 
 const InstructionsDisplay: React.FC<InstructionsDisplayProps> = ({
   supportActive,
   visibleInstructions,
   setVisibleInstructions,
+  setStepCompleted,
 }) => {
   const { goBack } = useNavigationContext();
   const lastStep = visibleInstructions.at(-1);
@@ -41,7 +43,7 @@ const InstructionsDisplay: React.FC<InstructionsDisplayProps> = ({
             {...{ supportActive, instruction, setVisibleInstructions }}
           />
         ) : (
-          <Instruction {...{ supportActive, instruction }} />
+          <Instruction {...{ supportActive, instruction, setStepCompleted }} />
         ),
       )}
       {showFinish && (

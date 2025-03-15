@@ -20,6 +20,7 @@ const ScriptSupport: React.FC<ScriptSupportProps> = ({ script }) => {
     setLevelOfSupport,
     supportActive,
     setSupportActive,
+    setStepCompleted,
     tab,
   } = useScriptSupport(script.program);
 
@@ -41,7 +42,12 @@ const ScriptSupport: React.FC<ScriptSupportProps> = ({ script }) => {
       <Divider flexItem />
 
       <InstructionsDisplay
-        {...{ supportActive, visibleInstructions, setVisibleInstructions }}
+        {...{
+          supportActive,
+          visibleInstructions,
+          setVisibleInstructions,
+          setStepCompleted,
+        }}
       />
 
       <SupportDialog {...supportDialogDetails} />

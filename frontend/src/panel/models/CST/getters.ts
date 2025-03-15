@@ -40,11 +40,6 @@ const getInnerStepNodeChoices = (
   },
   {
     id: getNextInnerStepId(section),
-    type: CSTStepNodeType.Check,
-    isChecked: false,
-  },
-  {
-    id: getNextInnerStepId(section),
     type: CSTStepNodeType.Select,
   },
   // {

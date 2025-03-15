@@ -54,14 +54,11 @@ const HelperScriptSelector = () => {
             <Typography variant="subtitle2">Username: {user.name}</Typography>
             <div className="all-scripts-container">
               <List sx={{ width: '100%' }}>
-                <ListSubheader>Published Scripts</ListSubheader>
-                {user.scripts.map((script) => (
-                  <ScriptListItem script={script} />
-                ))}
-              </List>
-              <List sx={{ width: '100%' }}>
                 <ListSubheader>Unpublished Scripts</ListSubheader>
                 <Button
+                  variant={'outlined'}
+                  sx={{ marginBottom: '0.5rem' }}
+                  fullWidth
                   onClick={() => {
                     const createNewScript = async () => {
                       const response = await createUnpublishedScript(user.id);
@@ -79,6 +76,12 @@ const HelperScriptSelector = () => {
                 </Button>
                 {user.unpublished_scripts.map((script) => (
                   <UnpublishedScriptListItem script={script} />
+                ))}
+              </List>
+              <List sx={{ width: '100%' }}>
+                <ListSubheader>Published Scripts</ListSubheader>
+                {user.scripts.map((script) => (
+                  <ScriptListItem script={script} />
                 ))}
               </List>
             </div>

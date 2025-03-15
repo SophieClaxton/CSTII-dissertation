@@ -6,6 +6,7 @@ import { PanelScreen } from './panel/navigation/ScreenType';
 import { ScreenContext } from './panel/contexts/ScreenContext';
 import TabContext, { TabInfo } from './panel/contexts/TabContext';
 import { setCurrentTab, setTabListeners } from './common/tabs';
+import { ConfirmProvider } from 'material-ui-confirm';
 
 function App() {
   useEffect(setUpMessageHandler, []);
@@ -33,7 +34,7 @@ function App() {
       }}
     >
       <TabContext.Provider value={{ tab }}>
-        {currentComponent}
+        <ConfirmProvider>{currentComponent}</ConfirmProvider>
       </TabContext.Provider>
     </ScreenContext.Provider>
   );

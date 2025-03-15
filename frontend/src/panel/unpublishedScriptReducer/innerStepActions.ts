@@ -1,3 +1,4 @@
+import { extractElementAttribute } from '../../content_scripts/elements/matchElements';
 import {
   CSTInnerStepId,
   CSTInnerStepNode,
@@ -50,6 +51,45 @@ const rearrangeInnerSteps = (
   );
 };
 
+const updateInnerStepWithNewElement = (
+  step: CSTInnerStepNode,
+  element: InterfaceElement | undefined,
+): CSTInnerStepNode => {
+  if (step.type === CSTStepNodeType.UserDecision) {
+    return step;
+  }
+  if (step.type == CSTStepNodeType.Select) {
+    if (!element) {
+      return { ...step, element: undefined, selector: undefined };
+    }
+    if (element.tag === 'SELECT') {
+      return {
+        ...step,
+        element,
+        selector: { selectType: 'select', option: undefined },
+      };
+    }
+    if (
+      element.tag === 'INPUT' &&
+      extractElementAttribute(element.outerHTML, 'type') === 'checkbox'
+    ) {
+      return {
+        ...step,
+        element,
+        selector: { selectType: 'check', isChecked: false },
+      };
+    }
+    if (
+      element.tag === 'INPUT' &&
+      extractElementAttribute(element.outerHTML, 'type') === 'radio'
+    ) {
+      return { ...step, element, selector: { selectType: 'radio' } };
+    }
+  }
+
+  return { ...step, element: element };
+};
+
 const editInnerStepElement = (
   program: CSTProgram,
   innerStepId: CSTInnerStepId,
@@ -65,7 +105,7 @@ const editInnerStepElement = (
     updateSectionInnerSteps(
       section.innerSteps.map((step) =>
         mapIdToString(step.id) === mapIdToString(innerStepId)
-          ? { ...step, element: element }
+          ? updateInnerStepWithNewElement(step, element)
           : step,
       ),
     ),
@@ -135,7 +175,7 @@ const editIsChecked = (program: CSTProgram, action: EditIsCheckedAction) => {
     updateSectionInnerSteps(
       section.innerSteps.map((step) =>
         mapIdToString(step.id) === mapIdToString(stepId)
-          ? { ...step, isChecked }
+          ? { ...step, selector: { selectType: 'check', isChecked } }
           : step,
       ),
     ),
@@ -157,7 +197,7 @@ const editSelectedOption = (
     updateSectionInnerSteps(
       section.innerSteps.map((step) =>
         mapIdToString(step.id) === mapIdToString(stepId)
-          ? { ...step, option }
+          ? { ...step, selector: { selectType: 'select', option } }
           : step,
       ),
     ),

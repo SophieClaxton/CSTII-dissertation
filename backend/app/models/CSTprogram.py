@@ -45,7 +45,7 @@ class CSTSectionNode(CSTSectionBase):
 
 
 class CSTStepNodeType(str, Enum):
-    Follow = "Follow"
+    Follow = "Go To"
     Click = "Click"
     Read = "Read"
     ScrollTo = "Scroll To"
@@ -53,7 +53,6 @@ class CSTStepNodeType(str, Enum):
     UserDecision = "User Decision"
     Write = "Write"
     Select = "Select"
-    Check = "Check"
     Draw = "Draw"
 
 
@@ -141,14 +140,27 @@ class CSTSelectNode(CSTInputBase):
     model_config = ConfigDict(use_enum_values=True)
 
     type: Literal[CSTStepNodeType.Select]
+    selector: CSTSelectOption | CSTCheck | CSTRadio
+
+
+class CSTSelectOption(BaseModel):
+    model_config = ConfigDict(use_enum_values=True)
+
+    selectType: Literal["select"]
     option: Option | None = None
 
 
-class CSTCheckNode(CSTInputBase):
+class CSTCheck(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
 
-    type: Literal[CSTStepNodeType.Check]
+    selectType: Literal["check"]
     isChecked: bool
+
+
+class CSTRadio(BaseModel):
+    model_config = ConfigDict(use_enum_values=True)
+
+    selectType: Literal["radio"]
 
 
 class CSTDrawNode(CSTInputBase):
@@ -166,7 +178,6 @@ CSTInnerStepNode = Annotated[
         CSTUserDecisionInnerStepNode,
         CSTWriteNode,
         CSTSelectNode,
-        CSTCheckNode,
         CSTDrawNode,
     ],
     Field(discriminator="type"),

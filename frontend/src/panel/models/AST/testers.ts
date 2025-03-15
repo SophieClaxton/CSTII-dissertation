@@ -33,6 +33,7 @@ const isASTStepNode = (
     ASTNodeType.Write,
     ASTNodeType.Select,
     ASTNodeType.Check,
+    ASTNodeType.Radio,
     ASTNodeType.Draw,
   ];
 

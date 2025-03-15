@@ -24,6 +24,7 @@ class ASTNodeType(str, Enum):
     Write = "Write"
     Select = "Select"
     Check = "Check"
+    Radio = "Radio"
     Draw = "Draw"
 
 
@@ -113,6 +114,13 @@ class ASTCheckNode(ASTStepBase):
     description: str | None = None
 
 
+class ASTRadioNode(ASTStepBase):
+    model_config = ConfigDict(use_enum_values=True)
+
+    type: Literal[ASTNodeType.Radio]
+    description: str | None = None
+
+
 class ASTDrawNode(ASTStepBase):
     model_config = ConfigDict(use_enum_values=True)
 
@@ -140,6 +148,7 @@ ASTStepNode = Annotated[
         ASTWriteNode,
         ASTSelectNode,
         ASTCheckNode,
+        ASTRadioNode,
         ASTDrawNode,
         ASTUserDecisionNode,
     ],

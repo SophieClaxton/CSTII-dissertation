@@ -1,5 +1,8 @@
 import { publishScript, updateScript } from '../../api/scripts';
-import { updateUnpublishedScript } from '../../api/unpublishedScripts';
+import {
+  deleteUnpublishedScript,
+  updateUnpublishedScript,
+} from '../../api/unpublishedScripts';
 import { getWebsites, createWebsite } from '../../api/websites';
 import {
   UnpublishedScript,
@@ -120,4 +123,21 @@ const onPublishUnpublishedScript = async (
   }
 };
 
-export { onSaveUnpublishedScript, onPublishUnpublishedScript };
+const onDeleteUnpublishedScript = async (
+  unpublishedScript: UnpublishedScript,
+  setSnackBar: StateSetter<SnackBarDetails>,
+) => {
+  const response = await deleteUnpublishedScript(unpublishedScript.id);
+  setSnackBar({
+    open: true,
+    message: `Delete ${response.status === 'Loaded' ? 'successful' : 'unsuccessful'}`,
+    error: response.status != 'Loaded',
+  });
+  return response;
+};
+
+export {
+  onSaveUnpublishedScript,
+  onPublishUnpublishedScript,
+  onDeleteUnpublishedScript,
+};

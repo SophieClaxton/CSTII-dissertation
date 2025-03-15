@@ -33,7 +33,13 @@ const useScriptSupport = (program: ASTProgram) => {
   const nextPossibleSteps = useRef<ASTInstruction[]>([]);
 
   useEffect(
-    () => onSupportChange(supportActive, levelOfSupport, tab),
+    () =>
+      onSupportChange(
+        supportActive,
+        levelOfSupport,
+        nextPossibleSteps.current,
+        tab,
+      ),
     [supportActive, levelOfSupport, tab],
   );
 
@@ -97,6 +103,7 @@ const useScriptSupport = (program: ASTProgram) => {
     supportActive,
     setSupportActive,
     tab,
+    setStepCompleted,
   };
 };
 
@@ -125,12 +132,14 @@ const onVisibleInstructionsChange = (
 const onSupportChange = (
   supportActive: boolean,
   levelOfSupport: LevelOfSupport,
+  nextPossibleSteps: ASTInstruction[],
   tab: TabInfo,
 ) => {
   console.log('Tab/supportActive/levelOfSupport changed. Sending message.');
   if (tab.scriptStatus === 'loaded') {
     if (supportActive) {
       sendStartSupportMessage(tab.id, levelOfSupport);
+      sendNextPossibleStepsMessage(tab.id, nextPossibleSteps);
     } else {
       sendEndSupportMessage(tab.id);
     }

@@ -17,6 +17,7 @@ enum ASTNodeType {
   Write = 'Write',
   Select = 'Select',
   Check = 'Check',
+  Radio = 'Radio',
   Draw = 'Draw',
 }
 
@@ -79,7 +80,12 @@ interface ASTDragNode extends ASTStepBase {
   location: { x: number; y: number };
 }
 
-type ASTInputNode = ASTWriteNode | ASTSelectNode | ASTCheckNode | ASTDrawNode;
+type ASTInputNode =
+  | ASTWriteNode
+  | ASTSelectNode
+  | ASTCheckNode
+  | ASTRadioNode
+  | ASTDrawNode;
 
 interface ASTWriteNode extends ASTStepBase {
   type: ASTNodeType.Write;
@@ -97,6 +103,11 @@ interface ASTSelectNode extends ASTStepBase {
 interface ASTCheckNode extends ASTStepBase {
   type: ASTNodeType.Check;
   isChecked: boolean;
+  description?: string;
+}
+
+interface ASTRadioNode extends ASTStepBase {
+  type: ASTNodeType.Radio;
   description?: string;
 }
 

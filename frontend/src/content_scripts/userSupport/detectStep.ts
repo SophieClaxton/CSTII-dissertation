@@ -71,7 +71,10 @@ const detectWriteStep = (
   element: Element,
   supportState: SupportState,
 ) => {
-  if (step.type === ASTNodeType.Write && elementsMatch(element, step.element)) {
+  if (
+    step.type === ASTNodeType.Write &&
+    elementsMatch(element, step.element, true)
+  ) {
     console.log('Detected write');
     const writeElement = element as HTMLInputElement | HTMLTextAreaElement;
     if (step.isExact) {
@@ -131,6 +134,25 @@ const detectCheckStep = (
   }
 };
 
+const detectRadioStep = (
+  step: ASTInstruction,
+  element: Element,
+  supportState: SupportState,
+) => {
+  if (step.type !== ASTNodeType.Radio) {
+    return;
+  }
+  console.log('Actual element:', element.outerHTML);
+  console.log('Step element', step.element.outerHTML);
+  if (elementsMatch(element, step.element)) {
+    console.log('Detected check');
+    const checkElement = element as HTMLInputElement;
+    if (checkElement.checked) {
+      sendDetectionMessage(supportState, step);
+    }
+  }
+};
+
 const detectStepOnInput = (element: Element, supportState: SupportState) => {
   if (!supportState.collectStruggleData) {
     return;
@@ -146,6 +168,8 @@ const detectStepOnInput = (element: Element, supportState: SupportState) => {
         return detectSelectStep(step, element, supportState);
       case ASTNodeType.Check:
         return detectCheckStep(step, element, supportState);
+      case ASTNodeType.Radio:
+        return detectRadioStep(step, element, supportState);
     }
   });
 };
