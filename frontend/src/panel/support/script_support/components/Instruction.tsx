@@ -4,7 +4,6 @@ import { mapASTInstructionToDescription } from '../../../models/AST/mappers';
 import { ASTInstruction } from '../../../models/AST/Instruction';
 import Button from '@mui/material/Button/Button';
 import { StateSetter } from '../../../models/utilTypes';
-import { ASTNodeType } from '../../../models/AST/AST';
 
 interface InstructionProps {
   supportActive: boolean;
@@ -44,6 +43,7 @@ const Instruction: React.FC<InstructionProps> = ({
       <Typography
         variant={'h6'}
         component={'p'}
+        color={supportActive ? 'textPrimary' : 'textDisabled'}
         sx={{
           gridColumnStart: 1,
           textAlign: 'right',
@@ -54,6 +54,7 @@ const Instruction: React.FC<InstructionProps> = ({
       </Typography>
       <Typography
         variant={'body1'}
+        color={supportActive ? 'textPrimary' : 'textDisabled'}
         sx={{
           gridColumnStart: 2,
           textAlign: 'left',
@@ -62,23 +63,24 @@ const Instruction: React.FC<InstructionProps> = ({
       >
         {mapASTInstructionToDescription(instruction)}
       </Typography>
-      {(instruction.type === ASTNodeType.Read ||
+      {/* {(instruction.type === ASTNodeType.Read ||
         (instruction.type === ASTNodeType.Write &&
-          instruction.isExact === false)) && (
-        <Button
-          sx={{
-            padding: '0.25rem',
-            lineHeight: 1,
-            minWidth: 'fit-content',
-            gridColumnStart: 2,
-            justifySelf: 'end',
-          }}
-          onClick={() => setStepCompleted(instruction)}
-          disabled={!supportActive}
-        >
-          Done
-        </Button>
-      )}
+          instruction.isExact === false)) && ( */}
+      <Button
+        sx={{
+          padding: '0.25rem',
+          lineHeight: 1,
+          minWidth: 'fit-content',
+          gridColumnStart: 2,
+          justifySelf: 'end',
+        }}
+        onClick={() => setStepCompleted(instruction)}
+        disabled={!supportActive || instruction.stage != 'next'}
+        variant={'outlined'}
+      >
+        Done
+      </Button>
+      {/* )} */}
     </Box>
   );
 };

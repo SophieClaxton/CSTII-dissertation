@@ -117,14 +117,12 @@ const onVisibleInstructionsChange = (
   nextPossibleSteps.current = nextSteps;
   console.log(nextSteps);
 
-  if (tab.scriptStatus === 'loaded') {
-    if (nextSteps.length > 0) {
-      sendNextPossibleStepsMessage(tab.id, nextSteps);
-    } else {
-      const lastInstruction = visibleInstructions.at(-1);
-      if (lastInstruction && lastInstruction.stage === 'complete') {
-        sendEndSupportMessage(tab.id);
-      }
+  if (nextSteps.length > 0) {
+    sendNextPossibleStepsMessage(tab.id, nextSteps);
+  } else {
+    const lastInstruction = visibleInstructions.at(-1);
+    if (lastInstruction && lastInstruction.stage === 'complete') {
+      sendEndSupportMessage(tab.id);
     }
   }
 };
@@ -135,14 +133,17 @@ const onSupportChange = (
   nextPossibleSteps: ASTInstruction[],
   tab: TabInfo,
 ) => {
-  console.log('Tab/supportActive/levelOfSupport changed. Sending message.');
+  console.log('Tab/supportActive/levelOfSupport changed.');
   if (tab.scriptStatus === 'loaded') {
+    console.log('Sending message.');
     if (supportActive) {
       sendStartSupportMessage(tab.id, levelOfSupport);
       sendNextPossibleStepsMessage(tab.id, nextPossibleSteps);
     } else {
       sendEndSupportMessage(tab.id);
     }
+  } else {
+    console.log('Tab status is not loaded');
   }
 };
 
@@ -152,6 +153,7 @@ const onStepCompletedChange = (
   setStepCompleted: StateSetter<ASTInstruction | undefined>,
   setVisibleInstructions: StateSetter<ASTInstruction[]>,
 ) => {
+  console.log('Step was completed');
   const nextSteps = nextPossibleSteps.current;
   if (stepCompleted && nextSteps.length > 0) {
     const validStepNumbers = nextSteps.map((step) => step.stepNumber);

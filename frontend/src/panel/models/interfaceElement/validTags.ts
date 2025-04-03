@@ -13,7 +13,13 @@ const defaultValidTags: ValidTag[] = [...defaultSelectableTags].map((tag) => ({
 
 const mapStepNodeToValidTags: Record<CSTElementNode['type'], ValidTag[]> = {
   'Go To': [
-    { tag: 'A' },
+    {
+      tag: 'A',
+      condition: (element: Element) => {
+        const href = element.getAttribute('href');
+        return href != null && href != '';
+      },
+    },
     {
       tag: 'BUTTON',
       condition: elementTypeIs('submit'),
@@ -27,6 +33,12 @@ const mapStepNodeToValidTags: Record<CSTElementNode['type'], ValidTag[]> = {
     {
       tag: 'INPUT',
       condition: elementTypeIs('button'),
+    },
+    {
+      tag: 'A',
+      condition: (element: Element) =>
+        element.getAttribute('href') === '' ||
+        element.getAttribute('href') === null,
     },
   ],
   Read: defaultValidTags,

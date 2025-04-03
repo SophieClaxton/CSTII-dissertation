@@ -20,7 +20,7 @@ const ScriptDetails: React.FC<ScriptDetailsProps> = ({ script }) => {
       }}
     >
       <Typography
-        variant={'h4'}
+        variant={'h6'}
         component={'h1'}
         gutterBottom
         sx={{ textAlign: 'left' }}

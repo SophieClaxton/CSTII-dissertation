@@ -28,6 +28,8 @@ import {
 } from './userSupport/support';
 
 console.log('Loaded content script');
+const loadedMessage: LoadedMessage = { type: 'loaded' };
+let loadedMessageSent = false;
 
 let editingState: EditingState = {
   isClickable: false,
@@ -53,6 +55,15 @@ const supportState: SupportState = {
 
 const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: PanelMessage) => {
+    if (!loadedMessageSent) {
+      chrome.runtime
+        .sendMessage(loadedMessage)
+        .then(() => {
+          console.log('Send loaded message');
+          loadedMessageSent = true;
+        })
+        .catch(() => console.log('Failed to send loaded message'));
+    }
     switch (message.type) {
       case 'set_clickable': {
         const { stepId, stepType, url } = message;
@@ -79,6 +90,7 @@ const setupMessageListener = () => {
       }
       case 'end_support': {
         console.log('Received end support message');
+        unsetFocus();
         return onEndSupport(supportState);
       }
       case 'next_possible_steps': {
@@ -151,6 +163,9 @@ const addInputListeners = () => {
         element.addEventListener('input', () => {
           detectStepOnInput(element, supportState);
         });
+        element.addEventListener('change', () => {
+          detectStepOnInput(element, supportState);
+        });
         elementsWithInputListeners.add(element);
       }
     }
@@ -158,8 +173,13 @@ const addInputListeners = () => {
 };
 
 setupMessageListener();
-const loadedMessage: LoadedMessage = { type: 'loaded' };
-chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
+chrome.runtime
+  .sendMessage(loadedMessage)
+  .then(() => {
+    console.log('Send loaded message');
+    loadedMessageSent = true;
+  })
+  .catch(() => console.log('Failed to send loaded message'));
 
 updateClassList();
 addClickListeners();

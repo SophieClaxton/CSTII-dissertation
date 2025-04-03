@@ -45,7 +45,7 @@ const ScriptSelectionPage: React.FC = () => {
   }, [scriptsData, websiteFilters, authorFilters]);
 
   return (
-    <Page title={'Script Selection'}>
+    <Page title={'Select Support'}>
       <Loadable
         response={scriptsData}
         onLoad={() => (

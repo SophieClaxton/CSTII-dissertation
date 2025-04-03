@@ -67,9 +67,35 @@ describe('extractElementAttribute', () => {
       'return-type',
     );
   });
+
+  it('extracts empty href from anchor element', () => {
+    const elementOuterHTML =
+      '<a class="menu-toggle button toggled" data-overlay="site-navigation" href="">Menu</a>';
+    const attribute = 'href';
+    expect(extractElementAttribute(elementOuterHTML, attribute)).toBe('');
+  });
 });
 
 describe('elementsMatch', () => {
+  it('anchors with no href', () => {
+    const element = document.createElement('a');
+    element.setAttribute('href', '');
+    element.setAttribute('class', 'menu-toggle button');
+    element.setAttribute('data-overlay', 'site-navigation');
+    element.innerText = 'Menu';
+
+    const msgElement = {
+      outerHTML:
+        '<a class="menu-toggle button toggled" data-overlay="site-navigation" href="">Menu</a>',
+      url: 'https://www.ealing.gov.uk/site/',
+      tag: 'A' as SelectableTag,
+      textContent: 'Menu',
+      label: undefined,
+    };
+
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
+  });
+
   it('checkboxes with different data-ids match', () => {
     const element = document.createElement('input');
     element.setAttribute('type', 'checkbox');

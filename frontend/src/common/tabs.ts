@@ -56,6 +56,7 @@ const setTabListeners = (setTab: StateSetter<TabInfo | undefined>) => {
   );
   chrome.runtime.onMessage.addListener((message: ContentScriptMessage) => {
     if (message.type === 'loaded') {
+      console.log('Received loaded message');
       setTab((prevState) => {
         if (prevState) {
           return { ...prevState, scriptStatus: 'loaded' };

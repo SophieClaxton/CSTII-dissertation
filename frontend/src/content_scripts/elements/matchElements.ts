@@ -5,6 +5,7 @@ import {
   mapTagToRelevantAttributes,
 } from '../../panel/models/interfaceElement/validAttribute';
 import { similarityThreshold } from '../consts';
+import { getCorrespondingLabel } from './elementUtils';
 
 const extractOpeningTag = (elementOuterHTML: string): string | null => {
   const openingTagPattern = /<([\s \S][^>]*)>/g;
@@ -16,7 +17,7 @@ const extractElementAttribute = (
   elementOuterHTML: string,
   attribute: string,
 ): string | null => {
-  const attrPatter = new RegExp(` ${attribute}="([\\s \\S][^"]*)"`, 'g');
+  const attrPatter = new RegExp(` ${attribute}="([^"]*)"`, 'g');
   const attr = attrPatter.exec(elementOuterHTML);
   return attr ? attr[1] : null;
 };
@@ -75,6 +76,12 @@ const elementsMatch = (
         extractElementAttribute(msgElementOpeningTag, attr)
     ) {
       displayAttrErrorMessage(element, msgElement, attr, showErrorMessages);
+      return false;
+    }
+  }
+  if (msgElement.tag === 'INPUT' && msgElement.label != undefined) {
+    const elemLabel = getCorrespondingLabel(element);
+    if (elemLabel && elemLabel != msgElement.label) {
       return false;
     }
   }

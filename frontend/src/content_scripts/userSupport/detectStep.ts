@@ -81,13 +81,16 @@ const detectWriteStep = (
       if (stringSimilarity(writeElement.value, step.text) > 0.95) {
         console.log(step);
         sendDetectionMessage(supportState, step);
-      }
-    } else {
-      if (writeElement.value !== '') {
-        console.log(step);
-        sendDetectionMessage(supportState, step);
+      } else {
+        console.log('Written strings did not match');
       }
     }
+    // } else {
+    //   if (writeElement.value !== '') {
+    //     console.log(step);
+    //     sendDetectionMessage(supportState, step);
+    //   }
+    // }
   }
 };
 
@@ -182,11 +185,41 @@ const preDetectInputStep = (
     step &&
     ((step.type === ASTNodeType.Write && step.isExact) ||
       step.type === ASTNodeType.Select ||
-      step.type === ASTNodeType.Check)
+      step.type === ASTNodeType.Check ||
+      step.type === ASTNodeType.Radio)
   ) {
     const element = findElement(step.element);
     if (element) {
       detectStepOnInput(element, supportState);
+    }
+  }
+};
+
+const listenForInputChange = (
+  step: ASTInstruction | undefined,
+  supportState: SupportState,
+) => {
+  if (step && step.type === ASTNodeType.Write && step.isExact) {
+    const element = findElement(step.element);
+    if (element) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (
+            (mutation.type === 'attributes' &&
+              mutation.attributeName === 'value') ||
+            mutation.type === 'characterData'
+          ) {
+            detectWriteStep(step, element, supportState);
+          }
+        });
+      });
+      observer.observe(element, {
+        attributes: true,
+        attributeFilter: ['value'],
+        childList: false,
+        characterData: true,
+        subtree: false,
+      });
     }
   }
 };
@@ -196,5 +229,6 @@ export {
   detectStepOnClick,
   detectStepOnInput,
   preDetectInputStep,
+  listenForInputChange,
   sendDetectionMessage,
 };

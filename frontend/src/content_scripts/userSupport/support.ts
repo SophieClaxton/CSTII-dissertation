@@ -3,7 +3,7 @@ import { ASTNodeType } from '../../panel/models/AST/AST';
 import { ASTInstruction } from '../../panel/models/AST/Instruction';
 import { defaultLevelOfSupport } from '../consts';
 import { setFocus } from '../elements/focusOnElement';
-import { preDetectInputStep } from './detectStep';
+import { listenForInputChange, preDetectInputStep } from './detectStep';
 import { SupportState } from './state';
 import { LevelOfSupport } from '../../panel/support/script_support/userStruggleSupport/userSupportMII';
 import { mapStepToSystemAction, onScrollStepComplete } from './doStep';
@@ -91,6 +91,7 @@ const onReceiveNextPossibleSteps = (
 
   // Check if the next step has already been completed if its an input step
   preDetectInputStep(nextPossibleSteps.at(0), supportState);
+  listenForInputChange(nextPossibleSteps.at(0), supportState);
 
   // Provide no further support if level of support is text
   if (levelOfSupport === 'text') {

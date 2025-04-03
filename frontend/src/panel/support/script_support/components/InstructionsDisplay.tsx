@@ -48,7 +48,7 @@ const InstructionsDisplay: React.FC<InstructionsDisplayProps> = ({
       )}
       {showFinish && (
         <Button variant={'contained'} onClick={goBack}>
-          Finish
+          Finish and Close
         </Button>
       )}
     </Stack>

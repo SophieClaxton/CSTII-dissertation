@@ -26,7 +26,7 @@ const ScriptSupport: React.FC<ScriptSupportProps> = ({ script }) => {
 
   return (
     <>
-      <ScriptDetails script={script} />
+      {!supportActive && <ScriptDetails script={script} />}
 
       <SupportButton
         supportActive={supportActive}

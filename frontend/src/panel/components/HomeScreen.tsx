@@ -18,7 +18,7 @@ const HomeScreen: React.FC = () => {
           sx={{ width: '100%', height: '8rem' }}
           onClick={() => goTo(scriptSelectorScreen)}
         >
-          Go to Script Selector
+          Select Support
         </Button>
         <Button
           variant="contained"
