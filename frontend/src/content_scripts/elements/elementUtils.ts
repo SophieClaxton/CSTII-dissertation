@@ -1,6 +1,6 @@
 import stringSimilarity from 'string-similarity-js';
-import InterfaceElement from '../../panel/models/interfaceElement/InterfaceElement';
-import { ValidTag } from '../../panel/models/interfaceElement/validTags';
+import InterfaceElement from '../../panel/models/interface_element/InterfaceElement';
+import { ValidTag } from '../../panel/models/interface_element/validTags';
 import { elementsMatch, extractElementAttribute } from './matchElements';
 
 const findElement = (msgElement: InterfaceElement): Element | undefined => {

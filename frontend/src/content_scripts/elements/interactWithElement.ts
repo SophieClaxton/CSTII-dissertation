@@ -1,13 +1,13 @@
-import { UserClickedElementMessage } from '../../common/message';
-import { EditingState } from '../userSupport/state';
+import { UserClickedElementMessage } from '../../messaging/message';
+import { EditingState } from '../user_support/state';
 import {
   elementSatisfiesValidTags,
   findElement,
   getCorrespondingLabel,
 } from './elementUtils';
 import { clickableClass } from '../consts';
-import InterfaceElement from '../../panel/models/interfaceElement/InterfaceElement';
-import { isSelectableTag } from '../../panel/models/interfaceElement/selectableTag';
+import InterfaceElement from '../../panel/models/interface_element/InterfaceElement';
+import { isSelectableTag } from '../../panel/models/interface_element/selectableTag';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;

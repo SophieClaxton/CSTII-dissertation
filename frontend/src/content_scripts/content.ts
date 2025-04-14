@@ -1,10 +1,10 @@
-import { PanelMessage, LoadedMessage } from '../common/message';
+import { PanelMessage, LoadedMessage } from '../messaging/message';
 import {
   allSelectableTags,
   isSelectableTag,
   allInputTags,
-} from '../panel/models/interfaceElement/selectableTag';
-import { mapStepNodeToValidTags } from '../panel/models/interfaceElement/validTags';
+} from '../panel/models/interface_element/selectableTag';
+import { mapStepNodeToValidTags } from '../panel/models/interface_element/validTags';
 import './clickable.css';
 import { clickableClass, defaultLevelOfSupport } from './consts';
 import { elementSatisfiesValidTags } from './elements/elementUtils';
@@ -14,18 +14,18 @@ import {
   collectUserStruggleDataOnMouseMove,
   collectUserStruggleDataOnMouseDown,
   collectStruggleDataOnScroll,
-} from './userSupport/collectStruggleEvidence';
+} from './user_support/collectStruggleEvidence';
 import {
   detectStepOnClick,
   detectStepOnInput,
   detectStepOnScroll,
-} from './userSupport/detectStep';
-import { EditingState, SupportState } from './userSupport/state';
+} from './user_support/detectStep';
+import { EditingState, SupportState } from './user_support/state';
 import {
   onStartSupport,
   onEndSupport,
   onReceiveNextPossibleSteps,
-} from './userSupport/support';
+} from './user_support/support';
 
 console.log('Loaded content script');
 const loadedMessage: LoadedMessage = { type: 'loaded' };

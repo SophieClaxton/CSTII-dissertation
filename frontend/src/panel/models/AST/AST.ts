@@ -1,4 +1,4 @@
-import InterfaceElement, { Option } from '../interfaceElement/InterfaceElement';
+import InterfaceElement, { Option } from '../interface_element/InterfaceElement';
 
 interface ASTProgram {
   start: ASTSectionNode;

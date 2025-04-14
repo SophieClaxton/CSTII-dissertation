@@ -1,4 +1,4 @@
-import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
+import { mapIdToString } from '../../scripting_interface/unpublishedScriptReducer/mappers/nodeIds';
 import {
   ASTClickNode,
   ASTDragNode,

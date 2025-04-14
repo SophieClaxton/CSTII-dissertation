@@ -3,7 +3,7 @@ import {
   extractElementAttribute,
   extractOpeningTag,
 } from '../../content_scripts/elements/matchElements';
-import { SelectableTag } from '../../panel/models/interfaceElement/selectableTag';
+import { SelectableTag } from '../../panel/models/interface_element/selectableTag';
 
 describe('extractOpeningTag', () => {
   it('extracts the opening tag', () => {
@@ -208,6 +208,26 @@ describe('elementsMatch', () => {
       textContent: '',
       label: 'Search for a provider',
     };
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
+  });
+
+  it('links to L match', () => {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'https://www.ealing.gov.uk/a_to_z/L');
+    element.setAttribute('class', 'button button--square');
+    element.textContent = 'L';
+
+    console.log(element.id);
+
+    const msgElement = {
+      outerHTML:
+        '<a href="https://www.ealing.gov.uk/a_to_z/L" class="button button--square">L</a>',
+      url: 'https://www.ealing.gov.uk/a_to_z',
+      tag: 'A' as SelectableTag,
+      textContent: 'L',
+      label: undefined,
+    };
+
     expect(elementsMatch(element, msgElement, true)).toBe(true);
   });
 });

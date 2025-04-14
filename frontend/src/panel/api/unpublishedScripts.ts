@@ -1,12 +1,12 @@
 import axios from 'axios';
-import APIResponse from '../models/API/APIResponse';
+import APIResponse from '../models/api/APIResponse';
 import {
   UnpublishedScript,
   UnpublishedScriptBase,
   UpdateUnpublishedScriptRequest,
-} from '../models/API/UnpublishedScript';
-import { handleError } from '../models/API/APIError';
-import APISuccess from '../models/API/APISuccess';
+} from '../models/api/UnpublishedScript';
+import { handleError } from '../models/api/APIError';
+import APISuccess from '../models/api/APISuccess';
 
 const unpublishedScriptsEndpoint = axios.create({
   baseURL: 'http://localhost:8000/unpublished_scripts/',

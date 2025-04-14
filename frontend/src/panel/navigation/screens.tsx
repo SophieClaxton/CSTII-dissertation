@@ -1,8 +1,8 @@
-import HelperScriptSelector from '../userScripts/HelperScriptSelector';
-import Editor from '../editor/EditorScreen';
-import ScriptSelectionPage from '../support/script_selection/ScriptSelectionPage';
-import UserScriptSelectionPage from '../support/script_selection/UserScriptSelectionPage';
-import WebsiteScriptSelectionPage from '../support/script_selection/WebsiteScriptSelectionPage';
+import UserScriptSelectorPage from '../components/pages/UserScriptSelectorPage';
+import EditorPage from '../components/pages/EditorPage';
+import ScriptSelectionPage from '../components/pages/ScriptSelectionPage';
+import ScriptSelectionByUserPage from '../components/pages/ScriptSelectionByUserPage';
+import ScriptSelectionByWebsitePage from '../components/pages/ScriptSelectionByWebsitePage';
 import {
   EditorScreen,
   HelperScriptsScreen,
@@ -11,17 +11,17 @@ import {
   UserScriptSelectorScreen,
   WebsiteScriptSelectorScreen,
 } from './ScreenType';
-import ScriptSupportPage from '../support/script_support/ScriptSupportPage';
+import ScriptSupportPage from '../components/pages/ScriptSupportPage';
 
 const helperScriptsScreen: HelperScriptsScreen = {
   type: 'HelperScripts',
-  component: <HelperScriptSelector />,
+  component: <UserScriptSelectorPage />,
 };
 
 const editorScreen = (scriptId: number): EditorScreen => ({
   type: 'Editor',
   params: { scriptId: scriptId },
-  component: <Editor />,
+  component: <EditorPage />,
 });
 
 const scriptSelectorScreen: ScriptSelectorScreen = {
@@ -34,7 +34,7 @@ const userScriptSelectorScreen = (
 ): UserScriptSelectorScreen => ({
   type: 'UserScriptSelector',
   params: { userId: userId },
-  component: <UserScriptSelectionPage />,
+  component: <ScriptSelectionByUserPage />,
 });
 
 const websiteScriptSelectorScreen = (
@@ -42,7 +42,7 @@ const websiteScriptSelectorScreen = (
 ): WebsiteScriptSelectorScreen => ({
   type: 'WebsiteScriptSelector',
   params: { websiteId: websiteId },
-  component: <WebsiteScriptSelectionPage />,
+  component: <ScriptSelectionByWebsitePage />,
 });
 
 const scriptSupportScreen = (scriptId: number): ScriptSupportScreen => ({

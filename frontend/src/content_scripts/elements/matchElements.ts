@@ -1,9 +1,9 @@
 import stringSimilarity from 'string-similarity-js';
-import InterfaceElement from '../../panel/models/interfaceElement/InterfaceElement';
+import InterfaceElement from '../../panel/models/interface_element/InterfaceElement';
 import {
   commonAttr,
   mapTagToRelevantAttributes,
-} from '../../panel/models/interfaceElement/validAttribute';
+} from '../../panel/models/interface_element/validAttribute';
 import { similarityThreshold } from '../consts';
 import { getCorrespondingLabel } from './elementUtils';
 
@@ -51,7 +51,7 @@ const elementsMatch = (
   }
   if (element.id === extractElementAttribute(msgElementOpeningTag, 'id')) {
     if (showErrorMessages) {
-      console.log('Matched ids');
+      // console.log('Matched ids');
     }
     return true;
   }
@@ -82,6 +82,11 @@ const elementsMatch = (
   if (msgElement.tag === 'INPUT' && msgElement.label != undefined) {
     const elemLabel = getCorrespondingLabel(element);
     if (elemLabel && elemLabel != msgElement.label) {
+      if (showErrorMessages) {
+        console.log(
+          `Labels do not match: element label is ${elemLabel}, message label is ${msgElement.label}`,
+        );
+      }
       return false;
     }
   }
@@ -91,10 +96,18 @@ const elementsMatch = (
     element.textContent.length > 0 &&
     msgElement.textContent.length > 0
   ) {
-    return (
-      stringSimilarity(element.textContent, msgElement.textContent) >
-      similarityThreshold
-    );
+    const areSimilar =
+      stringSimilarity(
+        element.textContent,
+        msgElement.textContent,
+        element.textContent.length > 10 ? 2 : 1,
+      ) > similarityThreshold;
+    if (!areSimilar && showErrorMessages) {
+      console.log(
+        `Text Content is not similar: ${element.textContent}, ${msgElement.textContent}`,
+      );
+    }
+    return areSimilar;
   }
   return true;
 };

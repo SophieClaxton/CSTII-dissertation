@@ -8,7 +8,7 @@ import {
 import { PanelScreen } from '../navigation/ScreenType';
 import { TypeErrorsContext } from './TypeErrorsContext';
 import { TypeCheckError } from '../models/CST/typeCheck';
-import { mapIdToString } from '../unpublishedScriptReducer/mappers/nodeIds';
+import { mapIdToString } from '../scripting_interface/unpublishedScriptReducer/mappers/nodeIds';
 import TabContext from './TabContext';
 
 const useUnpublishedScriptContext = () => {

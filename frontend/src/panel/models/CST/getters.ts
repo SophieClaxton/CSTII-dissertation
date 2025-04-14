@@ -1,4 +1,4 @@
-import { getNextInnerStepId } from '../../unpublishedScriptReducer/getters/nodeIds';
+import { getNextInnerStepId } from '../../scripting_interface/unpublishedScriptReducer/getters/nodeIds';
 import {
   CSTEndStepId,
   CSTEndStepNode,

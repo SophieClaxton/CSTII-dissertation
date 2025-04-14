@@ -2,8 +2,8 @@ import { focusClass, scrollDuration } from '../consts';
 import { findElement } from './elementUtils';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { SupportState } from '../userSupport/state';
-import InterfaceElement from '../../panel/models/interfaceElement/InterfaceElement';
+import { SupportState } from '../user_support/state';
+import InterfaceElement from '../../panel/models/interface_element/InterfaceElement';
 
 const elementIsVisible = (
   element: Element,

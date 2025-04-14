@@ -1,4 +1,4 @@
-import { mapTagToElementName } from '../interfaceElement/elementInfo';
+import { mapTagToElementName } from '../interface_element/elementInfo';
 import { ASTNodeType, ASTStepNode } from './AST';
 import { ASTInstruction } from './Instruction';
 

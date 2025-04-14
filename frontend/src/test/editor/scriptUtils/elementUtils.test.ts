@@ -1,7 +1,7 @@
 import {
   removeQueryDetails,
   urlsMatch,
-} from '../../../panel/editor/scriptUtils/elementUtils';
+} from '../../../panel/scripting_interface/script_editor/script_utils/elementUtils';
 
 describe('removeQueryDetails', () => {
   it('removes search.html details', () => {
