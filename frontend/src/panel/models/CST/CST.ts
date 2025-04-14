@@ -1,4 +1,6 @@
-import InterfaceElement, { Option } from '../interface_element/InterfaceElement';
+import InterfaceElement, {
+  Option,
+} from '../interface_element/InterfaceElement';
 
 interface CSTProgram {
   sections: CSTSectionNode[];

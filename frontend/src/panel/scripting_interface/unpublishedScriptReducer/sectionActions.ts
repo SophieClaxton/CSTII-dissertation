@@ -1,5 +1,12 @@
-import { CSTSectionNode, CSTFollowNode, CSTProgram } from '../../models/CST/CST';
-import { AddSectionAction, DeleteSectionAction } from '../../models/EditorAction';
+import {
+  CSTSectionNode,
+  CSTFollowNode,
+  CSTProgram,
+} from '../../models/CST/CST';
+import {
+  AddSectionAction,
+  DeleteSectionAction,
+} from '../../models/EditorAction';
 import { getNextSectionId } from './getters/nodeIds';
 import { getFollowNode, getFollowNodeFromNextSectionId } from './getters/nodes';
 import { updateProgramSections, updateSectionEndStep } from './mappers/nodes';

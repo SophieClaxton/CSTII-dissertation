@@ -1,5 +1,9 @@
 import { CSTProgram } from '../../models/CST/CST';
-import { isEndStepId, isInnerStep, isInnerStepId } from '../../models/CST/testers';
+import {
+  isEndStepId,
+  isInnerStep,
+  isInnerStepId,
+} from '../../models/CST/testers';
 import {
   AddStepAction,
   DeleteStepAction,
