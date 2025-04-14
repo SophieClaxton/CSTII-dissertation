@@ -15,7 +15,13 @@ from ..exceptions.not_found import (
     website_not_found_exception,
 )
 from ..database import DatabaseDep
-from ..models.database_tables import Annotation, Script, User, Website
+from ..models.database_tables import (
+    Annotation,
+    Script,
+    UnpublishedScript,
+    User,
+    Website,
+)
 from ..models.responses import (
     BaseScriptResponse,
     ScriptWithAuthorAndWebsiteResponse,
@@ -106,6 +112,14 @@ def delete_script(script_id: int, session: DatabaseDep) -> SuccessResponse:
         raise script_not_found_exception(script_id)
 
     delete_script_file(script.script_url)
+
+    linked_unpublished_script = session.exec(
+        select(UnpublishedScript).where(
+            UnpublishedScript.published_script_id == script.id
+        )
+    ).first()
+    if linked_unpublished_script:
+        linked_unpublished_script.published_script_id = None
 
     session.delete(script)
     session.commit()

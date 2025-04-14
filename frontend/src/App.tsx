@@ -1,19 +1,19 @@
 import './App.css';
-import { setUpMessageHandler } from './panel/messageHandler';
+import { setUpPortListener } from './messaging/portListener';
 import { useEffect, useState } from 'react';
-import HomeScreen from './panel/components/HomeScreen';
+import HomePage from './panel/components/pages/HomePage';
 import { PanelScreen } from './panel/navigation/ScreenType';
 import { ScreenContext } from './panel/contexts/ScreenContext';
 import TabContext, { TabInfo } from './panel/contexts/TabContext';
-import { setCurrentTab, setTabListeners } from './common/tabs';
+import { setCurrentTab, setTabListeners } from './messaging/tabs';
+import { ConfirmProvider } from 'material-ui-confirm';
 
 function App() {
-  useEffect(setUpMessageHandler, []);
-
   const [screenStack, setScreenStack] = useState<PanelScreen[]>([]);
   const [tab, setTab] = useState<TabInfo | undefined>();
 
   useEffect(() => {
+    setUpPortListener();
     setCurrentTab(setTab, true);
     setTabListeners(setTab);
   }, []);
@@ -22,7 +22,7 @@ function App() {
   const currentComponent = currentScreen ? (
     currentScreen.component
   ) : (
-    <HomeScreen />
+    <HomePage />
   );
 
   return (
@@ -33,7 +33,7 @@ function App() {
       }}
     >
       <TabContext.Provider value={{ tab }}>
-        {currentComponent}
+        <ConfirmProvider>{currentComponent}</ConfirmProvider>
       </TabContext.Provider>
     </ScreenContext.Provider>
   );

@@ -1,4 +1,4 @@
-import { getNextInnerStepId } from '../../unpublishedScriptReducer/getters/nodeIds';
+import { getNextInnerStepId } from '../../scripting_interface/unpublishedScriptReducer/getters/nodeIds';
 import {
   CSTEndStepId,
   CSTEndStepNode,
@@ -37,11 +37,6 @@ const getInnerStepNodeChoices = (
   {
     id: getNextInnerStepId(section),
     type: CSTStepNodeType.Write,
-  },
-  {
-    id: getNextInnerStepId(section),
-    type: CSTStepNodeType.Check,
-    isChecked: false,
   },
   {
     id: getNextInnerStepId(section),

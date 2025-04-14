@@ -3,7 +3,7 @@ import {
   extractElementAttribute,
   extractOpeningTag,
 } from '../../content_scripts/elements/matchElements';
-import { SelectableTag } from '../../panel/models/interfaceElement/selectableTag';
+import { SelectableTag } from '../../panel/models/interface_element/selectableTag';
 
 describe('extractOpeningTag', () => {
   it('extracts the opening tag', () => {
@@ -58,9 +58,44 @@ describe('extractElementAttribute', () => {
       'https://www.gov.uk/browse/education',
     );
   });
+
+  it('extracts id from select element', () => {
+    const elementOuterHTML =
+      '<select data-testid="dropdown-select-return-type" id="return-type" name="return-type" aria-invalid="false" aria-required="true" class="sc-e9939e2c-3 bVUdYC"><option data-testid="dropdown-option-0-return-type" value="departing">Departing after</option><option data-testid="dropdown-option-1-return-type" value="arriving">Arriving by</option><option data-testid="dropdown-option-2-return-type" value="last">Last train</option></select>';
+    const attribute = 'id';
+    expect(extractElementAttribute(elementOuterHTML, attribute)).toBe(
+      'return-type',
+    );
+  });
+
+  it('extracts empty href from anchor element', () => {
+    const elementOuterHTML =
+      '<a class="menu-toggle button toggled" data-overlay="site-navigation" href="">Menu</a>';
+    const attribute = 'href';
+    expect(extractElementAttribute(elementOuterHTML, attribute)).toBe('');
+  });
 });
 
 describe('elementsMatch', () => {
+  it('anchors with no href', () => {
+    const element = document.createElement('a');
+    element.setAttribute('href', '');
+    element.setAttribute('class', 'menu-toggle button');
+    element.setAttribute('data-overlay', 'site-navigation');
+    element.innerText = 'Menu';
+
+    const msgElement = {
+      outerHTML:
+        '<a class="menu-toggle button toggled" data-overlay="site-navigation" href="">Menu</a>',
+      url: 'https://www.ealing.gov.uk/site/',
+      tag: 'A' as SelectableTag,
+      textContent: 'Menu',
+      label: undefined,
+    };
+
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
+  });
+
   it('checkboxes with different data-ids match', () => {
     const element = document.createElement('input');
     element.setAttribute('type', 'checkbox');
@@ -152,6 +187,47 @@ describe('elementsMatch', () => {
       tag: 'A' as SelectableTag,
       textContent: 'the Office for Students (OfS) Register',
     };
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
+  });
+
+  it('inputs match with ids', () => {
+    const element = document.createElement('input');
+    element.setAttribute('id', 'mat-input-0');
+    element.setAttribute(
+      'class',
+      'mat-input-element mat-form-field-autofill-control mat-autocomplete-trigger ng-tns-c31-0 ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored',
+    );
+    element.setAttribute('type', 'text');
+    element.setAttribute('role', 'combobox');
+    element.setAttribute('aria-label', 'Provider name');
+    const msgElement = {
+      outerHTML:
+        '<input _ngcontent-agx-c39="" type="text" aria-label="Provider name" matinput="" class="mat-input-element mat-form-field-autofill-control mat-autocomplete-trigger ng-tns-c31-0 ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored" id="mat-input-0" data-placeholder="Search for a provider" aria-invalid="false" aria-required="false" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-haspopup="true" aria-owns="mat-autocomplete-0">',
+      url: 'https://www.officeforstudents.org.uk/for-providers/regulatory-resources/the-ofs-register/#/',
+      tag: 'INPUT' as SelectableTag,
+      textContent: '',
+      label: 'Search for a provider',
+    };
+    expect(elementsMatch(element, msgElement, true)).toBe(true);
+  });
+
+  it('links to L match', () => {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'https://www.ealing.gov.uk/a_to_z/L');
+    element.setAttribute('class', 'button button--square');
+    element.textContent = 'L';
+
+    console.log(element.id);
+
+    const msgElement = {
+      outerHTML:
+        '<a href="https://www.ealing.gov.uk/a_to_z/L" class="button button--square">L</a>',
+      url: 'https://www.ealing.gov.uk/a_to_z',
+      tag: 'A' as SelectableTag,
+      textContent: 'L',
+      label: undefined,
+    };
+
     expect(elementsMatch(element, msgElement, true)).toBe(true);
   });
 });

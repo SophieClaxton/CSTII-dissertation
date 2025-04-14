@@ -1,4 +1,6 @@
-import InterfaceElement, { Option } from '../interfaceElement/InterfaceElement';
+import InterfaceElement, {
+  Option,
+} from '../interface_element/InterfaceElement';
 
 interface CSTProgram {
   sections: CSTSectionNode[];
@@ -54,7 +56,7 @@ interface CSTSectionNode extends CSTSectionBase {
 }
 
 enum CSTStepNodeType {
-  Follow = 'Follow',
+  Follow = 'Go To',
   Click = 'Click',
   Read = 'Read',
   ScrollTo = 'Scroll To',
@@ -62,7 +64,6 @@ enum CSTStepNodeType {
   UserDecision = 'User Decision',
   Write = 'Write',
   Select = 'Select',
-  Check = 'Check',
   Draw = 'Draw',
 }
 
@@ -142,7 +143,7 @@ interface CSTUserDecisionEndStepNode extends CSTUserDecisionBase {
   endsWithFollow: CSTUserDecisionEndType.Follow;
 }
 
-type CSTInputNode = CSTWriteNode | CSTSelectNode | CSTCheckNode | CSTDrawNode;
+type CSTInputNode = CSTWriteNode | CSTSelectNode | CSTDrawNode;
 
 interface CSTInputBase extends CSTInnerStepBase {
   description?: string;
@@ -156,12 +157,21 @@ interface CSTWriteNode extends CSTInputBase {
 
 interface CSTSelectNode extends CSTInputBase {
   type: CSTStepNodeType.Select;
+  selector?: CSTSelectOption | CSTCheck | CSTRadio;
+}
+
+interface CSTSelectOption {
+  selectType: 'select';
   option?: Option;
 }
 
-interface CSTCheckNode extends CSTInputBase {
-  type: CSTStepNodeType.Check;
+interface CSTCheck {
+  selectType: 'check';
   isChecked: boolean;
+}
+
+interface CSTRadio {
+  selectType: 'radio';
 }
 
 interface CSTDrawNode extends CSTInputBase {
@@ -199,6 +209,8 @@ export type {
   CSTInputNode,
   CSTWriteNode,
   CSTSelectNode,
-  CSTCheckNode,
+  CSTSelectOption,
+  CSTCheck,
+  CSTRadio,
   CSTDrawNode,
 };

@@ -1,10 +1,10 @@
-import { PanelMessage, LoadedMessage } from '../common/message';
+import { PanelMessage, LoadedMessage } from '../messaging/message';
 import {
   allSelectableTags,
   isSelectableTag,
   allInputTags,
-} from '../panel/models/interfaceElement/selectableTag';
-import { mapStepNodeToValidTags } from '../panel/models/interfaceElement/validTags';
+} from '../panel/models/interface_element/selectableTag';
+import { mapStepNodeToValidTags } from '../panel/models/interface_element/validTags';
 import './clickable.css';
 import { clickableClass, defaultLevelOfSupport } from './consts';
 import { elementSatisfiesValidTags } from './elements/elementUtils';
@@ -14,20 +14,22 @@ import {
   collectUserStruggleDataOnMouseMove,
   collectUserStruggleDataOnMouseDown,
   collectStruggleDataOnScroll,
-} from './userSupport/collectStruggleEvidence';
+} from './user_support/collectStruggleEvidence';
 import {
   detectStepOnClick,
   detectStepOnInput,
   detectStepOnScroll,
-} from './userSupport/detectStep';
-import { EditingState, SupportState } from './userSupport/state';
+} from './user_support/detectStep';
+import { EditingState, SupportState } from './user_support/state';
 import {
   onStartSupport,
   onEndSupport,
   onReceiveNextPossibleSteps,
-} from './userSupport/support';
+} from './user_support/support';
 
 console.log('Loaded content script');
+const loadedMessage: LoadedMessage = { type: 'loaded' };
+let loadedMessageSent = false;
 
 let editingState: EditingState = {
   isClickable: false,
@@ -53,6 +55,15 @@ const supportState: SupportState = {
 
 const setupMessageListener = () => {
   chrome.runtime.onMessage.addListener((message: PanelMessage) => {
+    if (!loadedMessageSent) {
+      chrome.runtime
+        .sendMessage(loadedMessage)
+        .then(() => {
+          console.log('Send loaded message');
+          loadedMessageSent = true;
+        })
+        .catch(() => console.log('Failed to send loaded message'));
+    }
     switch (message.type) {
       case 'set_clickable': {
         const { stepId, stepType, url } = message;
@@ -79,6 +90,7 @@ const setupMessageListener = () => {
       }
       case 'end_support': {
         console.log('Received end support message');
+        unsetFocus();
         return onEndSupport(supportState);
       }
       case 'next_possible_steps': {
@@ -151,6 +163,9 @@ const addInputListeners = () => {
         element.addEventListener('input', () => {
           detectStepOnInput(element, supportState);
         });
+        element.addEventListener('change', () => {
+          detectStepOnInput(element, supportState);
+        });
         elementsWithInputListeners.add(element);
       }
     }
@@ -158,8 +173,13 @@ const addInputListeners = () => {
 };
 
 setupMessageListener();
-const loadedMessage: LoadedMessage = { type: 'loaded' };
-chrome.runtime.sendMessage(loadedMessage).catch(() => undefined);
+chrome.runtime
+  .sendMessage(loadedMessage)
+  .then(() => {
+    console.log('Send loaded message');
+    loadedMessageSent = true;
+  })
+  .catch(() => console.log('Failed to send loaded message'));
 
 updateClassList();
 addClickListeners();

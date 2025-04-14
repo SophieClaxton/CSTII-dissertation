@@ -5,6 +5,7 @@ import { PropsWithChildren } from 'react';
 import { useNavigationContext } from '../contexts/contextHooks';
 import Typography from '@mui/material/Typography/Typography';
 import Box from '@mui/material/Box/Box';
+import './page.css';
 
 interface PageProps {
   title: string;

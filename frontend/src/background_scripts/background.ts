@@ -3,7 +3,7 @@ import {
   openSidePanelAction,
   closeSidePanelAction,
 } from './contextMenuActions';
-import { CloseSidePanelMessage, Port } from '../common/message';
+import { CloseSidePanelMessage, Port } from '../messaging/message';
 
 /*
 Chrome only allows one action item on the main context menu per extension.
