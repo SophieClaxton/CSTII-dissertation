@@ -152,7 +152,7 @@ interface CSTInputBase extends CSTInnerStepBase {
 interface CSTWriteNode extends CSTInputBase {
   type: CSTStepNodeType.Write;
   text?: string;
-  isExact?: boolean;
+  isExact: boolean;
 }
 
 interface CSTSelectNode extends CSTInputBase {

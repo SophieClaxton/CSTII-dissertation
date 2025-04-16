@@ -8,8 +8,8 @@ import {
 } from '../../../../models/CST/CST';
 import Step from '../Step';
 import ElementSelector from '../instruction_components/ElementSelector';
-import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
-import InputDescription from '../InputDescription';
+import { mapIdToString } from '../../../unpublished_script_reducer/mappers/nodeIds';
+import InputDescription from '../instruction_components/InputDescription';
 import { EditorActionType } from '../../../../models/EditorAction';
 import CheckedSelector from '../instruction_components/CheckedSelector';
 import OptionSelector from '../instruction_components/OptionSelector';

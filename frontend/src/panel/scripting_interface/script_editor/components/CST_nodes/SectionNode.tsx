@@ -2,7 +2,7 @@ import { CSTSectionNode, CSTStepNode } from '../../../../models/CST/CST';
 import EndStepNode from './EndStepNode';
 import { getNodeChoices } from '../../../../models/CST/getters';
 import {
-  useTypeErrorsContext,
+  useSyntaxErrorsContext,
   useUnpublishedScriptContext,
 } from '../../../../contexts/contextHooks';
 import InnerStepContainer from '../InnerStepContainer';
@@ -13,9 +13,9 @@ import Link from '@mui/material/Link/Link';
 import IconButton from '@mui/material/IconButton/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../../../models/EditorAction';
-import { mapIdToString } from '../../../unpublishedScriptReducer/mappers/nodeIds';
+import { mapIdToString } from '../../../unpublished_script_reducer/mappers/nodeIds';
 import Paper from '@mui/material/Paper/Paper';
-import TypeErrorMessage from '../TypeErrorMessage';
+import SyntaxErrorMessage from '../../../syntax_checker/SyntaxErrorMessage';
 import { useXarrow } from 'react-xarrows';
 import { removeQueryDetails } from '../../script_utils/elementUtils';
 
@@ -25,8 +25,8 @@ interface SectionProps {
 
 const SectionNode: React.FC<SectionProps> = ({ section }) => {
   const { dispatch } = useUnpublishedScriptContext();
-  const typeErrors = useTypeErrorsContext();
-  const sectionError = typeErrors.get(mapIdToString(section.id));
+  const syntaxErrors = useSyntaxErrorsContext();
+  const sectionError = syntaxErrors.errorsMap.get(mapIdToString(section.id));
   const updateArrows = useXarrow();
 
   return (
@@ -75,8 +75,8 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         stepWidth={true}
       />
       {section.endStep && <EndStepNode endStep={section.endStep} />}
-      {sectionError && (
-        <TypeErrorMessage
+      {sectionError && syntaxErrors.showSyntaxErrors && (
+        <SyntaxErrorMessage
           id={`${mapIdToString(section.id)}-Error`}
           errorMsg={sectionError}
         />

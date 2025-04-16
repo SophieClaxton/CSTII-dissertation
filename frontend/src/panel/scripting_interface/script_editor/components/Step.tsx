@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  useTypeErrorsContext,
+  useSyntaxErrorsContext,
   useUnpublishedScriptContext,
 } from '../../../contexts/contextHooks';
 import {
@@ -15,11 +15,11 @@ import DragIndicator from '@mui/icons-material/DragIndicator';
 import IconButton from '@mui/material/IconButton/IconButton';
 import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../../models/EditorAction';
-import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
+import { mapIdToString } from '../../unpublished_script_reducer/mappers/nodeIds';
 import Typography from '@mui/material/Typography/Typography';
 import Stack from '@mui/material/Stack/Stack';
 import Box from '@mui/material/Box/Box';
-import TypeErrorMessage from './TypeErrorMessage';
+import SyntaxErrorMessage from '../../syntax_checker/SyntaxErrorMessage';
 
 const stepColourMap: Record<CSTStepNodeType, string> = {
   'Go To': '#ff999c',
@@ -56,8 +56,8 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
 
   const idString = mapIdToString(stepId);
 
-  const typeErrors = useTypeErrorsContext();
-  const stepError = typeErrors.get(idString);
+  const syntaxErrors = useSyntaxErrorsContext();
+  const stepError = syntaxErrors.errorsMap.get(idString);
 
   const { setNodeRef, style, attributes, listeners } = sortableProps ?? {
     setNodeRef: undefined,
@@ -71,7 +71,7 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
       id={idString}
       key={idString}
       className={[
-        stepError ? 'step-with-error' : '',
+        stepError && syntaxErrors.showSyntaxErrors ? 'step-with-error' : '',
         sortableProps ? 'draggable-step' : '',
         className ?? [],
       ].join(' ')}
@@ -87,7 +87,10 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
         gridTemplateColumns: '1.625rem 5rem 20rem 1.625rem',
         gap: '0.5rem',
         transition: 'margin ease-in-out 0.5s',
-        outline: stepError ? '2px dashed rgb(230, 40, 40)' : 'none',
+        outline:
+          stepError && syntaxErrors.showSyntaxErrors
+            ? '2px dashed rgb(230, 40, 40)'
+            : 'none',
       }}
     >
       {sortableProps ? (
@@ -111,8 +114,8 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
       >
         <Delete />
       </IconButton>
-      {stepError && (
-        <TypeErrorMessage id={`${idString}-Error`} errorMsg={stepError} />
+      {stepError && syntaxErrors.showSyntaxErrors && (
+        <SyntaxErrorMessage id={`${idString}-Error`} errorMsg={stepError} />
       )}
     </div>
   );

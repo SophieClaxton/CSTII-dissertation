@@ -8,7 +8,7 @@ import { EditorActionType } from '../../panel/models/EditorAction';
 import {
   addInputDescriptionToInput,
   editInputStepInputDescription,
-} from '../../panel/scripting_interface/unpublishedScriptReducer/innerStepActions';
+} from '../../panel/scripting_interface/unpublished_script_reducer/innerStepActions';
 
 const writeStep: CSTWriteNode = {
   element: {
@@ -20,6 +20,7 @@ const writeStep: CSTWriteNode = {
   },
   id: { parentId: { sectionId: 1 }, stepId: 1 },
   type: CSTStepNodeType.Write,
+  isExact: true,
 };
 
 describe('addInputDescriptionToInput', () => {

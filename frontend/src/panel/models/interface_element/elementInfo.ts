@@ -1,4 +1,5 @@
 import { SelectableTag } from './selectableTag';
+import { Option } from './InterfaceElement';
 
 const mapTagToElementName: Record<SelectableTag, string> = {
   A: 'Link',
@@ -41,4 +42,10 @@ const elementTypeIs =
     return element.getAttribute('type') != type;
   };
 
-export { mapTagToElementName, elementTypeIs };
+const getOptionsFromOuterHTML = (outerHTML: string): Option[] => {
+  const optionsRegex = /value="([\w\d]*)">([\w\s\d]*)</g;
+  const matches = outerHTML.matchAll(optionsRegex);
+  return Array.from(matches, (match) => ({ value: match[1], text: match[2] }));
+};
+
+export { mapTagToElementName, elementTypeIs, getOptionsFromOuterHTML };

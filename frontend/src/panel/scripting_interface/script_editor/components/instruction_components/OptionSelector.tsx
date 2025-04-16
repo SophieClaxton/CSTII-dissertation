@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem/MenuItem';
 import { CSTSelectNode } from '../../../../models/CST/CST';
 import { useUnpublishedScriptContext } from '../../../../contexts/contextHooks';
 import { EditorActionType } from '../../../../models/EditorAction';
+import { getOptionsFromOuterHTML } from '../../../../models/interface_element/elementInfo';
 
 interface OptionSelectorProps {
   stepId: CSTSelectNode['id'];
@@ -55,12 +56,6 @@ const OptionSelector: React.FC<OptionSelectorProps> = ({
       ))}
     </Select>
   );
-};
-
-const getOptionsFromOuterHTML = (outerHTML: string): Option[] => {
-  const optionsRegex = /value="([\w\d]*)">([\w\s\d]*)</g;
-  const matches = outerHTML.matchAll(optionsRegex);
-  return Array.from(matches, (match) => ({ value: match[1], text: match[2] }));
 };
 
 export default OptionSelector;

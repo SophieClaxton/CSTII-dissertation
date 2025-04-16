@@ -1,13 +1,13 @@
 import React from 'react';
-import './styles/typeErrorMessage.css';
+import './syntaxErrorMessage.css';
 import Box from '@mui/material/Box/Box';
 
-interface TypeErrorMessageProps {
+interface SyntaxErrorMessageProps {
   id: string;
   errorMsg: string;
 }
 
-const TypeErrorMessage: React.FC<TypeErrorMessageProps> = ({
+const SyntaxErrorMessage: React.FC<SyntaxErrorMessageProps> = ({
   id,
   errorMsg,
 }) => {
@@ -27,4 +27,4 @@ const TypeErrorMessage: React.FC<TypeErrorMessageProps> = ({
   );
 };
 
-export default TypeErrorMessage;
+export default SyntaxErrorMessage;

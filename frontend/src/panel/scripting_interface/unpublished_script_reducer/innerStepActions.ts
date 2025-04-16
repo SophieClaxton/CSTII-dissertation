@@ -12,6 +12,7 @@ import {
   EditSelectedOptionAction,
   RearrangeInnerStepsAction,
 } from '../../models/EditorAction';
+import { getOptionsFromOuterHTML } from '../../models/interface_element/elementInfo';
 import InterfaceElement from '../../models/interface_element/InterfaceElement';
 import { getSection } from './getters/nodes';
 import { mapIdToString } from './mappers/nodeIds';
@@ -66,7 +67,10 @@ const updateInnerStepWithNewElement = (
       return {
         ...step,
         element,
-        selector: { selectType: 'select', option: undefined },
+        selector: {
+          selectType: 'select',
+          option: getOptionsFromOuterHTML(element.outerHTML).at(0),
+        },
       };
     }
     if (

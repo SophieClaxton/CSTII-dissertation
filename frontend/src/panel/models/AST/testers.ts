@@ -1,4 +1,4 @@
-import { TypeCheckError } from '../CST/typeCheck';
+import { SyntaxCheckError } from '../SyntaxCheck';
 import {
   ASTNode,
   ASTNodeType,
@@ -8,19 +8,19 @@ import {
 } from './AST';
 
 const isASTSectionNode = (
-  value: ASTNode | TypeCheckError[],
+  value: ASTNode | SyntaxCheckError[],
 ): value is ASTSectionNode => {
   return 'type' in value && value.type === ASTNodeType.Section;
 };
 
 const isASTSubsectionNode = (
-  value: ASTNode | TypeCheckError[],
+  value: ASTNode | SyntaxCheckError[],
 ): value is ASTSubsectionNode => {
   return 'type' in value && value.type === ASTNodeType.Subsection;
 };
 
 const isASTStepNode = (
-  value: ASTNode | TypeCheckError[],
+  value: ASTNode | SyntaxCheckError[],
 ): value is ASTStepNode => {
   const stepNodeTypes = [
     ASTNodeType.End,

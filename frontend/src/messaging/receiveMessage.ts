@@ -6,7 +6,7 @@ import { EditorAction, EditorActionType } from '../panel/models/EditorAction';
 import { isSelectableTag } from '../panel/models/interface_element/selectableTag';
 import { mapStepNodeToValidTags } from '../panel/models/interface_element/validTags';
 import { StateRef } from '../panel/models/utilTypes';
-import { mapStringToId } from '../panel/scripting_interface/unpublishedScriptReducer/mappers/nodeIds';
+import { mapStringToId } from '../panel/scripting_interface/unpublished_script_reducer/mappers/nodeIds';
 import { ContentScriptMessage, UserStruggleData } from './message';
 
 const addClickedElementListener = (

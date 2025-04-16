@@ -11,7 +11,7 @@ import { useState } from 'react';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import Button from '@mui/material/Button/Button';
-import { getSection } from '../../../unpublishedScriptReducer/getters/nodes';
+import { getSection } from '../../../unpublished_script_reducer/getters/nodes';
 import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText/DialogContentText';
 import Link from '@mui/material/Link/Link';

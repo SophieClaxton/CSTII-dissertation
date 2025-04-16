@@ -4,8 +4,8 @@ import Stack from '@mui/material/Stack/Stack';
 import Switch from '@mui/material/Switch/Switch';
 import TextField from '@mui/material/TextField/TextField';
 import { useMemo, useState } from 'react';
-import { EditorAction } from '../../../models/EditorAction';
-import { useUnpublishedScriptContext } from '../../../contexts/contextHooks';
+import { EditorAction } from '../../../../models/EditorAction';
+import { useUnpublishedScriptContext } from '../../../../contexts/contextHooks';
 
 interface InputDescriptionProps {
   getCurrentDescription: () => string | undefined;

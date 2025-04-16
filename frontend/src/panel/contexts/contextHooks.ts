@@ -6,10 +6,10 @@ import {
   ScreenContextState,
 } from './ScreenContext';
 import { PanelScreen } from '../navigation/ScreenType';
-import { TypeErrorsContext } from './TypeErrorsContext';
-import { TypeCheckError } from '../models/CST/typeCheck';
-import { mapIdToString } from '../scripting_interface/unpublishedScriptReducer/mappers/nodeIds';
+import { SyntaxErrorsContext, SyntaxErrorsInfo } from './SyntaxErrorsContext';
+import { mapIdToString } from '../scripting_interface/unpublished_script_reducer/mappers/nodeIds';
 import TabContext from './TabContext';
+import { SyntaxCheckError, SyntaxCheckResult } from '../models/SyntaxCheck';
 
 const useUnpublishedScriptContext = () => {
   const editorProgramContext = useContext(UnpublishedScriptContext);
@@ -42,22 +42,32 @@ const getNavigationContext = ({
   };
 };
 
-const createTypeErrorsContext = (
-  typeErrors: TypeCheckError[],
-): Map<string, string> => {
-  const typeErrorsMap = new Map<string, string>();
-  typeErrors.forEach((error: TypeCheckError) => {
-    typeErrorsMap.set(mapIdToString(error.location), error.reason);
+const createSyntaxErrorsContext = (
+  syntaxCheckResult: SyntaxCheckResult,
+  showSyntaxErrors: boolean,
+): SyntaxErrorsInfo => {
+  const syntaxErrorsMap = new Map<string, string>();
+  if (syntaxCheckResult.success) {
+    return { errorsMap: syntaxErrorsMap, showSyntaxErrors };
+  }
+  syntaxCheckResult.errors.forEach((error: SyntaxCheckError) => {
+    const location = mapIdToString(error.location);
+    if (!syntaxErrorsMap.has(location)) {
+      syntaxErrorsMap.set(location, error.reason);
+    } else {
+      const prior_reasons = syntaxErrorsMap.get(location);
+      syntaxErrorsMap.set(location, `${prior_reasons}, ${error.reason}`);
+    }
   });
-  return typeErrorsMap;
+  return { errorsMap: syntaxErrorsMap, showSyntaxErrors };
 };
 
-const useTypeErrorsContext = () => {
-  const typeErrorContext = useContext(TypeErrorsContext);
-  if (!typeErrorContext) {
-    throw new Error('No type errors context found');
+const useSyntaxErrorsContext = () => {
+  const syntaxErrorContext = useContext(SyntaxErrorsContext);
+  if (!syntaxErrorContext) {
+    throw new Error('No syntax errors context found');
   }
-  return typeErrorContext;
+  return syntaxErrorContext;
 };
 
 const useTabContext = () => {
@@ -72,7 +82,7 @@ const useTabContext = () => {
 export {
   useUnpublishedScriptContext,
   useNavigationContext,
-  createTypeErrorsContext,
-  useTypeErrorsContext,
+  createSyntaxErrorsContext,
+  useSyntaxErrorsContext,
   useTabContext,
 };

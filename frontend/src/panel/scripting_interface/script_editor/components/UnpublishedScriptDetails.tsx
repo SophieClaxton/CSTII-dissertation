@@ -3,6 +3,7 @@ import Input from '@mui/material/Input/Input';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import {
+  createSyntaxErrorsContext,
   useNavigationContext,
   useUnpublishedScriptContext,
 } from '../../../contexts/contextHooks';
@@ -10,21 +11,22 @@ import { useState } from 'react';
 import { EditorActionType } from '../../../models/EditorAction';
 import { useConfirm } from 'material-ui-confirm';
 import { StateSetter } from '../../../models/utilTypes';
-import typeCheck, { TypeCheckError } from '../../../models/CST/typeCheck';
+import checkSyntax from '../../syntax_checker/checkSyntax';
 import {
   onDeleteUnpublishedScript,
   onSaveUnpublishedScript,
   onPublishUnpublishedScript,
 } from '../script_utils/updateUnpublishedScript';
+import { SyntaxErrorsInfo } from '../../../contexts/SyntaxErrorsContext';
 
 interface UnpublishedscriptDetailsProps {
   setSnackBar: StateSetter<{ open: boolean; message: string; error: boolean }>;
-  setTypeErrors: StateSetter<TypeCheckError[]>;
+  setSyntaxErrorsContext: StateSetter<SyntaxErrorsInfo>;
 }
 
 const UnpublishedScriptDetails: React.FC<UnpublishedscriptDetailsProps> = ({
   setSnackBar,
-  setTypeErrors,
+  setSyntaxErrorsContext,
 }) => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
   const { goBack } = useNavigationContext();
@@ -149,16 +151,26 @@ const UnpublishedScriptDetails: React.FC<UnpublishedscriptDetailsProps> = ({
           sx={{ width: '100%' }}
           variant={'contained'}
           onClick={() => {
-            const typeCheckResult = typeCheck(unpublishedScript.program);
-            if (typeCheckResult.success === false) {
-              setTypeErrors(typeCheckResult.errors);
-            } else {
+            const syntaxCheckResult = checkSyntax(unpublishedScript.program);
+            if (syntaxCheckResult.success === true) {
               onPublishUnpublishedScript(
                 unpublishedScript,
-                typeCheckResult.program,
+                syntaxCheckResult.program,
                 setSnackBar,
               );
+            } else {
+              setSnackBar({
+                open: true,
+                message: 'Cannot publish script, there are still errors',
+                error: true,
+              });
             }
+            setSyntaxErrorsContext(
+              createSyntaxErrorsContext(
+                syntaxCheckResult,
+                !syntaxCheckResult.success,
+              ),
+            );
           }}
         >
           Publish Script

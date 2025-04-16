@@ -1,7 +1,7 @@
 import { createContext, useReducer } from 'react';
 import { EditorAction } from '../models/EditorAction';
 import { UnpublishedScript } from '../models/api/UnpublishedScript';
-import { unpublishedScriptReducer } from '../scripting_interface/unpublishedScriptReducer/unpublishedScriptReducer';
+import { unpublishedScriptReducer } from '../scripting_interface/unpublished_script_reducer/unpublishedScriptReducer';
 
 interface UnpublishedScriptState {
   unpublishedScript: UnpublishedScript;

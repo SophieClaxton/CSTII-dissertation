@@ -24,7 +24,7 @@ import {
 } from '../../../models/CST/CST';
 import { EditorActionType } from '../../../models/EditorAction';
 import InnerStepNode from './CST_nodes/InnerStepNode';
-import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
+import { mapIdToString } from '../../unpublished_script_reducer/mappers/nodeIds';
 
 interface InnerStepContainerProps {
   innerSteps: CSTInnerStepNode[];

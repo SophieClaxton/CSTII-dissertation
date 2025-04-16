@@ -2,9 +2,11 @@
   position: absolute;
   left: 99%;
   top: 5%;
-  width: 4rem;
+  width: 8rem;
+  height: fit-content;
+  max-height: 4rem;
   text-align: left;
-  text-wrap: nowrap;
+  text-wrap: wrap;
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 0.5rem;
@@ -12,7 +14,5 @@
 }
 
 .type-error:hover {
-  width: 8rem;
-  text-wrap: wrap;
-  z-index: 10;
+  max-height: fit-content;
 }

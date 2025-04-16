@@ -1,5 +1,5 @@
 import { CSTFollowNode, CSTSectionNode } from '../../../models/CST/CST';
-import { mapIdToString } from '../../unpublishedScriptReducer/mappers/nodeIds';
+import { mapIdToString } from '../../unpublished_script_reducer/mappers/nodeIds';
 import { getFollowSteps } from './getNodes';
 
 interface Edge {
