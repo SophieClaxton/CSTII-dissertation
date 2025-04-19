@@ -1,11 +1,11 @@
 import { UnpublishedScriptContextProvider } from '../../contexts/UnpublishedScriptContext';
 import { useNavigationContext } from '../../contexts/contextHooks';
-import { getUnpublishedScript } from '../../api_temp/unpublishedScripts';
+import { getUnpublishedScript } from '../../api/unpublishedScripts';
 import { assertIsEditorScreen } from '../../navigation/screenChecks';
 import Loadable from '../Loadable';
 import ScriptEditor from '../../scripting_interface/script_editor/components/ScriptEditor';
 import Page from '../Page';
-import { useAPICall } from '../../api_temp/apiHooks';
+import { useAPICall } from '../../api/apiHooks';
 import { useCallback } from 'react';
 
 const EditorPage: React.FC = () => {

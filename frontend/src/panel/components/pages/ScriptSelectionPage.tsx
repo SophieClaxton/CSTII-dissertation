@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import { ScriptWithAuthorAndWebsite } from '../../models/api/Script';
-import { getScripts } from '../../api_temp/scripts';
+import { getScripts } from '../../api/scripts';
 import ScriptListItem from '../../support_interface/script_selection/ScriptListItem';
 import List from '@mui/material/List/List';
 import Website from '../../models/api/Website';
 import User from '../../models/api/User';
-import { getWebsites } from '../../api_temp/websites';
-import { getUsers } from '../../api_temp/users';
+import { getWebsites } from '../../api/websites';
+import { getUsers } from '../../api/users';
 import ScriptFilterDialog from '../../support_interface/script_selection/ScriptFilterDialog';
 import FilterBar from '../../support_interface/script_selection/FilterBar';
 import Loadable from '../Loadable';
 import Page from '../Page';
 import Stack from '@mui/material/Stack/Stack';
-import { useAPICall } from '../../api_temp/apiHooks';
+import { useAPICall } from '../../api/apiHooks';
 
 const ScriptSelectionPage: React.FC = () => {
   const scriptsData = useAPICall(getScripts);

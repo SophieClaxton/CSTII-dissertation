@@ -4,10 +4,10 @@ import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import TextField from '@mui/material/TextField/TextField';
 import Typography from '@mui/material/Typography/Typography';
 import { useState } from 'react';
-import { createUser, getUsers } from '../../api_temp/users';
+import { createUser, getUsers } from '../../api/users';
 import DialogActions from '@mui/material/DialogActions/DialogActions';
 import Button from '@mui/material/Button/Button';
-import { useAPICall } from '../../api_temp/apiHooks';
+import { useAPICall } from '../../api/apiHooks';
 import { StateSetter } from '../../models/utilTypes';
 
 interface CreateUserDialogProps {
