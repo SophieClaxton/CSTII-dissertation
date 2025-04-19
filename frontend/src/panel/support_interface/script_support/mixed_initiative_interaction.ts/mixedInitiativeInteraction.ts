@@ -1,0 +1,89 @@
+/** User model returns the probability of the goal given the evidence.
+ * The sum of the probabilities of all the possible goals should sum to 1
+ */
+type UserModel<G, E> = (goal: G, evidence: E) => number;
+
+/** Utility of a paritcular action A given goal G should be a number in the range [0, 1] */
+type UtilityModel<A, G> = (action: A, goal: G) => number;
+
+type EUResult<A> = { action: A; EU: number };
+
+interface MII<E, A> {
+  getBestAction: (evidence: E) => A;
+}
+
+interface MIIDetails<A, G, E> {
+  userModel: UserModel<G, E>;
+  utilityModel: UtilityModel<A, G>;
+  actions: readonly A[];
+  goals: readonly G[];
+}
+
+const getExpectedUtility = <A, G, E>(
+  action: A,
+  evidence: E,
+  possibleGoals: readonly G[],
+  userModel: UserModel<G, E>,
+  utilityModel: UtilityModel<A, G>,
+): number => {
+  const productsForGoals = possibleGoals.map(
+    (goal) => userModel(goal, evidence) * utilityModel(action, goal),
+  );
+  return sum(productsForGoals);
+};
+
+const getMII = <A, G, E>({
+  userModel,
+  utilityModel,
+  actions,
+  goals,
+}: MIIDetails<A, G, E>): MII<E, A> => {
+  if (actions.length === 0) {
+    throw new Error('No actions to consider');
+  }
+  if (goals.length === 0) {
+    throw new Error('No goals to consider');
+  }
+
+  return {
+    getBestAction: (evidence: E) => {
+      const results: EUResult<A>[] = actions.map((action) => ({
+        action,
+        EU: getExpectedUtility(
+          action,
+          evidence,
+          goals,
+          userModel,
+          utilityModel,
+        ),
+      }));
+      console.log(results);
+
+      const [baseAction] = actions;
+      const bestAction = getMax(
+        results,
+        { action: baseAction, EU: 0 },
+        (result) => result.EU,
+      ).action;
+      return bestAction;
+    },
+  };
+};
+
+const sum = (nums: number[]) => nums.reduce((total, num) => total + num, 0);
+
+const getMax = <V, P>(
+  values: V[],
+  initialValue: V,
+  getPropertyToCompare: (value: V) => P,
+): V =>
+  values.reduce(
+    (prevBest, current) =>
+      getPropertyToCompare(current) > getPropertyToCompare(prevBest)
+        ? current
+        : prevBest,
+    initialValue,
+  );
+
+export { getMII };
+export type { UserModel, UtilityModel, MII };

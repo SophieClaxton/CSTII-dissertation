@@ -1,7 +1,7 @@
-import { SupportChange } from '../userStruggleSupport/userSupportMII';
 import Button from '@mui/material/Button/Button';
 import Snackbar from '@mui/material/Snackbar/Snackbar';
 import Alert from '@mui/material/Alert/Alert';
+import { SupportChange } from '../../../models/UserSupport';
 
 interface SupportDialogProps {
   open: boolean;
@@ -17,7 +17,7 @@ const SupportDialog: React.FC<SupportDialogProps> = ({
   onAction,
 }) => {
   return (
-    <Snackbar open={open} autoHideDuration={3000} onClose={onClose}>
+    <Snackbar open={open} autoHideDuration={7500} onClose={onClose}>
       <Alert
         severity={'info'}
         onClose={onClose}

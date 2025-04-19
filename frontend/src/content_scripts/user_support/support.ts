@@ -5,10 +5,16 @@ import { defaultLevelOfSupport } from '../consts';
 import { setFocus } from '../elements/focusOnElement';
 import { listenForInputChange, preDetectInputStep } from './detectStep';
 import { SupportState } from './state';
-import { LevelOfSupport } from '../../panel/support_interface/script_support/userStruggleSupport/userSupportMII';
+import { LevelOfSupport } from '../../panel/models/UserSupport';
 import { mapStepToSystemAction, onScrollStepComplete } from './doStep';
 
 const sendUserStruggleData = (supportState: SupportState) => {
+  supportState.userStruggleData.totalDistance = Math.log(
+    supportState.userStruggleData.totalDistance,
+  );
+  supportState.userStruggleData.totalScrollDistance = Math.log(
+    supportState.userStruggleData.totalScrollDistance,
+  );
   const message: UserStruggleDataMessage = {
     type: 'user_struggle_data',
     userStruggleData: supportState.userStruggleData,
@@ -37,7 +43,7 @@ const onStartSupport = (
   if (!supportState.intervalId) {
     supportState.intervalId = setInterval(
       () => sendUserStruggleData(supportState),
-      5000,
+      10000,
     );
   }
 };

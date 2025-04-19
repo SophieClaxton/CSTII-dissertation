@@ -1,18 +1,25 @@
-import { UserStruggleData } from '../../../../messaging/message';
-import { StateSetter } from '../../../models/utilTypes';
-import { SupportDialogProps } from '../components/SupportDialog';
+import { UserStruggleData } from '../../../../../messaging/message';
+import { LevelOfSupport } from '../../../../models/UserSupport';
+import { StateSetter } from '../../../../models/utilTypes';
+import { SupportDialogProps } from '../../components/SupportDialog';
 import {
   increaseLevelOfSupport,
   decreaseLevelOfSupport,
-} from './levelOfSupportUtils';
-import { getNextSystemSupportAction, LevelOfSupport } from './userSupportMII';
+} from '../levelOfSupportUtils';
+import { getNextSystemSupportAction } from './userSupportMII';
 
 const performBestSystemAction = (
   userStruggleData: UserStruggleData,
+  levelOfSupport: LevelOfSupport,
+  deltaStepsCompleted: number,
   setLevelOfSupport: StateSetter<LevelOfSupport>,
   setSupportDialogDetails: StateSetter<SupportDialogProps>,
 ) => {
-  const nextAction = getNextSystemSupportAction(userStruggleData, 0);
+  const nextAction = getNextSystemSupportAction(
+    userStruggleData,
+    deltaStepsCompleted,
+    levelOfSupport,
+  );
   switch (nextAction) {
     case 'inc':
       return setLevelOfSupport(increaseLevelOfSupport);
