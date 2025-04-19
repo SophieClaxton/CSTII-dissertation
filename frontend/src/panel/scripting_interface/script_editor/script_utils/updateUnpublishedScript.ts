@@ -1,9 +1,9 @@
-import { updateScript, publishScript } from '../../../api/scripts';
+import { updateScript, publishScript } from '../../../api_temp/scripts';
 import {
   updateUnpublishedScript,
   deleteUnpublishedScript,
-} from '../../../api/unpublishedScripts';
-import { getWebsites, createWebsite } from '../../../api/websites';
+} from '../../../api_temp/unpublishedScripts';
+import { getWebsites, createWebsite } from '../../../api_temp/websites';
 import {
   UnpublishedScript,
   UpdateUnpublishedScriptRequest,

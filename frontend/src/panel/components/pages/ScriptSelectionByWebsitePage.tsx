@@ -2,11 +2,11 @@ import { useNavigationContext } from '../../contexts/contextHooks';
 import Loadable from '../Loadable';
 import List from '@mui/material/List/List';
 import ScriptListItem from '../../support_interface/script_selection/ScriptListItem';
-import { getWebsite } from '../../api/websites';
+import { getWebsite } from '../../api_temp/websites';
 import { assertIsWebsiteScriptSelectorScreen } from '../../navigation/screenChecks';
 import Page from '../Page';
 import Stack from '@mui/material/Stack/Stack';
-import { useAPICall } from '../../api/apiHooks';
+import { useAPICall } from '../../api_temp/apiHooks';
 import { useCallback } from 'react';
 
 const ScriptSelectionByWebsitePage = () => {
