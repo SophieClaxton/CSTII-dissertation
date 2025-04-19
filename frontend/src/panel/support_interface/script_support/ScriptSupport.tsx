@@ -5,7 +5,7 @@ import SupportDialog from './components/SupportDialog';
 import SupportButton from './components/SupportButton';
 import InstructionsDisplay from './components/InstructionsDisplay';
 import useScriptSupport from './useScriptSupport';
-import { Script } from '../../models/api/Script';
+import { Script } from '../../models/api_temp/Script';
 
 interface ScriptSupportProps {
   script: Script;

@@ -7,8 +7,8 @@ import { getWebsites, createWebsite } from '../../../api_temp/websites';
 import {
   UnpublishedScript,
   UpdateUnpublishedScriptRequest,
-} from '../../../models/api/UnpublishedScript';
-import Website from '../../../models/api/Website';
+} from '../../../models/api_temp/UnpublishedScript';
+import Website from '../../../models/api_temp/Website';
 import { ASTProgram } from '../../../models/AST/AST';
 import { StateSetter } from '../../../models/utilTypes';
 import { SnackBarDetails } from '../components/AlertSnackBar';

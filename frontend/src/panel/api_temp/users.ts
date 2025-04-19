@@ -1,10 +1,10 @@
 import axios from 'axios';
-import APIResponse from '../models/api/APIResponse';
-import { handleError } from '../models/api/APIError';
+import APIResponse from '../models/api_temp/APIResponse';
+import { handleError } from '../models/api_temp/APIError';
 import User, {
   PublicUserWithScripts,
   UserWithScripts,
-} from '../models/api/User';
+} from '../models/api_temp/User';
 
 const usersEndpoint = axios.create({
   baseURL: 'http://localhost:8000/users/',

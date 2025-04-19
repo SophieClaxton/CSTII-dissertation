@@ -1,5 +1,5 @@
 import { EditorAction, EditorActionType } from '../../models/EditorAction';
-import { UnpublishedScript } from '../../models/api/UnpublishedScript';
+import { UnpublishedScript } from '../../models/api_temp/UnpublishedScript';
 import { addSection, deleteSection } from './sectionActions';
 import {
   editInputStepInputDescription,

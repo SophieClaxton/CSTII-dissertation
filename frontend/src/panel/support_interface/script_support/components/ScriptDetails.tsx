@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack/Stack';
-import { Script } from '../../../models/api/Script';
+import { Script } from '../../../models/api_temp/Script';
 import Typography from '@mui/material/Typography/Typography';
 
 interface ScriptDetailsProps {

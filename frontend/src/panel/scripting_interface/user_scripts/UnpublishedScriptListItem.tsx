@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent/CardContent';
 import Typography from '@mui/material/Typography/Typography';
 import CardActions from '@mui/material/CardActions/CardActions';
 import { editorScreen } from '../../navigation/screens';
-import { UnpublishedScriptWithWebsite } from '../../models/api/UnpublishedScript';
+import { UnpublishedScriptWithWebsite } from '../../models/api_temp/UnpublishedScript';
 
 const UnpublishedScriptListItem: React.FC<{
   script: UnpublishedScriptWithWebsite;

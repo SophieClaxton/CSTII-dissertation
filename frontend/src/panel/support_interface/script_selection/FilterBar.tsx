@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button/Button';
 import Chip from '@mui/material/Chip/Chip';
 import Stack from '@mui/material/Stack/Stack';
-import Website from '../../models/api/Website';
-import User from '../../models/api/User';
+import Website from '../../models/api_temp/Website';
+import User from '../../models/api_temp/User';
 import React from 'react';
 import { StateSetter } from '../../models/utilTypes';
 

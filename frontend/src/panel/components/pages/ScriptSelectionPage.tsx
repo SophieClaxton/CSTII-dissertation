@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ScriptWithAuthorAndWebsite } from '../../models/api/Script';
+import { ScriptWithAuthorAndWebsite } from '../../models/api_temp/Script';
 import { getScripts } from '../../api_temp/scripts';
 import ScriptListItem from '../../support_interface/script_selection/ScriptListItem';
 import List from '@mui/material/List/List';
-import Website from '../../models/api/Website';
-import User from '../../models/api/User';
+import Website from '../../models/api_temp/Website';
+import User from '../../models/api_temp/User';
 import { getWebsites } from '../../api_temp/websites';
 import { getUsers } from '../../api_temp/users';
 import ScriptFilterDialog from '../../support_interface/script_selection/ScriptFilterDialog';

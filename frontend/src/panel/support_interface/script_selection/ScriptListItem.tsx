@@ -4,7 +4,7 @@ import {
   ScriptWithAuthor,
   ScriptWithAuthorAndWebsite,
   ScriptWithWebsite,
-} from '../../models/api/Script';
+} from '../../models/api_temp/Script';
 import Card from '@mui/material/Card/Card';
 import CardActionArea from '@mui/material/CardActionArea/CardActionArea';
 import CardContent from '@mui/material/CardContent/CardContent';

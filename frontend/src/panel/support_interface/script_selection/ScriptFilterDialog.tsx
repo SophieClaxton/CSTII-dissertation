@@ -6,8 +6,8 @@ import DialogContent from '@mui/material/DialogContent/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle/DialogTitle';
 import Stack from '@mui/material/Stack/Stack';
 import TextField from '@mui/material/TextField/TextField';
-import Website from '../../models/api/Website';
-import User from '../../models/api/User';
+import Website from '../../models/api_temp/Website';
+import User from '../../models/api_temp/User';
 import { useState } from 'react';
 import { StateSetter } from '../../models/utilTypes';
 
