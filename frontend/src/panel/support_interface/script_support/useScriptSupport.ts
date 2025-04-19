@@ -17,7 +17,7 @@ import {
 } from '../../models/AST/getters';
 import { useTabContext } from '../../contexts/contextHooks';
 import { ASTProgram } from '../../models/AST/AST';
-import { performBestSystemAction } from './userStruggleSupport/supportAction';
+import { performBestSystemAction } from './user_support/struggle_support/supportAction';
 import { TabInfo } from '../../contexts/TabContext';
 import { StateRef, StateSetter } from '../../models/utilTypes';
 import { LevelOfSupport } from '../../models/UserSupport';
@@ -27,21 +27,24 @@ const useScriptSupport = (program: ASTProgram) => {
 
   const [supportActive, setSupportActive] = useState(false);
   const [levelOfSupport, setLevelOfSupport] = useState<LevelOfSupport>('text');
+  const levelOfSupportRef = useRef<LevelOfSupport>(levelOfSupport);
+  const deltaStepsCompleted = useRef<number>(0);
+  const lastMIIAt = useRef<number>(Date.now());
+
   const [visibleInstructions, setVisibleInstructions] = useState(
     getVisibleInstructions(program.start.start, 0),
   );
   const nextPossibleSteps = useRef<ASTInstruction[]>([]);
 
-  useEffect(
-    () =>
-      onSupportChange(
-        supportActive,
-        levelOfSupport,
-        nextPossibleSteps.current,
-        tab,
-      ),
-    [supportActive, levelOfSupport, tab],
-  );
+  useEffect(() => {
+    levelOfSupportRef.current = levelOfSupport;
+    onSupportChange(
+      supportActive,
+      levelOfSupport,
+      nextPossibleSteps.current,
+      tab,
+    );
+  }, [supportActive, levelOfSupport, tab]);
 
   useEffect(
     () =>
@@ -75,25 +78,31 @@ const useScriptSupport = (program: ASTProgram) => {
 
   useEffect(() => {
     if (userStruggleData) {
+      const now = Date.now();
+      if (now - lastMIIAt.current < 9500) {
+        return;
+      }
+      lastMIIAt.current = now;
       performBestSystemAction(
         userStruggleData,
-        () => levelOfSupport,
+        levelOfSupportRef.current,
+        deltaStepsCompleted.current,
         setLevelOfSupport,
         setSupportDialogDetails,
       );
+      deltaStepsCompleted.current = 0;
     }
   }, [userStruggleData]);
 
-  useEffect(
-    () =>
-      onStepCompletedChange(
-        stepCompleted,
-        nextPossibleSteps,
-        setStepCompleted,
-        setVisibleInstructions,
-      ),
-    [stepCompleted],
-  );
+  useEffect(() => {
+    deltaStepsCompleted.current += 1;
+    onStepCompletedChange(
+      stepCompleted,
+      nextPossibleSteps,
+      setStepCompleted,
+      setVisibleInstructions,
+    );
+  }, [stepCompleted]);
 
   return {
     supportDialogDetails,

@@ -2,7 +2,7 @@ import { StateSetter } from '../../../models/utilTypes';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import Slider from '@mui/material/Slider/Slider';
-import { LoSDescription } from '../userStruggleSupport/levelOfSupportUtils';
+import { LoSDescription } from '../user_support/levelOfSupportUtils';
 import { LevelOfSupport, levelsOfSupport } from '../../../models/UserSupport';
 
 interface LevelOfSupportDetailsProps {

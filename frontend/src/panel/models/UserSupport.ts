@@ -1,13 +1,18 @@
+const levelsOfSupport = ['text', 'overlay', 'click'] as const;
+type LevelOfSupport = (typeof levelsOfSupport)[number];
+
 const supportChanges = ['inc', 'dec'] as const;
-const userSupportActions = [...supportChanges, 'none'] as const;
+const userSupportGoals = [...supportChanges, 'none'] as const;
 const systemSupportActions = [
-  ...userSupportActions,
-  'inc_dialog',
+  'dec',
   'dec_dialog',
+  'none',
+  'inc_dialog',
+  'inc',
 ] as const;
 
 type SupportChange = (typeof supportChanges)[number];
-type UserSupportAction = (typeof userSupportActions)[number];
+type UserSupportGoal = (typeof userSupportGoals)[number];
 type SystemSupportAction = (typeof systemSupportActions)[number];
 
 interface UserStruggleData {
@@ -20,15 +25,23 @@ type UserStruggleEvidence = UserStruggleData & {
   deltaStepsCompleted: number;
 };
 
-const levelsOfSupport = ['text', 'overlay', 'click'] as const;
-type LevelOfSupport = (typeof levelsOfSupport)[number];
+type StruggleModel = (data: UserStruggleData) => number;
+type StruggleProbEqn = (struggleProb: number, k: number) => number;
 
-export { systemSupportActions, userSupportActions, levelsOfSupport };
+type StruggleUtilityEqn = (
+  actionIndex: number,
+  levelOfSupportIndex: number,
+) => number;
+
+export { systemSupportActions, userSupportGoals, levelsOfSupport };
 export type {
+  LevelOfSupport,
   SupportChange,
   SystemSupportAction,
-  UserSupportAction,
+  UserSupportGoal,
   UserStruggleData,
   UserStruggleEvidence,
-  LevelOfSupport,
+  StruggleModel,
+  StruggleProbEqn,
+  StruggleUtilityEqn,
 };

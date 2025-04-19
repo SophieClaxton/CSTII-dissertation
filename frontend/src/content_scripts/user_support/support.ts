@@ -43,7 +43,7 @@ const onStartSupport = (
   if (!supportState.intervalId) {
     supportState.intervalId = setInterval(
       () => sendUserStruggleData(supportState),
-      5000,
+      10000,
     );
   }
 };
