@@ -1,10 +1,10 @@
 import axios from 'axios';
-import APIResponse from '../models/api_temp/APIResponse';
+import APIResponse from '../models/api/APIResponse';
 import Website, {
   WebsiteRequest,
   WebsiteWithScripts,
-} from '../models/api_temp/Website';
-import { handleError } from '../models/api_temp/APIError';
+} from '../models/api/Website';
+import { handleError } from '../models/api/APIError';
 
 const websitesEndpoint = axios.create({
   baseURL: 'http://localhost:8000/websites/',

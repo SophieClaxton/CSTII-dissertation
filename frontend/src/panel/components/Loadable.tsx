@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import APIResponse from '../models/api_temp/APIResponse';
+import APIResponse from '../models/api/APIResponse';
 import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import Alert from '@mui/material/Alert/Alert';
 import AlertTitle from '@mui/material/AlertTitle/AlertTitle';

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigationContext } from '../../contexts/contextHooks';
-import { getUser } from '../../api_temp/users';
-import APIResponse from '../../models/api_temp/APIResponse';
+import { getUser } from '../../api/users';
+import APIResponse from '../../models/api/APIResponse';
 import Loadable from '../Loadable';
 import List from '@mui/material/List/List';
 import ScriptListItem from '../../support_interface/script_selection/ScriptListItem';
@@ -9,11 +9,11 @@ import UnpublishedScriptListItem from '../../scripting_interface/user_scripts/Un
 import CreateUserDialog from '../../scripting_interface/user_scripts/CreateUserDialog';
 import Typography from '@mui/material/Typography/Typography';
 import { Button, Container, ListSubheader } from '@mui/material';
-import { createUnpublishedScript } from '../../api_temp/unpublishedScripts';
+import { createUnpublishedScript } from '../../api/unpublishedScripts';
 import { editorScreen } from '../../navigation/screens';
 import Page from '../Page';
-import { useAPICall } from '../../api_temp/apiHooks';
-import { UserWithScripts } from '../../models/api_temp/User';
+import { useAPICall } from '../../api/apiHooks';
+import { UserWithScripts } from '../../models/api/User';
 
 const UserScriptSelectorPage = () => {
   const { goTo } = useNavigationContext();

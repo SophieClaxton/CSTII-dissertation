@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import APIResponse from '../models/api_temp/APIResponse';
+import APIResponse from '../models/api/APIResponse';
 
 const useAPICall = <D>(
   apiFunction: () => Promise<APIResponse<D>>,

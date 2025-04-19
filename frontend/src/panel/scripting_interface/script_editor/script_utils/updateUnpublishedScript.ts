@@ -1,14 +1,14 @@
-import { updateScript, publishScript } from '../../../api_temp/scripts';
+import { updateScript, publishScript } from '../../../api/scripts';
 import {
   updateUnpublishedScript,
   deleteUnpublishedScript,
-} from '../../../api_temp/unpublishedScripts';
-import { getWebsites, createWebsite } from '../../../api_temp/websites';
+} from '../../../api/unpublishedScripts';
+import { getWebsites, createWebsite } from '../../../api/websites';
 import {
   UnpublishedScript,
   UpdateUnpublishedScriptRequest,
-} from '../../../models/api_temp/UnpublishedScript';
-import Website from '../../../models/api_temp/Website';
+} from '../../../models/api/UnpublishedScript';
+import Website from '../../../models/api/Website';
 import { ASTProgram } from '../../../models/AST/AST';
 import { StateSetter } from '../../../models/utilTypes';
 import { SnackBarDetails } from '../components/AlertSnackBar';

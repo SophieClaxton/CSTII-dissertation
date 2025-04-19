@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { sendEndSupportMessage } from '../../../messaging/sendMessage';
-import { useAPICall } from '../../api_temp/apiHooks';
-import { getScript } from '../../api_temp/scripts';
+import { useAPICall } from '../../api/apiHooks';
+import { getScript } from '../../api/scripts';
 import Loadable from '../Loadable';
 import Page from '../Page';
 import {
