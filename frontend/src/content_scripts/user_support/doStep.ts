@@ -45,6 +45,7 @@ const doWriteStep: SystemStepAction =
           inputElement.value = step.text;
           inputElement.dispatchEvent(inputEvent);
           inputElement.dispatchEvent(changeEvent);
+          document.body.click();
         }
       }
     }, 1000);
@@ -58,7 +59,7 @@ const doSelectStep: SystemStepAction =
     supportState.timeoutId = setTimeout(() => {
       if (isHTMLElement(element) && element.tagName === 'SELECT') {
         const selectElement = element as HTMLSelectElement;
-        selectElement.click();
+        selectElement.focus();
         for (const option of selectElement.options) {
           if (option.value === step.option.value) {
             option.selected = true;

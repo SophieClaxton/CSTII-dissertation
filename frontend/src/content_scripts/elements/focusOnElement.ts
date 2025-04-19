@@ -63,8 +63,8 @@ const scrollToElement = (
     duration: scrollDuration,
     scrollTo: {
       y: element,
-      autoKill: true,
       offsetY: viewHeight * 0.2,
+      autoKill: true,
       onAutoKill: () => {
         supportState.systemScrolling = false;
         console.log('Ended system scrolling');

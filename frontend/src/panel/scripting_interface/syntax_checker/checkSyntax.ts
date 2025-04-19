@@ -133,7 +133,7 @@ const checkSection = (
       getSection: (missingNextSections: ASTSectionNode[]) => {
         if (missingSectionIds.length != missingNextSections.length) {
           throw new Error(
-            'Syntax check error, did not provide the right number of next Sections',
+            `Syntax check error, did not provide the right number of next Sections\nWanted ${missingSectionIds.length} but got ${missingNextSections.length}`,
           );
         }
         const completeEndStep = endStep?.getEndStep(missingNextSections);
@@ -201,7 +201,7 @@ const checkSubsection = (
           getSubsection: (missingNextSections: ASTSectionNode[]) => {
             if (missingSectionIds.length != missingNextSections.length) {
               throw new Error(
-                'Syntax check error, did not provide the right number of next Sections',
+                `Syntax check error, did not provide the right number of next Sections\nWanted ${missingSectionIds.length} but got ${missingNextSections.length}`,
               );
             }
             const completeEndStep = endStep?.getEndStep(missingNextSections);
@@ -365,7 +365,7 @@ const checkUserDecisionEndNode = (
           missingNextSections.slice(0, subsection1.missingSectionIds.length),
         ),
         choice2: subsection2.getSubsection(
-          missingNextSections.slice(subsection1.missingSectionIds.length, -1),
+          missingNextSections.slice(subsection1.missingSectionIds.length),
         ),
       }),
     };

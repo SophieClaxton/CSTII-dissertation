@@ -149,8 +149,8 @@ const detectRadioStep = (
   console.log('Step element', step.element.outerHTML);
   if (elementsMatch(element, step.element)) {
     console.log('Detected check');
-    const checkElement = element as HTMLInputElement;
-    if (checkElement.checked) {
+    const radioElement = element as HTMLInputElement;
+    if (radioElement.checked) {
       sendDetectionMessage(supportState, step);
     }
   }

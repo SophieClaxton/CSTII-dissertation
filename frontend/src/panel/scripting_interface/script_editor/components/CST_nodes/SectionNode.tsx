@@ -41,7 +41,10 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         padding: '1rem',
         borderRadius: '1rem',
         position: 'relative',
-        outline: sectionError ? '2px dashed rgb(230, 40, 40)' : 'none',
+        outline:
+          sectionError && syntaxErrors.showSyntaxErrors
+            ? '2px dashed rgb(230, 40, 40)'
+            : 'none',
       }}
     >
       <Stack direction={'row'} justifyContent={'space-between'}>

@@ -111,12 +111,12 @@ document.onmousedown = collectUserStruggleDataOnMouseDown(supportState);
 let ticking = false;
 document.onscroll = () => {
   if (!ticking) {
-    window.requestAnimationFrame(() => {
+    ticking = true;
+    setTimeout(() => {
       collectStruggleDataOnScroll(supportState);
       detectStepOnScroll(supportState);
       ticking = false;
-    });
-    ticking = true;
+    }, 33);
   }
 };
 

@@ -23,16 +23,15 @@ const checkClickNode = (
       type: 'syntax_error',
       errors: [{ location: clickNode.id, reason: 'Missing element' }],
     };
-  } else {
-    return {
-      type: 'incomplete_node',
-      getInnerStep: (missingNextStep: ASTStepNode) => ({
-        type: ASTNodeType.Click,
-        element: clickNode.element!,
-        next: missingNextStep,
-      }),
-    };
   }
+  return {
+    type: 'incomplete_node',
+    getInnerStep: (missingNextStep: ASTStepNode) => ({
+      type: ASTNodeType.Click,
+      element: clickNode.element!,
+      next: missingNextStep,
+    }),
+  };
 };
 
 const checkReadNode = (
