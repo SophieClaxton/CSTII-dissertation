@@ -1,15 +1,15 @@
 import {
   UserSupportGoal,
   UserStruggleEvidence,
-  StruggleModel,
+  StruggleProbModel,
   StruggleProbEqn,
   UserStruggleData,
 } from '../../../../models/UserSupport';
 import * as lodash from 'lodash';
 import { softmax } from '../modelUtils';
-import { UserModel } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
+import { GoalLikelihoodModel } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
 
-const tempGoalModel: StruggleModel = (_data: UserStruggleData) => 0.5;
+const tempGoalModel: StruggleProbModel = (_data: UserStruggleData) => 0.5;
 
 const defautlStruggleProbEquations: Record<UserSupportGoal, StruggleProbEqn> = {
   inc: (struggleProb, k) => 1.5 * Math.pow(struggleProb + (5 - k) / 10, 2),
@@ -21,14 +21,14 @@ const defautlStruggleProbEquations: Record<UserSupportGoal, StruggleProbEqn> = {
     ),
 };
 
-const getUserStruggleUserModel = (
-  struggleModel: StruggleModel = tempGoalModel,
+const getSupportChangeLikelihoodModel = (
+  struggleModel: StruggleProbModel = tempGoalModel,
   alpha: number = 0.7,
   struggleEqns: Record<
     UserSupportGoal,
     StruggleProbEqn
   > = defautlStruggleProbEquations,
-): UserModel<UserSupportGoal, UserStruggleEvidence> => {
+): GoalLikelihoodModel<UserSupportGoal, UserStruggleEvidence> => {
   let movingEvidenceAverage: UserStruggleEvidence | undefined = undefined;
   let lastEvidence: UserStruggleEvidence | undefined = undefined;
   let probabilities: Record<UserSupportGoal, number> = {
@@ -83,7 +83,7 @@ const computeMovingAverage = (
 };
 
 const computeUserGoalProbabilities = (
-  struggleModel: StruggleModel,
+  struggleModel: StruggleProbModel,
   movingEvidenceAverage: UserStruggleEvidence,
   struggleEqns: Record<UserSupportGoal, StruggleProbEqn>,
 ): Record<UserSupportGoal, number> => {
@@ -104,4 +104,4 @@ const computeUserGoalProbabilities = (
   };
 };
 
-export default getUserStruggleUserModel;
+export { getSupportChangeLikelihoodModel };

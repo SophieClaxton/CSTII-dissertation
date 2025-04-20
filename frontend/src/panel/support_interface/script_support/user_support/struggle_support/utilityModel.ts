@@ -21,7 +21,7 @@ const defaultStruggleUtilityEquations: Record<
     8 * Math.exp(-2 * Math.pow((a - 2 + (l - 1) / 2) / 1.25, 2)) + 2,
 };
 
-const getUserUtilityModel =
+const getSupportChangeUtilityModel =
   (
     currentLevelOfSupport: LevelOfSupport,
     utilityEqns: Record<
@@ -43,4 +43,4 @@ const getUserUtilityModel =
     return utility;
   };
 
-export default getUserUtilityModel;
+export { getSupportChangeUtilityModel };

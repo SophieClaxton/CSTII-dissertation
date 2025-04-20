@@ -1,7 +1,7 @@
 /** User model returns the probability of the goal given the evidence.
  * The sum of the probabilities of all the possible goals should sum to 1
  */
-type UserModel<G, E> = (goal: G, evidence: E) => number;
+type GoalLikelihoodModel<G, E> = (goal: G, evidence: E) => number;
 
 /** Utility of a paritcular action A given goal G should be a number in the range [0, 1] */
 type UtilityModel<A, G> = (action: A, goal: G) => number;
@@ -13,7 +13,7 @@ interface MII<E, A> {
 }
 
 interface MIIDetails<A, G, E> {
-  userModel: UserModel<G, E>;
+  goalLikelihoodModel: GoalLikelihoodModel<G, E>;
   utilityModel: UtilityModel<A, G>;
   actions: readonly A[];
   goals: readonly G[];
@@ -22,22 +22,18 @@ interface MIIDetails<A, G, E> {
 const getExpectedUtility = <A, G, E>(
   action: A,
   evidence: E,
-  possibleGoals: readonly G[],
-  userModel: UserModel<G, E>,
-  utilityModel: UtilityModel<A, G>,
+  details: MIIDetails<A, G, E>,
 ): number => {
-  const productsForGoals = possibleGoals.map(
-    (goal) => userModel(goal, evidence) * utilityModel(action, goal),
+  const products = details.goals.map(
+    (goal) =>
+      details.goalLikelihoodModel(goal, evidence) *
+      details.utilityModel(action, goal),
   );
-  return sum(productsForGoals);
+  return sum(products);
 };
 
-const getMII = <A, G, E>({
-  userModel,
-  utilityModel,
-  actions,
-  goals,
-}: MIIDetails<A, G, E>): MII<E, A> => {
+const getMII = <A, G, E>(details: MIIDetails<A, G, E>): MII<E, A> => {
+  const { actions, goals } = details;
   if (actions.length === 0) {
     throw new Error('No actions to consider');
   }
@@ -49,13 +45,7 @@ const getMII = <A, G, E>({
     getBestAction: (evidence: E) => {
       const results: EUResult<A>[] = actions.map((action) => ({
         action,
-        EU: getExpectedUtility(
-          action,
-          evidence,
-          goals,
-          userModel,
-          utilityModel,
-        ),
+        EU: getExpectedUtility(action, evidence, details),
       }));
       console.log(results);
 
@@ -86,4 +76,4 @@ const getMax = <V, P>(
   );
 
 export { getMII };
-export type { UserModel, UtilityModel, MII };
+export type { GoalLikelihoodModel, UtilityModel, MII };

@@ -17,7 +17,12 @@ const SupportDialog: React.FC<SupportDialogProps> = ({
   onAction,
 }) => {
   return (
-    <Snackbar open={open} autoHideDuration={7500} onClose={onClose}>
+    <Snackbar
+      open={open}
+      autoHideDuration={5000}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    >
       <Alert
         severity={'info'}
         onClose={onClose}

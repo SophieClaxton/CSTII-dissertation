@@ -25,7 +25,7 @@ type UserStruggleEvidence = UserStruggleData & {
   deltaStepsCompleted: number;
 };
 
-type StruggleModel = (data: UserStruggleData) => number;
+type StruggleProbModel = (data: UserStruggleData) => number;
 type StruggleProbEqn = (struggleProb: number, k: number) => number;
 
 type StruggleUtilityEqn = (
@@ -33,7 +33,18 @@ type StruggleUtilityEqn = (
   levelOfSupportIndex: number,
 ) => number;
 
-export { systemSupportActions, userSupportGoals, levelsOfSupport };
+const scriptFeedbackGoals = ['none', 'send'] as const;
+type ScriptFeedbackGoal = (typeof scriptFeedbackGoals)[number];
+const scriptFeedbackActions = ['none', 'dialog', 'send'] as const;
+type ScriptFeedbackAction = (typeof scriptFeedbackActions)[number];
+
+export {
+  systemSupportActions,
+  userSupportGoals,
+  levelsOfSupport,
+  scriptFeedbackGoals,
+  scriptFeedbackActions,
+};
 export type {
   LevelOfSupport,
   SupportChange,
@@ -41,7 +52,9 @@ export type {
   UserSupportGoal,
   UserStruggleData,
   UserStruggleEvidence,
-  StruggleModel,
+  StruggleProbModel,
   StruggleProbEqn,
   StruggleUtilityEqn,
+  ScriptFeedbackGoal,
+  ScriptFeedbackAction,
 };

@@ -9,9 +9,9 @@ import {
 } from '../../panel/models/UserSupport';
 import { getMII } from '../../panel/support_interface/script_support/mixed_initiative_interaction.ts/mixedInitiativeInteraction';
 import { softmax } from '../../panel/support_interface/script_support/user_support/modelUtils';
-import getUserStruggleUserModel from '../../panel/support_interface/script_support/user_support/struggle_support/userModel';
-import { getNextSystemSupportAction } from '../../panel/support_interface/script_support/user_support/struggle_support/userSupportMII';
-import getUserUtilityModel from '../../panel/support_interface/script_support/user_support/struggle_support/utilityModel';
+import getSupportChangeLikelihoodModel from '../../panel/support_interface/script_support/user_support/struggle_support/goalLikelihoodModel';
+import { getNextStruggleSupportAction } from '../../panel/support_interface/script_support/user_support/struggle_support/userSupportMII';
+import getSupportChangeUtilityModel from '../../panel/support_interface/script_support/user_support/struggle_support/utilityModel';
 
 describe('softmax', () => {
   it('returns numbers', () => {
@@ -37,7 +37,7 @@ describe('getNextSystemSupportAction', () => {
       totalScrollDistance: Math.log(280.7),
       numMouseClicks: 1.4,
     };
-    const action = getNextSystemSupportAction(userStruggleData, 1, 'click');
+    const action = getNextStruggleSupportAction(userStruggleData, 1, 'click');
     expect(action).not.toBeUndefined();
   });
 });
@@ -84,8 +84,8 @@ describe('getBestActionResults', () => {
       >({
         actions: systemSupportActions,
         goals: userSupportGoals,
-        userModel: getUserStruggleUserModel(() => struggleProb),
-        utilityModel: getUserUtilityModel(LOS as LevelOfSupport),
+        goalLikelihoodModel: getSupportChangeLikelihoodModel(() => struggleProb),
+        utilityModel: getSupportChangeUtilityModel(LOS as LevelOfSupport),
       });
       const action = MII.getBestAction({
         totalDistance: 0,

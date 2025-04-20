@@ -6,7 +6,7 @@ import {
   increaseLevelOfSupport,
   decreaseLevelOfSupport,
 } from '../levelOfSupportUtils';
-import { getNextSystemSupportAction } from './userSupportMII';
+import { getNextStruggleSupportAction } from './userSupportMII';
 
 const performBestSystemAction = (
   userStruggleData: UserStruggleData,
@@ -15,7 +15,7 @@ const performBestSystemAction = (
   setLevelOfSupport: StateSetter<LevelOfSupport>,
   setSupportDialogDetails: StateSetter<SupportDialogProps>,
 ) => {
-  const nextAction = getNextSystemSupportAction(
+  const nextAction = getNextStruggleSupportAction(
     userStruggleData,
     deltaStepsCompleted,
     levelOfSupport,

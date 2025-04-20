@@ -8,10 +8,10 @@ import {
   LevelOfSupport,
 } from '../../../../models/UserSupport';
 import { getMII } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
-import getUserStruggleUserModel from './userModel';
-import userStruggleUtilityModel from './utilityModel';
+import { getSupportChangeLikelihoodModel } from './goalLikelihoodModel';
+import { getSupportChangeUtilityModel } from './utilityModel';
 
-const getNextSystemSupportAction = (
+const getNextStruggleSupportAction = (
   userStruggleData: UserStruggleData,
   deltaStepsCompleted: number,
   currentLevelOfSupport: LevelOfSupport,
@@ -23,8 +23,8 @@ const getNextSystemSupportAction = (
     UserSupportGoal,
     UserStruggleEvidence
   >({
-    userModel: getUserStruggleUserModel(),
-    utilityModel: userStruggleUtilityModel(currentLevelOfSupport),
+    goalLikelihoodModel: getSupportChangeLikelihoodModel(),
+    utilityModel: getSupportChangeUtilityModel(currentLevelOfSupport),
     actions: systemSupportActions,
     goals: userSupportGoals,
   }).getBestAction(evidence);
@@ -34,4 +34,4 @@ const getNextSystemSupportAction = (
   return bestAction;
 };
 
-export { getNextSystemSupportAction };
+export { getNextStruggleSupportAction };
