@@ -3,14 +3,14 @@ import {
   ScriptFeedbackGoal,
   scriptFeedbackActions,
   scriptFeedbackGoals,
-} from '../../../../models/support_and_MII/ScriptFeedbackMII';
+} from '../../models/support_and_MII/ScriptFeedbackMII';
 import {
   LevelOfSupport,
   UserStruggleData,
   UserStruggleEvidence,
-} from '../../../../models/support_and_MII/UserSupport';
-import { StateSetter } from '../../../../models/utilTypes';
-import { getMII } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
+} from '../../models/support_and_MII/UserSupport';
+import { StateSetter } from '../../models/utilTypes';
+import { getMII } from '../mixedInitiativeInteraction';
 import { FeedbackActionDialogProps } from './FeedbackActionDialog';
 import { getScriptFeedbackGoalLikelihoodModel } from './goalLikelihoodModel';
 import { getScriptFeedbackUtilityModel } from './utilityModel';
@@ -45,6 +45,7 @@ const performBestScriptFeedbackAction = (
   levelOfSupport: LevelOfSupport,
   stepsCompleted: number,
   setFeedbackActionDialogDetails: StateSetter<FeedbackActionDialogProps>,
+  onAnnotate: () => void,
 ) => {
   const nextAction = getNextScriptFeedbackAction(
     userStruggleData,
@@ -60,12 +61,10 @@ const performBestScriptFeedbackAction = (
         ...prev,
         open: true,
         action: nextAction,
-        onAction: () => {
-          console.log('Sending annotation message');
-        },
+        onAction: onAnnotate,
       }));
     case 'send': {
-      console.log('Sending annotation message');
+      onAnnotate();
       return setFeedbackActionDialogDetails((prev) => ({
         ...prev,
         open: true,

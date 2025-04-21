@@ -8,9 +8,9 @@ import {
   LevelOfSupport,
   UserStruggleEvidence,
 } from '../../panel/models/support_and_MII/UserSupport';
-import { getMII } from '../../panel/support_interface/script_support/mixed_initiative_interaction.ts/mixedInitiativeInteraction';
-import { getScriptFeedbackGoalLikelihoodModel } from '../../panel/support_interface/script_support/user_support/script_feedback/goalLikelihoodModel';
-import { getScriptFeedbackUtilityModel } from '../../panel/support_interface/script_support/user_support/script_feedback/utilityModel';
+import { getMII } from '../../panel/mixed_initiative_interaction/mixedInitiativeInteraction';
+import { getScriptFeedbackGoalLikelihoodModel } from '../../panel/mixed_initiative_interaction/script_feedback/goalLikelihoodModel';
+import { getScriptFeedbackUtilityModel } from '../../panel/mixed_initiative_interaction/script_feedback/utilityModel';
 
 describe('getBestActionResults', () => {
   it.each([

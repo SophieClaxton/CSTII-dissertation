@@ -1,4 +1,3 @@
-import Annotation from './Annotation';
 import { ASTProgram } from '../AST/AST';
 import User from './User';
 import Website from './Website';
@@ -15,7 +14,6 @@ type ScriptWithWebsite = BaseScript & { website: Website };
 type ScriptWithAuthorAndWebsite = ScriptWithAuthor & ScriptWithWebsite;
 type Script = ScriptWithAuthorAndWebsite & {
   program: ASTProgram;
-  annotations: Annotation[];
 };
 
 interface UpdateScriptRequest {

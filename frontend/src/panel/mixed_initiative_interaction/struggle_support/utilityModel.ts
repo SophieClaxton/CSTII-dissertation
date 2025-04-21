@@ -3,12 +3,12 @@ import {
   SystemSupportAction,
   systemSupportActions,
   UserSupportGoal,
-} from '../../../../models/support_and_MII/StruggleSupportMII';
+} from '../../models/support_and_MII/StruggleSupportMII';
 import {
   LevelOfSupport,
   levelsOfSupport,
-} from '../../../../models/support_and_MII/UserSupport';
-import { UtilityModel } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
+} from '../../models/support_and_MII/UserSupport';
+import { UtilityModel } from '../mixedInitiativeInteraction';
 
 const defaultStruggleUtilityEquations: Record<
   UserSupportGoal,

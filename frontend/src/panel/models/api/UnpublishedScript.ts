@@ -1,4 +1,5 @@
 import { CSTProgram } from '../CST/CST';
+import Annotation from './Annotation';
 import User from './User';
 import Website from './Website';
 
@@ -16,6 +17,7 @@ type UnpublishedScript = UnpublishedScriptWithWebsite & {
   author: User;
   program: CSTProgram;
   published_script_id?: number;
+  annotations: Annotation;
 };
 
 interface UpdateUnpublishedScriptRequest {

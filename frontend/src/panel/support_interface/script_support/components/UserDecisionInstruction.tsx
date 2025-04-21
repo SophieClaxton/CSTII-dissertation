@@ -6,19 +6,22 @@ import {
 import Typography from '@mui/material/Typography/Typography';
 import { ASTStepNode, ASTUserDecisionNode } from '../../../models/AST/AST';
 import Button from '@mui/material/Button/Button';
-import { StateSetter } from '../../../models/utilTypes';
+import { StateRef, StateSetter } from '../../../models/utilTypes';
 import { getVisibleInstructions } from '../../../models/AST/getters';
+import { ScriptLocation } from '../../../models/support_and_MII/UserSupport';
 
 interface UserDecisionInstructionProps {
   supportActive: boolean;
   instruction: ASTUserDecisionNode & InstructionDetail;
   setVisibleInstructions: StateSetter<ASTInstruction[]>;
+  currentScriptLocation: StateRef<ScriptLocation>;
 }
 
 const UserDecisionInstruction: React.FC<UserDecisionInstructionProps> = ({
   supportActive,
   instruction,
   setVisibleInstructions,
+  currentScriptLocation,
 }) => {
   const { stage, stepNumber } = instruction;
   return (
@@ -73,13 +76,20 @@ const UserDecisionInstruction: React.FC<UserDecisionInstructionProps> = ({
         sx={{
           gridColumnStart: 2,
         }}
-        onClick={() =>
+        onClick={() => {
+          currentScriptLocation.current = {
+            stepNumber: currentScriptLocation.current.stepNumber + 1,
+            decisionHistory: [
+              ...currentScriptLocation.current.decisionHistory,
+              'yes',
+            ],
+          };
           onUpdateVisibleInstruction(
             setVisibleInstructions,
             instruction,
             instruction.choice1.start,
-          )
-        }
+          );
+        }}
         disabled={stage != 'next' || !supportActive}
       >
         Yes
@@ -89,13 +99,20 @@ const UserDecisionInstruction: React.FC<UserDecisionInstructionProps> = ({
         sx={{
           gridColumnStart: 3,
         }}
-        onClick={() =>
+        onClick={() => {
+          currentScriptLocation.current = {
+            stepNumber: currentScriptLocation.current.stepNumber + 1,
+            decisionHistory: [
+              ...currentScriptLocation.current.decisionHistory,
+              'no',
+            ],
+          };
           onUpdateVisibleInstruction(
             setVisibleInstructions,
             instruction,
             instruction.choice2.start,
-          )
-        }
+          );
+        }}
         disabled={stage != 'next'}
       >
         No

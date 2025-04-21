@@ -117,9 +117,6 @@ class Script(SQLModel, table=True):
             author=self.author.toBaseUserResponse(),
             website=self.website.toBaseWesbiteResponse(),
             program=program,
-            annotations=[
-                annotation.toAnnotationResponse() for annotation in self.annotations
-            ],
         )
 
 
@@ -144,6 +141,20 @@ class Website(SQLModel, table=True):
             url=self.url,
             description=self.descrpition,
             scripts=[script.toScriptWithAuthorResponse() for script in self.scripts],
+        )
+
+
+class Annotation(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    script_id: int = Field(foreign_key="script.id", ondelete="CASCADE")
+    location: str
+    description: str
+
+    script: Script = Relationship(back_populates="annotations")
+
+    def toAnnotationResponse(self) -> AnnotationResponse:
+        return AnnotationResponse(
+            id=self.id, location=self.location, description=self.description
         )
 
 
@@ -186,7 +197,7 @@ class UnpublishedScript(SQLModel, table=True):
         )
 
     def toUnpublishedScriptWithProgramResponse(
-        self, program: CSTProgram | None
+        self, program: CSTProgram | None, annotations: List[Annotation] | None
     ) -> UnpublishedScriptWithProgramResponse:
         return UnpublishedScriptWithProgramResponse(
             id=self.id,
@@ -197,18 +208,7 @@ class UnpublishedScript(SQLModel, table=True):
             website=None if not self.website else self.website.toBaseWesbiteResponse(),
             published_script_id=self.published_script_id,
             program=program,
-        )
-
-
-class Annotation(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    script_id: int = Field(foreign_key="script.id", ondelete="CASCADE")
-    location: str
-    description: str
-
-    script: Script = Relationship(back_populates="annotations")
-
-    def toAnnotationResponse(self) -> AnnotationResponse:
-        return AnnotationResponse(
-            id=self.id, location=self.location, description=self.description
+            annotations=(
+                [a.toAnnotationResponse() for a in annotations] if annotations else None
+            ),
         )

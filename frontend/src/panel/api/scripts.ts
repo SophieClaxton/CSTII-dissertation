@@ -9,6 +9,7 @@ import {
 } from '../models/api/Script';
 import APISuccess from '../models/api/APISuccess';
 import APIResponse from '../models/api/APIResponse';
+import { CreateAnnotationRequest } from '../models/api/Annotation';
 
 const scriptsEndpoint = axios.create({
   baseURL: 'http://localhost:8000/scripts/',
@@ -103,6 +104,28 @@ const deleteScript = async (id: number): Promise<APIResponse<APISuccess>> => {
   }
 };
 
+const annotateScript = async (
+  scriptId: number,
+  annotationRequest: CreateAnnotationRequest,
+): Promise<APIResponse<APISuccess>> => {
+  console.log('Making request to annotate scripts');
+  try {
+    const response = await scriptsEndpoint.post(
+      `${scriptId}/annotate`,
+      annotationRequest,
+    );
+    return {
+      status: 'Loaded',
+      data: response.data as APISuccess,
+    };
+  } catch (err: unknown) {
+    return {
+      status: 'Error',
+      error: handleError(err),
+    };
+  }
+};
+
 const getUserScripts = async (
   userId: number,
 ): Promise<APIResponse<ScriptWithAuthorAndWebsite[]>> => {
@@ -145,6 +168,7 @@ export {
   publishScript,
   updateScript,
   deleteScript,
+  annotateScript,
   getUserScripts,
   getWebsiteScripts,
 };

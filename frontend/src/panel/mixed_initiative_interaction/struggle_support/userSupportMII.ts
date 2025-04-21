@@ -1,15 +1,11 @@
-import { UserStruggleData } from '../../../../../messaging/message';
+import { UserStruggleData } from '../../../messaging/message';
 import {
   LevelOfSupport,
   UserStruggleEvidence,
-} from '../../../../models/support_and_MII/UserSupport';
-import { StateSetter } from '../../../../models/utilTypes';
+} from '../../models/support_and_MII/UserSupport';
+import { StateSetter } from '../../models/utilTypes';
 import { SupportActionDialogProps } from '../script_feedback/SupportActionDialog';
-import { getMII } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
-import {
-  increaseLevelOfSupport,
-  decreaseLevelOfSupport,
-} from '../levelOfSupportUtils';
+import { getMII } from '../mixedInitiativeInteraction';
 import { getSupportChangeLikelihoodModel } from './goalLikelihoodModel';
 import { getSupportChangeUtilityModel } from './utilityModel';
 import {
@@ -17,7 +13,11 @@ import {
   UserSupportGoal,
   systemSupportActions,
   userSupportGoals,
-} from '../../../../models/support_and_MII/StruggleSupportMII';
+} from '../../models/support_and_MII/StruggleSupportMII';
+import {
+  increaseLevelOfSupport,
+  decreaseLevelOfSupport,
+} from './levelOfSupportUtils';
 
 const getNextStruggleSupportAction = (
   userStruggleData: UserStruggleData,

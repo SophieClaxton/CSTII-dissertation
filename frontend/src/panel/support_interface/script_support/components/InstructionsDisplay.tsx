@@ -3,14 +3,16 @@ import Button from '@mui/material/Button/Button';
 import { ASTInstruction } from '../../../models/AST/Instruction';
 import Instruction from './Instruction';
 import { useNavigationContext } from '../../../contexts/contextHooks';
-import { StateSetter } from '../../../models/utilTypes';
+import { StateRef, StateSetter } from '../../../models/utilTypes';
 import { ASTNodeType } from '../../../models/AST/AST';
 import UserDecisionInstruction from './UserDecisionInstruction';
+import { ScriptLocation } from '../../../models/support_and_MII/UserSupport';
 
 interface InstructionsDisplayProps {
   supportActive: boolean;
   visibleInstructions: ASTInstruction[];
   setVisibleInstructions: StateSetter<ASTInstruction[]>;
+  currentScriptLocation: StateRef<ScriptLocation>;
   setStepCompleted: StateSetter<ASTInstruction | undefined>;
 }
 
@@ -18,6 +20,7 @@ const InstructionsDisplay: React.FC<InstructionsDisplayProps> = ({
   supportActive,
   visibleInstructions,
   setVisibleInstructions,
+  currentScriptLocation,
   setStepCompleted,
 }) => {
   const { goBack } = useNavigationContext();
@@ -40,7 +43,12 @@ const InstructionsDisplay: React.FC<InstructionsDisplayProps> = ({
       {visibleInstructions.map((instruction) =>
         instruction.type === ASTNodeType.UserDecision ? (
           <UserDecisionInstruction
-            {...{ supportActive, instruction, setVisibleInstructions }}
+            {...{
+              supportActive,
+              instruction,
+              setVisibleInstructions,
+              currentScriptLocation,
+            }}
           />
         ) : (
           <Instruction {...{ supportActive, instruction, setStepCompleted }} />

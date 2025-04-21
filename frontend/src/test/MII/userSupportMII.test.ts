@@ -9,11 +9,11 @@ import {
   LevelOfSupport,
   UserStruggleEvidence,
 } from '../../panel/models/support_and_MII/UserSupport';
-import { getMII } from '../../panel/support_interface/script_support/mixed_initiative_interaction.ts/mixedInitiativeInteraction';
-import { softmax } from '../../panel/support_interface/script_support/user_support/modelUtils';
-import { getSupportChangeLikelihoodModel } from '../../panel/support_interface/script_support/user_support/struggle_support/goalLikelihoodModel';
-import { getNextStruggleSupportAction } from '../../panel/support_interface/script_support/user_support/struggle_support/userSupportMII';
-import { getSupportChangeUtilityModel } from '../../panel/support_interface/script_support/user_support/struggle_support/utilityModel';
+import { getMII } from '../../panel/mixed_initiative_interaction/mixedInitiativeInteraction';
+import { softmax } from '../../panel/mixed_initiative_interaction/modelUtils';
+import { getSupportChangeLikelihoodModel } from '../../panel/mixed_initiative_interaction/struggle_support/goalLikelihoodModel';
+import { getNextStruggleSupportAction } from '../../panel/mixed_initiative_interaction/struggle_support/userSupportMII';
+import { getSupportChangeUtilityModel } from '../../panel/mixed_initiative_interaction/struggle_support/utilityModel';
 
 describe('softmax', () => {
   it('returns numbers', () => {

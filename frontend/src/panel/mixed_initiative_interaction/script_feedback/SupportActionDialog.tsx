@@ -1,26 +1,27 @@
+import Button from '@mui/material/Button/Button';
 import Snackbar from '@mui/material/Snackbar/Snackbar';
 import Alert from '@mui/material/Alert/Alert';
-import HelpOutline from '@mui/icons-material/HelpOutline';
-import Button from '@mui/material/Button/Button';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { StruggleEvidenceDuration } from '../../../../../content_scripts/consts';
-import { ScriptFeedbackAction } from '../../../../models/support_and_MII/ScriptFeedbackMII';
+import HelpOutline from '@mui/icons-material/HelpOutline';
+import { StruggleEvidenceDuration } from '../../../content_scripts/consts';
+import { SystemSupportAction } from '../../models/support_and_MII/StruggleSupportMII';
 
-interface FeedbackActionDialogProps {
+interface SupportActionDialogProps {
   open: boolean;
   onClose: () => void;
-  action: ScriptFeedbackAction;
+  action: SystemSupportAction;
   onAction?: () => void;
 }
 
-const mapActionToText: Record<ScriptFeedbackAction, string> = {
+const mapActionToText: Record<SystemSupportAction, string> = {
+  dec: 'The level of support has been decreased.',
+  dec_dialog: 'Would you like to decrease the level of support?',
   none: '',
-  dialog:
-    'Would you like to let the script writer that their might be a problem with their script?',
-  send: 'The script writer has been notified that there might be a problem with the script.',
+  inc_dialog: 'Would you like to increase the level of support?',
+  inc: 'The level of support has been increased',
 };
 
-const FeedbackActionDialog: React.FC<FeedbackActionDialogProps> = ({
+const SupportActionDialog: React.FC<SupportActionDialogProps> = ({
   open,
   onClose,
   action,
@@ -35,7 +36,8 @@ const FeedbackActionDialog: React.FC<FeedbackActionDialogProps> = ({
     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
   >
     <Alert
-      severity={action === 'dialog' ? 'info' : 'success'}
+      severity={onAction ? 'info' : 'success'}
+      variant="filled"
       iconMapping={{
         success: <CheckCircleOutlineIcon fontSize="inherit" />,
         info: <HelpOutline />,
@@ -61,5 +63,5 @@ const FeedbackActionDialog: React.FC<FeedbackActionDialogProps> = ({
   </Snackbar>
 );
 
-export default FeedbackActionDialog;
-export type { FeedbackActionDialogProps };
+export default SupportActionDialog;
+export type { SupportActionDialogProps };

@@ -3,8 +3,8 @@ import {
   scriptFeedbackActions,
   ScriptFeedbackGoal,
   ScriptFeedbackUtilityEqn,
-} from '../../../../models/support_and_MII/ScriptFeedbackMII';
-import { UtilityModel } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
+} from '../../models/support_and_MII/ScriptFeedbackMII';
+import { UtilityModel } from '../mixedInitiativeInteraction';
 
 const defaultStruggleUtilityEquations: Record<
   ScriptFeedbackGoal,

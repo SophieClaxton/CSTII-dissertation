@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { SupportActionDialogProps } from './user_support/script_feedback/SupportActionDialog';
+import { SupportActionDialogProps } from '../../mixed_initiative_interaction/script_feedback/SupportActionDialog';
 import {
   addStepCompletedListener,
   addUserStruggleDataListener,
@@ -19,19 +19,27 @@ import { useTabContext } from '../../contexts/contextHooks';
 import { ASTProgram } from '../../models/AST/AST';
 import { TabInfo } from '../../contexts/TabContext';
 import { StateRef, StateSetter } from '../../models/utilTypes';
-import { LevelOfSupport } from '../../models/support_and_MII/UserSupport';
-import { performBestStruggleSupportAction } from './user_support/struggle_support/userSupportMII';
-import { FeedbackActionDialogProps } from './user_support/script_feedback/FeedbackActionDialog';
+import {
+  LevelOfSupport,
+  ScriptLocation,
+} from '../../models/support_and_MII/UserSupport';
+import { performBestStruggleSupportAction } from '../../mixed_initiative_interaction/struggle_support/userSupportMII';
+import { FeedbackActionDialogProps } from '../../mixed_initiative_interaction/script_feedback/FeedbackActionDialog';
 import { StruggleEvidenceDuration } from '../../../content_scripts/consts';
-import { performBestScriptFeedbackAction } from './user_support/script_feedback/scriptFeedbackMII';
+import { performBestScriptFeedbackAction } from '../../mixed_initiative_interaction/script_feedback/scriptFeedbackMII';
+import { annotateScript } from '../../api/scripts';
 
-const useScriptSupport = (program: ASTProgram) => {
+const useScriptSupport = (scriptId: number, program: ASTProgram) => {
   const { tab } = useTabContext();
 
   const [supportActive, setSupportActive] = useState(false);
   const [levelOfSupport, setLevelOfSupport] = useState<LevelOfSupport>('text');
   const levelOfSupportRef = useRef<LevelOfSupport>(levelOfSupport);
-  const stepsCompleted = useRef<number>(0);
+  const currentScriptLocation = useRef<ScriptLocation>({
+    stepNumber: 0,
+    decisionHistory: [],
+  });
+  const stepsCompletedInPeriod = useRef<number>(0);
   const lastMIIAt = useRef<number>(Date.now());
 
   const [visibleInstructions, setVisibleInstructions] = useState(
@@ -87,45 +95,35 @@ const useScriptSupport = (program: ASTProgram) => {
 
   useEffect(() => {
     if (userStruggleData) {
-      const now = Date.now();
-      if (now - lastMIIAt.current < 0.95 * StruggleEvidenceDuration) {
-        return;
-      }
-      lastMIIAt.current = now;
-      performBestStruggleSupportAction(
+      receiveUserStruggleData(
         userStruggleData,
-        levelOfSupportRef.current,
-        stepsCompleted.current,
+        lastMIIAt,
+        levelOfSupportRef,
+        stepsCompletedInPeriod,
         setLevelOfSupport,
         setSupportActionDialogDetails,
+        setFeedbackActionDialogDetails,
+        scriptId,
+        mapScriptLocationToString(currentScriptLocation.current),
       );
-      setTimeout(
-        () =>
-          performBestScriptFeedbackAction(
-            userStruggleData,
-            levelOfSupportRef.current,
-            stepsCompleted.current,
-            setFeedbackActionDialogDetails,
-          ),
-        0.45 * StruggleEvidenceDuration,
-      );
-      stepsCompleted.current = 0;
     }
-  }, [userStruggleData]);
+  }, [userStruggleData, scriptId]);
 
   useEffect(() => {
-    stepsCompleted.current += 1;
+    stepsCompletedInPeriod.current += 1;
     onStepCompletedChange(
       stepCompleted,
       nextPossibleSteps,
       setStepCompleted,
       setVisibleInstructions,
+      currentScriptLocation,
     );
   }, [stepCompleted]);
 
   return {
     supportActionDialogDetails,
     feedbackActionDialogDetails,
+    currentScriptLocation,
     visibleInstructions,
     setVisibleInstructions,
     levelOfSupport,
@@ -182,12 +180,17 @@ const onStepCompletedChange = (
   nextPossibleSteps: StateRef<ASTInstruction[]>,
   setStepCompleted: StateSetter<ASTInstruction | undefined>,
   setVisibleInstructions: StateSetter<ASTInstruction[]>,
+  currentPositionInScript: StateRef<ScriptLocation>,
 ) => {
   console.log('Step was completed');
   const nextSteps = nextPossibleSteps.current;
   if (stepCompleted && nextSteps.length > 0) {
     const validStepNumbers = nextSteps.map((step) => step.stepNumber);
     if (validStepNumbers.includes(stepCompleted.stepNumber)) {
+      currentPositionInScript.current = {
+        ...currentPositionInScript.current,
+        stepNumber: stepCompleted.stepNumber + 1,
+      };
       setVisibleInstructions((prev) =>
         prev.map((instr) => {
           if (instr.stepNumber <= stepCompleted.stepNumber) {
@@ -203,6 +206,51 @@ const onStepCompletedChange = (
     }
     setStepCompleted(undefined);
   }
+};
+
+const receiveUserStruggleData = (
+  userStruggleData: UserStruggleData,
+  lastMIIAt: StateRef<number>,
+  levelOfSupportRef: StateRef<LevelOfSupport>,
+  stepsCompleted: StateRef<number>,
+  setLevelOfSupport: StateSetter<LevelOfSupport>,
+  setSupportActionDialogDetails: StateSetter<SupportActionDialogProps>,
+  setFeedbackActionDialogDetails: StateSetter<FeedbackActionDialogProps>,
+  scriptId: number,
+  currentPositionInScript: string,
+) => {
+  const now = Date.now();
+  if (now - lastMIIAt.current < 0.95 * StruggleEvidenceDuration) {
+    return;
+  }
+  lastMIIAt.current = now;
+  performBestStruggleSupportAction(
+    userStruggleData,
+    levelOfSupportRef.current,
+    stepsCompleted.current,
+    setLevelOfSupport,
+    setSupportActionDialogDetails,
+  );
+  setTimeout(
+    () =>
+      performBestScriptFeedbackAction(
+        userStruggleData,
+        levelOfSupportRef.current,
+        stepsCompleted.current,
+        setFeedbackActionDialogDetails,
+        () =>
+          annotateScript(scriptId, {
+            location: currentPositionInScript,
+            description: 'Users using support are getting stuck here',
+          }),
+      ),
+    0.45 * StruggleEvidenceDuration,
+  );
+  stepsCompleted.current = 0;
+};
+
+const mapScriptLocationToString = (location: ScriptLocation): string => {
+  return `${location.stepNumber}|${location.decisionHistory.join('-')}`;
 };
 
 export default useScriptSupport;

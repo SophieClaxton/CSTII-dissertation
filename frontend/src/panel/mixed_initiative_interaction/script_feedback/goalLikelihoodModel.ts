@@ -4,14 +4,14 @@ import {
   UserStruggleData,
   LevelOfSupport,
   levelsOfSupport,
-} from '../../../../models/support_and_MII/UserSupport';
+} from '../../models/support_and_MII/UserSupport';
 import * as lodash from 'lodash';
 import { softmax } from '../modelUtils';
-import { GoalLikelihoodModel } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
+import { GoalLikelihoodModel } from '../mixedInitiativeInteraction';
 import {
   ScriptFeedbackGoal,
   ScriptProblemProbEqn,
-} from '../../../../models/support_and_MII/ScriptFeedbackMII';
+} from '../../models/support_and_MII/ScriptFeedbackMII';
 
 const tempStruggleModel: StruggleProbModel = (_data: UserStruggleData) => 0.5;
 

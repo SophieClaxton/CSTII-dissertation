@@ -50,7 +50,6 @@ class ScriptWithAuthorAndWebsiteResponse(BaseScriptResponse):
 
 class ScriptWithProgramResponse(ScriptWithAuthorAndWebsiteResponse):
     program: ASTProgram
-    annotations: List[AnnotationResponse]
 
 
 class BaseWebsiteResponse(BaseModel):
@@ -78,6 +77,7 @@ class UnpublishedScriptWithProgramResponse(UnpublishedScriptWithWebsiteResponse)
     published_script_id: int | None
     author: BaseUserResponse | None
     program: CSTProgram | None = None
+    annotations: List[AnnotationResponse] | None = None
 
 
 class AnnotationResponse(BaseModel):

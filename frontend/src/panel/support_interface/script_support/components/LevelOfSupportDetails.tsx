@@ -2,8 +2,11 @@ import { StateSetter } from '../../../models/utilTypes';
 import Stack from '@mui/material/Stack/Stack';
 import Typography from '@mui/material/Typography/Typography';
 import Slider from '@mui/material/Slider/Slider';
-import { LoSDescription } from '../user_support/levelOfSupportUtils';
-import { LevelOfSupport, levelsOfSupport } from '../../../models/support_and_MII/UserSupport';
+import {
+  LevelOfSupport,
+  levelsOfSupport,
+} from '../../../models/support_and_MII/UserSupport';
+import { LoSDescription } from '../../../mixed_initiative_interaction/struggle_support/levelOfSupportUtils';
 
 interface LevelOfSupportDetailsProps {
   levelOfSupport: LevelOfSupport;

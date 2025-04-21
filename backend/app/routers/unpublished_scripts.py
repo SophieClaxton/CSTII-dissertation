@@ -14,7 +14,7 @@ from ..exceptions.not_found import (
     user_or_website_not_found_exception,
 )
 from ..database import DatabaseDep
-from ..models.database_tables import UnpublishedScript, User, Website
+from ..models.database_tables import Script, UnpublishedScript, User, Website
 from ..models.responses import (
     BaseUnpublishedScriptResponse,
     SuccessResponse,
@@ -85,8 +85,12 @@ def get_unpublished_script(
                 CSTSectionNode(id=CSTSectionId(sectionId=1), url="", innerSteps=[])
             ]
         )
-
-    return script.toUnpublishedScriptWithProgramResponse(program)
+    annotations = None
+    if script.published_script_id:
+        published_script = session.get(Script, script.published_script_id)
+        if published_script:
+            annotations = published_script.annotations
+    return script.toUnpublishedScriptWithProgramResponse(program, annotations)
 
 
 @router.patch("/{script_id}", response_model=UnpublishedScriptWithProgramResponse)
@@ -113,7 +117,7 @@ def update_unpublished_script(
 
     program = get_unpublished_script_program(existing_script.script_url)
 
-    return existing_script.toUnpublishedScriptWithProgramResponse(program)
+    return existing_script.toUnpublishedScriptWithProgramResponse(program, None)
 
 
 @router.delete("/{script_id}", response_model=SuccessResponse)

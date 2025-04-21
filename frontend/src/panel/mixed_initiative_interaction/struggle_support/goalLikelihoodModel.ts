@@ -2,14 +2,14 @@ import {
   UserStruggleEvidence,
   StruggleProbModel,
   UserStruggleData,
-} from '../../../../models/support_and_MII/UserSupport';
+} from '../../models/support_and_MII/UserSupport';
 import * as lodash from 'lodash';
 import { softmax } from '../modelUtils';
-import { GoalLikelihoodModel } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
+import { GoalLikelihoodModel } from '../mixedInitiativeInteraction';
 import {
   UserSupportGoal,
   UserSupportProbEqn,
-} from '../../../../models/support_and_MII/StruggleSupportMII';
+} from '../../models/support_and_MII/StruggleSupportMII';
 
 const tempStruggleModel: StruggleProbModel = (_data: UserStruggleData) => 0.5;
 
