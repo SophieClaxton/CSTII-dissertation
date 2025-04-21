@@ -17,7 +17,7 @@ import { mapIdToString } from '../../../unpublished_script_reducer/mappers/nodeI
 import Paper from '@mui/material/Paper/Paper';
 import { useXarrow } from 'react-xarrows';
 import { removeQueryDetails } from '../../script_utils/elementUtils';
-import SyntaxErrorMessage from '../../../syntax_checker/SyntaxErrorMessage';
+import SideDetails from '../instruction_components/SideDetails';
 
 interface SectionProps {
   section: CSTSectionNode;
@@ -41,10 +41,7 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         padding: '1rem',
         borderRadius: '1rem',
         position: 'relative',
-        outline:
-          sectionError && syntaxErrors.showSyntaxErrors
-            ? '2px dashed rgb(230, 40, 40)'
-            : 'none',
+        borderTop: sectionError ? '2px dashed rgb(230, 40, 40)' : 'none',
       }}
     >
       <Stack direction={'row'} justifyContent={'space-between'}>
@@ -78,12 +75,15 @@ const SectionNode: React.FC<SectionProps> = ({ section }) => {
         stepWidth={true}
       />
       {section.endStep && <EndStepNode endStep={section.endStep} />}
-      {sectionError && syntaxErrors.showSyntaxErrors && (
-        <SyntaxErrorMessage
-          id={`${mapIdToString(section.id)}-Error`}
-          errorMsg={sectionError}
-        />
-      )}
+      <SideDetails
+        showErrors={syntaxErrors.showSyntaxErrors}
+        syntaxError={
+          sectionError
+            ? { id: mapIdToString(section.id), errorMsg: sectionError }
+            : undefined
+        }
+        showAnnotations={false}
+      />
     </Paper>
   );
 };

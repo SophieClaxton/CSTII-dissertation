@@ -90,7 +90,7 @@ const ScriptEditor: React.FC = () => {
               syntaxErrorsContext.showSyntaxErrors ||
               annotationsContext.showAnnotations
             )
-              ? '10rem'
+              ? '12rem'
               : '0',
           }}
         >
@@ -125,6 +125,8 @@ const ScriptEditor: React.FC = () => {
           width: '100%',
           padding: '0.25rem 0.5rem',
           justifyContent: 'end',
+          zIndex: 10,
+          boxShadow: 'rgba(0, 0, 0, 0.3) 0px -6px 5px 0px',
         }}
       >
         {syntaxErrorsContext.errorsMap.size > 0 && (
@@ -145,18 +147,20 @@ const ScriptEditor: React.FC = () => {
             {syntaxErrorsContext.showSyntaxErrors ? 'Hide' : 'Show'} Errors
           </Button>
         )}
-        <Button
-          variant={'contained'}
-          color={'info'}
-          onClick={() =>
-            setAnnotationsContext((prev) => ({
-              ...prev,
-              showAnnotations: !annotationsContext.showAnnotations,
-            }))
-          }
-        >
-          {annotationsContext.showAnnotations ? 'Hide' : 'Show'} Annotations
-        </Button>
+        {annotationsContext.annotationsMap.size > 0 && (
+          <Button
+            variant={'contained'}
+            color={'info'}
+            onClick={() =>
+              setAnnotationsContext((prev) => ({
+                ...prev,
+                showAnnotations: !annotationsContext.showAnnotations,
+              }))
+            }
+          >
+            {annotationsContext.showAnnotations ? 'Hide' : 'Show'} Annotations
+          </Button>
+        )}
       </Stack>
     </>
   );

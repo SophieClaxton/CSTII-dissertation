@@ -38,11 +38,11 @@
 }
 
 .annotated-step {
-  border-bottom: 2px solid #0288d1;
+  border-bottom: 2px solid #03a9fa;
 }
 
 .step-with-error {
-  border-top: 2px solid #d32f2f;
+  border-top: 2px solid #ef5350;
 }
 
 .follow-step:focus {

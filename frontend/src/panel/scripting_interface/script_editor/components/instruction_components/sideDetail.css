@@ -16,6 +16,7 @@
 .side-detail>.MuiAlert-root {
   padding: 0 !important;
   background-color: white;
+  border-width: 2px;
 }
 
 .side-detail>.MuiAlert-root>.MuiAlert-message {
