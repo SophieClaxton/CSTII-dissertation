@@ -1,11 +1,11 @@
 import { UserStruggleDataMessage } from '../../messaging/message';
-import { ASTNodeType } from '../../panel/models/AST/AST';
-import { ASTInstruction } from '../../panel/models/AST/Instruction';
+import { ASTNodeType } from '../../side_panel/models/AST/AST';
+import { ASTInstruction } from '../../side_panel/models/AST/Instruction';
 import { defaultLevelOfSupport, StruggleEvidenceDuration } from '../consts';
 import { setFocus } from '../elements/focusOnElement';
 import { listenForInputChange, preDetectInputStep } from './detectStep';
 import { SupportState } from './state';
-import { LevelOfSupport } from '../../panel/models/support_and_MII/UserSupport';
+import { LevelOfSupport } from '../../side_panel/models/support_and_MII/UserSupport';
 import { mapStepToSystemAction, onScrollStepComplete } from './doStep';
 
 const sendUserStruggleData = (supportState: SupportState) => {

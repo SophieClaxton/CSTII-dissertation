@@ -1,5 +1,5 @@
-import { TabInfo } from '../panel/contexts/TabContext';
-import { StateSetter } from '../panel/models/utilTypes';
+import { TabInfo } from '../side_panel/contexts/TabContext';
+import { StateSetter } from '../side_panel/models/utilTypes';
 import { ContentScriptMessage } from './message';
 
 const setCurrentTab = async (

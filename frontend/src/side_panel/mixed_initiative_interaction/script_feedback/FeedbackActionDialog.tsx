@@ -3,7 +3,7 @@ import Alert from '@mui/material/Alert/Alert';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import Button from '@mui/material/Button/Button';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { StruggleEvidenceDuration } from '../../../content_scripts/consts';
+import { StruggleEvidenceDuration } from '../../../content_script/consts';
 import { ScriptFeedbackAction } from '../../models/support_and_MII/ScriptFeedbackMII';
 
 interface FeedbackActionDialogProps {

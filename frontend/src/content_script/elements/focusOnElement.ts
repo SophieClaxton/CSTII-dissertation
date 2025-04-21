@@ -3,7 +3,7 @@ import { findElement } from './elementUtils';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { SupportState } from '../user_support/state';
-import InterfaceElement from '../../panel/models/interface_element/InterfaceElement';
+import InterfaceElement from '../../side_panel/models/interface_element/InterfaceElement';
 
 const elementIsVisible = (
   element: Element,

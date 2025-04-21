@@ -4,16 +4,16 @@ import {
   UserSupportGoal,
   systemSupportActions,
   userSupportGoals,
-} from '../../panel/models/support_and_MII/StruggleSupportMII';
+} from '../../side_panel/models/support_and_MII/StruggleSupportMII';
 import {
   LevelOfSupport,
   UserStruggleEvidence,
-} from '../../panel/models/support_and_MII/UserSupport';
-import { getMII } from '../../panel/mixed_initiative_interaction/mixedInitiativeInteraction';
-import { softmax } from '../../panel/mixed_initiative_interaction/modelUtils';
-import { getSupportChangeLikelihoodModel } from '../../panel/mixed_initiative_interaction/struggle_support/goalLikelihoodModel';
-import { getNextStruggleSupportAction } from '../../panel/mixed_initiative_interaction/struggle_support/userSupportMII';
-import { getSupportChangeUtilityModel } from '../../panel/mixed_initiative_interaction/struggle_support/utilityModel';
+} from '../../side_panel/models/support_and_MII/UserSupport';
+import { getMII } from '../../side_panel/mixed_initiative_interaction/mixedInitiativeInteraction';
+import { softmax } from '../../side_panel/mixed_initiative_interaction/modelUtils';
+import { getSupportChangeLikelihoodModel } from '../../side_panel/mixed_initiative_interaction/struggle_support/goalLikelihoodModel';
+import { getNextStruggleSupportAction } from '../../side_panel/mixed_initiative_interaction/struggle_support/userSupportMII';
+import { getSupportChangeUtilityModel } from '../../side_panel/mixed_initiative_interaction/struggle_support/utilityModel';
 
 describe('softmax', () => {
   it('returns numbers', () => {

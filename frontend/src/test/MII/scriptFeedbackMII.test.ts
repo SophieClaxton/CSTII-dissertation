@@ -3,14 +3,14 @@ import {
   scriptFeedbackActions,
   ScriptFeedbackGoal,
   scriptFeedbackGoals,
-} from '../../panel/models/support_and_MII/ScriptFeedbackMII';
+} from '../../side_panel/models/support_and_MII/ScriptFeedbackMII';
 import {
   LevelOfSupport,
   UserStruggleEvidence,
-} from '../../panel/models/support_and_MII/UserSupport';
-import { getMII } from '../../panel/mixed_initiative_interaction/mixedInitiativeInteraction';
-import { getScriptFeedbackGoalLikelihoodModel } from '../../panel/mixed_initiative_interaction/script_feedback/goalLikelihoodModel';
-import { getScriptFeedbackUtilityModel } from '../../panel/mixed_initiative_interaction/script_feedback/utilityModel';
+} from '../../side_panel/models/support_and_MII/UserSupport';
+import { getMII } from '../../side_panel/mixed_initiative_interaction/mixedInitiativeInteraction';
+import { getScriptFeedbackGoalLikelihoodModel } from '../../side_panel/mixed_initiative_interaction/script_feedback/goalLikelihoodModel';
+import { getScriptFeedbackUtilityModel } from '../../side_panel/mixed_initiative_interaction/script_feedback/utilityModel';
 
 describe('getBestActionResults', () => {
   it.each([

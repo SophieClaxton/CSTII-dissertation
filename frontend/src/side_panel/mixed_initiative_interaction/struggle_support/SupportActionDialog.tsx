@@ -3,7 +3,7 @@ import Snackbar from '@mui/material/Snackbar/Snackbar';
 import Alert from '@mui/material/Alert/Alert';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { StruggleEvidenceDuration } from '../../../content_scripts/consts';
+import { StruggleEvidenceDuration } from '../../../content_script/consts';
 import { SystemSupportAction } from '../../models/support_and_MII/StruggleSupportMII';
 
 interface SupportActionDialogProps {

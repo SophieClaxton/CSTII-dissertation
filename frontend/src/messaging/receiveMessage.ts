@@ -1,12 +1,12 @@
-import { TabInfo } from '../panel/contexts/TabContext';
-import { ASTInstruction } from '../panel/models/AST/Instruction';
-import { CSTStepNodeType } from '../panel/models/CST/CST';
-import { isEndStepId, isInnerStepId } from '../panel/models/CST/testers';
-import { EditorAction, EditorActionType } from '../panel/models/EditorAction';
-import { isSelectableTag } from '../panel/models/interface_element/selectableTag';
-import { mapStepNodeToValidTags } from '../panel/models/interface_element/validTags';
-import { StateRef } from '../panel/models/utilTypes';
-import { mapStringToId } from '../panel/scripting_interface/unpublished_script_reducer/mappers/nodeIds';
+import { TabInfo } from '../side_panel/contexts/TabContext';
+import { ASTInstruction } from '../side_panel/models/AST/Instruction';
+import { CSTStepNodeType } from '../side_panel/models/CST/CST';
+import { isEndStepId, isInnerStepId } from '../side_panel/models/CST/testers';
+import { EditorAction, EditorActionType } from '../side_panel/models/EditorAction';
+import { isSelectableTag } from '../side_panel/models/interface_element/selectableTag';
+import { mapStepNodeToValidTags } from '../side_panel/models/interface_element/validTags';
+import { StateRef } from '../side_panel/models/utilTypes';
+import { mapStringToId } from '../side_panel/scripting_interface/unpublished_script_reducer/mappers/nodeIds';
 import { ContentScriptMessage, UserStruggleData } from './message';
 
 const addClickedElementListener = (

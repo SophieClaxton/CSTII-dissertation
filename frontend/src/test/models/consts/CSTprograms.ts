@@ -1,4 +1,4 @@
-import { CSTProgram, CSTStepNodeType } from '../../../panel/models/CST/CST';
+import { CSTProgram, CSTStepNodeType } from '../../../side_panel/models/CST/CST';
 
 const emptyProgram: CSTProgram = {
   sections: [

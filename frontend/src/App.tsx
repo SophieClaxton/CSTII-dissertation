@@ -1,10 +1,10 @@
 import './App.css';
 import { setUpPortListener } from './messaging/portListener';
 import { useEffect, useState } from 'react';
-import HomePage from './panel/components/pages/HomePage';
-import { PanelScreen } from './panel/navigation/ScreenType';
-import { ScreenContext } from './panel/contexts/ScreenContext';
-import TabContext, { TabInfo } from './panel/contexts/TabContext';
+import HomePage from './side_panel/components/pages/HomePage';
+import { PanelScreen } from './side_panel/navigation/ScreenType';
+import { ScreenContext } from './side_panel/contexts/ScreenContext';
+import TabContext, { TabInfo } from './side_panel/contexts/TabContext';
 import { setCurrentTab, setTabListeners } from './messaging/tabs';
 import { ConfirmProvider } from 'material-ui-confirm';
 

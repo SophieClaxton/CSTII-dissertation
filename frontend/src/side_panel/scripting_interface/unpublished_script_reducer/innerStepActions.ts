@@ -1,4 +1,4 @@
-import { extractElementAttribute } from '../../../content_scripts/elements/matchElements';
+import { extractElementAttribute } from '../../../content_script/elements/matchElements';
 import {
   CSTInnerStepId,
   CSTInnerStepNode,

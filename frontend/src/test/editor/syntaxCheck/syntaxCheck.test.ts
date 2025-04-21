@@ -1,5 +1,5 @@
-import { ASTNodeType } from '../../../panel/models/AST/AST';
-import checkSyntaxInOrder from '../../../panel/scripting_interface/syntax_checker/checkSyntax';
+import { ASTNodeType } from '../../../side_panel/models/AST/AST';
+import checkSyntaxInOrder from '../../../side_panel/scripting_interface/syntax_checker/checkSyntax';
 import { allCSTPrograms, mediumProgram } from '../../models/consts/CSTprograms';
 
 describe('Syntax Check (In Order) for', () => {

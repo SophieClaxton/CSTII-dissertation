@@ -2,8 +2,8 @@ import {
   elementsMatch,
   extractElementAttribute,
   extractOpeningTag,
-} from '../../content_scripts/elements/matchElements';
-import { SelectableTag } from '../../panel/models/interface_element/selectableTag';
+} from '../../content_script/elements/matchElements';
+import { SelectableTag } from '../../side_panel/models/interface_element/selectableTag';
 
 describe('extractOpeningTag', () => {
   it('extracts the opening tag', () => {

@@ -1,6 +1,6 @@
 import { isHTMLElement } from '@dnd-kit/utilities';
-import { ASTNodeType } from '../../panel/models/AST/AST';
-import { ASTInstruction } from '../../panel/models/AST/Instruction';
+import { ASTNodeType } from '../../side_panel/models/AST/AST';
+import { ASTInstruction } from '../../side_panel/models/AST/Instruction';
 import { sendDetectionMessage } from './detectStep';
 import { SupportState } from './state';
 

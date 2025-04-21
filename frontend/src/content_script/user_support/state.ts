@@ -1,9 +1,9 @@
-import { ASTInstruction } from '../../panel/models/AST/Instruction';
-import { ValidTag } from '../../panel/models/interface_element/validTags';
+import { ASTInstruction } from '../../side_panel/models/AST/Instruction';
+import { ValidTag } from '../../side_panel/models/interface_element/validTags';
 import {
   LevelOfSupport,
   UserStruggleData,
-} from '../../panel/models/support_and_MII/UserSupport';
+} from '../../side_panel/models/support_and_MII/UserSupport';
 
 interface EditingState {
   isClickable: boolean;

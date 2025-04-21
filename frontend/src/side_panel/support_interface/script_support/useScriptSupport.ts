@@ -26,7 +26,7 @@ import {
 } from '../../models/support_and_MII/UserSupport';
 import { performBestStruggleSupportAction } from '../../mixed_initiative_interaction/struggle_support/userSupportMII';
 import { FeedbackActionDialogProps } from '../../mixed_initiative_interaction/script_feedback/FeedbackActionDialog';
-import { StruggleEvidenceDuration } from '../../../content_scripts/consts';
+import { StruggleEvidenceDuration } from '../../../content_script/consts';
 import { performBestScriptFeedbackAction } from '../../mixed_initiative_interaction/script_feedback/scriptFeedbackMII';
 import { annotateScript } from '../../api/scripts';
 

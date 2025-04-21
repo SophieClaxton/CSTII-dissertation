@@ -3,8 +3,8 @@ import {
   allSelectableTags,
   isSelectableTag,
   allInputTags,
-} from '../panel/models/interface_element/selectableTag';
-import { mapStepNodeToValidTags } from '../panel/models/interface_element/validTags';
+} from '../side_panel/models/interface_element/selectableTag';
+import { mapStepNodeToValidTags } from '../side_panel/models/interface_element/validTags';
 import './clickable.css';
 import { clickableClass, defaultLevelOfSupport } from './consts';
 import { elementSatisfiesValidTags } from './elements/elementUtils';

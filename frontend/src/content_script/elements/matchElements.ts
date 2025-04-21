@@ -1,9 +1,9 @@
 import stringSimilarity from 'string-similarity-js';
-import InterfaceElement from '../../panel/models/interface_element/InterfaceElement';
+import InterfaceElement from '../../side_panel/models/interface_element/InterfaceElement';
 import {
   commonAttr,
   mapTagToRelevantAttributes,
-} from '../../panel/models/interface_element/validAttribute';
+} from '../../side_panel/models/interface_element/validAttribute';
 import { similarityThreshold } from '../consts';
 import { getCorrespondingLabel } from './elementUtils';
 

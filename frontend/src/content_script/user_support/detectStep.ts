@@ -1,7 +1,7 @@
 import stringSimilarity from 'string-similarity-js';
 import { StepCompletedMessage } from '../../messaging/message';
-import { ASTNodeType } from '../../panel/models/AST/AST';
-import { ASTInstruction } from '../../panel/models/AST/Instruction';
+import { ASTNodeType } from '../../side_panel/models/AST/AST';
+import { ASTInstruction } from '../../side_panel/models/AST/Instruction';
 import { unsetFocus } from '../elements/focusOnElement';
 import { SupportState } from './state';
 import { findElement } from '../elements/elementUtils';

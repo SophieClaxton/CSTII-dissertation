@@ -6,8 +6,8 @@ import {
   getCorrespondingLabel,
 } from './elementUtils';
 import { clickableClass } from '../consts';
-import InterfaceElement from '../../panel/models/interface_element/InterfaceElement';
-import { isSelectableTag } from '../../panel/models/interface_element/selectableTag';
+import InterfaceElement from '../../side_panel/models/interface_element/InterfaceElement';
+import { isSelectableTag } from '../../side_panel/models/interface_element/selectableTag';
 
 const isHTMLElement = (element: Element): element is HTMLElement => {
   return 'outerText' in element && 'innerText' in element;

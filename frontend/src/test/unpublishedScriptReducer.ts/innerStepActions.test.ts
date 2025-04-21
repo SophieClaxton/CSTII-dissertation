@@ -3,12 +3,12 @@ import {
   CSTSectionNode,
   CSTStepNodeType,
   CSTWriteNode,
-} from '../../panel/models/CST/CST';
-import { EditorActionType } from '../../panel/models/EditorAction';
+} from '../../side_panel/models/CST/CST';
+import { EditorActionType } from '../../side_panel/models/EditorAction';
 import {
   addInputDescriptionToInput,
   editInputStepInputDescription,
-} from '../../panel/scripting_interface/unpublished_script_reducer/innerStepActions';
+} from '../../side_panel/scripting_interface/unpublished_script_reducer/innerStepActions';
 
 const writeStep: CSTWriteNode = {
   element: {
