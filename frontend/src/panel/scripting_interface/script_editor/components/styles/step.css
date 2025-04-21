@@ -37,6 +37,14 @@
   margin-top: 0.5rem;
 }
 
+.annotated-step {
+  border-bottom: 2px solid #0288d1;
+}
+
+.step-with-error {
+  border-top: 2px solid #d32f2f;
+}
+
 .follow-step:focus {
   outline: 3px solid rgb(60, 60, 60) !important;
 }

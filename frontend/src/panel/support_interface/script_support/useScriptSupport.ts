@@ -21,6 +21,7 @@ import { TabInfo } from '../../contexts/TabContext';
 import { StateRef, StateSetter } from '../../models/utilTypes';
 import {
   LevelOfSupport,
+  mapScriptLocationToString,
   ScriptLocation,
 } from '../../models/support_and_MII/UserSupport';
 import { performBestStruggleSupportAction } from '../../mixed_initiative_interaction/struggle_support/userSupportMII';
@@ -247,10 +248,6 @@ const receiveUserStruggleData = (
     0.45 * StruggleEvidenceDuration,
   );
   stepsCompleted.current = 0;
-};
-
-const mapScriptLocationToString = (location: ScriptLocation): string => {
-  return `${location.stepNumber}|${location.decisionHistory.join('-')}`;
 };
 
 export default useScriptSupport;

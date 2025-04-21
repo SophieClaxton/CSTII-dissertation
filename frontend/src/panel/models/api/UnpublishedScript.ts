@@ -17,7 +17,7 @@ type UnpublishedScript = UnpublishedScriptWithWebsite & {
   author: User;
   program: CSTProgram;
   published_script_id?: number;
-  annotations: Annotation;
+  annotations: Annotation[];
 };
 
 interface UpdateUnpublishedScriptRequest {

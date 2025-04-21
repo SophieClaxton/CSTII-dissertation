@@ -10,6 +10,13 @@ import { SyntaxErrorsContext, SyntaxErrorsInfo } from './SyntaxErrorsContext';
 import { mapIdToString } from '../scripting_interface/unpublished_script_reducer/mappers/nodeIds';
 import TabContext from './TabContext';
 import { SyntaxCheckError, SyntaxCheckResult } from '../models/SyntaxCheck';
+import {
+  AnnotationsContex,
+  AnnotationsContextInfo,
+} from './AnnotationsContext';
+import Annotation from '../models/api/Annotation';
+import { mapScriptLocationToStepId } from '../scripting_interface/script_editor/script_utils/annotationUtils';
+import { CSTProgram } from '../models/CST/CST';
 
 const useUnpublishedScriptContext = () => {
   const editorProgramContext = useContext(UnpublishedScriptContext);
@@ -79,10 +86,33 @@ const useTabContext = () => {
   return { tab: tabContext.tab };
 };
 
+const createAnnotationsContext = (
+  annotations: Annotation[],
+  program: CSTProgram,
+  showAnnotations: boolean,
+): AnnotationsContextInfo => {
+  const annotationsMap = new Map();
+  for (const annotation of annotations) {
+    const stepId = mapScriptLocationToStepId(annotation.location, program);
+    annotationsMap.set(mapIdToString(stepId), annotation.description);
+  }
+  return { annotationsMap, showAnnotations };
+};
+
+const useAnnotationsContext = () => {
+  const annotationsContext = useContext(AnnotationsContex);
+  if (!annotationsContext) {
+    throw new Error('No annotations context found');
+  }
+  return annotationsContext;
+};
+
 export {
   useUnpublishedScriptContext,
   useNavigationContext,
   createSyntaxErrorsContext,
   useSyntaxErrorsContext,
   useTabContext,
+  createAnnotationsContext,
+  useAnnotationsContext,
 };

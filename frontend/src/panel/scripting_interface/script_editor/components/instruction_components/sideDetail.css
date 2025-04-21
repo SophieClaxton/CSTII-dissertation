@@ -1,0 +1,27 @@
+.side-detail {
+  position: absolute;
+  left: 101%;
+  top: 0%;
+  width: 12rem;
+  height: fit-content;
+  text-align: left;
+  text-wrap: wrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.side-detail>.MuiAlert-root {
+  padding: 0 !important;
+  background-color: white;
+}
+
+.side-detail>.MuiAlert-root>.MuiAlert-message {
+  padding: 0.25rem !important;
+}
+
+.side-detail:hover {
+  z-index: 100;
+}

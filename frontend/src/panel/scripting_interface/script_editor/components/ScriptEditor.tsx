@@ -6,6 +6,7 @@ import {
   useUnpublishedScriptContext,
   createSyntaxErrorsContext,
   useTabContext,
+  createAnnotationsContext,
 } from '../../../contexts/contextHooks';
 import {
   SyntaxErrorsContext,
@@ -19,6 +20,11 @@ import Box from '@mui/material/Box/Box';
 import { TabInfo } from '../../../contexts/TabContext';
 import UnpublishedScriptDetails from './UnpublishedScriptDetails';
 import checkSyntax from '../../syntax_checker/checkSyntax';
+import {
+  AnnotationsContex,
+  AnnotationsContextInfo,
+} from '../../../contexts/AnnotationsContext';
+import Stack from '@mui/material/Stack/Stack';
 
 const ScriptEditor: React.FC = () => {
   const { unpublishedScript, dispatch } = useUnpublishedScriptContext();
@@ -35,6 +41,14 @@ const ScriptEditor: React.FC = () => {
       errorsMap: new Map(),
       showSyntaxErrors: true,
     });
+  const [annotationsContext, setAnnotationsContext] =
+    useState<AnnotationsContextInfo>(
+      createAnnotationsContext(
+        unpublishedScript.annotations,
+        unpublishedScript.program,
+        true,
+      ),
+    );
 
   const edges = getEdges(unpublishedScript.program.sections);
   console.log(edges);
@@ -72,20 +86,25 @@ const ScriptEditor: React.FC = () => {
         <div
           className="program-code"
           style={{
-            paddingRight:
-              (syntaxErrorsContext?.errorsMap.size ?? 0) > 0 ? '10rem' : '0',
-            paddingBottom: '2rem',
+            paddingRight: ~(
+              syntaxErrorsContext.showSyntaxErrors ||
+              annotationsContext.showAnnotations
+            )
+              ? '10rem'
+              : '0',
           }}
         >
           <Xwrapper>
             <div className="start-block" id="start">
               START
             </div>
-            <SyntaxErrorsContext.Provider value={syntaxErrorsContext}>
-              {unpublishedScript.program.sections.map((section) => (
-                <SectionNode section={section} />
-              ))}
-            </SyntaxErrorsContext.Provider>
+            <AnnotationsContex.Provider value={annotationsContext}>
+              <SyntaxErrorsContext.Provider value={syntaxErrorsContext}>
+                {unpublishedScript.program.sections.map((section) => (
+                  <SectionNode section={section} />
+                ))}
+              </SyntaxErrorsContext.Provider>
+            </AnnotationsContex.Provider>
             {edges.map((edge) => (
               <Xarrow
                 start={edge.source}
@@ -96,60 +115,49 @@ const ScriptEditor: React.FC = () => {
             ))}
           </Xwrapper>
         </div>
-        {syntaxErrorsContext.showSyntaxErrors &&
-          syntaxErrorsContext.errorsMap.size > 0 && (
-            <Button
-              variant={'contained'}
-              color={'warning'}
-              onClick={() =>
-                setSyntaxErrorsContext((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        showSyntaxErrors: false,
-                      }
-                    : prev,
-                )
-              }
-              sx={{
-                position: 'fixed',
-                bottom: '2rem',
-                width: 'fit-content',
-                margin: '1rem',
-                alignSelf: 'flex-end',
-              }}
-            >
-              Hide Errors
-            </Button>
-          )}
-        {!syntaxErrorsContext.showSyntaxErrors &&
-          syntaxErrorsContext.errorsMap.size > 0 && (
-            <Button
-              variant={'contained'}
-              color={'warning'}
-              onClick={() =>
-                setSyntaxErrorsContext((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        showSyntaxErrors: true,
-                      }
-                    : prev,
-                )
-              }
-              sx={{
-                position: 'fixed',
-                bottom: '2rem',
-                width: 'fit-content',
-                margin: '1rem',
-                alignSelf: 'flex-end',
-              }}
-            >
-              Show Errors
-            </Button>
-          )}
+
         <AlertSnackBar snackBar={snackBar} setSnackBar={setSnackBar} />
       </Box>
+      <Stack
+        direction="row"
+        sx={{
+          gap: '0.25rem',
+          width: '100%',
+          padding: '0.25rem 0.5rem',
+          justifyContent: 'end',
+        }}
+      >
+        {syntaxErrorsContext.errorsMap.size > 0 && (
+          <Button
+            variant={'contained'}
+            color={'error'}
+            onClick={() =>
+              setSyntaxErrorsContext((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      showSyntaxErrors: !syntaxErrorsContext.showSyntaxErrors,
+                    }
+                  : prev,
+              )
+            }
+          >
+            {syntaxErrorsContext.showSyntaxErrors ? 'Hide' : 'Show'} Errors
+          </Button>
+        )}
+        <Button
+          variant={'contained'}
+          color={'info'}
+          onClick={() =>
+            setAnnotationsContext((prev) => ({
+              ...prev,
+              showAnnotations: !annotationsContext.showAnnotations,
+            }))
+          }
+        >
+          {annotationsContext.showAnnotations ? 'Hide' : 'Show'} Annotations
+        </Button>
+      </Stack>
     </>
   );
 };

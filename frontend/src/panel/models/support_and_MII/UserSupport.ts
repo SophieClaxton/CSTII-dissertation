@@ -6,6 +6,10 @@ interface ScriptLocation {
   decisionHistory: ('yes' | 'no')[];
 }
 
+const mapScriptLocationToString = (location: ScriptLocation): string => {
+  return `${location.stepNumber}|${location.decisionHistory.join('-')}`;
+};
+
 interface UserStruggleData {
   totalDistance: number;
   numMouseClicks: number;
@@ -18,7 +22,7 @@ type UserStruggleEvidence = UserStruggleData & {
 
 type StruggleProbModel = (data: UserStruggleData) => number;
 
-export { levelsOfSupport };
+export { levelsOfSupport, mapScriptLocationToString };
 export type {
   LevelOfSupport,
   ScriptLocation,

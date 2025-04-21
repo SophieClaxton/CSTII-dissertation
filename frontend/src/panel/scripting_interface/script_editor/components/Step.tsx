@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  useAnnotationsContext,
   useSyntaxErrorsContext,
   useUnpublishedScriptContext,
 } from '../../../contexts/contextHooks';
@@ -19,7 +20,7 @@ import { mapIdToString } from '../../unpublished_script_reducer/mappers/nodeIds'
 import Typography from '@mui/material/Typography/Typography';
 import Stack from '@mui/material/Stack/Stack';
 import Box from '@mui/material/Box/Box';
-import SyntaxErrorMessage from '../../syntax_checker/SyntaxErrorMessage';
+import SideDetails from './instruction_components/SideDetails';
 
 const stepColourMap: Record<CSTStepNodeType, string> = {
   'Go To': '#ff999c',
@@ -58,6 +59,8 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
 
   const syntaxErrors = useSyntaxErrorsContext();
   const stepError = syntaxErrors.errorsMap.get(idString);
+  const annotations = useAnnotationsContext();
+  const annotation = annotations.annotationsMap.get(idString);
 
   const { setNodeRef, style, attributes, listeners } = sortableProps ?? {
     setNodeRef: undefined,
@@ -71,9 +74,10 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
       id={idString}
       key={idString}
       className={[
-        stepError && syntaxErrors.showSyntaxErrors ? 'step-with-error' : '',
         sortableProps ? 'draggable-step' : '',
-        className ?? [],
+        annotation ? 'annotated-step' : '',
+        stepError ? 'step-with-error' : '',
+        className ?? '',
       ].join(' ')}
       ref={setNodeRef}
       style={{
@@ -87,10 +91,6 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
         gridTemplateColumns: '1.625rem 5rem 20rem 1.625rem',
         gap: '0.5rem',
         transition: 'margin ease-in-out 0.5s',
-        outline:
-          stepError && syntaxErrors.showSyntaxErrors
-            ? '2px dashed rgb(230, 40, 40)'
-            : 'none',
       }}
     >
       {sortableProps ? (
@@ -114,9 +114,16 @@ const BaseStep: React.FC<StepProps & React.PropsWithChildren> = ({
       >
         <Delete />
       </IconButton>
-      {stepError && syntaxErrors.showSyntaxErrors && (
-        <SyntaxErrorMessage id={`${idString}-Error`} errorMsg={stepError} />
-      )}
+      <SideDetails
+        showAnnotations={annotations.showAnnotations}
+        annotation={
+          annotation ? { id: idString, description: annotation } : undefined
+        }
+        showErrors={syntaxErrors.showSyntaxErrors}
+        syntaxError={
+          stepError ? { id: idString, errorMsg: stepError } : undefined
+        }
+      />
     </div>
   );
 };

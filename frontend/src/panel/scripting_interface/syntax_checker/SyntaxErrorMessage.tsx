@@ -1,30 +1,26 @@
 import React from 'react';
-import './syntaxErrorMessage.css';
-import Box from '@mui/material/Box/Box';
+import Alert from '@mui/material/Alert/Alert';
 
-interface SyntaxErrorMessageProps {
+interface SyntaxErrorMessageDetails {
   id: string;
   errorMsg: string;
 }
 
-const SyntaxErrorMessage: React.FC<SyntaxErrorMessageProps> = ({
+const SyntaxErrorMessage: React.FC<SyntaxErrorMessageDetails> = ({
   id,
   errorMsg,
 }) => {
   return (
-    <Box
-      id={id}
-      className="type-error"
-      sx={{
-        padding: '0.25rem',
-        border: '2px solid #d32f2f',
-        color: 'rgb(95, 33, 32)',
-        backgroundColor: 'rgb(253, 237, 237)',
-      }}
+    <Alert
+      id={`synErr-${id}}`}
+      icon={false}
+      variant="outlined"
+      severity="error"
     >
       {errorMsg}
-    </Box>
+    </Alert>
   );
 };
 
 export default SyntaxErrorMessage;
+export type { SyntaxErrorMessageDetails };

@@ -15,9 +15,9 @@ import Delete from '@mui/icons-material/Delete';
 import { EditorActionType } from '../../../../models/EditorAction';
 import { mapIdToString } from '../../../unpublished_script_reducer/mappers/nodeIds';
 import Paper from '@mui/material/Paper/Paper';
-import SyntaxErrorMessage from '../../../syntax_checker/SyntaxErrorMessage';
 import { useXarrow } from 'react-xarrows';
 import { removeQueryDetails } from '../../script_utils/elementUtils';
+import SyntaxErrorMessage from '../../../syntax_checker/SyntaxErrorMessage';
 
 interface SectionProps {
   section: CSTSectionNode;

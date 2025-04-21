@@ -7,6 +7,7 @@ import InstructionsDisplay from './components/InstructionsDisplay';
 import useScriptSupport from './useScriptSupport';
 import { Script } from '../../models/api/Script';
 import FeedbackActionDialog from '../../mixed_initiative_interaction/script_feedback/FeedbackActionDialog';
+import FeedbackButton from './components/FeedbackButton';
 
 interface ScriptSupportProps {
   script: Script;
@@ -53,6 +54,13 @@ const ScriptSupport: React.FC<ScriptSupportProps> = ({ script }) => {
           currentScriptLocation,
         }}
       />
+
+      {supportActive && (
+        <FeedbackButton
+          scriptId={script.id}
+          scriptLocation={currentScriptLocation.current}
+        />
+      )}
 
       <SupportActionDialog {...supportActionDialogDetails} />
       <FeedbackActionDialog {...feedbackActionDialogDetails} />
