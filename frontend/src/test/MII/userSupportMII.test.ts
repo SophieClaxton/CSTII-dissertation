@@ -76,6 +76,12 @@ describe('getBestActionResults', () => {
       stepsCompleted: 2,
       outcome: 'inc_dialog',
     },
+    {
+      struggleProb: 1,
+      LOS: 'text',
+      stepsCompleted: 0,
+      outcome: 'inc',
+    },
   ])(
     'correctly returns $outcome for P(struggle)=$struggleProb, k=$stepsCompleted, LOS=$LOS',
     ({ struggleProb, LOS, stepsCompleted, outcome }) => {

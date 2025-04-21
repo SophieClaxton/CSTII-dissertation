@@ -11,7 +11,7 @@ import {
   UserSupportProbEqn,
 } from '../../models/support_and_MII/StruggleSupportMII';
 
-const tempStruggleModel: StruggleProbModel = (_data: UserStruggleData) => 0.5;
+const tempStruggleModel: StruggleProbModel = (_data: UserStruggleData) => 0.2;
 
 const defautlStruggleProbEquations: Record<
   UserSupportGoal,

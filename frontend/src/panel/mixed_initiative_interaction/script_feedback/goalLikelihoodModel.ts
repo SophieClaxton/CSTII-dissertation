@@ -13,7 +13,7 @@ import {
   ScriptProblemProbEqn,
 } from '../../models/support_and_MII/ScriptFeedbackMII';
 
-const tempStruggleModel: StruggleProbModel = (_data: UserStruggleData) => 0.5;
+const tempStruggleModel: StruggleProbModel = (_data: UserStruggleData) => 0.75;
 
 const defautlFeedbackGoalProbEquations: Record<
   ScriptFeedbackGoal,

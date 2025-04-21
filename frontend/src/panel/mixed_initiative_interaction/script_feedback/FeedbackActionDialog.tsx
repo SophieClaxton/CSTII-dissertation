@@ -16,7 +16,7 @@ interface FeedbackActionDialogProps {
 const mapActionToText: Record<ScriptFeedbackAction, string> = {
   none: '',
   dialog:
-    'Would you like to let the script writer that their might be a problem with their script?',
+    'Would you like to tell the script writer that there might be a problem with their script?',
   send: 'The script writer has been notified that there might be a problem with the script.',
 };
 

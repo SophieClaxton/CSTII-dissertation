@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { SupportActionDialogProps } from '../../mixed_initiative_interaction/script_feedback/SupportActionDialog';
+import { SupportActionDialogProps } from '../../mixed_initiative_interaction/struggle_support/SupportActionDialog';
 import {
   addStepCompletedListener,
   addUserStruggleDataListener,
@@ -75,7 +75,7 @@ const useScriptSupport = (scriptId: number, program: ASTProgram) => {
     useState<FeedbackActionDialogProps>({
       open: false,
       onClose: () =>
-        setSupportActionDialogDetails((prev) => ({ ...prev, open: false })),
+        setFeedbackActionDialogDetails((prev) => ({ ...prev, open: false })),
       action: 'none',
     });
 

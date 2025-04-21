@@ -4,7 +4,7 @@ import {
   UserStruggleEvidence,
 } from '../../models/support_and_MII/UserSupport';
 import { StateSetter } from '../../models/utilTypes';
-import { SupportActionDialogProps } from '../script_feedback/SupportActionDialog';
+import { SupportActionDialogProps } from './SupportActionDialog';
 import { getMII } from '../mixedInitiativeInteraction';
 import { getSupportChangeLikelihoodModel } from './goalLikelihoodModel';
 import { getSupportChangeUtilityModel } from './utilityModel';
@@ -55,24 +55,36 @@ const performBestStruggleSupportAction = (
     levelOfSupport,
   );
   switch (nextAction) {
-    case 'inc':
-      return setLevelOfSupport(increaseLevelOfSupport);
-    case 'dec':
-      return setLevelOfSupport(decreaseLevelOfSupport);
+    case 'inc': {
+      setLevelOfSupport(increaseLevelOfSupport);
+      return setSupportDialogDetails((prev) => ({
+        ...prev,
+        open: true,
+        action: 'inc',
+      }));
+    }
+    case 'dec': {
+      setLevelOfSupport(decreaseLevelOfSupport);
+      return setSupportDialogDetails((prev) => ({
+        ...prev,
+        open: true,
+        action: nextAction,
+      }));
+    }
     case 'none':
       return;
     case 'inc_dialog':
       return setSupportDialogDetails((prev) => ({
         ...prev,
         open: true,
-        action: 'inc',
+        action: nextAction,
         onAction: () => setLevelOfSupport(increaseLevelOfSupport),
       }));
     case 'dec_dialog':
       return setSupportDialogDetails((prev) => ({
         ...prev,
         open: true,
-        action: 'dec',
+        action: nextAction,
         onAction: () => setLevelOfSupport(decreaseLevelOfSupport),
       }));
   }
