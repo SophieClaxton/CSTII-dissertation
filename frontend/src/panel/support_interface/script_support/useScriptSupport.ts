@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { SupportDialogProps } from './components/SupportDialog';
+import { SupportActionDialogProps } from './user_support/script_feedback/SupportActionDialog';
 import {
   addStepCompletedListener,
   addUserStruggleDataListener,
@@ -17,10 +17,13 @@ import {
 } from '../../models/AST/getters';
 import { useTabContext } from '../../contexts/contextHooks';
 import { ASTProgram } from '../../models/AST/AST';
-import { performBestSystemAction } from './user_support/struggle_support/supportAction';
 import { TabInfo } from '../../contexts/TabContext';
 import { StateRef, StateSetter } from '../../models/utilTypes';
-import { LevelOfSupport } from '../../models/UserSupport';
+import { LevelOfSupport } from '../../models/support_and_MII/UserSupport';
+import { performBestStruggleSupportAction } from './user_support/struggle_support/userSupportMII';
+import { FeedbackActionDialogProps } from './user_support/script_feedback/FeedbackActionDialog';
+import { StruggleEvidenceDuration } from '../../../content_scripts/consts';
+import { performBestScriptFeedbackAction } from './user_support/script_feedback/scriptFeedbackMII';
 
 const useScriptSupport = (program: ASTProgram) => {
   const { tab } = useTabContext();
@@ -28,7 +31,7 @@ const useScriptSupport = (program: ASTProgram) => {
   const [supportActive, setSupportActive] = useState(false);
   const [levelOfSupport, setLevelOfSupport] = useState<LevelOfSupport>('text');
   const levelOfSupportRef = useRef<LevelOfSupport>(levelOfSupport);
-  const deltaStepsCompleted = useRef<number>(0);
+  const stepsCompleted = useRef<number>(0);
   const lastMIIAt = useRef<number>(Date.now());
 
   const [visibleInstructions, setVisibleInstructions] = useState(
@@ -52,13 +55,19 @@ const useScriptSupport = (program: ASTProgram) => {
     [visibleInstructions, tab],
   );
 
-  const [supportDialogDetails, setSupportDialogDetails] =
-    useState<SupportDialogProps>({
+  const [supportActionDialogDetails, setSupportActionDialogDetails] =
+    useState<SupportActionDialogProps>({
       open: false,
       onClose: () =>
-        setSupportDialogDetails((prev) => ({ ...prev, open: false })),
-      aboutChange: 'inc',
-      onAction: () => setLevelOfSupport((prev) => prev),
+        setSupportActionDialogDetails((prev) => ({ ...prev, open: false })),
+      action: 'none',
+    });
+  const [feedbackActionDialogDetails, setFeedbackActionDialogDetails] =
+    useState<FeedbackActionDialogProps>({
+      open: false,
+      onClose: () =>
+        setSupportActionDialogDetails((prev) => ({ ...prev, open: false })),
+      action: 'none',
     });
 
   const messageListenersAdded = useRef(false);
@@ -79,23 +88,33 @@ const useScriptSupport = (program: ASTProgram) => {
   useEffect(() => {
     if (userStruggleData) {
       const now = Date.now();
-      if (now - lastMIIAt.current < 9500) {
+      if (now - lastMIIAt.current < 0.95 * StruggleEvidenceDuration) {
         return;
       }
       lastMIIAt.current = now;
-      performBestSystemAction(
+      performBestStruggleSupportAction(
         userStruggleData,
         levelOfSupportRef.current,
-        deltaStepsCompleted.current,
+        stepsCompleted.current,
         setLevelOfSupport,
-        setSupportDialogDetails,
+        setSupportActionDialogDetails,
       );
-      deltaStepsCompleted.current = 0;
+      setTimeout(
+        () =>
+          performBestScriptFeedbackAction(
+            userStruggleData,
+            levelOfSupportRef.current,
+            stepsCompleted.current,
+            setFeedbackActionDialogDetails,
+          ),
+        0.45 * StruggleEvidenceDuration,
+      );
+      stepsCompleted.current = 0;
     }
   }, [userStruggleData]);
 
   useEffect(() => {
-    deltaStepsCompleted.current += 1;
+    stepsCompleted.current += 1;
     onStepCompletedChange(
       stepCompleted,
       nextPossibleSteps,
@@ -105,7 +124,8 @@ const useScriptSupport = (program: ASTProgram) => {
   }, [stepCompleted]);
 
   return {
-    supportDialogDetails,
+    supportActionDialogDetails,
+    feedbackActionDialogDetails,
     visibleInstructions,
     setVisibleInstructions,
     levelOfSupport,

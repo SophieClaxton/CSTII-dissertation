@@ -1,11 +1,12 @@
 import Divider from '@mui/material/Divider/Divider';
 import ScriptDetails from './components/ScriptDetails';
 import LevelOfSupportDetails from './components/LevelOfSupportDetails';
-import SupportDialog from './components/SupportDialog';
+import SupportActionDialog from './user_support/script_feedback/SupportActionDialog';
 import SupportButton from './components/SupportButton';
 import InstructionsDisplay from './components/InstructionsDisplay';
 import useScriptSupport from './useScriptSupport';
 import { Script } from '../../models/api/Script';
+import FeedbackActionDialog from './user_support/script_feedback/FeedbackActionDialog';
 
 interface ScriptSupportProps {
   script: Script;
@@ -13,7 +14,8 @@ interface ScriptSupportProps {
 
 const ScriptSupport: React.FC<ScriptSupportProps> = ({ script }) => {
   const {
-    supportDialogDetails,
+    supportActionDialogDetails,
+    feedbackActionDialogDetails,
     visibleInstructions,
     setVisibleInstructions,
     levelOfSupport,
@@ -50,7 +52,8 @@ const ScriptSupport: React.FC<ScriptSupportProps> = ({ script }) => {
         }}
       />
 
-      <SupportDialog {...supportDialogDetails} />
+      <SupportActionDialog {...supportActionDialogDetails} />
+      <FeedbackActionDialog {...feedbackActionDialogDetails} />
     </>
   );
 };

@@ -1,11 +1,13 @@
 import {
-  LevelOfSupport,
-  levelsOfSupport,
   StruggleUtilityEqn,
   SystemSupportAction,
   systemSupportActions,
   UserSupportGoal,
-} from '../../../../models/UserSupport';
+} from '../../../../models/support_and_MII/StruggleSupportMII';
+import {
+  LevelOfSupport,
+  levelsOfSupport,
+} from '../../../../models/support_and_MII/UserSupport';
 import { UtilityModel } from '../../mixed_initiative_interaction.ts/mixedInitiativeInteraction';
 
 const defaultStruggleUtilityEquations: Record<
@@ -13,12 +15,13 @@ const defaultStruggleUtilityEquations: Record<
   StruggleUtilityEqn
 > = {
   inc: (a, l) =>
-    (4 - l) * Math.tanh((3 - l) * (a - 2.8 + l / 4)) + (5.5 - 1.5 * l),
+    (4.7 - 1.5 * l) * Math.tanh((1.1 + l / 4) * (a - 1.9 + l / 4)) +
+    (4.6 - 1.4 * l),
   dec: (a, l) =>
-    (2 - l - 4) * Math.tanh((3 - (2 - l)) * (a - 2.1 + l / 2)) +
-    (5.5 - 1.25 * (2 - l)),
+    (1.5 * (2 - l) - 4.5) * Math.tanh((1.25 - l / 4) * (a - 2.3 - l / 6)) +
+    (3.7 - 0.9 * (2 - l)),
   none: (a, l) =>
-    8 * Math.exp(-2 * Math.pow((a - 2 + (l - 1) / 2) / 1.25, 2)) + 2,
+    10 * Math.exp(-2 * Math.pow((a - 2 + (l - 1) / 2.25) / 1.2, 4)),
 };
 
 const getSupportChangeUtilityModel =

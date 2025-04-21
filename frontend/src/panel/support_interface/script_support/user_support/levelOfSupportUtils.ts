@@ -1,4 +1,4 @@
-import { LevelOfSupport } from '../../../models/UserSupport';
+import { LevelOfSupport } from '../../../models/support_and_MII/UserSupport';
 
 const LoSDescription: Record<LevelOfSupport, string> = {
   text: 'The system will only provide instructions, but will indicate which steps have been completed.',

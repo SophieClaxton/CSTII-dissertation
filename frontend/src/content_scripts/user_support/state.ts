@@ -3,7 +3,7 @@ import { ValidTag } from '../../panel/models/interface_element/validTags';
 import {
   LevelOfSupport,
   UserStruggleData,
-} from '../../panel/models/UserSupport';
+} from '../../panel/models/support_and_MII/UserSupport';
 
 interface EditingState {
   isClickable: boolean;

@@ -1,17 +1,19 @@
 import { UserStruggleData } from '../../messaging/message';
 import {
   SystemSupportAction,
-  systemSupportActions,
-  UserStruggleEvidence,
-  userSupportGoals,
   UserSupportGoal,
+  systemSupportActions,
+  userSupportGoals,
+} from '../../panel/models/support_and_MII/StruggleSupportMII';
+import {
   LevelOfSupport,
-} from '../../panel/models/UserSupport';
+  UserStruggleEvidence,
+} from '../../panel/models/support_and_MII/UserSupport';
 import { getMII } from '../../panel/support_interface/script_support/mixed_initiative_interaction.ts/mixedInitiativeInteraction';
 import { softmax } from '../../panel/support_interface/script_support/user_support/modelUtils';
-import getSupportChangeLikelihoodModel from '../../panel/support_interface/script_support/user_support/struggle_support/goalLikelihoodModel';
+import { getSupportChangeLikelihoodModel } from '../../panel/support_interface/script_support/user_support/struggle_support/goalLikelihoodModel';
 import { getNextStruggleSupportAction } from '../../panel/support_interface/script_support/user_support/struggle_support/userSupportMII';
-import getSupportChangeUtilityModel from '../../panel/support_interface/script_support/user_support/struggle_support/utilityModel';
+import { getSupportChangeUtilityModel } from '../../panel/support_interface/script_support/user_support/struggle_support/utilityModel';
 
 describe('softmax', () => {
   it('returns numbers', () => {
@@ -45,33 +47,33 @@ describe('getNextSystemSupportAction', () => {
 describe('getBestActionResults', () => {
   it.each([
     {
-      struggleProb: 0.5,
+      struggleProb: 0.4,
       LOS: 'overlay',
       stepsCompleted: 1,
       outcome: 'none',
     },
     {
-      struggleProb: 0.5,
+      struggleProb: 0.4,
       LOS: 'text',
       stepsCompleted: 0,
       outcome: 'inc_dialog',
     },
     {
-      struggleProb: 0.5,
+      struggleProb: 0.4,
+      LOS: 'click',
+      stepsCompleted: 5,
+      outcome: 'dec_dialog',
+    },
+    {
+      struggleProb: 0.8,
       LOS: 'click',
       stepsCompleted: 0,
-      outcome: 'dec_dialog',
+      outcome: 'inc',
     },
     {
-      struggleProb: 0.5,
-      LOS: 'click',
-      stepsCompleted: 6,
-      outcome: 'dec_dialog',
-    },
-    {
-      struggleProb: 0.5,
+      struggleProb: 0.8,
       LOS: 'overlay',
-      stepsCompleted: 0,
+      stepsCompleted: 2,
       outcome: 'inc_dialog',
     },
   ])(
@@ -84,14 +86,16 @@ describe('getBestActionResults', () => {
       >({
         actions: systemSupportActions,
         goals: userSupportGoals,
-        goalLikelihoodModel: getSupportChangeLikelihoodModel(() => struggleProb),
+        goalLikelihoodModel: getSupportChangeLikelihoodModel(
+          () => struggleProb,
+        ),
         utilityModel: getSupportChangeUtilityModel(LOS as LevelOfSupport),
       });
       const action = MII.getBestAction({
         totalDistance: 0,
         totalScrollDistance: 0,
         numMouseClicks: 0,
-        deltaStepsCompleted: stepsCompleted,
+        stepsCompleted: stepsCompleted,
       });
 
       expect(action).toBe(outcome);
