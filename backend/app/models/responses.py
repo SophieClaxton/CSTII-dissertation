@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import List
-from pydantic import BaseModel
 from datetime import datetime
+from pydantic import BaseModel
 
 from .ASTprogram import ASTProgram
 from .CSTprogram import CSTProgram
@@ -21,11 +20,11 @@ class BaseUserResponse(BaseModel):
 
 
 class PublicUserWithScriptsResponse(BaseUserResponse):
-    scripts: List[ScriptWithWebsiteResponse]
+    scripts: list[ScriptWithWebsiteResponse]
 
 
 class UserWithScriptsResponse(PublicUserWithScriptsResponse):
-    unpublished_scripts: List[UnpublishedScriptWithWebsiteResponse]
+    unpublished_scripts: list[UnpublishedScriptWithWebsiteResponse]
 
 
 class BaseScriptResponse(BaseModel):
@@ -59,7 +58,7 @@ class BaseWebsiteResponse(BaseModel):
 
 
 class WebsiteWithScriptsResponse(BaseWebsiteResponse):
-    scripts: List[ScriptWithAuthorResponse]
+    scripts: list[ScriptWithAuthorResponse]
 
 
 class BaseUnpublishedScriptResponse(BaseModel):
@@ -77,7 +76,7 @@ class UnpublishedScriptWithProgramResponse(UnpublishedScriptWithWebsiteResponse)
     published_script_id: int | None
     author: BaseUserResponse | None
     program: CSTProgram | None = None
-    annotations: List[AnnotationResponse] | None = None
+    annotations: list[AnnotationResponse] | None = None
 
 
 class AnnotationResponse(BaseModel):

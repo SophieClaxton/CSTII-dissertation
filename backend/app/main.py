@@ -9,7 +9,7 @@ from .routers import scripts, unpublished_scripts, users, websites
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     settings = get_settings()
     if settings.create_tables:
         create_db_and_tables()

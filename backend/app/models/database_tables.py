@@ -1,6 +1,5 @@
-from sqlmodel import Field, SQLModel, Relationship  # type: ignore
 from datetime import datetime
-from typing import List
+from sqlmodel import Field, SQLModel, Relationship  # type: ignore
 
 from .CSTprogram import CSTProgram
 from .ASTprogram import ASTProgram
@@ -26,8 +25,8 @@ class User(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     name: str
 
-    scripts: List["Script"] = Relationship(back_populates="author", cascade_delete=True)
-    unpublished_scripts: List["UnpublishedScript"] = Relationship(
+    scripts: list["Script"] = Relationship(back_populates="author", cascade_delete=True)
+    unpublished_scripts: list["UnpublishedScript"] = Relationship(
         back_populates="author", cascade_delete=True
     )
 
@@ -64,7 +63,7 @@ class Script(SQLModel, table=True):
 
     author: User = Relationship(back_populates="scripts")
     website: "Website" = Relationship(back_populates="scripts")
-    annotations: List["Annotation"] = Relationship(
+    annotations: list["Annotation"] = Relationship(
         back_populates="script", cascade_delete=True
     )
 
@@ -125,8 +124,8 @@ class Website(SQLModel, table=True):
     url: str
     descrpition: str
 
-    scripts: List[Script] = Relationship(back_populates="website")
-    unpublished_scripts: List["UnpublishedScript"] = Relationship(
+    scripts: list[Script] = Relationship(back_populates="website")
+    unpublished_scripts: list["UnpublishedScript"] = Relationship(
         back_populates="website"
     )
 
@@ -197,7 +196,7 @@ class UnpublishedScript(SQLModel, table=True):
         )
 
     def toUnpublishedScriptWithProgramResponse(
-        self, program: CSTProgram | None, annotations: List[Annotation] | None
+        self, program: CSTProgram | None, annotations: list[Annotation]
     ) -> UnpublishedScriptWithProgramResponse:
         return UnpublishedScriptWithProgramResponse(
             id=self.id,
@@ -208,7 +207,5 @@ class UnpublishedScript(SQLModel, table=True):
             website=None if not self.website else self.website.toBaseWesbiteResponse(),
             published_script_id=self.published_script_id,
             program=program,
-            annotations=(
-                [a.toAnnotationResponse() for a in annotations] if annotations else None
-            ),
+            annotations=[a.toAnnotationResponse() for a in annotations],
         )

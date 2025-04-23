@@ -48,7 +48,6 @@ def delete_script_file(filename: str) -> None:
         raise Exception(f"Could not find file {file_path}")
 
     remove(file_path)
-    return
 
 
 # Unpublished Scripts
@@ -85,4 +84,3 @@ def delete_unpublished_script_file(filename: str) -> None:
         raise Exception(f"Could not find file {file_path}")
 
     remove(file_path)
-    return
