@@ -11,7 +11,7 @@ import {
 } from '../../side_panel/models/support_and_MII/UserSupport';
 import { getMII } from '../../side_panel/mixed_initiative_interaction/mixedInitiativeInteraction';
 import { softmax } from '../../side_panel/mixed_initiative_interaction/modelUtils';
-import { getSupportChangeLikelihoodModel } from '../../side_panel/mixed_initiative_interaction/struggle_support/goalLikelihoodModel';
+import { getSupportChangeUserModel } from '../../side_panel/mixed_initiative_interaction/struggle_support/userModel';
 import { getNextStruggleSupportAction } from '../../side_panel/mixed_initiative_interaction/struggle_support/userSupportMII';
 import { getSupportChangeUtilityModel } from '../../side_panel/mixed_initiative_interaction/struggle_support/utilityModel';
 
@@ -92,7 +92,7 @@ describe('getBestActionResults', () => {
       >({
         actions: systemSupportActions,
         goals: userSupportGoals,
-        goalLikelihoodModel: getSupportChangeLikelihoodModel(
+        goalLikelihoodModel: getSupportChangeUserModel(
           () => struggleProb,
         ),
         utilityModel: getSupportChangeUtilityModel(LOS as LevelOfSupport),

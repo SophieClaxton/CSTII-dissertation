@@ -1,7 +1,7 @@
 /** User model returns the probability of the goal given the evidence.
  * The sum of the probabilities of all the possible goals should sum to 1
  */
-type GoalLikelihoodModel<G, E> = (goal: G, evidence: E) => number;
+type UserModel<G, E> = (goal: G, evidence: E) => number;
 
 /** Utility of a paritcular action A given goal G should be a number in the range [0, 1] */
 type UtilityModel<A, G> = (action: A, goal: G) => number;
@@ -13,7 +13,7 @@ interface MII<E, A> {
 }
 
 interface MIIDetails<A, G, E> {
-  goalLikelihoodModel: GoalLikelihoodModel<G, E>;
+  goalLikelihoodModel: UserModel<G, E>;
   utilityModel: UtilityModel<A, G>;
   actions: readonly A[];
   goals: readonly G[];
@@ -76,4 +76,4 @@ const getMax = <V, P>(
   );
 
 export { getMII };
-export type { GoalLikelihoodModel, UtilityModel, MII };
+export type { UserModel, UtilityModel, MII };

@@ -7,7 +7,7 @@ import {
 } from '../../models/support_and_MII/UserSupport';
 import * as lodash from 'lodash';
 import { softmax } from '../modelUtils';
-import { GoalLikelihoodModel } from '../mixedInitiativeInteraction';
+import { UserModel } from '../mixedInitiativeInteraction';
 import {
   ScriptFeedbackGoal,
   ScriptProblemProbEqn,
@@ -25,7 +25,7 @@ const defautlFeedbackGoalProbEquations: Record<
     ((0.25 * (k + 1)) / (2.5 * l + 1)) * (Math.exp(-struggleProb + 1) - 1),
 };
 
-const getScriptFeedbackGoalLikelihoodModel = (
+const getScriptFeedbackUserModel = (
   levelOfSupport: LevelOfSupport,
   struggleModel: StruggleProbModel = tempStruggleModel,
   alpha: number = 0.7,
@@ -33,7 +33,7 @@ const getScriptFeedbackGoalLikelihoodModel = (
     ScriptFeedbackGoal,
     ScriptProblemProbEqn
   > = defautlFeedbackGoalProbEquations,
-): GoalLikelihoodModel<ScriptFeedbackGoal, UserStruggleEvidence> => {
+): UserModel<ScriptFeedbackGoal, UserStruggleEvidence> => {
   let movingEvidenceAverage: UserStruggleEvidence | undefined = undefined;
   let lastEvidence: UserStruggleEvidence | undefined = undefined;
   let probabilities: Record<ScriptFeedbackGoal, number> = {
@@ -109,4 +109,4 @@ const computeUserGoalProbabilities = (
   };
 };
 
-export { getScriptFeedbackGoalLikelihoodModel };
+export { getScriptFeedbackUserModel };

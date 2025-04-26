@@ -9,7 +9,7 @@ import {
   UserStruggleEvidence,
 } from '../../side_panel/models/support_and_MII/UserSupport';
 import { getMII } from '../../side_panel/mixed_initiative_interaction/mixedInitiativeInteraction';
-import { getScriptFeedbackGoalLikelihoodModel } from '../../side_panel/mixed_initiative_interaction/script_feedback/goalLikelihoodModel';
+import { getScriptFeedbackUserModel } from '../../side_panel/mixed_initiative_interaction/script_feedback/userModel';
 import { getScriptFeedbackUtilityModel } from '../../side_panel/mixed_initiative_interaction/script_feedback/utilityModel';
 
 describe('getBestActionResults', () => {
@@ -60,7 +60,7 @@ describe('getBestActionResults', () => {
       >({
         actions: scriptFeedbackActions,
         goals: scriptFeedbackGoals,
-        goalLikelihoodModel: getScriptFeedbackGoalLikelihoodModel(
+        goalLikelihoodModel: getScriptFeedbackUserModel(
           LOS as LevelOfSupport,
           () => struggleProb,
         ),

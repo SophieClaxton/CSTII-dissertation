@@ -12,7 +12,7 @@ import {
 import { StateSetter } from '../../models/utilTypes';
 import { getMII } from '../mixedInitiativeInteraction';
 import { FeedbackActionDialogProps } from './FeedbackActionDialog';
-import { getScriptFeedbackGoalLikelihoodModel } from './goalLikelihoodModel';
+import { getScriptFeedbackUserModel } from './userModel';
 import { getScriptFeedbackUtilityModel } from './utilityModel';
 
 const getNextScriptFeedbackAction = (
@@ -27,7 +27,7 @@ const getNextScriptFeedbackAction = (
     ScriptFeedbackGoal,
     UserStruggleEvidence
   >({
-    goalLikelihoodModel: getScriptFeedbackGoalLikelihoodModel(
+    goalLikelihoodModel: getScriptFeedbackUserModel(
       currentLevelOfSupport,
     ),
     utilityModel: getScriptFeedbackUtilityModel(),

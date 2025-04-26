@@ -5,7 +5,7 @@ import {
 } from '../../models/support_and_MII/UserSupport';
 import * as lodash from 'lodash';
 import { softmax } from '../modelUtils';
-import { GoalLikelihoodModel } from '../mixedInitiativeInteraction';
+import { UserModel } from '../mixedInitiativeInteraction';
 import {
   UserSupportGoal,
   UserSupportProbEqn,
@@ -27,14 +27,14 @@ const defautlStruggleProbEquations: Record<
     ),
 };
 
-const getSupportChangeLikelihoodModel = (
+const getSupportChangeUserModel = (
   struggleModel: StruggleProbModel = tempStruggleModel,
   alpha: number = 0.7,
   struggleEqns: Record<
     UserSupportGoal,
     UserSupportProbEqn
   > = defautlStruggleProbEquations,
-): GoalLikelihoodModel<UserSupportGoal, UserStruggleEvidence> => {
+): UserModel<UserSupportGoal, UserStruggleEvidence> => {
   let movingEvidenceAverage: UserStruggleEvidence | undefined = undefined;
   let lastEvidence: UserStruggleEvidence | undefined = undefined;
   let probabilities: Record<UserSupportGoal, number> = {
@@ -110,4 +110,4 @@ const computeUserGoalProbabilities = (
   };
 };
 
-export { getSupportChangeLikelihoodModel };
+export { getSupportChangeUserModel };

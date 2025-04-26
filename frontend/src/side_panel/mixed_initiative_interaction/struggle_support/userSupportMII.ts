@@ -6,7 +6,7 @@ import {
 import { StateSetter } from '../../models/utilTypes';
 import { SupportActionDialogProps } from './SupportActionDialog';
 import { getMII } from '../mixedInitiativeInteraction';
-import { getSupportChangeLikelihoodModel } from './goalLikelihoodModel';
+import { getSupportChangeUserModel } from './userModel';
 import { getSupportChangeUtilityModel } from './utilityModel';
 import {
   SystemSupportAction,
@@ -31,7 +31,7 @@ const getNextStruggleSupportAction = (
     UserSupportGoal,
     UserStruggleEvidence
   >({
-    goalLikelihoodModel: getSupportChangeLikelihoodModel(),
+    goalLikelihoodModel: getSupportChangeUserModel(),
     utilityModel: getSupportChangeUtilityModel(currentLevelOfSupport),
     actions: systemSupportActions,
     goals: userSupportGoals,
