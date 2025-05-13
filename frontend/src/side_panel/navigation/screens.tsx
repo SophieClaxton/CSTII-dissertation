@@ -1,61 +1,61 @@
-import UserScriptSelectorPage from '../components/pages/UserScriptSelectorPage';
-import EditorPage from '../components/pages/EditorPage';
-import ScriptSelectionPage from '../components/pages/ScriptSelectionPage';
-import ScriptSelectionByUserPage from '../components/pages/ScriptSelectionByUserPage';
-import ScriptSelectionByWebsitePage from '../components/pages/ScriptSelectionByWebsitePage';
+import UserWorkflowSelectorPage from '../components/pages/UserWorkflowSelectorPage';
+import DSVPLEditorPage from '../components/pages/DSVPLEditorPage';
+import WorkflowSelectionPage from '../components/pages/WorkflowSelectionPage';
+import WorkflowSelectionByUserPage from '../components/pages/WorkflowSelectionByUserPage';
+import WorkflowSelectionByWebsitePage from '../components/pages/WorkflowSelectionByWebsitePage';
 import {
-  EditorScreen,
-  HelperScriptsScreen,
-  ScriptSelectorScreen,
-  ScriptSupportScreen,
-  UserScriptSelectorScreen,
-  WebsiteScriptSelectorScreen,
+  DSVPLEditorScreen,
+  WorkflowEncoderWorkflowsScreen,
+  WorkflowSelectorScreen,
+  WorkflowSupportScreen,
+  UserWorkflowSelectorScreen,
+  WebsiteWorkflowSelectorScreen,
 } from './ScreenType';
-import ScriptSupportPage from '../components/pages/ScriptSupportPage';
+import WorkflowSupportPage from '../components/pages/WorkflowSupportPage';
 
-const helperScriptsScreen: HelperScriptsScreen = {
-  type: 'HelperScripts',
-  component: <UserScriptSelectorPage />,
+const workflowEncoderWorkflowsScreen: WorkflowEncoderWorkflowsScreen = {
+  type: 'WorkflowEncoderWorkflows',
+  component: <UserWorkflowSelectorPage />,
 };
 
-const editorScreen = (scriptId: number): EditorScreen => ({
-  type: 'Editor',
-  params: { scriptId: scriptId },
-  component: <EditorPage />,
+const dsvplEditorScreen = (workflowId: number): DSVPLEditorScreen => ({
+  type: 'DSVPLEditor',
+  params: { workflowId },
+  component: <DSVPLEditorPage />,
 });
 
-const scriptSelectorScreen: ScriptSelectorScreen = {
-  type: 'ScriptSelector',
-  component: <ScriptSelectionPage />,
+const workflowSelectorScreen: WorkflowSelectorScreen = {
+  type: 'WorkflowSelector',
+  component: <WorkflowSelectionPage />,
 };
 
-const userScriptSelectorScreen = (
+const userWorkflowSelectorScreen = (
   userId: number,
-): UserScriptSelectorScreen => ({
-  type: 'UserScriptSelector',
+): UserWorkflowSelectorScreen => ({
+  type: 'UserWorkflowSelector',
   params: { userId: userId },
-  component: <ScriptSelectionByUserPage />,
+  component: <WorkflowSelectionByUserPage />,
 });
 
-const websiteScriptSelectorScreen = (
+const websiteWorkflowSelectorScreen = (
   websiteId: number,
-): WebsiteScriptSelectorScreen => ({
-  type: 'WebsiteScriptSelector',
+): WebsiteWorkflowSelectorScreen => ({
+  type: 'WebsiteWorkflowSelector',
   params: { websiteId: websiteId },
-  component: <ScriptSelectionByWebsitePage />,
+  component: <WorkflowSelectionByWebsitePage />,
 });
 
-const scriptSupportScreen = (scriptId: number): ScriptSupportScreen => ({
-  type: 'ScriptSupport',
-  params: { scriptId: scriptId },
-  component: <ScriptSupportPage />,
+const workflowSupportScreen = (workflowId: number): WorkflowSupportScreen => ({
+  type: 'WorkflowSupport',
+  params: { workflowId },
+  component: <WorkflowSupportPage />,
 });
 
 export {
-  helperScriptsScreen,
-  editorScreen,
-  scriptSelectorScreen,
-  userScriptSelectorScreen,
-  websiteScriptSelectorScreen,
-  scriptSupportScreen,
+  workflowEncoderWorkflowsScreen,
+  dsvplEditorScreen,
+  workflowSelectorScreen,
+  userWorkflowSelectorScreen,
+  websiteWorkflowSelectorScreen,
+  workflowSupportScreen,
 };

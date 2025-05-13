@@ -1,19 +1,19 @@
-import { UserStruggleData } from '../../messaging/message';
 import {
   SystemSupportAction,
   UserSupportGoal,
   systemSupportActions,
   userSupportGoals,
-} from '../../side_panel/models/support_and_MII/StruggleSupportMII';
+} from '../../side_panel/models/support_and_MII/MetacognitiveSupportMII';
 import {
+  InteractionData,
   LevelOfSupport,
   UserStruggleEvidence,
 } from '../../side_panel/models/support_and_MII/UserSupport';
 import { getMII } from '../../side_panel/mixed_initiative_interaction/mixedInitiativeInteraction';
 import { softmax } from '../../side_panel/mixed_initiative_interaction/modelUtils';
-import { getSupportChangeUserModel } from '../../side_panel/mixed_initiative_interaction/struggle_support/userModel';
-import { getNextStruggleSupportAction } from '../../side_panel/mixed_initiative_interaction/struggle_support/userSupportMII';
-import { getSupportChangeUtilityModel } from '../../side_panel/mixed_initiative_interaction/struggle_support/utilityModel';
+import { getSupportChangeUserModel } from '../../side_panel/mixed_initiative_interaction/metacognitive_support/userModel';
+import { getNextStruggleSupportAction } from '../../side_panel/mixed_initiative_interaction/metacognitive_support/metacognitiveSupportMII';
+import { getSupportChangeUtilityModel } from '../../side_panel/mixed_initiative_interaction/metacognitive_support/utilityModel';
 
 describe('softmax', () => {
   it('returns numbers', () => {
@@ -34,12 +34,12 @@ describe('softmax', () => {
 
 describe('getNextSystemSupportAction', () => {
   it('succeeds', () => {
-    const userStruggleData: UserStruggleData = {
+    const interactionData: InteractionData = {
       totalDistance: Math.log(1173.732143181506),
       totalScrollDistance: Math.log(280.7),
       numMouseClicks: 1.4,
     };
-    const action = getNextStruggleSupportAction(userStruggleData, 1, 'click');
+    const action = getNextStruggleSupportAction(interactionData, 1, 'click');
     expect(action).not.toBeUndefined();
   });
 });
@@ -92,9 +92,7 @@ describe('getBestActionResults', () => {
       >({
         actions: systemSupportActions,
         goals: userSupportGoals,
-        goalLikelihoodModel: getSupportChangeUserModel(
-          () => struggleProb,
-        ),
+        goalLikelihoodModel: getSupportChangeUserModel(() => struggleProb),
         utilityModel: getSupportChangeUtilityModel(LOS as LevelOfSupport),
       });
       const action = MII.getBestAction({

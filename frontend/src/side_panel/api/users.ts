@@ -2,8 +2,8 @@ import axios from 'axios';
 import APIResponse from '../models/api/APIResponse';
 import { handleError } from '../models/api/APIError';
 import User, {
-  PublicUserWithScripts,
-  UserWithScripts,
+  PublicUserWithWorkflows,
+  UserWithWorkflows,
 } from '../models/api/User';
 
 const usersEndpoint = axios.create({
@@ -46,12 +46,12 @@ const createUser = async (username: string): Promise<APIResponse<User>> => {
 
 const getUser = async (
   userId: number,
-): Promise<APIResponse<UserWithScripts>> => {
+): Promise<APIResponse<UserWithWorkflows>> => {
   try {
     const response = await usersEndpoint.get(`${userId}`);
     return {
       status: 'Loaded',
-      data: response.data as UserWithScripts,
+      data: response.data as UserWithWorkflows,
     };
   } catch (err: unknown) {
     return {
@@ -63,13 +63,13 @@ const getUser = async (
 
 const getPublicUser = async (
   userId: number,
-): Promise<APIResponse<PublicUserWithScripts>> => {
+): Promise<APIResponse<PublicUserWithWorkflows>> => {
   console.log('Making request for public user');
   try {
     const response = await usersEndpoint.get(`public/${userId}`);
     return {
       status: 'Loaded',
-      data: response.data as PublicUserWithScripts,
+      data: response.data as PublicUserWithWorkflows,
     };
   } catch (err: unknown) {
     return {

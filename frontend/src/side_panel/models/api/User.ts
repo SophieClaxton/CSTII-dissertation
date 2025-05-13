@@ -1,18 +1,18 @@
-import { ScriptWithWebsite } from './Script';
-import { UnpublishedScriptWithWebsite } from './UnpublishedScript';
+import { TaskWorkflowWithWebsite } from './TaskWorkflow';
+import { UnpublishedTaskWorkflowWithWebsite } from './UnpublishedTaskWorkflow';
 
 interface User {
   id: number;
   name: string;
 }
 
-interface PublicUserWithScripts extends User {
-  scripts: ScriptWithWebsite[];
+interface PublicUserWithWorkflows extends User {
+  scripts: TaskWorkflowWithWebsite[];
 }
 
-interface UserWithScripts extends PublicUserWithScripts {
-  unpublished_scripts: UnpublishedScriptWithWebsite[];
+interface UserWithWorkflows extends PublicUserWithWorkflows {
+  unpublished_scripts: UnpublishedTaskWorkflowWithWebsite[];
 }
 
 export default User;
-export type { PublicUserWithScripts, UserWithScripts };
+export type { PublicUserWithWorkflows, UserWithWorkflows };

@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 
 type PanelScreen =
-  | HelperScriptsScreen
-  | EditorScreen
-  | ScriptSelectorScreen
-  | UserScriptSelectorScreen
-  | WebsiteScriptSelectorScreen
-  | ScriptSupportScreen;
+  | WorkflowEncoderWorkflowsScreen
+  | DSVPLEditorScreen
+  | WorkflowSelectorScreen
+  | UserWorkflowSelectorScreen
+  | WebsiteWorkflowSelectorScreen
+  | WorkflowSupportScreen;
 
 interface ScreenBase {
   type: ScreenType;
@@ -14,50 +14,50 @@ interface ScreenBase {
   component: ReactNode;
 }
 
-type ScreenType = HelperScreenType | HelpeeScreenType;
+type ScreenType = WorkflowEncoderScreenType | SupportSeekerScreenType;
 
-type HelperScreenType = 'HelperScripts' | 'Editor';
-type HelpeeScreenType =
-  | 'ScriptSelector'
-  | 'UserScriptSelector'
-  | 'WebsiteScriptSelector'
-  | 'ScriptSupport';
+type WorkflowEncoderScreenType = 'WorkflowEncoderWorkflows' | 'DSVPLEditor';
+type SupportSeekerScreenType =
+  | 'WorkflowSelector'
+  | 'UserWorkflowSelector'
+  | 'WebsiteWorkflowSelector'
+  | 'WorkflowSupport';
 
-interface HelperScriptsScreen extends ScreenBase {
-  type: 'HelperScripts';
+interface WorkflowEncoderWorkflowsScreen extends ScreenBase {
+  type: 'WorkflowEncoderWorkflows';
 }
 
-interface EditorScreen extends ScreenBase {
-  type: 'Editor';
-  params: { scriptId: number };
+interface DSVPLEditorScreen extends ScreenBase {
+  type: 'DSVPLEditor';
+  params: { workflowId: number };
 }
 
-interface ScriptSelectorScreen extends ScreenBase {
-  type: 'ScriptSelector';
+interface WorkflowSelectorScreen extends ScreenBase {
+  type: 'WorkflowSelector';
 }
 
-interface UserScriptSelectorScreen extends ScreenBase {
-  type: 'UserScriptSelector';
+interface UserWorkflowSelectorScreen extends ScreenBase {
+  type: 'UserWorkflowSelector';
   params: { userId: number };
 }
 
-interface WebsiteScriptSelectorScreen extends ScreenBase {
-  type: 'WebsiteScriptSelector';
+interface WebsiteWorkflowSelectorScreen extends ScreenBase {
+  type: 'WebsiteWorkflowSelector';
   params: { websiteId: number };
 }
 
-interface ScriptSupportScreen extends ScreenBase {
-  type: 'ScriptSupport';
-  params: { scriptId: number };
+interface WorkflowSupportScreen extends ScreenBase {
+  type: 'WorkflowSupport';
+  params: { workflowId: number };
 }
 
 export type {
   ScreenType,
   PanelScreen,
-  HelperScriptsScreen,
-  EditorScreen,
-  ScriptSelectorScreen,
-  UserScriptSelectorScreen,
-  WebsiteScriptSelectorScreen,
-  ScriptSupportScreen,
+  WorkflowEncoderWorkflowsScreen,
+  DSVPLEditorScreen,
+  WorkflowSelectorScreen,
+  UserWorkflowSelectorScreen,
+  WebsiteWorkflowSelectorScreen,
+  WorkflowSupportScreen,
 };

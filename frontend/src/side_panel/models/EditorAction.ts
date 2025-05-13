@@ -10,9 +10,9 @@ import {
 } from './CST/CST';
 
 enum EditorActionType {
-  EditScriptTitle = 'editScriptTitle',
-  EditScriptDescription = 'editScriptDescription',
-  SetPublishedScriptId = 'setPublishedScriptId',
+  EditWorkflowTitle = 'editWorkflowTitle',
+  EditWorkflowDescription = 'editWorkflowDescription',
+  SetPublishedWorkflowId = 'setPublishedWorkflowId',
   AddSection = 'addSection',
   DeleteSection = 'deleteSection',
   AddStep = 'addStep',
@@ -32,9 +32,9 @@ interface BaseEditorAction {
 }
 
 type EditorAction =
-  | EditScriptTitleAction
-  | EditScriptDescriptionAction
-  | SetPublishedScriptIdAction
+  | EditWorkflowTitleAction
+  | EditWorkflowDescriptionAction
+  | SetPublishedWorkflowIdAction
   | AddSectionAction
   | DeleteSectionAction
   | EditStepElementAction
@@ -48,18 +48,18 @@ type EditorAction =
   | ChangeUserDecisionStepToInnerStepAction
   | ChangeUserDecisionStepToEndStepAction;
 
-interface EditScriptTitleAction extends BaseEditorAction {
-  type: EditorActionType.EditScriptTitle;
+interface EditWorkflowTitleAction extends BaseEditorAction {
+  type: EditorActionType.EditWorkflowTitle;
   title: string;
 }
 
-interface EditScriptDescriptionAction extends BaseEditorAction {
-  type: EditorActionType.EditScriptDescription;
+interface EditWorkflowDescriptionAction extends BaseEditorAction {
+  type: EditorActionType.EditWorkflowDescription;
   description: string;
 }
 
-interface SetPublishedScriptIdAction extends BaseEditorAction {
-  type: EditorActionType.SetPublishedScriptId;
+interface SetPublishedWorkflowIdAction extends BaseEditorAction {
+  type: EditorActionType.SetPublishedWorkflowId;
   id: number | undefined;
 }
 
@@ -136,9 +136,9 @@ interface ChangeUserDecisionStepToEndStepAction extends BaseEditorAction {
 export { EditorActionType };
 export type {
   EditorAction,
-  EditScriptTitleAction,
-  EditScriptDescriptionAction,
-  SetPublishedScriptIdAction,
+  EditWorkflowTitleAction,
+  EditWorkflowDescriptionAction,
+  SetPublishedWorkflowIdAction,
   AddSectionAction,
   DeleteSectionAction,
   AddStepAction,

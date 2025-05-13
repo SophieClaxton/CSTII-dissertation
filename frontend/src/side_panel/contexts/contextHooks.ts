@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { UnpublishedScriptContext } from './UnpublishedScriptContext';
+import { UnpublishedWorkflowContext } from './UnpublishedWorkflowContext';
 import {
   NavigationContext,
   ScreenContext,
@@ -7,7 +7,6 @@ import {
 } from './ScreenContext';
 import { PanelScreen } from '../navigation/ScreenType';
 import { SyntaxErrorsContext, SyntaxErrorsInfo } from './SyntaxErrorsContext';
-import { mapIdToString } from '../scripting_interface/unpublished_script_reducer/mappers/nodeIds';
 import TabContext from './TabContext';
 import { SyntaxCheckError, SyntaxCheckResult } from '../models/SyntaxCheck';
 import {
@@ -15,11 +14,12 @@ import {
   AnnotationsContextInfo,
 } from './AnnotationsContext';
 import Annotation from '../models/api/Annotation';
-import { mapScriptLocationToStepId } from '../scripting_interface/script_editor/script_utils/annotationUtils';
 import { CSTProgram } from '../models/CST/CST';
+import { mapIdToString } from '../task_workflows/unpublished_task_workflow_reducer/mappers/nodeIds';
+import { mapWorkflowLocationToStepId } from '../task_workflows/DSVPL_editor/task_workflow_utils/annotationUtils';
 
-const useUnpublishedScriptContext = () => {
-  const editorProgramContext = useContext(UnpublishedScriptContext);
+const useUnpublishedWorkflowContext = () => {
+  const editorProgramContext = useContext(UnpublishedWorkflowContext);
   if (!editorProgramContext) {
     throw new Error('No editor program found');
   }
@@ -93,7 +93,7 @@ const createAnnotationsContext = (
 ): AnnotationsContextInfo => {
   const annotationsMap = new Map();
   for (const annotation of annotations) {
-    const stepId = mapScriptLocationToStepId(annotation.location, program);
+    const stepId = mapWorkflowLocationToStepId(annotation.location, program);
     annotationsMap.set(mapIdToString(stepId), annotation.description);
   }
   return { annotationsMap, showAnnotations };
@@ -108,7 +108,7 @@ const useAnnotationsContext = () => {
 };
 
 export {
-  useUnpublishedScriptContext,
+  useUnpublishedWorkflowContext,
   useNavigationContext,
   createSyntaxErrorsContext,
   useSyntaxErrorsContext,

@@ -1,16 +1,16 @@
 import {
-  ScriptFeedbackAction,
-  scriptFeedbackActions,
-  ScriptFeedbackGoal,
-  scriptFeedbackGoals,
-} from '../../side_panel/models/support_and_MII/ScriptFeedbackMII';
+  ConsultationTriggerActions,
+  consultationTriggerActions,
+  ConsultationTriggerGoal,
+  consultationTriggerGoals,
+} from '../../side_panel/models/support_and_MII/ConsultationTriggerMII';
 import {
   LevelOfSupport,
   UserStruggleEvidence,
 } from '../../side_panel/models/support_and_MII/UserSupport';
 import { getMII } from '../../side_panel/mixed_initiative_interaction/mixedInitiativeInteraction';
-import { getScriptFeedbackUserModel } from '../../side_panel/mixed_initiative_interaction/script_feedback/userModel';
-import { getScriptFeedbackUtilityModel } from '../../side_panel/mixed_initiative_interaction/script_feedback/utilityModel';
+import { getConsultationTriggerUserModel } from '../../side_panel/mixed_initiative_interaction/consultation_trigger/userModel';
+import { getConsultationTriggerUtilityModel } from '../../side_panel/mixed_initiative_interaction/consultation_trigger/utilityModel';
 
 describe('getBestActionResults', () => {
   it.each([
@@ -54,17 +54,17 @@ describe('getBestActionResults', () => {
     'correctly returns $outcome for P(struggle)=$struggleProb, k=$stepsCompleted, LOS=$LOS',
     ({ struggleProb, LOS, stepsCompleted, outcome }) => {
       const MII = getMII<
-        ScriptFeedbackAction,
-        ScriptFeedbackGoal,
+        ConsultationTriggerActions,
+        ConsultationTriggerGoal,
         UserStruggleEvidence
       >({
-        actions: scriptFeedbackActions,
-        goals: scriptFeedbackGoals,
-        goalLikelihoodModel: getScriptFeedbackUserModel(
+        actions: consultationTriggerActions,
+        goals: consultationTriggerGoals,
+        goalLikelihoodModel: getConsultationTriggerUserModel(
           LOS as LevelOfSupport,
           () => struggleProb,
         ),
-        utilityModel: getScriptFeedbackUtilityModel(),
+        utilityModel: getConsultationTriggerUtilityModel(),
       });
       const action = MII.getBestAction({
         totalDistance: 0,

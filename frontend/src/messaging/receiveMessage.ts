@@ -2,12 +2,16 @@ import { TabInfo } from '../side_panel/contexts/TabContext';
 import { ASTInstruction } from '../side_panel/models/AST/Instruction';
 import { CSTStepNodeType } from '../side_panel/models/CST/CST';
 import { isEndStepId, isInnerStepId } from '../side_panel/models/CST/testers';
-import { EditorAction, EditorActionType } from '../side_panel/models/EditorAction';
+import {
+  EditorAction,
+  EditorActionType,
+} from '../side_panel/models/EditorAction';
 import { isSelectableTag } from '../side_panel/models/interface_element/selectableTag';
 import { mapStepNodeToValidTags } from '../side_panel/models/interface_element/validTags';
+import { InteractionData } from '../side_panel/models/support_and_MII/UserSupport';
 import { StateRef } from '../side_panel/models/utilTypes';
-import { mapStringToId } from '../side_panel/scripting_interface/unpublished_script_reducer/mappers/nodeIds';
-import { ContentScriptMessage, UserStruggleData } from './message';
+import { mapStringToId } from '../side_panel/task_workflows/unpublished_task_workflow_reducer/mappers/nodeIds';
+import { ContentScriptMessage } from './message';
 
 const addClickedElementListener = (
   dispatch: React.Dispatch<EditorAction>,
@@ -53,12 +57,12 @@ const addClickedElementListener = (
 /** Every time the user struggle data is received, run the Mixed-Initiative Model
  */
 const addUserStruggleDataListener = (
-  setUserStruggleData: (data: UserStruggleData) => void,
+  setUserStruggleData: (data: InteractionData) => void,
 ) => {
   chrome.runtime.onMessage.addListener((message: ContentScriptMessage) => {
-    if (message.type === 'user_struggle_data') {
-      console.log('received user struggle data');
-      setUserStruggleData(message.userStruggleData);
+    if (message.type === 'interaction_data') {
+      console.log('received interaction data');
+      setUserStruggleData(message.interactionData);
     }
   });
 };

@@ -2,7 +2,7 @@ import { ASTInstruction } from '../side_panel/models/AST/Instruction';
 import { CSTElementNode, CSTNodeId } from '../side_panel/models/CST/CST';
 import InterfaceElement from '../side_panel/models/interface_element/InterfaceElement';
 import { LevelOfSupport } from '../side_panel/models/support_and_MII/UserSupport';
-import { mapIdToString } from '../side_panel/scripting_interface/unpublished_script_reducer/mappers/nodeIds';
+import { mapIdToString } from '../side_panel/task_workflows/unpublished_task_workflow_reducer/mappers/nodeIds';
 import {
   EndSupportMessage,
   NextPossibleStepsMessage,

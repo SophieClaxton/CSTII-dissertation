@@ -1,32 +1,32 @@
 const levelsOfSupport = ['text', 'overlay', 'click'] as const;
 type LevelOfSupport = (typeof levelsOfSupport)[number];
 
-interface ScriptLocation {
+interface WorkflowLocation {
   stepNumber: number;
   decisionHistory: ('yes' | 'no')[];
 }
 
-const mapScriptLocationToString = (location: ScriptLocation): string => {
+const mapWorkflowLocationToString = (location: WorkflowLocation): string => {
   return `${location.stepNumber}|${location.decisionHistory.join('-')}`;
 };
 
-interface UserStruggleData {
+interface InteractionData {
   totalDistance: number;
   numMouseClicks: number;
   totalScrollDistance: number;
 }
 
-type UserStruggleEvidence = UserStruggleData & {
+type UserStruggleEvidence = InteractionData & {
   stepsCompleted: number;
 };
 
-type StruggleProbModel = (data: UserStruggleData) => number;
+type StruggleProbModel = (data: InteractionData) => number;
 
-export { levelsOfSupport, mapScriptLocationToString };
+export { levelsOfSupport, mapWorkflowLocationToString };
 export type {
   LevelOfSupport,
-  ScriptLocation,
-  UserStruggleData,
+  WorkflowLocation,
+  InteractionData,
   UserStruggleEvidence,
   StruggleProbModel,
 };

@@ -1,46 +1,46 @@
 import {
   PanelScreen,
-  UserScriptSelectorScreen,
-  WebsiteScriptSelectorScreen,
-  ScriptSupportScreen,
-  EditorScreen,
+  UserWorkflowSelectorScreen,
+  WebsiteWorkflowSelectorScreen,
+  WorkflowSupportScreen,
+  DSVPLEditorScreen,
 } from './ScreenType';
 
-function assertIsEditorScreen(
+function assertIsDSVPLEditorScreen(
   screen: PanelScreen | undefined,
-): asserts screen is EditorScreen {
-  if (screen?.type != 'Editor') {
-    throw new Error(`Assert ${screen} as EditorScreen failed`);
+): asserts screen is DSVPLEditorScreen {
+  if (screen?.type != 'DSVPLEditor') {
+    throw new Error(`Assert ${screen} as DSVPLEditorScreen failed`);
   }
 }
 
-function assertIsUserScriptSelectorScreen(
+function assertIsUserWorkflowSelectorScreen(
   screen: PanelScreen | undefined,
-): asserts screen is UserScriptSelectorScreen {
-  if (screen?.type != 'UserScriptSelector') {
-    throw new Error(`Assert ${screen} as UserScriptSelectorScreen failed`);
+): asserts screen is UserWorkflowSelectorScreen {
+  if (screen?.type != 'UserWorkflowSelector') {
+    throw new Error(`Assert ${screen} as UserWorkflowSelectorScreen failed`);
   }
 }
 
-function assertIsWebsiteScriptSelectorScreen(
+function assertIsWebsiteWorkflowSelectorScreen(
   screen: PanelScreen | undefined,
-): asserts screen is WebsiteScriptSelectorScreen {
-  if (screen?.type != 'WebsiteScriptSelector') {
-    throw new Error(`Assert ${screen} as WebsiteScriptSelectorScreen failed`);
+): asserts screen is WebsiteWorkflowSelectorScreen {
+  if (screen?.type != 'WebsiteWorkflowSelector') {
+    throw new Error(`Assert ${screen} as WebsiteWorkflowSelectorScreen failed`);
   }
 }
 
-function assertIsScriptSupportScreen(
+function assertIsWorkflowSupportScreen(
   screen: PanelScreen | undefined,
-): asserts screen is ScriptSupportScreen {
-  if (screen?.type != 'ScriptSupport') {
-    throw new Error(`Assert ${screen} as ScriptSupportScreen failed`);
+): asserts screen is WorkflowSupportScreen {
+  if (screen?.type != 'WorkflowSupport') {
+    throw new Error(`Assert ${screen} as WorkflowSupportScreen failed`);
   }
 }
 
 export {
-  assertIsEditorScreen,
-  assertIsUserScriptSelectorScreen,
-  assertIsWebsiteScriptSelectorScreen,
-  assertIsScriptSupportScreen,
+  assertIsDSVPLEditorScreen,
+  assertIsUserWorkflowSelectorScreen,
+  assertIsWebsiteWorkflowSelectorScreen,
+  assertIsWorkflowSupportScreen,
 };

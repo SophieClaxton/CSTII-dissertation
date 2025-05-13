@@ -1,5 +1,5 @@
 import { UserClickedElementMessage } from '../../messaging/message';
-import { EditingState } from '../user_support/state';
+import { EditingState } from '../interactive_support/state';
 import {
   elementSatisfiesValidTags,
   findElement,

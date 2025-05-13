@@ -2,7 +2,7 @@ import axios from 'axios';
 import APIResponse from '../models/api/APIResponse';
 import Website, {
   WebsiteRequest,
-  WebsiteWithScripts,
+  WebsiteWithWorkflows,
 } from '../models/api/Website';
 import { handleError } from '../models/api/APIError';
 
@@ -48,13 +48,13 @@ const createWebsite = async (
 
 const getWebsite = async (
   websiteId: number,
-): Promise<APIResponse<WebsiteWithScripts>> => {
+): Promise<APIResponse<WebsiteWithWorkflows>> => {
   console.log('Making request for website');
   try {
     const response = await websitesEndpoint.get(`${websiteId}`);
     return {
       status: 'Loaded',
-      data: response.data as WebsiteWithScripts,
+      data: response.data as WebsiteWithWorkflows,
     };
   } catch (err: unknown) {
     return {

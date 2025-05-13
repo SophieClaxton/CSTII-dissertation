@@ -1,4 +1,4 @@
-import { ScriptWithAuthor } from './Script';
+import { TaskWorkflowWithAuthor } from './TaskWorkflow';
 
 interface Website {
   id: number;
@@ -6,8 +6,8 @@ interface Website {
   description: string;
 }
 
-interface WebsiteWithScripts extends Website {
-  scripts: ScriptWithAuthor[];
+interface WebsiteWithWorkflows extends Website {
+  scripts: TaskWorkflowWithAuthor[];
 }
 
 interface WebsiteRequest {
@@ -16,4 +16,4 @@ interface WebsiteRequest {
 }
 
 export default Website;
-export type { WebsiteWithScripts, WebsiteRequest };
+export type { WebsiteWithWorkflows, WebsiteRequest };

@@ -11,21 +11,21 @@ import { elementSatisfiesValidTags } from './elements/elementUtils';
 import { setFocus, unsetFocus } from './elements/focusOnElement';
 import { onUserClickElement } from './elements/interactWithElement';
 import {
-  collectUserStruggleDataOnMouseMove,
-  collectUserStruggleDataOnMouseDown,
-  collectStruggleDataOnScroll,
-} from './user_support/collectStruggleEvidence';
+  collectInteractionDataOnMouseMove,
+  collectInteractionDataOnMouseDown,
+  collectInteractionDataOnScroll,
+} from './interactive_support/collectInteractionData';
 import {
   detectStepOnClick,
   detectStepOnInput,
   detectStepOnScroll,
-} from './user_support/detectStep';
-import { EditingState, SupportState } from './user_support/state';
+} from './interactive_support/detectStep';
+import { EditingState, SupportState } from './interactive_support/state';
 import {
   onStartSupport,
   onEndSupport,
   onReceiveNextPossibleSteps,
-} from './user_support/support';
+} from './interactive_support/support';
 
 console.log('Loaded content script');
 const loadedMessage: LoadedMessage = { type: 'loaded' };
@@ -39,8 +39,8 @@ let editingState: EditingState = {
 };
 
 const supportState: SupportState = {
-  collectStruggleData: false,
-  userStruggleData: {
+  collectInteractionData: false,
+  interactionData: {
     totalDistance: 0,
     numMouseClicks: 0,
     totalScrollDistance: 0,
@@ -105,15 +105,15 @@ const setupMessageListener = () => {
   });
 };
 
-document.onmousemove = collectUserStruggleDataOnMouseMove(supportState);
-document.onmousedown = collectUserStruggleDataOnMouseDown(supportState);
+document.onmousemove = collectInteractionDataOnMouseMove(supportState);
+document.onmousedown = collectInteractionDataOnMouseDown(supportState);
 
 let ticking = false;
 document.onscroll = () => {
   if (!ticking) {
     ticking = true;
     setTimeout(() => {
-      collectStruggleDataOnScroll(supportState);
+      collectInteractionDataOnScroll(supportState);
       detectStepOnScroll(supportState);
       ticking = false;
     }, 33);

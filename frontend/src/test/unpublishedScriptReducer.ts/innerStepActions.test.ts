@@ -8,7 +8,7 @@ import { EditorActionType } from '../../side_panel/models/EditorAction';
 import {
   addInputDescriptionToInput,
   editInputStepInputDescription,
-} from '../../side_panel/scripting_interface/unpublished_script_reducer/innerStepActions';
+} from '../../side_panel/task_workflows/unpublished_task_workflow_reducer/innerStepActions';
 
 const writeStep: CSTWriteNode = {
   element: {

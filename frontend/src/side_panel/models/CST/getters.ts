@@ -1,4 +1,4 @@
-import { getNextInnerStepId } from '../../scripting_interface/unpublished_script_reducer/getters/nodeIds';
+import { getNextInnerStepId } from '../../task_workflows/unpublished_task_workflow_reducer/getters/nodeIds';
 import {
   CSTEndStepId,
   CSTEndStepNode,

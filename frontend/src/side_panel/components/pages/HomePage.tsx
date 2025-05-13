@@ -1,8 +1,8 @@
 import Stack from '@mui/material/Stack/Stack';
 import { useNavigationContext } from '../../contexts/contextHooks';
 import {
-  helperScriptsScreen,
-  scriptSelectorScreen,
+  workflowEncoderWorkflowsScreen,
+  workflowSelectorScreen,
 } from '../../navigation/screens';
 import Button from '@mui/material/Button/Button';
 import Page from '../Page';
@@ -16,16 +16,16 @@ const HomePage: React.FC = () => {
         <Button
           variant="contained"
           sx={{ width: '100%', height: '8rem' }}
-          onClick={() => goTo(scriptSelectorScreen)}
+          onClick={() => goTo(workflowSelectorScreen)}
         >
           Select Support
         </Button>
         <Button
           variant="contained"
           sx={{ width: '100%', height: '8rem' }}
-          onClick={() => goTo(helperScriptsScreen)}
+          onClick={() => goTo(workflowEncoderWorkflowsScreen)}
         >
-          Start Writing Scripts
+          Start Writing Task Workflows
         </Button>
       </Stack>
     </Page>
