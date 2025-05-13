@@ -5,19 +5,19 @@ from .CSTprogram import CSTProgram
 from .ASTprogram import ASTProgram
 from .responses import (
     AnnotationResponse,
-    BaseScriptResponse,
-    BaseUnpublishedScriptResponse,
+    BaseWorkflowResponse,
+    BaseUnpublishedWorkflowResponse,
     BaseUserResponse,
     BaseWebsiteResponse,
-    PublicUserWithScriptsResponse,
-    ScriptWithAuthorAndWebsiteResponse,
-    ScriptWithAuthorResponse,
-    ScriptWithProgramResponse,
-    ScriptWithWebsiteResponse,
-    UnpublishedScriptWithProgramResponse,
-    UnpublishedScriptWithWebsiteResponse,
-    UserWithScriptsResponse,
-    WebsiteWithScriptsResponse,
+    PublicUserWithWorkflowsResponse,
+    WorkflowWithAuthorAndWebsiteResponse,
+    WorkflowWithAuthorResponse,
+    FullWorkflowResponse,
+    WorkflowWithWebsiteResponse,
+    FullUnpublishedWorkflowResponse,
+    UnpublishedWorkflowWithWebsiteResponse,
+    UserWithWorkflowsResponse,
+    WebsiteWithWorkflowsResponse,
 )
 
 
@@ -33,15 +33,15 @@ class User(SQLModel, table=True):
     def toBaseUserResponse(self) -> BaseUserResponse:
         return BaseUserResponse(id=self.id, name=self.name)
 
-    def toPublicUserWithScriptsResponse(self) -> PublicUserWithScriptsResponse:
-        return PublicUserWithScriptsResponse(
+    def toPublicUserWithScriptsResponse(self) -> PublicUserWithWorkflowsResponse:
+        return PublicUserWithWorkflowsResponse(
             id=self.id,
             name=self.name,
             scripts=[script.toScriptWithWebsiteResponse() for script in self.scripts],
         )
 
-    def toUserWithScriptsResponse(self) -> UserWithScriptsResponse:
-        return UserWithScriptsResponse(
+    def toUserWithScriptsResponse(self) -> UserWithWorkflowsResponse:
+        return UserWithWorkflowsResponse(
             id=self.id,
             name=self.name,
             scripts=[script.toScriptWithWebsiteResponse() for script in self.scripts],
@@ -67,16 +67,16 @@ class Script(SQLModel, table=True):
         back_populates="script", cascade_delete=True
     )
 
-    def toBaseScriptResponse(self) -> BaseScriptResponse:
-        return BaseScriptResponse(
+    def toBaseScriptResponse(self) -> BaseWorkflowResponse:
+        return BaseWorkflowResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,
             description=self.description,
         )
 
-    def toScriptWithWebsiteResponse(self) -> ScriptWithWebsiteResponse:
-        return ScriptWithWebsiteResponse(
+    def toScriptWithWebsiteResponse(self) -> WorkflowWithWebsiteResponse:
+        return WorkflowWithWebsiteResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,
@@ -84,8 +84,8 @@ class Script(SQLModel, table=True):
             website=self.website.toBaseWesbiteResponse(),
         )
 
-    def toScriptWithAuthorResponse(self) -> ScriptWithAuthorResponse:
-        return ScriptWithAuthorResponse(
+    def toScriptWithAuthorResponse(self) -> WorkflowWithAuthorResponse:
+        return WorkflowWithAuthorResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,
@@ -95,8 +95,8 @@ class Script(SQLModel, table=True):
 
     def toScriptWithAuthorAndWebsiteResponse(
         self,
-    ) -> ScriptWithAuthorAndWebsiteResponse:
-        return ScriptWithAuthorAndWebsiteResponse(
+    ) -> WorkflowWithAuthorAndWebsiteResponse:
+        return WorkflowWithAuthorAndWebsiteResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,
@@ -105,10 +105,8 @@ class Script(SQLModel, table=True):
             website=self.website.toBaseWesbiteResponse(),
         )
 
-    def toScriptWithProgramResponse(
-        self, program: ASTProgram
-    ) -> ScriptWithProgramResponse:
-        return ScriptWithProgramResponse(
+    def toScriptWithProgramResponse(self, program: ASTProgram) -> FullWorkflowResponse:
+        return FullWorkflowResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,
@@ -134,12 +132,12 @@ class Website(SQLModel, table=True):
             id=self.id, url=self.url, description=self.descrpition
         )
 
-    def toWebsiteWithScriptsResponse(self) -> WebsiteWithScriptsResponse:
-        return WebsiteWithScriptsResponse(
+    def toWebsiteWithScriptsResponse(self) -> WebsiteWithWorkflowsResponse:
+        return WebsiteWithWorkflowsResponse(
             id=self.id,
             url=self.url,
             description=self.descrpition,
-            scripts=[script.toScriptWithAuthorResponse() for script in self.scripts],
+            workflows=[script.toScriptWithAuthorResponse() for script in self.scripts],
         )
 
 
@@ -174,8 +172,8 @@ class UnpublishedScript(SQLModel, table=True):
     author: User | None = Relationship(back_populates="unpublished_scripts")
     website: Website | None = Relationship(back_populates="unpublished_scripts")
 
-    def toBaseUnpublishedScriptResponse(self) -> BaseUnpublishedScriptResponse:
-        return BaseUnpublishedScriptResponse(
+    def toBaseUnpublishedScriptResponse(self) -> BaseUnpublishedWorkflowResponse:
+        return BaseUnpublishedWorkflowResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,
@@ -184,8 +182,8 @@ class UnpublishedScript(SQLModel, table=True):
 
     def toUnpublishedScriptWithWebsiteResponse(
         self,
-    ) -> UnpublishedScriptWithWebsiteResponse:
-        return UnpublishedScriptWithWebsiteResponse(
+    ) -> UnpublishedWorkflowWithWebsiteResponse:
+        return UnpublishedWorkflowWithWebsiteResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,
@@ -197,8 +195,8 @@ class UnpublishedScript(SQLModel, table=True):
 
     def toUnpublishedScriptWithProgramResponse(
         self, program: CSTProgram | None, annotations: list[Annotation]
-    ) -> UnpublishedScriptWithProgramResponse:
-        return UnpublishedScriptWithProgramResponse(
+    ) -> FullUnpublishedWorkflowResponse:
+        return FullUnpublishedWorkflowResponse(
             id=self.id,
             title=self.title,
             created_at=self.created_at,

@@ -3,7 +3,7 @@ from sqlmodel import select
 
 from ..exceptions.not_found import website_not_found_exception
 from ..database import DatabaseDep
-from ..models.responses import BaseWebsiteResponse, WebsiteWithScriptsResponse
+from ..models.responses import BaseWebsiteResponse, WebsiteWithWorkflowsResponse
 from ..models.requests import CreateWebsiteRequest
 from ..models.database_tables import Website
 
@@ -30,8 +30,8 @@ def create_website(
     return new_website.toBaseWesbiteResponse()
 
 
-@router.get("/{website_id}", response_model=WebsiteWithScriptsResponse)
-def get_website(website_id: int, session: DatabaseDep) -> WebsiteWithScriptsResponse:
+@router.get("/{website_id}", response_model=WebsiteWithWorkflowsResponse)
+def get_website(website_id: int, session: DatabaseDep) -> WebsiteWithWorkflowsResponse:
     if not (website := session.get(Website, website_id)):
         raise website_not_found_exception(website_id)
     return website.toWebsiteWithScriptsResponse()

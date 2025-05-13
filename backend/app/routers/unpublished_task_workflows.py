@@ -2,10 +2,10 @@ from datetime import datetime
 from fastapi import APIRouter
 
 from ..static_files import (
-    create_unpublished_script_url,
-    delete_unpublished_script_file,
-    get_unpublished_script_program,
-    update_unpublished_script_program,
+    create_unpublished_task_workflow_url,
+    delete_unpublished_task_workflow_file,
+    get_unpublished_task_workflow_program,
+    update_unpublished_task_workflow_program,
 )
 from ..exceptions.not_found import (
     unpublished_script_not_found_exception,
@@ -15,23 +15,25 @@ from ..exceptions.not_found import (
 from ..database import DatabaseDep
 from ..models.database_tables import Script, UnpublishedScript, User, Website
 from ..models.responses import (
-    BaseUnpublishedScriptResponse,
+    BaseUnpublishedWorkflowResponse,
     SuccessResponse,
-    UnpublishedScriptWithWebsiteResponse,
-    UnpublishedScriptWithProgramResponse,
+    UnpublishedWorkflowWithWebsiteResponse,
+    FullUnpublishedWorkflowResponse,
 )
-from ..models.requests import UpdateUnpublishedScriptRequest
-from ..models.CSTprogram import CSTProgram, CSTSectionId, CSTSectionNode
+from ..models.requests import UpdateUnpublishedWorkflowRequest
+from ..models.CSTprogram import CSTProgram, CSTSectionNode, CSTSectionId
 
-router = APIRouter(prefix="/unpublished_scripts", tags=["unpublished_scripts"])
+router = APIRouter(
+    prefix="/unpublished_task_workflows", tags=["unpublished-task-workflows"]
+)
 
 
 @router.get(
-    "/user/{user_id}", response_model=list[UnpublishedScriptWithWebsiteResponse]
+    "/user/{user_id}", response_model=list[UnpublishedWorkflowWithWebsiteResponse]
 )
-def get_user_unpublished_scripts(
+def get_user_unpublished_task_workflows(
     user_id: int, session: DatabaseDep
-) -> list[UnpublishedScriptWithWebsiteResponse]:
+) -> list[UnpublishedWorkflowWithWebsiteResponse]:
     if not (user := session.get(User, user_id)):
         raise user_not_found_exception(user_id)
 
@@ -41,10 +43,10 @@ def get_user_unpublished_scripts(
     ]
 
 
-@router.post("/user/{user_id}", response_model=BaseUnpublishedScriptResponse)
-def create_user_unpublished_script(
+@router.post("/user/{user_id}", response_model=BaseUnpublishedWorkflowResponse)
+def create_user_unpublished_task_workflow(
     user_id: int, session: DatabaseDep
-) -> BaseUnpublishedScriptResponse:
+) -> BaseUnpublishedWorkflowResponse:
     if not (user := session.get(User, user_id)):
         raise user_not_found_exception(user_id)
 
@@ -53,7 +55,7 @@ def create_user_unpublished_script(
     )
     new_script_title = f"WIP #{new_script_num}"
 
-    script_url = create_unpublished_script_url()
+    script_url = create_unpublished_task_workflow_url()
     new_script = UnpublishedScript(
         title=new_script_title,
         author_id=user.id,
@@ -67,14 +69,14 @@ def create_user_unpublished_script(
     return new_script.toBaseUnpublishedScriptResponse()
 
 
-@router.get("/{script_id}", response_model=UnpublishedScriptWithProgramResponse)
-def get_unpublished_script(
-    script_id: int, session: DatabaseDep
-) -> UnpublishedScriptWithProgramResponse:
-    if not (script := session.get(UnpublishedScript, script_id)):
-        raise unpublished_script_not_found_exception(script_id)
+@router.get("/{workflow_id}", response_model=FullUnpublishedWorkflowResponse)
+def get_unpublished_task_workflow(
+    workflow_id: int, session: DatabaseDep
+) -> FullUnpublishedWorkflowResponse:
+    if not (script := session.get(UnpublishedScript, workflow_id)):
+        raise unpublished_script_not_found_exception(workflow_id)
 
-    if not (program := get_unpublished_script_program(script.script_url)):
+    if not (program := get_unpublished_task_workflow_program(script.script_url)):
         program = CSTProgram(
             sections=[
                 CSTSectionNode(id=CSTSectionId(sectionId=1), url="", innerSteps=[])
@@ -88,12 +90,12 @@ def get_unpublished_script(
     return script.toUnpublishedScriptWithProgramResponse(program, annotations)
 
 
-@router.patch("/{script_id}", response_model=UnpublishedScriptWithProgramResponse)
-def update_unpublished_script(
-    script_id: int, script: UpdateUnpublishedScriptRequest, session: DatabaseDep
-) -> UnpublishedScriptWithProgramResponse:
-    if not (existing_script := session.get(UnpublishedScript, script_id)):
-        raise unpublished_script_not_found_exception(script_id)
+@router.patch("/{workflow_id}", response_model=FullUnpublishedWorkflowResponse)
+def update_unpublished_task_workflow(
+    workflow_id: int, script: UpdateUnpublishedWorkflowRequest, session: DatabaseDep
+) -> FullUnpublishedWorkflowResponse:
+    if not (existing_script := session.get(UnpublishedScript, workflow_id)):
+        raise unpublished_script_not_found_exception(workflow_id)
 
     if script.title:
         existing_script.title = script.title
@@ -104,12 +106,14 @@ def update_unpublished_script(
     if script.published_script_id:
         existing_script.published_script_id = script.published_script_id
     if script.program:
-        update_unpublished_script_program(existing_script.script_url, script.program)
+        update_unpublished_task_workflow_program(
+            existing_script.script_url, script.program
+        )
 
     session.commit()
     session.refresh(existing_script)
 
-    program = get_unpublished_script_program(existing_script.script_url)
+    program = get_unpublished_task_workflow_program(existing_script.script_url)
 
     annotations = []
     if script.published_script_id:
@@ -119,12 +123,14 @@ def update_unpublished_script(
     return existing_script.toUnpublishedScriptWithProgramResponse(program, annotations)
 
 
-@router.delete("/{script_id}", response_model=SuccessResponse)
-def delete_unpublished_script(script_id: int, session: DatabaseDep) -> SuccessResponse:
-    if not (script := session.get(UnpublishedScript, script_id)):
-        raise unpublished_script_not_found_exception(script_id)
+@router.delete("/{workflow_id}", response_model=SuccessResponse)
+def delete_unpublished_task_workflow(
+    workflow_id: int, session: DatabaseDep
+) -> SuccessResponse:
+    if not (script := session.get(UnpublishedScript, workflow_id)):
+        raise unpublished_script_not_found_exception(workflow_id)
 
-    delete_unpublished_script_file(script.script_url)
+    delete_unpublished_task_workflow_file(script.script_url)
 
     session.delete(script)
     session.commit()
@@ -132,11 +138,11 @@ def delete_unpublished_script(script_id: int, session: DatabaseDep) -> SuccessRe
 
 
 @router.get(
-    "/user/{user_id}/{website_id}", response_model=list[BaseUnpublishedScriptResponse]
+    "/user/{user_id}/{website_id}", response_model=list[BaseUnpublishedWorkflowResponse]
 )
-def get_user_website_unpublished_scripts(
+def get_user_website_unpublished_task_workflows(
     user_id: int, website_id: int, session: DatabaseDep
-) -> list[BaseUnpublishedScriptResponse]:
+) -> list[BaseUnpublishedWorkflowResponse]:
     user = session.get(User, user_id)
     website = session.get(Website, website_id)
     if not user or not website:

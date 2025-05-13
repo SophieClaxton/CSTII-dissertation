@@ -2,8 +2,8 @@ from __future__ import annotations
 from datetime import datetime
 from pydantic import BaseModel
 
-from .ASTprogram import ASTProgram
 from .CSTprogram import CSTProgram
+from .ASTprogram import ASTProgram
 
 
 class StatusResponse(BaseModel):
@@ -19,35 +19,35 @@ class BaseUserResponse(BaseModel):
     name: str
 
 
-class PublicUserWithScriptsResponse(BaseUserResponse):
-    scripts: list[ScriptWithWebsiteResponse]
+class PublicUserWithWorkflowsResponse(BaseUserResponse):
+    scripts: list[WorkflowWithWebsiteResponse]
 
 
-class UserWithScriptsResponse(PublicUserWithScriptsResponse):
-    unpublished_scripts: list[UnpublishedScriptWithWebsiteResponse]
+class UserWithWorkflowsResponse(PublicUserWithWorkflowsResponse):
+    unpublished_scripts: list[UnpublishedWorkflowWithWebsiteResponse]
 
 
-class BaseScriptResponse(BaseModel):
+class BaseWorkflowResponse(BaseModel):
     id: int
     title: str
     created_at: datetime
     description: str
 
 
-class ScriptWithAuthorResponse(BaseScriptResponse):
+class WorkflowWithAuthorResponse(BaseWorkflowResponse):
     author: BaseUserResponse
 
 
-class ScriptWithWebsiteResponse(BaseScriptResponse):
+class WorkflowWithWebsiteResponse(BaseWorkflowResponse):
     website: BaseWebsiteResponse
 
 
-class ScriptWithAuthorAndWebsiteResponse(BaseScriptResponse):
+class WorkflowWithAuthorAndWebsiteResponse(BaseWorkflowResponse):
     author: BaseUserResponse
     website: BaseWebsiteResponse
 
 
-class ScriptWithProgramResponse(ScriptWithAuthorAndWebsiteResponse):
+class FullWorkflowResponse(WorkflowWithAuthorAndWebsiteResponse):
     program: ASTProgram
 
 
@@ -57,22 +57,22 @@ class BaseWebsiteResponse(BaseModel):
     description: str
 
 
-class WebsiteWithScriptsResponse(BaseWebsiteResponse):
-    scripts: list[ScriptWithAuthorResponse]
+class WebsiteWithWorkflowsResponse(BaseWebsiteResponse):
+    workflows: list[WorkflowWithAuthorResponse]
 
 
-class BaseUnpublishedScriptResponse(BaseModel):
+class BaseUnpublishedWorkflowResponse(BaseModel):
     id: int
     title: str
     created_at: datetime
     description: str | None = None
 
 
-class UnpublishedScriptWithWebsiteResponse(BaseUnpublishedScriptResponse):
+class UnpublishedWorkflowWithWebsiteResponse(BaseUnpublishedWorkflowResponse):
     website: BaseWebsiteResponse | None = None
 
 
-class UnpublishedScriptWithProgramResponse(UnpublishedScriptWithWebsiteResponse):
+class FullUnpublishedWorkflowResponse(UnpublishedWorkflowWithWebsiteResponse):
     published_script_id: int | None
     author: BaseUserResponse | None
     program: CSTProgram | None = None

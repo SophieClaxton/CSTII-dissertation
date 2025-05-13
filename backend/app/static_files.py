@@ -7,13 +7,15 @@ from .models.CSTprogram import CSTProgram
 
 # Scripts
 
-scripts_path = path.join("app", "static", "scripts")
-unpublished_scripts_path = path.join("app", "static", "unpublished_scripts")
+task_workflows_path = path.join("app", "static", "task_workflows")
+unpublished_task_workflows_path = path.join(
+    "app", "static", "unpublished_task_workflows"
+)
 
 
-def create_script_file(program: ASTProgram) -> str:
+def create_task_workflow_file(program: ASTProgram) -> str:
     filename = f"{uuid.uuid4()}.pkl"
-    file_path = path.join(scripts_path, filename)
+    file_path = path.join(task_workflows_path, filename)
 
     with open(file_path, "wb") as file:
         pickle.dump(program, file)
@@ -21,8 +23,8 @@ def create_script_file(program: ASTProgram) -> str:
     return filename
 
 
-def get_script_program(filename: str) -> ASTProgram:
-    file_path = path.join(scripts_path, filename)
+def get_task_workflow_program(filename: str) -> ASTProgram:
+    file_path = path.join(task_workflows_path, filename)
 
     if not path.exists(file_path):
         raise Exception(f"Could not find file {file_path}")
@@ -33,16 +35,16 @@ def get_script_program(filename: str) -> ASTProgram:
         return program
 
 
-def update_script_program(filename: str, program: ASTProgram) -> None:
-    file_path = path.join(scripts_path, filename)
+def update_task_workflow_program(filename: str, program: ASTProgram) -> None:
+    file_path = path.join(task_workflows_path, filename)
 
     with open(file_path, "wb") as file:
         pickle.dump(program, file)
         return
 
 
-def delete_script_file(filename: str) -> None:
-    file_path = path.join(scripts_path, filename)
+def delete_task_workflow_file(filename: str) -> None:
+    file_path = path.join(task_workflows_path, filename)
 
     if not path.exists(file_path):
         raise Exception(f"Could not find file {file_path}")
@@ -53,12 +55,12 @@ def delete_script_file(filename: str) -> None:
 # Unpublished Scripts
 
 
-def create_unpublished_script_url() -> str:
+def create_unpublished_task_workflow_url() -> str:
     return str(uuid.uuid4())
 
 
-def get_unpublished_script_program(filename: str) -> CSTProgram | None:
-    file_path = path.join(unpublished_scripts_path, filename)
+def get_unpublished_task_workflow_program(filename: str) -> CSTProgram | None:
+    file_path = path.join(unpublished_task_workflows_path, filename)
 
     if not path.exists(file_path):
         return None
@@ -69,16 +71,18 @@ def get_unpublished_script_program(filename: str) -> CSTProgram | None:
         return program
 
 
-def update_unpublished_script_program(filename: str, program: CSTProgram) -> None:
-    file_path = path.join(unpublished_scripts_path, filename)
+def update_unpublished_task_workflow_program(
+    filename: str, program: CSTProgram
+) -> None:
+    file_path = path.join(unpublished_task_workflows_path, filename)
 
     with open(file_path, "wb") as file:
         pickle.dump(program, file)
         return
 
 
-def delete_unpublished_script_file(filename: str) -> None:
-    file_path = path.join(unpublished_scripts_path, filename)
+def delete_unpublished_task_workflow_file(filename: str) -> None:
+    file_path = path.join(unpublished_task_workflows_path, filename)
 
     if not path.exists(file_path):
         raise Exception(f"Could not find file {file_path}")

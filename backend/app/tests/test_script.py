@@ -2,8 +2,8 @@ import time
 import timeit
 import json
 
-from app.models.requests import UpdateUnpublishedScriptRequest
-from ..models.ASTprogram import ASTProgram
+from app.models.requests import UpdateUnpublishedWorkflowRequest
+from ..models.ASTworkflow import ASTWorkflow
 
 
 def test_script_load_time():
@@ -13,7 +13,7 @@ def test_script_load_time():
         data = json.load(file)
         time.sleep(3)
         start = timeit.timeit()
-        UpdateUnpublishedScriptRequest.model_validate(data)
+        UpdateUnpublishedWorkflowRequest.model_validate(data)
         end = timeit.timeit()
         time_taken = end - start
         assert time_taken < 10
@@ -24,7 +24,7 @@ def test_program_load_time():
         data = json.load(file)
         time.sleep(3)
         start = timeit.timeit()
-        ASTProgram.model_validate(data)
+        ASTWorkflow.model_validate(data)
         end = timeit.timeit()
         time_taken = end - start
         assert time_taken < 10
