@@ -3,16 +3,16 @@ import {
   LevelOfSupport,
   UserStruggleEvidence,
 } from '../../models/support_and_MII/UserSupport';
-import { StateSetter } from '../../models/utilTypes';
+import { StateRef, StateSetter } from '../../models/utilTypes';
 import { SupportActionDialogProps } from './SupportActionDialog';
 import { getMII } from '../mixedInitiativeInteraction';
 import { getSupportChangeUserModel } from './userModel';
 import { getSupportChangeUtilityModel } from './utilityModel';
 import {
-  SystemSupportAction,
-  UserSupportGoal,
-  systemSupportActions,
-  userSupportGoals,
+  MetacognitiveSupportAction,
+  MetacognitiveSupportGoal,
+  metacognitiveSupportActions,
+  metacognitiveSupportGoals,
 } from '../../models/support_and_MII/MetacognitiveSupportMII';
 import {
   increaseLevelOfSupport,
@@ -22,22 +22,31 @@ import {
 const getNextStruggleSupportAction = (
   interactionData: InteractionData,
   stepsCompleted: number,
-  currentLevelOfSupport: LevelOfSupport,
-): SystemSupportAction => {
-  const evidence = { ...interactionData, stepsCompleted };
+  levelOfSupport: LevelOfSupport,
+  timeSinceInteraction: number,
+): MetacognitiveSupportAction => {
+  const evidence = {
+    ...interactionData,
+    stepsCompleted,
+    levelOfSupport,
+    timeSinceInteraction,
+  };
   // console.log(evidence);
   const bestAction = getMII<
-    SystemSupportAction,
-    UserSupportGoal,
+    MetacognitiveSupportAction,
+    MetacognitiveSupportGoal,
     UserStruggleEvidence
   >({
     goalLikelihoodModel: getSupportChangeUserModel(),
-    utilityModel: getSupportChangeUtilityModel(currentLevelOfSupport),
-    actions: systemSupportActions,
-    goals: userSupportGoals,
+    utilityModel: getSupportChangeUtilityModel(
+      levelOfSupport,
+      timeSinceInteraction,
+    ),
+    actions: metacognitiveSupportActions,
+    goals: metacognitiveSupportGoals,
   }).getBestAction(evidence);
   // console.log(
-  //   `Best action for k=${stepsCompleted}, l=${currentLevelOfSupport} is: ${bestAction}`,
+  //   `Best action for k=${stepsCompleted}, l=${levelOfSupport} is: ${bestAction}`,
   // );
   return bestAction;
 };
@@ -46,6 +55,8 @@ const performBestStruggleSupportAction = (
   userStruggleData: InteractionData,
   levelOfSupport: LevelOfSupport,
   stepsCompleted: number,
+  timeSinceInteraction: number,
+  lastInteractionAt: StateRef<number>,
   setLevelOfSupport: StateSetter<LevelOfSupport>,
   setSupportDialogDetails: StateSetter<SupportActionDialogProps>,
 ) => {
@@ -53,10 +64,12 @@ const performBestStruggleSupportAction = (
     userStruggleData,
     stepsCompleted,
     levelOfSupport,
+    timeSinceInteraction,
   );
   switch (nextAction) {
     case 'inc': {
       setLevelOfSupport(increaseLevelOfSupport);
+      lastInteractionAt.current = Date.now();
       return setSupportDialogDetails((prev) => ({
         ...prev,
         open: true,
@@ -65,6 +78,7 @@ const performBestStruggleSupportAction = (
     }
     case 'dec': {
       setLevelOfSupport(decreaseLevelOfSupport);
+      lastInteractionAt.current = Date.now();
       return setSupportDialogDetails((prev) => ({
         ...prev,
         open: true,
@@ -74,6 +88,7 @@ const performBestStruggleSupportAction = (
     case 'none':
       return;
     case 'inc_dialog':
+      lastInteractionAt.current = Date.now();
       return setSupportDialogDetails((prev) => ({
         ...prev,
         open: true,
@@ -81,6 +96,7 @@ const performBestStruggleSupportAction = (
         onAction: () => setLevelOfSupport(increaseLevelOfSupport),
       }));
     case 'dec_dialog':
+      lastInteractionAt.current = Date.now();
       return setSupportDialogDetails((prev) => ({
         ...prev,
         open: true,

@@ -10,12 +10,19 @@ const defaultStruggleUtilityEquations: Record<
   ConsultationTriggerGoal,
   ConsultationTriggerUtilityEqn
 > = {
-  send: (a) => 3 * Math.tanh(1.5 * a - 0.8) + 4,
-  none: (a) => Math.exp(-0.67 * a + 2.5) - 2.2,
+  send: (a, t) => {
+    const t2 = -Math.exp(-Math.pow(0.1 * t, 3)) + 1;
+    return (4 * t2 + 1) * Math.tanh(5 * a - 5 + 2 * t2) + (4 * t2 + 1);
+  },
+  none: (a, t) => {
+    const t2 = -Math.exp(-Math.pow(0.1 * t, 3)) + 1;
+    return 9 * Math.exp(-(4 - 2 * Math.pow(t2, 0.1)) * a);
+  },
 };
 
 const getConsultationTriggerUtilityModel =
   (
+    timeSinceInteraction: number,
     utilityEqns: Record<
       ConsultationTriggerGoal,
       ConsultationTriggerUtilityEqn
@@ -24,6 +31,7 @@ const getConsultationTriggerUtilityModel =
   (action: ConsultationTriggerActions, goal: ConsultationTriggerGoal) => {
     const utility = utilityEqns[goal](
       consultationTriggerActions.indexOf(action),
+      timeSinceInteraction,
     );
     return utility;
   };

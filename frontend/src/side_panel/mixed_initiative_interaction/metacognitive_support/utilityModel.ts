@@ -1,8 +1,8 @@
 import {
-  StruggleUtilityEqn,
-  SystemSupportAction,
-  systemSupportActions,
-  UserSupportGoal,
+  MetacognitiveSupportUtilityEqn,
+  MetacognitiveSupportAction,
+  metacognitiveSupportActions,
+  MetacognitiveSupportGoal,
 } from '../../models/support_and_MII/MetacognitiveSupportMII';
 import {
   LevelOfSupport,
@@ -11,37 +11,49 @@ import {
 import { UtilityModel } from '../mixedInitiativeInteraction';
 
 const defaultStruggleUtilityEquations: Record<
-  UserSupportGoal,
-  StruggleUtilityEqn
+  MetacognitiveSupportGoal,
+  MetacognitiveSupportUtilityEqn
 > = {
-  inc: (a, l) =>
-    (4.7 - 1.5 * l) * Math.tanh((1.1 + l / 4) * (a - 1.9 + l / 4)) +
-    (4.6 - 1.4 * l),
-  dec: (a, l) =>
-    (1.5 * (2 - l) - 4.5) * Math.tanh((1.25 - l / 4) * (a - 2.3 - l / 6)) +
-    (3.7 - 0.9 * (2 - l)),
-  none: (a, l) =>
-    10 * Math.exp(-2 * Math.pow((a - 2 + (l - 1) / 2.25) / 1.2, 4)),
+  inc: (a, l, t) => {
+    const t2 = -Math.exp(-0.02 * Math.pow(t, 2)) + 1;
+    const scale = 2 + 3 * t2 - 0.5 * l;
+    return scale * Math.tanh(2 * (a - 1.8)) + scale;
+  },
+  dec: (a, l, t) => {
+    const t2 = -Math.exp(-0.02 * Math.pow(t, 2)) + 1;
+    const l2 = 2 - l;
+    const scale = 1 + 3.5 * t2 - 0.25 * l2;
+    return -scale * Math.tanh(2 * (a - 2.2)) + scale;
+  },
+  none: (a, _l, t) => {
+    const t2 = -Math.exp(-0.02 * Math.pow(t, 2)) + 1;
+    return (
+      10 *
+      Math.exp(-(3 - 2.5 * t2) * Math.pow(a - 2, 2 * Math.round(1 + 1 * t2)))
+    );
+  },
 };
 
 const getSupportChangeUtilityModel =
   (
-    currentLevelOfSupport: LevelOfSupport,
+    levelOfSupport: LevelOfSupport,
+    timeSinceInteraction: number,
     utilityEqns: Record<
-      UserSupportGoal,
-      StruggleUtilityEqn
+      MetacognitiveSupportGoal,
+      MetacognitiveSupportUtilityEqn
     > = defaultStruggleUtilityEquations,
-  ): UtilityModel<SystemSupportAction, UserSupportGoal> =>
-  (action: SystemSupportAction, goal: UserSupportGoal) => {
+  ): UtilityModel<MetacognitiveSupportAction, MetacognitiveSupportGoal> =>
+  (action: MetacognitiveSupportAction, goal: MetacognitiveSupportGoal) => {
     if (
-      (currentLevelOfSupport === 'text' && action === 'dec_dialog') ||
-      (currentLevelOfSupport === 'click' && action === 'inc_dialog')
+      (levelOfSupport === 'text' && action === 'dec_dialog') ||
+      (levelOfSupport === 'click' && action === 'inc_dialog')
     ) {
       return 0;
     }
     const utility = utilityEqns[goal](
-      systemSupportActions.indexOf(action),
-      levelsOfSupport.indexOf(currentLevelOfSupport),
+      metacognitiveSupportActions.indexOf(action),
+      levelsOfSupport.indexOf(levelOfSupport),
+      timeSinceInteraction,
     );
     return utility;
   };

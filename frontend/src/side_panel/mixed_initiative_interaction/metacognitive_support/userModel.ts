@@ -7,43 +7,65 @@ import * as lodash from 'lodash';
 import { computeMovingAverage, softmax } from '../modelUtils';
 import { UserModel } from '../mixedInitiativeInteraction';
 import {
-  UserSupportGoal,
-  UserSupportProbEqn,
+  MetacognitiveSupportGoal,
+  SupportLevelProbEqn,
 } from '../../models/support_and_MII/MetacognitiveSupportMII';
 
 const tempStruggleModel: StruggleProbModel = (_data: InteractionData) => 0.6;
 
-const defautlStruggleProbEquations: Record<
-  UserSupportGoal,
-  UserSupportProbEqn
+const defautlSupportLevelProbEquations: Record<
+  MetacognitiveSupportGoal,
+  SupportLevelProbEqn
 > = {
-  inc: (struggleProb, k) =>
-    Math.exp(3.5 * (k / 10 + 1) * (struggleProb - 0.25 - k / 10)),
-  dec: (struggleProb, k) => Math.exp(-3.5 * (struggleProb - 0.4 - k / 25)),
-  none: (struggleProb, k) =>
-    3 *
-    Math.exp(
-      -0.4 * Math.exp(-k / 5) * Math.pow(struggleProb - (5 + k) / 20, 2),
-    ),
+  inc: (p, k, l) => {
+    switch (l) {
+      case 'text':
+        return 6 * (0.2 + p) * Math.exp(-0.5 * k);
+      case 'overlay':
+        return 6 * (1 + p) * Math.exp(-0.75 * k);
+      case 'click':
+        return -Infinity;
+    }
+  },
+  none: (p, k, l) => {
+    switch (l) {
+      case 'text':
+        return 6 * (0.7 - 0.65 * p) * Math.exp(0.5 * k);
+      case 'overlay':
+        return 6 * (1.5 - 0.5 * p) * Math.exp((-0.25 * k) / 6);
+      case 'click':
+        return 6 * (0.05 + 0.2 * p) * Math.exp((p - 1.2) * (k - 1));
+    }
+  },
+  dec: (p, k, l) => {
+    switch (l) {
+      case 'text':
+        return -Infinity;
+      case 'overlay':
+        return 6 * (0.6 - 0.3 * p) * Math.exp(0.5 * (1 - p) * (k - 1));
+      case 'click':
+        return 6 * (0.25 - 0.2 * p) * Math.exp(0.5 * (k - 1));
+    }
+  },
 };
 
 const getSupportChangeUserModel = (
   struggleModel: StruggleProbModel = tempStruggleModel,
   alpha: number = 0.7,
   struggleEqns: Record<
-    UserSupportGoal,
-    UserSupportProbEqn
-  > = defautlStruggleProbEquations,
-): UserModel<UserSupportGoal, UserStruggleEvidence> => {
+    MetacognitiveSupportGoal,
+    SupportLevelProbEqn
+  > = defautlSupportLevelProbEquations,
+): UserModel<MetacognitiveSupportGoal, UserStruggleEvidence> => {
   let movingEvidenceAverage: UserStruggleEvidence | undefined = undefined;
   let lastEvidence: UserStruggleEvidence | undefined = undefined;
-  let probabilities: Record<UserSupportGoal, number> = {
+  let probabilities: Record<MetacognitiveSupportGoal, number> = {
     inc: 0,
     dec: 0,
     none: 0,
   };
 
-  return (goal: UserSupportGoal, evidence: UserStruggleEvidence) => {
+  return (goal: MetacognitiveSupportGoal, evidence: UserStruggleEvidence) => {
     if (lodash.isEqual(evidence, lastEvidence)) {
       lastEvidence = evidence;
       return probabilities[goal];
@@ -67,15 +89,16 @@ const getSupportChangeUserModel = (
 const computeUserGoalProbabilities = (
   struggleModel: StruggleProbModel,
   movingEvidenceAverage: UserStruggleEvidence,
-  struggleEqns: Record<UserSupportGoal, UserSupportProbEqn>,
-): Record<UserSupportGoal, number> => {
-  const struggleProb = struggleModel(movingEvidenceAverage);
-  // console.log(`Struggle prob: ${struggleProb}`);
+  struggleEqns: Record<MetacognitiveSupportGoal, SupportLevelProbEqn>,
+): Record<MetacognitiveSupportGoal, number> => {
+  const p = struggleModel(movingEvidenceAverage);
+  // console.log(`Struggle prob: ${p}`);
   const k = movingEvidenceAverage.stepsCompleted;
+  const l = movingEvidenceAverage.levelOfSupport;
 
-  const incVal = struggleEqns.inc(struggleProb, k);
-  const decVal = struggleEqns.dec(struggleProb, k);
-  const noneVal = struggleEqns.none(struggleProb, k);
+  const incVal = struggleEqns.inc(p, k, l);
+  const decVal = struggleEqns.dec(p, k, l);
+  const noneVal = struggleEqns.none(p, k, l);
 
   const [inc, dec, none] = softmax([incVal, decVal, noneVal]);
   // console.log(`Inc: ${inc}, Dec: ${dec}, None: ${none}`);

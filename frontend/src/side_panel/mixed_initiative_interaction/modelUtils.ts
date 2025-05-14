@@ -1,8 +1,24 @@
 import { UserStruggleEvidence } from '../models/support_and_MII/UserSupport';
 
+const sum = (nums: number[]) => nums.reduce((total, num) => total + num, 0);
+
+const getMax = <V, P>(
+  values: V[],
+  initialValue: V,
+  getPropertyToCompare: (value: V) => P,
+): V =>
+  values.reduce(
+    (prevBest, current) =>
+      getPropertyToCompare(current) > getPropertyToCompare(prevBest)
+        ? current
+        : prevBest,
+    initialValue,
+  );
+
 const softmax = (items: number[]): number[] => {
-  const exps = items.map(Math.exp);
-  const total = exps.reduce((prev, curr) => prev + curr, 0);
+  const maxVal = getMax<number, number>(items, items[0], (item) => item);
+  const exps = items.map((value) => Math.exp(value) - maxVal);
+  const total = sum(exps);
   return exps.map((item) => item / total);
 };
 
@@ -27,7 +43,9 @@ const computeMovingAverage = (
     stepsCompleted:
       alpha * newEvidence.stepsCompleted +
       (1 - alpha) * lastAverage.stepsCompleted,
+    timeSinceInteraction: newEvidence.timeSinceInteraction,
+    levelOfSupport: newEvidence.levelOfSupport,
   };
 };
 
-export { softmax, computeMovingAverage };
+export { softmax, sum, getMax, computeMovingAverage };

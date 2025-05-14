@@ -1,15 +1,29 @@
+import { LevelOfSupport } from './UserSupport';
+
 const consultationTriggerGoals = ['none', 'send'] as const;
 type ConsultationTriggerGoal = (typeof consultationTriggerGoals)[number];
 
 const consultationTriggerActions = ['none', 'dialog', 'send'] as const;
 type ConsultationTriggerActions = (typeof consultationTriggerActions)[number];
 
+/** User Model Equations:
+ *
+ * @param p probability of struggle
+ * @param k number of steps completed in last 5 seconds
+ * @param l level of support
+ */
 type SupportProblemProbEqn = (
-  struggleProb: number,
-  l: number,
+  p: number,
   k: number,
+  l: LevelOfSupport,
 ) => number;
-type ConsultationTriggerUtilityEqn = (actionIndex: number) => number;
+
+/** Utility Model Equations:
+ *
+ * @param a action index
+ * @param t time since last interaction
+ */
+type ConsultationTriggerUtilityEqn = (a: number, t: number) => number;
 
 export { consultationTriggerGoals, consultationTriggerActions };
 export type {

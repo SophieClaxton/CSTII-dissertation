@@ -4,16 +4,16 @@ import Alert from '@mui/material/Alert/Alert';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import { StruggleEvidenceDuration } from '../../../content_script/consts';
-import { SystemSupportAction } from '../../models/support_and_MII/MetacognitiveSupportMII';
+import { MetacognitiveSupportAction } from '../../models/support_and_MII/MetacognitiveSupportMII';
 
 interface SupportActionDialogProps {
   open: boolean;
   onClose: () => void;
-  action: SystemSupportAction;
+  action: MetacognitiveSupportAction;
   onAction?: () => void;
 }
 
-const mapActionToText: Record<SystemSupportAction, string> = {
+const mapActionToText: Record<MetacognitiveSupportAction, string> = {
   dec: 'The level of support has been decreased.',
   dec_dialog: 'Would you like to decrease the level of support?',
   none: '',

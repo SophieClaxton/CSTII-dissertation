@@ -1,8 +1,8 @@
 import {
-  SystemSupportAction,
-  UserSupportGoal,
-  systemSupportActions,
-  userSupportGoals,
+  MetacognitiveSupportAction,
+  MetacognitiveSupportGoal,
+  metacognitiveSupportActions,
+  metacognitiveSupportGoals,
 } from '../../side_panel/models/support_and_MII/MetacognitiveSupportMII';
 import {
   InteractionData,
@@ -86,12 +86,12 @@ describe('getBestActionResults', () => {
     'correctly returns $outcome for P(struggle)=$struggleProb, k=$stepsCompleted, LOS=$LOS',
     ({ struggleProb, LOS, stepsCompleted, outcome }) => {
       const MII = getMII<
-        SystemSupportAction,
-        UserSupportGoal,
+        MetacognitiveSupportAction,
+        MetacognitiveSupportGoal,
         UserStruggleEvidence
       >({
-        actions: systemSupportActions,
-        goals: userSupportGoals,
+        actions: metacognitiveSupportActions,
+        goals: metacognitiveSupportGoals,
         goalLikelihoodModel: getSupportChangeUserModel(() => struggleProb),
         utilityModel: getSupportChangeUtilityModel(LOS as LevelOfSupport),
       });

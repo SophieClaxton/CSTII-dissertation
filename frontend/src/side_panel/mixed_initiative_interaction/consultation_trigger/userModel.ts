@@ -2,8 +2,6 @@ import {
   UserStruggleEvidence,
   StruggleProbModel,
   InteractionData,
-  LevelOfSupport,
-  levelsOfSupport,
 } from '../../models/support_and_MII/UserSupport';
 import * as lodash from 'lodash';
 import { computeMovingAverage, softmax } from '../modelUtils';
@@ -15,24 +13,39 @@ import {
 
 const tempStruggleModel: StruggleProbModel = (_data: InteractionData) => 0.75;
 
-const defautlFeedbackGoalProbEquations: Record<
+const defautlSupportProblemProbEquations: Record<
   ConsultationTriggerGoal,
   SupportProblemProbEqn
 > = {
-  send: (struggleProb, l, k) =>
-    ((0.5 * (2.5 * l + 1)) / (k + 1)) * (Math.exp(struggleProb - 0.4) - 1),
-  none: (struggleProb, l, k) =>
-    ((0.25 * (k + 1)) / (2.5 * l + 1)) * (Math.exp(-struggleProb + 1) - 1),
+  send: (p, k, l) => {
+    switch (l) {
+      case 'text':
+        return -3 * (1.5 - p) * Math.exp(2 * k);
+      case 'overlay':
+        return (p - 0.65) * Math.exp(-0.75 * (k - 1 - p));
+      case 'click':
+        return 2 * p * Math.exp(-0.375 * (k - 1));
+    }
+  },
+  none: (_p, k, l) => {
+    switch (l) {
+      case 'text':
+        return Math.exp(k);
+      case 'overlay':
+        return Math.exp(0.75 * k);
+      case 'click':
+        return 1.75 * Math.exp(0.375 * k);
+    }
+  },
 };
 
 const getConsultationTriggerUserModel = (
-  levelOfSupport: LevelOfSupport,
   struggleModel: StruggleProbModel = tempStruggleModel,
   alpha: number = 0.7,
   struggleEqns: Record<
     ConsultationTriggerGoal,
     SupportProblemProbEqn
-  > = defautlFeedbackGoalProbEquations,
+  > = defautlSupportProblemProbEquations,
 ): UserModel<ConsultationTriggerGoal, UserStruggleEvidence> => {
   let movingEvidenceAverage: UserStruggleEvidence | undefined = undefined;
   let lastEvidence: UserStruggleEvidence | undefined = undefined;
@@ -56,7 +69,6 @@ const getConsultationTriggerUserModel = (
     probabilities = computeUserGoalProbabilities(
       struggleModel,
       movingEvidenceAverage,
-      levelOfSupport,
       struggleEqns,
     );
     return probabilities[goal];
@@ -66,16 +78,15 @@ const getConsultationTriggerUserModel = (
 const computeUserGoalProbabilities = (
   struggleModel: StruggleProbModel,
   movingEvidenceAverage: UserStruggleEvidence,
-  levelOfSupport: LevelOfSupport,
   struggleEqns: Record<ConsultationTriggerGoal, SupportProblemProbEqn>,
 ): Record<ConsultationTriggerGoal, number> => {
-  const struggleProb = struggleModel(movingEvidenceAverage);
-  // console.log(`Struggle prob: ${struggleProb}`);
+  const p = struggleModel(movingEvidenceAverage);
+  // console.log(`Struggle prob: ${p}`);
   const k = movingEvidenceAverage.stepsCompleted;
-  const l = levelsOfSupport.indexOf(levelOfSupport);
+  const l = movingEvidenceAverage.levelOfSupport;
 
-  const sendVal = struggleEqns.send(struggleProb, l, k);
-  const noneVal = struggleEqns.none(struggleProb, l, k);
+  const sendVal = struggleEqns.send(p, k, l);
+  const noneVal = struggleEqns.none(p, k, l);
 
   const [send, none] = softmax([sendVal, noneVal]);
   // console.log(`Send: ${send}, None: ${none}`);

@@ -9,7 +9,7 @@ import {
   InteractionData,
   UserStruggleEvidence,
 } from '../../models/support_and_MII/UserSupport';
-import { StateSetter } from '../../models/utilTypes';
+import { StateRef, StateSetter } from '../../models/utilTypes';
 import { getMII } from '../mixedInitiativeInteraction';
 import { FeedbackActionDialogProps } from './FeedbackActionDialog';
 import { getConsultationTriggerUserModel } from './userModel';
@@ -18,17 +18,23 @@ import { getConsultationTriggerUtilityModel } from './utilityModel';
 const getNextConsultationTriggerAction = (
   interactionData: InteractionData,
   stepsCompleted: number,
-  currentLevelOfSupport: LevelOfSupport,
+  levelOfSupport: LevelOfSupport,
+  timeSinceInteraction: number,
 ): ConsultationTriggerActions => {
-  const evidence = { ...interactionData, stepsCompleted };
+  const evidence = {
+    ...interactionData,
+    stepsCompleted,
+    levelOfSupport,
+    timeSinceInteraction,
+  };
   // console.log(evidence);
   const bestAction = getMII<
     ConsultationTriggerActions,
     ConsultationTriggerGoal,
     UserStruggleEvidence
   >({
-    goalLikelihoodModel: getConsultationTriggerUserModel(currentLevelOfSupport),
-    utilityModel: getConsultationTriggerUtilityModel(),
+    goalLikelihoodModel: getConsultationTriggerUserModel(),
+    utilityModel: getConsultationTriggerUtilityModel(timeSinceInteraction),
     actions: consultationTriggerActions,
     goals: consultationTriggerGoals,
   }).getBestAction(evidence);
@@ -42,6 +48,8 @@ const performBestConsultationTriggerAction = (
   interactionData: InteractionData,
   levelOfSupport: LevelOfSupport,
   stepsCompleted: number,
+  timeSinceInteraction: number,
+  lastInteractionAt: StateRef<number>,
   setFeedbackActionDialogDetails: StateSetter<FeedbackActionDialogProps>,
   onAnnotate: () => void,
 ) => {
@@ -49,12 +57,14 @@ const performBestConsultationTriggerAction = (
     interactionData,
     stepsCompleted,
     levelOfSupport,
+    timeSinceInteraction,
   );
 
   switch (nextAction) {
     case 'none':
       return;
     case 'dialog':
+      lastInteractionAt.current = Date.now();
       return setFeedbackActionDialogDetails((prev) => ({
         ...prev,
         open: true,
@@ -62,6 +72,7 @@ const performBestConsultationTriggerAction = (
         onAction: onAnnotate,
       }));
     case 'send': {
+      lastInteractionAt.current = Date.now();
       onAnnotate();
       return setFeedbackActionDialogDetails((prev) => ({
         ...prev,

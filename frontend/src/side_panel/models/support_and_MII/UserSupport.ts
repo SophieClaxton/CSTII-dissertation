@@ -18,6 +18,8 @@ interface InteractionData {
 
 type UserStruggleEvidence = InteractionData & {
   stepsCompleted: number;
+  timeSinceInteraction: number;
+  levelOfSupport: LevelOfSupport;
 };
 
 type StruggleProbModel = (data: InteractionData) => number;

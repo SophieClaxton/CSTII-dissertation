@@ -42,6 +42,7 @@ const useWorkflowSupport = (workflowId: number, program: ASTProgram) => {
   });
   const stepsCompletedInPeriod = useRef<number>(0);
   const lastMIIAt = useRef<number>(Date.now());
+  const lastInteractionAt = useRef<number>(Date.now());
 
   const [visibleInstructions, setVisibleInstructions] = useState(
     getVisibleInstructions(program.start.start, 0),
@@ -101,6 +102,7 @@ const useWorkflowSupport = (workflowId: number, program: ASTProgram) => {
         lastMIIAt,
         levelOfSupportRef,
         stepsCompletedInPeriod,
+        lastInteractionAt,
         setLevelOfSupport,
         setSupportActionDialogDetails,
         setFeedbackActionDialogDetails,
@@ -214,21 +216,25 @@ const receiveInteractionData = (
   lastMIIAt: StateRef<number>,
   levelOfSupportRef: StateRef<LevelOfSupport>,
   stepsCompleted: StateRef<number>,
+  lastInteractionAt: StateRef<number>,
   setLevelOfSupport: StateSetter<LevelOfSupport>,
   setSupportActionDialogDetails: StateSetter<SupportActionDialogProps>,
   setFeedbackActionDialogDetails: StateSetter<FeedbackActionDialogProps>,
-  scriptId: number,
+  workflowId: number,
   currentPositionInWorkflow: string,
 ) => {
   const now = Date.now();
   if (now - lastMIIAt.current < 0.95 * StruggleEvidenceDuration) {
     return;
   }
+  const timeSinceInteraction = now - lastInteractionAt.current;
   lastMIIAt.current = now;
   performBestMetacognitiveSupportAction(
     interactionData,
     levelOfSupportRef.current,
     stepsCompleted.current,
+    timeSinceInteraction,
+    lastInteractionAt,
     setLevelOfSupport,
     setSupportActionDialogDetails,
   );
@@ -238,9 +244,11 @@ const receiveInteractionData = (
         interactionData,
         levelOfSupportRef.current,
         stepsCompleted.current,
+        timeSinceInteraction,
+        lastInteractionAt,
         setFeedbackActionDialogDetails,
         () =>
-          annotateTaskWorkflow(scriptId, {
+          annotateTaskWorkflow(workflowId, {
             location: currentPositionInWorkflow,
             description: 'Users using support are getting stuck here',
           }),

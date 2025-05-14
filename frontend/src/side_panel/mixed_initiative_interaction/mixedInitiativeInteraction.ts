@@ -1,3 +1,6 @@
+import { sum } from 'lodash';
+import { getMax } from './modelUtils';
+
 /** User model returns the probability of the goal given the evidence.
  * The sum of the probabilities of all the possible goals should sum to 1
  */
@@ -59,21 +62,6 @@ const getMII = <A, G, E>(details: MIIDetails<A, G, E>): MII<E, A> => {
     },
   };
 };
-
-const sum = (nums: number[]) => nums.reduce((total, num) => total + num, 0);
-
-const getMax = <V, P>(
-  values: V[],
-  initialValue: V,
-  getPropertyToCompare: (value: V) => P,
-): V =>
-  values.reduce(
-    (prevBest, current) =>
-      getPropertyToCompare(current) > getPropertyToCompare(prevBest)
-        ? current
-        : prevBest,
-    initialValue,
-  );
 
 export { getMII };
 export type { UserModel, UtilityModel, MII };
