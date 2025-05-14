@@ -1,7 +1,7 @@
 import {
   removeQueryDetails,
   urlsMatch,
-} from '../../../panel/scripting_interface/script_editor/script_utils/elementUtils';
+} from '../../../side_panel/task_workflows/DSVPL_editor/task_workflow_utils/elementUtils';
 
 describe('removeQueryDetails', () => {
   it('removes search.html details', () => {

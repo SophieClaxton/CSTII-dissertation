@@ -1,4 +1,7 @@
-import { ASTNodeType, ASTScrollToNode } from '../../../panel/models/AST/AST';
+import {
+  ASTNodeType,
+  ASTScrollToNode,
+} from '../../../side_panel/models/AST/AST';
 
 const scrollToNode: ASTScrollToNode = {
   type: ASTNodeType.ScrollTo,

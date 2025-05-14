@@ -1,20 +1,19 @@
 from fastapi import APIRouter
-from typing import List
 from sqlmodel import select
 
 from ..exceptions.not_found import website_not_found_exception
 from ..database import DatabaseDep
-from ..models.responses import BaseWebsiteResponse, WebsiteWithScriptsResponse
+from ..models.responses import BaseWebsiteResponse, WebsiteWithWorkflowsResponse
 from ..models.requests import CreateWebsiteRequest
 from ..models.database_tables import Website
 
 router = APIRouter(prefix="/websites", tags=["websites"])
 
 
-@router.get("/", response_model=List[BaseWebsiteResponse])
+@router.get("/", response_model=list[BaseWebsiteResponse])
 def get_websites(
-    session: DatabaseDep, name_query: str | None = None
-) -> List[BaseWebsiteResponse]:
+    session: DatabaseDep, _name_query: str | None = None
+) -> list[BaseWebsiteResponse]:
     # TODO: include `name_query` in the search
     websites = session.exec(select(Website)).all()
     return [website.toBaseWesbiteResponse() for website in websites]
@@ -31,9 +30,8 @@ def create_website(
     return new_website.toBaseWesbiteResponse()
 
 
-@router.get("/{website_id}", response_model=WebsiteWithScriptsResponse)
-def get_website(website_id: int, session: DatabaseDep) -> WebsiteWithScriptsResponse:
-    website = session.get(Website, website_id)
-    if not website:
+@router.get("/{website_id}", response_model=WebsiteWithWorkflowsResponse)
+def get_website(website_id: int, session: DatabaseDep) -> WebsiteWithWorkflowsResponse:
+    if not (website := session.get(Website, website_id)):
         raise website_not_found_exception(website_id)
     return website.toWebsiteWithScriptsResponse()

@@ -1,5 +1,5 @@
-from sqlmodel import create_engine, SQLModel, Session
 from typing import Annotated
+from sqlmodel import create_engine, SQLModel, Session
 from fastapi import Depends
 
 from .models.database_tables import User

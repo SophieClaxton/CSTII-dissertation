@@ -8,13 +8,13 @@
   "action": {
     "default_title": "sc2370"
   },
-  "background": { "service_worker": "src/background_scripts/background.ts", "type": "module" },
+  "background": { "service_worker": "src/service_worker/background.ts", "type": "module" },
   "content_scripts": [
     {
-      "js": ["src/content_scripts/content.ts"],
+      "js": ["src/content_script/content.ts"],
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["sidePanel", "scripting", "activeTab", "contextMenus", "storage"],
+  "permissions": ["sidePanel", "tabs", "contextMenus", "storage"],
   "host_permissions": ["<all_urls>"]
 }

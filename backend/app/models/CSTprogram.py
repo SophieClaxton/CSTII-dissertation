@@ -1,6 +1,6 @@
 from __future__ import annotations
 from enum import Enum
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from .element import Element, Option
@@ -170,19 +170,19 @@ class CSTDrawNode(CSTInputBase):
 
 
 CSTInnerStepNode = Annotated[
-    Union[
-        CSTClickNode,
-        CSTReadNode,
-        CSTScrollToNode,
-        CSTDragNode,
-        CSTUserDecisionInnerStepNode,
-        CSTWriteNode,
-        CSTSelectNode,
-        CSTDrawNode,
-    ],
+    (
+        CSTClickNode
+        | CSTReadNode
+        | CSTScrollToNode
+        | CSTDragNode
+        | CSTUserDecisionInnerStepNode
+        | CSTWriteNode
+        | CSTSelectNode
+        | CSTDrawNode
+    ),
     Field(discriminator="type"),
 ]
 
 CSTEndStepNode = Annotated[
-    Union[CSTFollowNode, CSTUserDecisionEndStepNode], Field(discriminator="type")
+    (CSTFollowNode | CSTUserDecisionEndStepNode), Field(discriminator="type")
 ]

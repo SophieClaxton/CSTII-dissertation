@@ -1,5 +1,5 @@
-import { ASTStepNode } from '../../../panel/models/AST/AST';
-import { isASTStepNode } from '../../../panel/models/AST/testers';
+import { ASTStepNode } from '../../../side_panel/models/AST/AST';
+import { isASTStepNode } from '../../../side_panel/models/AST/testers';
 import { n2, scrollToNode } from '../consts/ASTprograms';
 
 describe('isASTStepNode returns', () => {

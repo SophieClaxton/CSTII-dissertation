@@ -6,8 +6,8 @@ from ..database import DatabaseDep
 from ..models.database_tables import User
 from ..models.responses import (
     BaseUserResponse,
-    PublicUserWithScriptsResponse,
-    UserWithScriptsResponse,
+    PublicUserWithWorkflowsResponse,
+    UserWithWorkflowsResponse,
 )
 from ..models.requests import CreateUserRequest, UpdateUserRequest
 
@@ -29,18 +29,16 @@ def create_user(user: CreateUserRequest, session: DatabaseDep) -> BaseUserRespon
     return new_user.toBaseUserResponse()
 
 
-@router.get("/{user_id}", response_model=UserWithScriptsResponse)
-def get_user(user_id: int, session: DatabaseDep) -> UserWithScriptsResponse:
-    user = session.get(User, user_id)
-    if not user:
+@router.get("/{user_id}", response_model=UserWithWorkflowsResponse)
+def get_user(user_id: int, session: DatabaseDep) -> UserWithWorkflowsResponse:
+    if not (user := session.get(User, user_id)):
         raise user_not_found_exception(user_id)
     return user.toUserWithScriptsResponse()
 
 
 @router.patch("/", response_model=BaseUserResponse)
 def update_user(user: UpdateUserRequest, session: DatabaseDep) -> BaseUserResponse:
-    existing_user = session.get(User, user.id)
-    if not existing_user:
+    if not (existing_user := session.get(User, user.id)):
         raise user_not_found_exception(user.id)
 
     if user.name:
@@ -51,11 +49,10 @@ def update_user(user: UpdateUserRequest, session: DatabaseDep) -> BaseUserRespon
     return existing_user.toBaseUserResponse()
 
 
-@router.get("/public/{user_id}", response_model=PublicUserWithScriptsResponse)
+@router.get("/public/{user_id}", response_model=PublicUserWithWorkflowsResponse)
 def get_public_user(
     user_id: int, session: DatabaseDep
-) -> PublicUserWithScriptsResponse:
-    user = session.get(User, user_id)
-    if not user:
+) -> PublicUserWithWorkflowsResponse:
+    if not (user := session.get(User, user_id)):
         raise user_not_found_exception(user_id)
     return user.toPublicUserWithScriptsResponse()

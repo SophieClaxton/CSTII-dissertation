@@ -1,6 +1,6 @@
-import { ASTNodeType } from '../../../panel/models/AST/AST';
-import { getNextPossibleSteps } from '../../../panel/models/AST/getters';
-import { ASTInstruction } from '../../../panel/models/AST/Instruction';
+import { ASTNodeType } from '../../../side_panel/models/AST/AST';
+import { getNextPossibleSteps } from '../../../side_panel/models/AST/getters';
+import { ASTInstruction } from '../../../side_panel/models/AST/Instruction';
 
 describe('getNextPossibleSteps returns', () => {
   it('3 steps for 2 reads and 1 click', () => {

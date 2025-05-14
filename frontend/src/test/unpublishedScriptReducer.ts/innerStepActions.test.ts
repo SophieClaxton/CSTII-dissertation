@@ -3,12 +3,12 @@ import {
   CSTSectionNode,
   CSTStepNodeType,
   CSTWriteNode,
-} from '../../panel/models/CST/CST';
-import { EditorActionType } from '../../panel/models/EditorAction';
+} from '../../side_panel/models/CST/CST';
+import { EditorActionType } from '../../side_panel/models/EditorAction';
 import {
   addInputDescriptionToInput,
   editInputStepInputDescription,
-} from '../../panel/scripting_interface/unpublishedScriptReducer/innerStepActions';
+} from '../../side_panel/task_workflows/unpublished_task_workflow_reducer/innerStepActions';
 
 const writeStep: CSTWriteNode = {
   element: {
@@ -20,6 +20,7 @@ const writeStep: CSTWriteNode = {
   },
   id: { parentId: { sectionId: 1 }, stepId: 1 },
   type: CSTStepNodeType.Write,
+  isExact: true,
 };
 
 describe('addInputDescriptionToInput', () => {
