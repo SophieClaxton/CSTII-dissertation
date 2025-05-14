@@ -21,9 +21,9 @@ const defautlSupportProblemProbEquations: Record<
     switch (l) {
       case 'text':
         return -3 * (1.5 - p) * Math.exp(2 * k);
-      case 'overlay':
+      case 'hints':
         return (p - 0.65) * Math.exp(-0.75 * (k - 1 - p));
-      case 'click':
+      case 'auto':
         return 2 * p * Math.exp(-0.375 * (k - 1));
     }
   },
@@ -31,9 +31,9 @@ const defautlSupportProblemProbEquations: Record<
     switch (l) {
       case 'text':
         return Math.exp(k);
-      case 'overlay':
+      case 'hints':
         return Math.exp(0.75 * k);
-      case 'click':
+      case 'auto':
         return 1.75 * Math.exp(0.375 * k);
     }
   },

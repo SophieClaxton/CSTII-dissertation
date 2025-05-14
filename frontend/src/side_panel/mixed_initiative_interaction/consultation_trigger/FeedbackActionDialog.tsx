@@ -4,16 +4,16 @@ import HelpOutline from '@mui/icons-material/HelpOutline';
 import Button from '@mui/material/Button/Button';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { StruggleEvidenceDuration } from '../../../content_script/consts';
-import { ConsultationTriggerActions } from '../../models/support_and_MII/ConsultationTriggerMII';
+import { ConsultationTriggerAction } from '../../models/support_and_MII/ConsultationTriggerMII';
 
 interface FeedbackActionDialogProps {
   open: boolean;
   onClose: () => void;
-  action: ConsultationTriggerActions;
+  action: ConsultationTriggerAction;
   onAction?: () => void;
 }
 
-const mapActionToText: Record<ConsultationTriggerActions, string> = {
+const mapActionToText: Record<ConsultationTriggerAction, string> = {
   none: '',
   dialog:
     'It seems likely that there is a problem with the support, would you like the system to report it?',

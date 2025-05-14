@@ -46,7 +46,7 @@ const getSupportChangeUtilityModel =
   (action: MetacognitiveSupportAction, goal: MetacognitiveSupportGoal) => {
     if (
       (levelOfSupport === 'text' && action === 'dec_dialog') ||
-      (levelOfSupport === 'click' && action === 'inc_dialog')
+      (levelOfSupport === 'auto' && action === 'inc_dialog')
     ) {
       return 0;
     }

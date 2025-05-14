@@ -21,9 +21,9 @@ const defautlSupportLevelProbEquations: Record<
     switch (l) {
       case 'text':
         return 6 * (0.2 + p) * Math.exp(-0.5 * k);
-      case 'overlay':
+      case 'hints':
         return 6 * (1 + p) * Math.exp(-0.75 * k);
-      case 'click':
+      case 'auto':
         return -Infinity;
     }
   },
@@ -31,9 +31,9 @@ const defautlSupportLevelProbEquations: Record<
     switch (l) {
       case 'text':
         return 6 * (0.7 - 0.65 * p) * Math.exp(0.5 * k);
-      case 'overlay':
+      case 'hints':
         return 6 * (1.5 - 0.5 * p) * Math.exp((-0.25 * k) / 6);
-      case 'click':
+      case 'auto':
         return 6 * (0.05 + 0.2 * p) * Math.exp((p - 1.2) * (k - 1));
     }
   },
@@ -41,9 +41,9 @@ const defautlSupportLevelProbEquations: Record<
     switch (l) {
       case 'text':
         return -Infinity;
-      case 'overlay':
+      case 'hints':
         return 6 * (0.6 - 0.3 * p) * Math.exp(0.5 * (1 - p) * (k - 1));
-      case 'click':
+      case 'auto':
         return 6 * (0.25 - 0.2 * p) * Math.exp(0.5 * (k - 1));
     }
   },

@@ -1,5 +1,5 @@
 import {
-  ConsultationTriggerActions,
+  ConsultationTriggerAction,
   ConsultationTriggerGoal,
   consultationTriggerActions,
   consultationTriggerGoals,
@@ -20,7 +20,7 @@ const getNextConsultationTriggerAction = (
   stepsCompleted: number,
   levelOfSupport: LevelOfSupport,
   timeSinceInteraction: number,
-): ConsultationTriggerActions => {
+): ConsultationTriggerAction => {
   const evidence = {
     ...interactionData,
     stepsCompleted,
@@ -29,7 +29,7 @@ const getNextConsultationTriggerAction = (
   };
   // console.log(evidence);
   const bestAction = getMII<
-    ConsultationTriggerActions,
+    ConsultationTriggerAction,
     ConsultationTriggerGoal,
     UserStruggleEvidence
   >({

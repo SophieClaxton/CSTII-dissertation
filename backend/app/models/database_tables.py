@@ -137,7 +137,7 @@ class Website(SQLModel, table=True):
             id=self.id,
             url=self.url,
             description=self.descrpition,
-            workflows=[script.toScriptWithAuthorResponse() for script in self.scripts],
+            scripts=[script.toScriptWithAuthorResponse() for script in self.scripts],
         )
 
 

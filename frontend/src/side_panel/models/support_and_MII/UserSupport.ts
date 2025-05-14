@@ -1,4 +1,4 @@
-const levelsOfSupport = ['text', 'overlay', 'click'] as const;
+const levelsOfSupport = ['text', 'hints', 'auto'] as const;
 type LevelOfSupport = (typeof levelsOfSupport)[number];
 
 interface WorkflowLocation {

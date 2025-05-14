@@ -62,12 +62,12 @@ const onScrollEnd = (
   step: ASTInstruction,
 ): ((element: Element, supportState: SupportState) => void) => {
   switch (levelOfSupport) {
-    case 'overlay':
+    case 'hints':
       if (step.type === ASTNodeType.ScrollTo) {
         return onScrollStepComplete(step);
       }
       return (_element: Element, _supportState: SupportState) => {};
-    case 'click':
+    case 'auto':
       return mapStepToSystemAction[step.type](step);
   }
 };

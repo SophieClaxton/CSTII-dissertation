@@ -4,6 +4,9 @@ import {
 } from '@dnd-kit/core';
 import { MouseEvent, TouchEvent } from 'react';
 
+// Block DnD event propagation if element has "data-no-dnd" attribute
+// Solution developed from https://github.com/clauderic/dnd-kit/issues/477
+
 const isInteractiveElement = (element: Element | null) => {
   const interactiveElements = [
     'button',
@@ -22,7 +25,6 @@ const isInteractiveElement = (element: Element | null) => {
   return false;
 };
 
-// Block DnD event propagation if element has "data-no-dnd" attribute
 const handler = ({ nativeEvent: event }: MouseEvent | TouchEvent) => {
   let cur = event.target as HTMLElement;
 

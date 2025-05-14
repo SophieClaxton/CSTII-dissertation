@@ -4,7 +4,7 @@ const consultationTriggerGoals = ['none', 'send'] as const;
 type ConsultationTriggerGoal = (typeof consultationTriggerGoals)[number];
 
 const consultationTriggerActions = ['none', 'dialog', 'send'] as const;
-type ConsultationTriggerActions = (typeof consultationTriggerActions)[number];
+type ConsultationTriggerAction = (typeof consultationTriggerActions)[number];
 
 /** User Model Equations:
  *
@@ -28,7 +28,7 @@ type ConsultationTriggerUtilityEqn = (a: number, t: number) => number;
 export { consultationTriggerGoals, consultationTriggerActions };
 export type {
   ConsultationTriggerGoal,
-  ConsultationTriggerActions,
+  ConsultationTriggerAction,
   SupportProblemProbEqn,
   ConsultationTriggerUtilityEqn,
 };

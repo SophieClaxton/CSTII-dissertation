@@ -1,5 +1,5 @@
 import {
-  ConsultationTriggerActions,
+  ConsultationTriggerAction,
   consultationTriggerActions,
   ConsultationTriggerGoal,
   ConsultationTriggerUtilityEqn,
@@ -27,8 +27,8 @@ const getConsultationTriggerUtilityModel =
       ConsultationTriggerGoal,
       ConsultationTriggerUtilityEqn
     > = defaultStruggleUtilityEquations,
-  ): UtilityModel<ConsultationTriggerActions, ConsultationTriggerGoal> =>
-  (action: ConsultationTriggerActions, goal: ConsultationTriggerGoal) => {
+  ): UtilityModel<ConsultationTriggerAction, ConsultationTriggerGoal> =>
+  (action: ConsultationTriggerAction, goal: ConsultationTriggerGoal) => {
     const utility = utilityEqns[goal](
       consultationTriggerActions.indexOf(action),
       timeSinceInteraction,

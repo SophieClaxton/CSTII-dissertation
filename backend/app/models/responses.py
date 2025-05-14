@@ -58,7 +58,7 @@ class BaseWebsiteResponse(BaseModel):
 
 
 class WebsiteWithWorkflowsResponse(BaseWebsiteResponse):
-    workflows: list[WorkflowWithAuthorResponse]
+    scripts: list[WorkflowWithAuthorResponse]
 
 
 class BaseUnpublishedWorkflowResponse(BaseModel):
